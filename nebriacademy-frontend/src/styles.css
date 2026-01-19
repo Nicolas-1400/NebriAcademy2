@@ -9,11 +9,19 @@
 body {
     font-family: 'Arial', sans-serif;
     color: #000000;
+    background-color: var(--color-fondo);
+}
+
+/*VARIABLES*/
+:root {
+    --rojo-nebrija: #C2002F;
+    --color-secundario: #ff0000;
+    --color-fondo:#ebebeb;
 }
 
 /* HEADER */
 .header {
-    background-color: #C2002F;
+    background-color: var(--rojo-nebrija);
     display: flex;
     justify-content: center;
     align-items: center;
@@ -41,7 +49,7 @@ body {
     display: flex;
     align-items: center;
     justify-content: space-between;
-    min-height: calc(100vh - 80px);
+    min-height: 615px;
     background-image: url('./assets/FondoLogin.png');
     background-size: cover;
     background-position: right center;
@@ -80,7 +88,7 @@ body {
 
 .formulario-login input:focus {
     outline: none;
-    border-color: #C2002F;
+    border-color: var(--rojo-nebrija);
     box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
 }
 
@@ -88,7 +96,7 @@ body {
     padding: 15px;
     font-size: 16px;
     font-weight: bold;
-    background-color: #C2002F;
+    background-color: var(--rojo-nebrija);
     color: white;
     border: none;
     border-radius: 5px;
@@ -97,24 +105,106 @@ body {
 }
 
 .formulario-login button:hover {
-    background-color: #C2002F;
+    background-color: var(--rojo-nebrija);
     transform: translateY(-2px);
     box-shadow: 0 5px 15px rgba(220, 126, 126, 0.4);
 }
 
-.formulario-login-contenedor > a {
-    color: #C2002F;
+.formulario-login-contenedor a {
+    color: var(--rojo-nebrija);
     text-decoration: none;
     font-size: 14px;
     font-weight: 600;
     transition: color 0.3s ease;
 }
 
-.formulario-login-contenedor > a:hover {
-    color: #C2002F;
+.formulario-login-contenedor a:hover {
     text-decoration: underline;
 }
 
+.error-login {
+    text-align: center;
+    color: var(--color-secundario);    
+}
 
+/* PreRegisterGrid */
 
+.pre-register-grid {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    width: 900px;
+    height: 500px;
+    margin: 50px auto;
+    padding: 40px;
+    border-radius: 15px;
+    box-shadow: 0 0 10px gray;
+    background-color: white;
+}
 
+.pre-register-grid h2 {
+    font-size: 30px;
+    margin-bottom: 30px;
+}
+
+.contenedor-botones {
+    display: flex;
+    gap: 100px;
+    margin-bottom: 30px;
+}
+
+.boton-estudiante-si,
+.boton-estudiante-no {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    width: 300px;
+    height: 250px;
+    padding: 20px;
+    gap: 10px;
+    border-radius: 10px;
+    background-color: white;
+    border: 2px solid #ddd;
+    box-shadow: 5px 5px 15px gray;
+    cursor: pointer;
+}
+
+.boton-profesor {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    font-size: 23px;
+    width: 250px;
+    height: 70px;
+    gap: 15px;
+    padding: 20px;
+    border-radius: 10px;
+    background-color: white;
+    border: 2px solid #ddd;
+    box-shadow: 5px 5px 15px gray;
+    cursor: pointer;   
+}
+.boton-estudiante-si:hover,
+.boton-estudiante-no:hover,
+.boton-profesor:hover {
+    border-color: var(--rojo-nebrija);
+    box-shadow: 5px 5px 20px var(--rojo-nebrija);
+    transform: translateY(3px);
+}
+
+.boton-profesor:hover {
+    border-color: var(--rojo-nebrija);
+    transform: translateY(3px);
+}
+
+.boton-estudiante-si img,
+.boton-estudiante-no img{
+    width: 75px; 
+}
+.boton-profesor img {
+    width: 50px; 
+}
