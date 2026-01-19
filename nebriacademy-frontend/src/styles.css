@@ -6,16 +6,37 @@
     box-sizing: border-box;
 }
 
-
-
 body {
     font-family: 'Arial', sans-serif;
-    background-color: #C2002F;
     color: #000000;
 }
 
-/* LOGIN */
+/* HEADER */
+.header {
+    background-color: #C2002F;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+}
 
+.contenedor-header{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-header {
+    height: 60px;
+}
+
+.header h1 {
+    color: white;
+    font-size: 28px;
+    margin: 0;
+}
+
+/* LOGIN */
 .login-grid {
     display: flex;
     align-items: center;
