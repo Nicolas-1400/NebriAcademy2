@@ -1,0 +1,99 @@
+/* ESTILOS GENERALES */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+
+
+body {
+    font-family: 'Arial', sans-serif;
+    background-color: #C2002F;
+    color: #000000;
+}
+
+/* LOGIN */
+
+.login-grid {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    min-height: calc(100vh - 80px);
+    background-image: url('./assets/FondoLogin.png');
+    background-size: cover;
+    background-position: right center;
+    background-repeat: no-repeat;
+    padding: 40px;
+}
+
+.formulario-login-contenedor {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 40%;
+    background-color: rgba(255, 255, 255, 0.95);
+    padding: 60px 50px;
+    border-radius: 10px;
+    box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.formulario-login {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    width: 100%;
+    margin-bottom: 20px;
+}
+
+.formulario-login input {
+    padding: 15px;
+    font-size: 14px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-family: 'Arial', sans-serif;
+}
+
+.formulario-login input:focus {
+    outline: none;
+    border-color: #C2002F;
+    box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
+}
+
+.formulario-login button {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: #C2002F;
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.formulario-login button:hover {
+    background-color: #C2002F;
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(220, 126, 126, 0.4);
+}
+
+.formulario-login-contenedor > a {
+    color: #C2002F;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 600;
+    transition: color 0.3s ease;
+}
+
+.formulario-login-contenedor > a:hover {
+    color: #C2002F;
+    text-decoration: underline;
+}
+
+
+
+

@@ -1,0 +1,127 @@
+CREATE TABLE usuarios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo ENUM('alumno', 'profesor', 'administrador') NOT NULL
+);
+
+CREATE TABLE administradores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuarioId INT NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    numTelefono VARCHAR(30),
+    redes VARCHAR(255),
+    pais VARCHAR(50),
+    localidad VARCHAR(50),
+    FOREIGN KEY (usuarioId) REFERENCES usuarios(id)
+);
+
+CREATE TABLE alumnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuarioId INT NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    numeroTarjeta VARCHAR(20) NOT NULL UNIQUE,
+    numTelefono VARCHAR(30),
+    redes TEXT,
+    pais VARCHAR(50),
+    localidad VARCHAR(50),
+    FOREIGN KEY (usuarioId) REFERENCES usuarios(id)
+);
+
+CREATE TABLE profesores (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    usuarioId INT NOT NULL,
+    dni VARCHAR(20) NOT NULL UNIQUE,
+    nombre VARCHAR(50) NOT NULL,
+    apellidos VARCHAR(100) NOT NULL,
+    email VARCHAR(100) NOT NULL UNIQUE,
+    contrasena VARCHAR(255) NOT NULL,
+    numCuentaBancaria VARCHAR(50) NOT NULL UNIQUE,
+    numTelefono VARCHAR(30),
+    redes TEXT,
+    pais VARCHAR(50),
+    localidad VARCHAR(50),
+    especializacion VARCHAR(50),
+    FOREIGN KEY (usuarioId) REFERENCES usuarios(id)
+);
+
+CREATE TABLE cursos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    nombreCurso VARCHAR(100) NOT NULL,
+    categoria VARCHAR(100),
+    profesor INT NOT NULL,
+    nivel VARCHAR(50),
+    valoracion FLOAT DEFAULT 0,
+    comentarios TEXT,
+    descripcion TEXT,
+    FOREIGN KEY (profesor) REFERENCES profesores(id)
+);
+
+CREATE TABLE profesoresCursos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    profesorId INT NOT NULL,
+    cursoId INT NOT NULL,
+    FOREIGN KEY (profesorId) REFERENCES profesores(id),
+    FOREIGN KEY (cursoId) REFERENCES cursos(id)
+);
+
+CREATE TABLE cursosAlumnos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    cursoId INT NOT NULL,
+    alumnoId INT NOT NULL,
+    FOREIGN KEY (cursoId) REFERENCES cursos(id),
+    FOREIGN KEY (alumnoId) REFERENCES alumnos(id)
+);
+
+CREATE TABLE incidencias (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    tipo VARCHAR(50) NOT NULL,
+    descripcion TEXT,
+    resuelto BOOLEAN DEFAULT FALSE,
+    usuario INT NOT NULL,
+    FOREIGN KEY (usuario) REFERENCES usuarios(id)
+);
+
+CREATE TABLE apuntes (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    autor INT NOT NULL,
+    curso INT NOT NULL,
+    contenido TEXT,
+    valoracion FLOAT DEFAULT 0,
+    FOREIGN KEY (autor) REFERENCES usuarios(id),
+    FOREIGN KEY (curso) REFERENCES cursos(id)
+);
+
+CREATE TABLE ejercicios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    autor INT NOT NULL,
+    curso INT NOT NULL,
+    valoracion FLOAT DEFAULT 0,
+    FOREIGN KEY (autor) REFERENCES profesores(id),
+    FOREIGN KEY (curso) REFERENCES cursos(id)
+);
+
+CREATE TABLE puntuacionesEjercicios (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    ejercicioId INT NOT NULL,
+    alumnoId INT NOT NULL,
+    puntuacion FLOAT,
+    FOREIGN KEY (ejercicioId) REFERENCES ejercicios(id),
+    FOREIGN KEY (alumnoId) REFERENCES alumnos(id)
+);
+
+CREATE TABLE videos (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    autor INT NOT NULL,
+    curso INT NOT NULL,
+    duracion INT,
+    valoracion FLOAT DEFAULT 0,
+    FOREIGN KEY (autor) REFERENCES profesores(id),
+    FOREIGN KEY (curso) REFERENCES cursos(id)
+);
