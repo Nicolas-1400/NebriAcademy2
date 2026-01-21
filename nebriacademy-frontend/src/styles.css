@@ -15,7 +15,7 @@ body {
 /*VARIABLES*/
 :root {
     --rojo-nebrija: #C2002F;
-    --color-secundario: #910024;
+    --color-secundario: #7a001f;
     --color-fondo:#ebebeb;
 }
 
@@ -50,8 +50,8 @@ body {
     padding: 10px 20px;
     display: flex;
     flex-direction: row;
-    justify-content: space-between;
     align-items: center;
+    gap: 20px;
 }
 
 .contenedor-logo-titulo {
@@ -61,48 +61,64 @@ body {
     padding: 0 20px;
 }
 
+.nav a {
+    text-decoration: none;
+}
+
+.contenedor-logo-titulo h2 {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
 .contenedor-botones-nav {
     display: flex;
     align-items: center;
     gap: 10px;
-    margin-left: 200px;
+    margin-left: auto;
 }
 
 .boton-nav {
     width: 90px;
     height: 30px;
+    font-weight: bold;
     background-color: white;
-    border: 1px solid gray;
+    border: 1px solid black;
     border-radius: 10px;
     box-shadow: 2px 2px 1px black;
     color: black;
     font-size: 16px;
     cursor: pointer;
-    transition: color 0.5s ease;
+    transition: color 0.3s ease;
 }
 .boton-nav:hover {
+    border: 1px solid var(--color-secundario);
     color: var(--color-secundario);
     transform: translateY(1px);
+    box-shadow: none;
 }
 
 .barra-busqueda-nav {
-    align-items: end;
-    justify-content: right;
     padding: 8px;
     border-radius: 5px;
     border: 2px solid gray;
     font-size: 14px;
     height: 35px;
     width: 300px;
+    order: 3;
 }
 
 .logo-nav {
     height: 40px;
-
-} 
-
-.perfil-nav{
+    background-color: white;
+    border: 5px solid white;
+    border-radius: 100%;
+}
+.perfil-nav {
     height: 40px;
+    background-color: white;
+    border: 0.5px solid white;
+    border-radius: 100%;
 }
 
 /* DROPDOWN PERFIL */
@@ -110,6 +126,7 @@ body {
     position: relative;
     display: flex;
     align-items: center;
+    order: 4;
 }
 
 .perfil-button {
@@ -117,16 +134,12 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    display: flex;
-    align-items: center;
-    justify-content: center;
     border-radius: 50%;
     transition: all 0.3s ease;
 }
 
 .perfil-button:hover {
     transform: scale(1.1);
-    box-shadow: 0 0 10px rgba(255, 255, 255, 0.3);
 }
 
 .dropdown-menu {
@@ -141,17 +154,6 @@ body {
     overflow: hidden;
     z-index: 1000;
     animation: slideDown 0.2s ease-in-out;
-}
-
-@keyframes slideDown {
-    from {
-        opacity: 0;
-        transform: translateY(-10px);
-    }
-    to {
-        opacity: 1;
-        transform: translateY(0);
-    }
 }
 
 .dropdown-item {
@@ -183,6 +185,87 @@ body {
     background-color: #ffe0e0;
     font-weight: 600;
 }
+
+/* FOOTER */
+.footer {
+    background-color: gray;
+    color: white;
+    padding: 40px 20px;
+    margin-top: 60px;
+}
+
+.footer-politicas {
+    display: flex;
+    justify-content: center;
+    gap: 30px;
+    margin-bottom: 20px;
+    flex-wrap: wrap;
+}
+
+.footer-politicas a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    border-bottom: 2px solid transparent;
+}
+
+.footer-politicas a:hover {
+    border-bottom: 2px solid white;
+    transform: translateY(-2px);
+}
+
+.footer-redes {
+    display: flex;
+    justify-content: center;
+    gap: 25px;
+    margin-bottom: 25px;
+    flex-wrap: wrap;
+}
+
+.footer-redes a {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    background-color: rgba(255, 255, 255, 0.2);
+    border-radius: 50%;
+    transition: all 0.3s ease;
+    border: 2px solid transparent;
+}
+
+.footer-redes a:hover {
+    background-color: white;
+    transform: translateY(-5px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+}
+
+.footer-redes img {
+    width: 22px;
+    height: 22px;
+    filter: brightness(1);
+    transition: filter 0.3s ease;
+}
+
+.footer-redes a:hover img {
+    filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(1000%) hue-rotate(320deg);
+}
+
+.footer p {
+    margin: 8px 0;
+    font-size: 14px;
+    font-weight: 500;
+    letter-spacing: 0.5px;
+}
+
+.footer p:last-child {
+    margin-top: 15px;
+    font-size: 13px;
+    opacity: 0.9;
+}
+
 
 /* LOGIN */
 .login-grid {
