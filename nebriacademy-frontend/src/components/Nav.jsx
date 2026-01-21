@@ -10,20 +10,20 @@ function Nav() {
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
 
-    const clickbtn1 = () => {
-        navigate('/Home')
+    const clickBtnMiEspacio = () => {
+        navigate('/Home/MiEspacio')
     }
 
-     const clickbtn2 = () => {
-        navigate('/Home')
+     const clickBtnCursos = () => {
+        navigate('/Home/Cursos')
     }
 
-       const clickbtn3 = () => {
-        navigate('/Home')
+       const clickBtnProfesores = () => {
+        navigate('/Home/Profesores')
     }
 
-       const clickbtn4 = () => {
-        navigate('/Home')
+       const clickBtnApuntes = () => {
+        navigate('/Home/Apuntes')
     }
 
     const handleProfileClick = () => {
@@ -62,10 +62,10 @@ function Nav() {
         </div>
         </a>
         <div className="contenedor-botones-nav">
-            <button type="button" className="boton-nav-1" onClick={clickbtn1}>Botón 1</button>
-            <button type="button" className="boton-nav-2" onClick={clickbtn2}>Botón 2</button>
-            <button type="button" className="boton-nav-3" onClick={clickbtn3}>Botón 3</button>
-            <button type="button" className="boton-nav-4" onClick={clickbtn4}>Botón 4</button>
+            <button type="button" className="boton-nav" onClick={clickBtnMiEspacio}>Mi Espacio</button>
+            <button type="button" className="boton-nav" onClick={clickBtnCursos}>Cursos</button>
+            <button type="button" className="boton-nav" onClick={clickBtnProfesores}>Profesores</button>
+            <button type="button" className="boton-nav" onClick={clickBtnApuntes}>Apuntes</button>
         </div>
         <input type="search" className="barra-busqueda-nav" placeholder="Buscar..." />
         <div className="perfil-dropdown-container" ref={dropdownRef}>
