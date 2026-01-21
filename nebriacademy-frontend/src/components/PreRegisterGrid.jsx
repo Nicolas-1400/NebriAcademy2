@@ -8,13 +8,13 @@ function PreRegisterGrid() {
   const navigate = useNavigate();
 
   const clickSi = () => {
-    navigate('/PreRegister/Register');
+    navigate('/Register/VerificacionAlumnoNebrija');
   };
   const clickNo = () => {
-    navigate('/PreRegister/Register');
+    navigate('/Register/RegisterAlumnoExterno');
   };
   const clickProf = () => {
-    navigate('/PreRegister/Register');
+    navigate('/Register');
   };
 
   return (
