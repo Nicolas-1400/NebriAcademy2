@@ -13,7 +13,7 @@ function LoginGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/usuarios/login/auth",
+        "http://localhost:3000/login/auth",
         {
           method: "POST",
           headers: {
@@ -65,6 +65,7 @@ function LoginGrid() {
         </form>
 
         <a href="/PreRegister">Crear cuenta</a>
+        <a href="/Home">Ir al home</a>
       </div>
     </div>
   );

@@ -19,6 +19,7 @@ app.use('/profesores', require('./routes/profesores'));
 app.use('/profesorescursos', require('./routes/profesorescursos'));
 app.use('/puntuacionesejercicios', require('./routes/puntuacionesejercicios'));
 app.use('/usuarios', require('./routes/usuarios'));
+app.use('/login', require('./database/login'));
 app.use('/videos', require('./routes/videos'));
 
 // Inica el servidor
