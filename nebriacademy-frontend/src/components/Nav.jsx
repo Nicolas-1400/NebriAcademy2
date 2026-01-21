@@ -7,20 +7,20 @@ function Nav() {
 
     const navigate = useNavigate();
 
-    const clickbtn1 = () => {
-        navigate('/Home')
+    const clickBtnMiEspacio = () => {
+        navigate('/Home/:id/MiEspacio')
     }
 
-     const clickbtn2 = () => {
-        navigate('/Home')
+     const clickBtnCursos = () => {
+        navigate('/Home/:id/Cursos')
     }
 
-       const clickbtn3 = () => {
-        navigate('/Home')
+       const clickBtnProfesores = () => {
+        navigate('/Home/:id/Profesores')
     }
 
-       const clickbtn4 = () => {
-        navigate('/Home')
+       const clickBtnApuntes = () => {
+        navigate('/Home/:id/Apuntes')
     }
 
 
@@ -33,10 +33,10 @@ function Nav() {
         </div>
         </a>
         <div className="contenedor-botones-nav">
-            <button type="button" className="boton-nav-1" onClick={clickbtn1}>Botón 1</button>
-            <button type="button" className="boton-nav-2" onClick={clickbtn2}>Botón 2</button>
-            <button type="button" className="boton-nav-3" onClick={clickbtn3}>Botón 3</button>
-            <button type="button" className="boton-nav-4" onClick={clickbtn4}>Botón 4</button>
+            <button type="button" className="boton-nav" onClick={clickBtnMiEspacio}>Mi Espacio</button>
+            <button type="button" className="boton-nav" onClick={clickBtnCursos}>Cursos</button>
+            <button type="button" className="boton-nav" onClick={clickBtnProfesores}>Profesores</button>
+            <button type="button" className="boton-nav" onClick={clickBtnApuntes}>Apuntes</button>
         </div>
         <input type="search" className="barra-busqueda-nav" placeholder="Buscar..." />
         <a href="/Perfil">
