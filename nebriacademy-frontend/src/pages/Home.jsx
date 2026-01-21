@@ -1,11 +1,12 @@
 import Nav from '../components/Nav'
 import Footer from '../components/Footer'
+import HomeFeed from '../components/HomeFeed'
 
 function Home() {
   return (
     <div>
       <Nav />
-      Home
+      <HomeFeed />
       <Footer />
     </div>
   )
