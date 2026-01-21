@@ -65,7 +65,6 @@ function LoginGrid() {
         </form>
 
         <a href="/PreRegister">Crear cuenta</a>
-        <a href="/Home">Ir al home</a>
       </div>
     </div>
   );
