@@ -9,6 +9,7 @@ import PreRegister from "../pages/PreRegister.jsx"
 import VerificacionAlumnoNebrija from "../pages/VerificacionAlumnoNebrija.jsx"
 import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx"
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx"
+import RegisterProfesor from "../pages/RegisterProfesor.jsx"
 import Perfil from "../pages/Perfil.jsx"
 import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx"
 import NotaLegal from "../pages/NotaLegal.jsx"
@@ -23,6 +24,7 @@ function AppRouter() {
         <Route path="/Register/VerificacionAlumnoNebrija" element={<VerificacionAlumnoNebrija />} />
         <Route path="/RegisterAlumnoNebrija" element={<RegisterAlumnoNebrija />} />
         <Route path="/Register/RegisterAlumnoExterno" element={<RegisterAlumnoExterno />} />
+        <Route path="/Register/RegisterProfesor" element={<RegisterProfesor />} />
         <Route path="/Home" element={<Home />} />
         <Route path="/Home/MiEspacio" element={<MiEspacio/>} />
         <Route path="/Home/Cursos" element={<TodosCursos />} />

@@ -1,56 +1,56 @@
 const express = require("express");
 const router = express.Router();
 const Usuarios = require("../models/Usuarios.js");
-const Alumnos = require("../models/Alumnos.js");
+const Profesores = require("../models/Profesores.js");
 
-// Registrar un nuevo usuario (alumno)
+// Registrar un nuevo usuario (profesor)
 router.post("/auth", (req, res) => {
   try {
     const { nombre, apellidos, dni, email, contrasena, numeroTarjeta, pais, localidad } = req.body;
-    console.log(`POST /registerAlumnoExterno/auth - Email: ${email}`);
+    console.log(`POST /registerProfesor/auth - Email: ${email}`);
 
     if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroTarjeta || !pais || !localidad) {
       return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
     // Verificar si el email ya existe
-    Alumnos.findAll().then((alumnos) => {
-      const usuarioExistente = alumnos.find((a) => a.email === email);
+    Profesores.findAll().then((profesores) => {
+      const usuarioExistente = profesores.find((a) => a.email === email);
       if (usuarioExistente) {
         return res.status(400).json({ error: "El email ya está registrado" });
       }
 
-      // Crear nuevo usuario en tabla usuarios
+      // Crear nuevo usuario en tabla usuarios con tipo profesor
       Usuarios.create({
-        tipo: "alumno"
+        tipo: "profesor"
       }).then((nuevoUsuario) => {
-        // Crear nuevo alumno con el usuarioId
-        Alumnos.create({
+        // Crear nuevo profesor con el usuarioId
+        Profesores.create({
           usuarioId: nuevoUsuario.id,
           nombre: nombre,
           apellidos: apellidos,
           dni: dni,
           email: email,
           contrasena: contrasena,
-          numeroTarjeta: numeroTarjeta,
+          numCuentaBancaria: numeroTarjeta,
           pais: pais,
           localidad: localidad
-        }).then((nuevoAlumno) => {
+        }).then((nuevoProfesor) => {
           res.status(201).json({
             mensaje: "Registro exitoso",
             usuario: {
-              id: nuevoAlumno.id,
-              nombre: nuevoAlumno.nombre,
-              apellidos: nuevoAlumno.apellidos,
-              dni: nuevoAlumno.dni,
-              email: nuevoAlumno.email
+              id: nuevoProfesor.id,
+              nombre: nuevoProfesor.nombre,
+              apellidos: nuevoProfesor.apellidos,
+              dni: nuevoProfesor.dni,
+              email: nuevoProfesor.email
             }
           });
         }).catch((error) => {
-          console.error("Error al crear alumno:", error);
-          // Eliminar el usuario si falla la creación del alumno
+          console.error("Error al crear profesor:", error);
+          // Eliminar el usuario si falla la creación del profesor
           nuevoUsuario.destroy();
-          res.status(500).json({ error: "Error al crear el usuario" });
+          res.status(500).json({ error: "Error al crear el profesor" });
         });
       }).catch((error) => {
         console.error("Error al crear usuario:", error);
