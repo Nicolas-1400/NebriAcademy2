@@ -21,6 +21,7 @@ app.use('/puntuacionesejercicios', require('./routes/puntuacionesejercicios'));
 app.use('/usuarios', require('./routes/usuarios'));
 app.use('/login', require('./database/login'));
 app.use('/registerAlumnoExterno', require('./database/registerAlumnoExterno'));
+app.use('/registerProfesor', require('./database/registerProfesor'));
 app.use('/verificacionnebrija', require('./database/registerUsuarioNebrija'));
 app.use('/videos', require('./routes/videos'));
 

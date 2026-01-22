@@ -100,8 +100,6 @@ function RegisterAlumnoNebrijaGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
-
-        <a href="/">Iniciar sesión</a>
       </div>
     </div>
   );

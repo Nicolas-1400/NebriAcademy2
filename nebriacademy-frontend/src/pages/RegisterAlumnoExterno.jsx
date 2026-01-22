@@ -1,8 +1,12 @@
+import Header from "../components/Header"
 import RegisterAlumnoExternoGrid from "../components/RegisterAlumnoExternoGrid"
 
 function RegisterAlumnoExterno() {
   return (
-    <div><RegisterAlumnoExternoGrid /></div>
+    <div>
+      <Header />
+      <RegisterAlumnoExternoGrid />
+    </div>
   )
 }
 

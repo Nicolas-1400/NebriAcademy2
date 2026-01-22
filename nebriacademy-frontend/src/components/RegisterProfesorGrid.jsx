@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function RegisterAlumnoExternoGrid() {
+function RegisterProfesorGrid() {
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
   const [dni, setDni] = useState("");
@@ -19,7 +19,7 @@ function RegisterAlumnoExternoGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/registerAlumnoExterno/auth",
+        "http://localhost:3000/registerProfesor/auth",
         {
           method: "POST",
           headers: {
@@ -120,4 +120,4 @@ function RegisterAlumnoExternoGrid() {
   );
 }
 
-export default RegisterAlumnoExternoGrid;
+export default RegisterProfesorGrid;

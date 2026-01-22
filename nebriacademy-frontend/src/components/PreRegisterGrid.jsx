@@ -14,7 +14,7 @@ function PreRegisterGrid() {
     navigate('/Register/RegisterAlumnoExterno');
   };
   const clickProf = () => {
-    navigate('/Register');
+    navigate('/Register/RegisterProfesor');
   };
 
   return (
