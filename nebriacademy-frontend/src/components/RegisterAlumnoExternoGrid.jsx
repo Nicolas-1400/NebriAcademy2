@@ -1,8 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-function RegisterGrid() {
+function RegisterAlumnoExternoGrid() {
   const [nombre, setNombre] = useState("");
+  const [apellidos, setApellidos] = useState("");
+  const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -14,7 +16,7 @@ function RegisterGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/usuarios/register",
+        "http://localhost:3000/registerAlumnoExterno/auth",
         {
           method: "POST",
           headers: {
@@ -22,6 +24,8 @@ function RegisterGrid() {
           },
           body: JSON.stringify({
             nombre: nombre,
+            apellidos: apellidos,
+            dni: dni,
             email: email,
             contrasena: contrasena,
           }),
@@ -32,7 +36,7 @@ function RegisterGrid() {
 
       if (respuesta.ok) {
         console.log("Registro exitoso:", datos);
-        navigate("/Login");
+        navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
       }
@@ -51,6 +55,20 @@ function RegisterGrid() {
             placeholder="Nombre"
             value={nombre}
             onChange={(e) => setNombre(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="Apellidos"
+            value={apellidos}
+            onChange={(e) => setApellidos(e.target.value)}
+            required
+          />
+          <input
+            type="text"
+            placeholder="DNI"
+            value={dni}
+            onChange={(e) => setDni(e.target.value)}
             required
           />
           <input
@@ -74,6 +92,7 @@ function RegisterGrid() {
         <a href="/">Iniciar sesión</a>
       </div>
     </div>
-  )
+  );
 }
-export default RegisterGrid
+
+export default RegisterAlumnoExternoGrid;

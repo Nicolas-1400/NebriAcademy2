@@ -1,8 +1,14 @@
-import React from 'react'
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
+import PerfilGrid from "../components/PerfilGrid"
 
 function Perfil() {
   return (
-    <div>Perfil</div>
+    <div>
+      <Nav />
+      <PerfilGrid />
+      <Footer />
+    </div>
   )
 }
 

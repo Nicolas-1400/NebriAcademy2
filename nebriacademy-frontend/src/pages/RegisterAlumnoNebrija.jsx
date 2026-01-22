@@ -1,11 +1,11 @@
-import RegisterGrid from '../components/RegisterGrid';
+import RegisterAlumnoNebrijaGrid from '../components/RegisterAlumnoNebrijaGrid.jsx';
 import Header from '../components/Header.jsx';
 
 function Register() {
   return (
     <div>
       <Header />
-      <RegisterGrid />
+      <RegisterAlumnoNebrijaGrid />
     </div>
   )
 }

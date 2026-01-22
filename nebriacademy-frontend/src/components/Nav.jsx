@@ -9,6 +9,12 @@ function Nav() {
     const navigate = useNavigate();
     const [isDropdownOpen, setIsDropdownOpen] = useState(false);
     const dropdownRef = useRef(null);
+    const [usuario, setUsuario] = useState(null);
+
+    useEffect(() => {
+        const usuarioIniciado = localStorage.getItem('usuario')
+        setUsuario(JSON.parse(usuarioIniciado))
+    }, []);
 
     const clickBtnMiEspacio = () => {
         navigate('/Home/MiEspacio')
@@ -31,7 +37,7 @@ function Nav() {
     }
 
     const handleNavigateProfile = () => {
-        navigate('/Perfil');
+        navigate('/Home/Perfil');
         setIsDropdownOpen(false);
     }
 
@@ -78,6 +84,8 @@ function Nav() {
             </button>
             {isDropdownOpen && (
                 <div className="dropdown-menu">
+                    <h3>{usuario.nombre} {usuario.apellidos}</h3>
+                    <p>{usuario.email}</p>
                     <button className="dropdown-item" onClick={handleNavigateProfile}>
                         Mi Perfil
                     </button>
