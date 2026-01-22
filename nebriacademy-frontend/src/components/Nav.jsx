@@ -7,8 +7,8 @@ import ImagenPerfil from '../assets/imagenPerfilUsuario.png'
 function Nav() {
 
     const navigate = useNavigate();
-    const [isDropdownOpen, setIsDropdownOpen] = useState(false);
-    const dropdownRef = useRef(null);
+    const [isdesplegableOpen, setIsdesplegableOpen] = useState(false);
+    const desplegableRef = useRef(null);
     const [usuario, setUsuario] = useState(null);
 
     useEffect(() => {
@@ -33,24 +33,24 @@ function Nav() {
     }
 
     const handleProfileClick = () => {
-        setIsDropdownOpen(!isDropdownOpen);
+        setIsdesplegableOpen(!isdesplegableOpen);
     }
 
     const handleNavigateProfile = () => {
         navigate('/Home/Perfil');
-        setIsDropdownOpen(false);
+        setIsdesplegableOpen(false);
     }
 
     const handleLogout = () => {
         localStorage.clear();
         navigate('/');
-        setIsDropdownOpen(false);
+        setIsdesplegableOpen(false);
     }
 
     useEffect(() => {
         const handleClickOutside = (event) => {
-            if (dropdownRef.current && !dropdownRef.current.contains(event.target)) {
-                setIsDropdownOpen(false);
+            if (desplegableRef.current && !desplegableRef.current.contains(event.target)) {
+                setIsdesplegableOpen(false);
             }
         };
 
@@ -74,7 +74,7 @@ function Nav() {
             <button type="button" className="boton-nav" onClick={clickBtnApuntes}>Apuntes</button>
         </div>
         <input type="search" className="barra-busqueda-nav" placeholder="Buscar..." />
-        <div className="perfil-dropdown-container" ref={dropdownRef}>
+        <div className="perfil-desplegable-container" ref={desplegableRef}>
             <button 
                 className="perfil-button"
                 onClick={handleProfileClick}
@@ -82,14 +82,14 @@ function Nav() {
             >
                 <img className="perfil-nav" src={ImagenPerfil} alt="Perfil Usuario" />
             </button>
-            {isDropdownOpen && (
-                <div className="dropdown-menu">
+            {isdesplegableOpen && (
+                <div className="desplegable-menu">
                     <h3>{usuario.nombre} {usuario.apellidos}</h3>
                     <p>{usuario.email}</p>
-                    <button className="dropdown-item" onClick={handleNavigateProfile}>
+                    <button className="desplegable-item" onClick={handleNavigateProfile}>
                         Mi Perfil
                     </button>
-                    <button className="dropdown-item" onClick={handleLogout}>
+                    <button className="desplegable-item" onClick={handleLogout}>
                         Cerrar Sesión
                     </button>
                 </div>

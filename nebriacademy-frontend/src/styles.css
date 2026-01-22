@@ -109,7 +109,7 @@ body {
 }
 
 .logo-nav {
-    height: 40px;
+    height: 50px;
     background-color: white;
     border: 5px solid white;
     border-radius: 100%;
@@ -117,12 +117,12 @@ body {
 .perfil-nav {
     height: 40px;
     background-color: white;
-    border: 0.5px solid white;
     border-radius: 100%;
+    border: 1px solid white;
 }
 
-/* DROPDOWN PERFIL */
-.perfil-dropdown-container {
+/* desplegable PERFIL */
+.perfil-desplegable-container {
     position: relative;
     display: flex;
     align-items: center;
@@ -134,7 +134,6 @@ body {
     border: none;
     padding: 0;
     cursor: pointer;
-    border-radius: 50%;
     transition: all 0.3s ease;
 }
 
@@ -142,7 +141,7 @@ body {
     transform: scale(1.1);
 }
 
-.dropdown-menu {
+.desplegable-menu {
     position: absolute;
     top: 100%;
     right: 0;
@@ -150,18 +149,30 @@ body {
     background-color: white;
     border-radius: 8px;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
-    min-width: 180px;
+    min-width: 280px;
     overflow: hidden;
     z-index: 1000;
-    animation: slideDown 0.2s ease-in-out;
 }
 
-.dropdown-item {
-    display: block;
+.desplegable-menu h3 {
+    padding: 10px 5px 10px 15px;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e5e5;
+    font-family: 'Arial', sans-serif;
+}
+.desplegable-menu p {
+    font-size: 14px;
+    padding: 10px 5px 10px 15px;
+    color: #777;
+    font-family: 'Arial', sans-serif;
+}
+
+.desplegable-item {
     width: 100%;
     padding: 12px 16px;
     border: none;
-    background: none;
+    background-color: rgb(229, 229, 229);
     text-align: left;
     cursor: pointer;
     font-size: 14px;
@@ -170,18 +181,18 @@ body {
     font-family: 'Arial', sans-serif;
 }
 
-.dropdown-item:hover {
+.desplegable-item:hover {
     background-color: #f5f5f5;
     color: var(--rojo-nebrija);
     font-weight: 600;
 }
 
-.dropdown-item:last-child {
+.desplegable-item:last-child {
     border-top: 1px solid #e5e5e5;
     color: var(--rojo-nebrija);
 }
 
-.dropdown-item:last-child:hover {
+.desplegable-item:last-child:hover {
     background-color: #ffe0e0;
     font-weight: 600;
 }
@@ -190,8 +201,11 @@ body {
 .footer {
     background-color: gray;
     color: white;
-    padding: 40px 20px;
+    padding: 15px;
     margin-top: 60px;
+    position: fixed;
+    bottom: 0;
+    width: 100%;
 }
 
 .footer-politicas {
@@ -213,7 +227,6 @@ body {
 
 .footer-politicas a:hover {
     border-bottom: 2px solid white;
-    transform: translateY(-2px);
 }
 
 .footer-redes {
@@ -233,24 +246,16 @@ body {
     background-color: rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     transition: all 0.3s ease;
-    border: 2px solid transparent;
 }
 
 .footer-redes a:hover {
     background-color: white;
-    transform: translateY(-5px);
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
 }
 
 .footer-redes img {
     width: 22px;
     height: 22px;
-    filter: brightness(1);
-    transition: filter 0.3s ease;
-}
-
-.footer-redes a:hover img {
-    filter: brightness(0) saturate(100%) invert(20%) sepia(85%) saturate(1000%) hue-rotate(320deg);
 }
 
 .footer p {
@@ -258,13 +263,9 @@ body {
     font-size: 14px;
     font-weight: 500;
     letter-spacing: 0.5px;
+    text-align: center;
 }
 
-.footer p:last-child {
-    margin-top: 15px;
-    font-size: 13px;
-    opacity: 0.9;
-}
 
 
 /* LOGIN */
