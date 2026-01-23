@@ -7,7 +7,7 @@ function RegisterProfesorGrid() {
   const [dni, setDni] = useState("");
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [numeroTarjeta, setTarjeta] = useState("");
+  const [numeroCuentaBancaria, setCuentaBancaria] = useState("");
   const [pais, setPais] = useState("");
   const [localidad, setLocalizacion] = useState("");
   const [error, setError] = useState("");
@@ -31,7 +31,7 @@ function RegisterProfesorGrid() {
             dni: dni,
             email: email,
             contrasena: contrasena,
-            numeroTarjeta: numeroTarjeta,
+            numeroCuentaBancaria: numeroCuentaBancaria,
             pais: pais,
             localidad: localidad,
           }),
@@ -93,9 +93,9 @@ function RegisterProfesorGrid() {
           />
           <input
             type="text"
-            placeholder="Tarjeta"
-            value={numeroTarjeta}
-            onChange={(e) => setTarjeta(e.target.value)}
+            placeholder="Cuenta Bancaria"
+            value={numeroCuentaBancaria}
+            onChange={(e) => setCuentaBancaria(e.target.value)}
             required
           />
           <input

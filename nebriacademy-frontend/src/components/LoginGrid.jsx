@@ -32,7 +32,12 @@ function LoginGrid() {
         console.log("Login exitoso:", datos);
         localStorage.setItem("usuario", JSON.stringify(datos.usuario));
         localStorage.setItem("tipo", datos.tipo);
-        navigate("/Home");
+        if (datos.tipo === "profesor") {
+          navigate("/HomeProfesor");
+        }
+        else{
+          navigate("/Home");
+        }
       } else {
         setError(datos.error || "Error en el login");
       }

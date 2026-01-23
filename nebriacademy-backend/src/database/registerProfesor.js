@@ -6,10 +6,10 @@ const Profesores = require("../models/Profesores.js");
 // Registrar un nuevo usuario (profesor)
 router.post("/auth", (req, res) => {
   try {
-    const { nombre, apellidos, dni, email, contrasena, numeroTarjeta, pais, localidad } = req.body;
+    const { nombre, apellidos, dni, email, contrasena, numeroCuentaBancaria, pais, localidad } = req.body;
     console.log(`POST /registerProfesor/auth - Email: ${email}`);
 
-    if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroTarjeta || !pais || !localidad) {
+    if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroCuentaBancaria || !pais || !localidad) {
       return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
@@ -32,7 +32,7 @@ router.post("/auth", (req, res) => {
           dni: dni,
           email: email,
           contrasena: contrasena,
-          numCuentaBancaria: numeroTarjeta,
+          numCuentaBancaria: numeroCuentaBancaria,
           pais: pais,
           localidad: localidad
         }).then((nuevoProfesor) => {

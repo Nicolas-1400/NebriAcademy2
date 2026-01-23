@@ -1,17 +1,18 @@
 import { useEffect, useState } from 'react'
 import ImagenPerfil from '../assets/imagenPerfilUsuario.png'
 
-function PerfilGrid() {
+function PerfilProfesorGrid() {
     const [usuario, setUsuario] = useState(null);
     const [formData, setFormData] = useState({
         nombre: '',
         apellidos: '',
         contrasena: '',
-        numeroTarjeta: '',
+        numCuentaBancaria: '',
         numTelefono: '',
         redes: '',
         pais: '',
-        localidad: ''
+        localidad: '',
+        especializacion: ''
     });
     const [mensajeExito, setMensajeExito] = useState('');
     const [mensajeError, setMensajeError] = useState('');
@@ -20,11 +21,11 @@ function PerfilGrid() {
         const usuarioIniciado = localStorage.getItem('usuario')
         const tipoIniciado = localStorage.getItem('tipo') || localStorage.getItem('tipoUsuario')
         
-        if (usuarioIniciado && tipoIniciado === 'alumno') {
+        if (usuarioIniciado && tipoIniciado === 'profesor') {
             const usuarioParsed = JSON.parse(usuarioIniciado)
             setUsuario(usuarioParsed)
             
-            fetch(`http://localhost:3000/usuarios/${usuarioParsed.id}?tipo=alumno`)
+            fetch(`http://localhost:3000/usuarios/${usuarioParsed.id}?tipo=profesor`)
                 .then(response => {
                     if (!response.ok) {
                         throw new Error('Error al obtener datos del usuario')
@@ -39,11 +40,12 @@ function PerfilGrid() {
                         nombre: datosCompletos.nombre || '',
                         apellidos: datosCompletos.apellidos || '',
                         contrasena: '',
-                        numeroTarjeta: datosCompletos.numeroTarjeta || '',
+                        numCuentaBancaria: datosCompletos.numCuentaBancaria || '',
                         numTelefono: datosCompletos.numTelefono || '',
                         redes: datosCompletos.redes || '',
                         pais: datosCompletos.pais || '',
-                        localidad: datosCompletos.localidad || ''
+                        localidad: datosCompletos.localidad || '',
+                        especializacion: datosCompletos.especializacion || ''
                     })
                 })
                 .catch(error => {
@@ -52,11 +54,12 @@ function PerfilGrid() {
                         nombre: usuarioParsed.nombre || '',
                         apellidos: usuarioParsed.apellidos || '',
                         contrasena: '',
-                        numeroTarjeta: usuarioParsed.numeroTarjeta || '',
+                        numCuentaBancaria: usuarioParsed.numCuentaBancaria || '',
                         numTelefono: usuarioParsed.numTelefono || '',
                         redes: usuarioParsed.redes || '',
                         pais: usuarioParsed.pais || '',
-                        localidad: usuarioParsed.localidad || ''
+                        localidad: usuarioParsed.localidad || '',
+                        especializacion: usuarioParsed.especializacion || ''
                     })
                 })
         }
@@ -77,7 +80,7 @@ function PerfilGrid() {
         try {
             const datosActualizar = {
                 ...formData,
-                tipo: 'alumno'
+                tipo: 'profesor'
             }
 
             if (!formData.contrasena) {
@@ -118,7 +121,8 @@ function PerfilGrid() {
                 <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
                 <h2 className="nombrePerfil">{usuario ? `${usuario.nombre} ${usuario.apellidos}` : 'Usuario'}</h2>
                 <p className="correoPerfil">{usuario ? usuario.email : 'correo@example.com'}</p>
-                <p className="tipoPerfil">Alumno</p>
+                <p className="tipoPerfil">Profesor</p>
+                {usuario?.especializacion && <p className="especializacionPerfil">📚 {usuario.especializacion}</p>}
                 {usuario?.numTelefono && <p className="telPerfil">📱 {usuario.numTelefono}</p>}
                 {usuario?.pais && <p className="paisPerfil">🌍 {usuario.pais}</p>}
             </div>
@@ -164,14 +168,14 @@ function PerfilGrid() {
                     </div>
 
                     <div className="formulario-grupo">
-                        <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
+                        <label htmlFor="numCuentaBancaria">Número de Cuenta Bancaria:</label>
                         <input
                             type="text"
-                            id="numeroTarjeta"
-                            name="numeroTarjeta"
-                            value={formData.numeroTarjeta}
+                            id="numCuentaBancaria"
+                            name="numCuentaBancaria"
+                            value={formData.numCuentaBancaria}
                             onChange={handleInputChange}
-                            placeholder="Tu número de tarjeta"
+                            placeholder="Tu número de cuenta bancaria"
                         />
                     </div>
 
@@ -223,6 +227,18 @@ function PerfilGrid() {
                         />
                     </div>
 
+                    <div className="formulario-grupo">
+                        <label htmlFor="especializacion">Especialización:</label>
+                        <input
+                            type="text"
+                            id="especializacion"
+                            name="especializacion"
+                            value={formData.especializacion}
+                            onChange={handleInputChange}
+                            placeholder="Tu área de especialización"
+                        />
+                    </div>
+
                     <button type="submit" className="boton-editar-perfil">Guardar Cambios</button>
                 </form>
             </div>
@@ -230,4 +246,4 @@ function PerfilGrid() {
     )
 }
 
-export default PerfilGrid
+export default PerfilProfesorGrid
