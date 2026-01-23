@@ -1,6 +1,6 @@
 import { useNavigate } from "react-router-dom"
 
-function TarjetaCursos(name, cursoId, description) {
+function TarjetaCursos({ name, cursoId, categoria, descripcion, profesor, valoracion }) {
 
     const navigate = useNavigate();
 
@@ -14,8 +14,10 @@ function TarjetaCursos(name, cursoId, description) {
         onClick={() => handleCursoClick(cursoId)}
     >
         <h3>{name}</h3>
-        <p>{description}</p>
-        
+        <p>{categoria}</p>
+        <p>{descripcion}</p>
+        <p>{profesor}</p>
+        <p>{valoracion}</p>
     </div>
   )
 }

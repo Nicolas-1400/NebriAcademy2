@@ -1,91 +1,52 @@
-import Nav from "./Nav";
-import Footer from "./Footer";
-
+import TarjetaCursos from "./TarjetaCursos";
 
 function TodosCursosGrid() {
 
-    const cursosEnProceso = [
-        { nombre: "React Avanzado", valoracion: 4.5, profesor: "Juan García" },
-        { nombre: "JavaScript ES6+", valoracion: 4.5, profesor: "María López" },
-        { nombre: "Node.js Fundamentals", valoracion: 4.5, profesor: "Carlos Rodríguez" }
-    ];
-    const cursosGuardados = [
-        { nombre: "Python para Ciencia de Datos", valoracion: 4.5, profesor: "Ana Martínez" },
-        { nombre: "UI/UX Design", valoracion: 4.5, profesor: "Elena Sánchez" }
-    ];
-    const cursosCompletados = [
-        { nombre: "HTML & CSS Básico", fechaFinalizacion: "15/01/2026", calificacion: "9.5" },
-        { nombre: "Git & GitHub", fechaFinalizacion: "10/01/2026", calificacion: "8.7" }
-    ];
-    const profesoresSeguidos = [
-        { nombre: "Juan García", especialidad: "Frontend Development" },
-        { nombre: "María López", especialidad: "Full Stack" },
-        { nombre: "Carlos Rodríguez", especialidad: "Backend Development" }
-    ];
-    const apuntesGuardados = [
-        { titulo: "Hooks en React", curso: "React Avanzado" },
-        { titulo: "Async/Await", curso: "JavaScript ES6+" },
-        { titulo: "Middlewares", curso: "Node.js Fundamentals" }
+    const cursos = [
+        {name: "curso1", cursoId: 1, categoria: "programacion", descripcion: "descripcion1", profesor: "profesor1", valoracion: 4.5},
+        {name: "curso2", cursoId: 2, categoria: "programacion", descripcion: "descripcion2", profesor: "profesor2", valoracion: 4.0},
+        {name: "curso3", cursoId: 3, categoria: "programacion", descripcion: "descripcion3", profesor: "profesor3", valoracion: 5.0},
+        {name: "curso4", cursoId: 4, categoria: "programacion", descripcion: "descripcion4", profesor: "profesor4", valoracion: 3.5},
+        {name: "curso5", cursoId: 1, categoria: "programacion", descripcion: "descripcion5", profesor: "profesor1", valoracion: 4.5},
+        {name: "curso6", cursoId: 2, categoria: "programacion", descripcion: "descripcion6", profesor: "profesor2", valoracion: 4.0},
+        {name: "curso7", cursoId: 3, categoria: "programacion", descripcion: "descripcion7", profesor: "profesor3", valoracion: 5.0},
+        {name: "curso8", cursoId: 4, categoria: "programacion", descripcion: "descripcion8", profesor: "profesor4", valoracion: 3.5},
+
     ];
 
   return (
-    <div>
-        <Nav />
-        <div className="contenedor-cursos">
-            <h1>Cursos</h1>
-            <div className="contenedor-slides-cursos">
-                <h2>Cursos en proceso</h2>
-                <div className="slide-cursos-en-proceso">
-                    {cursosEnProceso.map((curso, index) => (
-                        <div key={index}>
-                            <h3>{curso.nombre}</h3>
-                            <p>Progreso: {curso.progreso}</p>
-                            <p>Profesor: {curso.profesor}</p>
-                        </div>
-                    ))}
-                </div>
-                <h2>Cursos guardados</h2>
-                <div className="slide-cursos-guardados">
-                    {cursosGuardados.map((curso, index) => (
-                        <div key={index}>
-                            <h3>{curso.nombre}</h3>
-                            <p>Profesor: {curso.profesor}</p>
-                        </div>
-                    ))}
-                </div>
-                <h2>Cursos completados</h2>
-                <div className="slide-cursos-completados">
-                    {cursosCompletados.map((curso, index) => (
-                        <div key={index}>
-                            <h3>{curso.nombre}</h3>
-                            <p>Finalizado: {curso.fechaFinalizacion}</p>
-                            <p>Calificación: {curso.calificacion}</p>
-                        </div>
-                    ))}                    
-                </div>
-                <h2>Profesores a los que sigues</h2>
-                <div className="slide-profesores-seguidos">
-                    {profesoresSeguidos.map((profesor, index) => (
-                        <div key={index}>
-                            <h3>{profesor.nombre}</h3>
-                            <p>{profesor.especialidad}</p>
-                        </div>
-                    ))}                    
-                </div>
-                <h2>Apuntes guardados</h2>
-                <div className="slide-apuntes-guardados">
-                    {apuntesGuardados.map((apunte, index) => (
-                        <div key={index}>
-                            <h3>{apunte.titulo}</h3>
-                            <p>Curso: {apunte.curso}</p>
-                            <p>Fecha: {apunte.fecha}</p>
-                        </div>
-                    ))}                    
-                </div>
+    <div className="todos-cursos-grid">
+        <aside className="buscador-sidebar">
+            <form role="search" className="formulario-busqueda">
+                <input type="search" placeholder="Buscar cursos..." aria-label="Buscar cursos" />
+                <button type="submit">Buscar</button>
+            </form>
+            <div className="categorias-sidebar">
+                <h3>Categorías</h3>
+                <ul>
+                    <li><a href="#">Todas</a></li>
+                    <li><a href="#">Programación</a></li>
+                    <li><a href="#">Diseño</a></li>
+                    <li><a href="#">Marketing</a></li>
+                </ul>
             </div>
-        </div>
-
-        <Footer />        
+        </aside>
+        <main className="cursos-contenedor">
+            <h2>Cursos</h2>
+            <div className="cursos-grid">
+                {cursos.map(curso => (
+                    <TarjetaCursos
+                        key={curso.cursoId}
+                        name={curso.name}
+                        cursoId={curso.cursoId}
+                        categoria={`Categoría: ${curso.categoria}`}
+                        descripcion={curso.descripcion}
+                        profesor={`Profesor: ${curso.profesor}`}
+                        valoracion={`Valoración: ${curso.valoracion}`}
+                    />
+                ))}
+            </div>
+        </main>
     </div>
   )
 }
