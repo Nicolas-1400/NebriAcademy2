@@ -1,8 +1,10 @@
-import React from 'react'
+import TodosCursosGrid from "../components/TodosCursosGrid"
 
 function TodosCursos() {
   return (
-    <div>TodosCursos</div>
+    <div>
+        <TodosCursosGrid />
+    </div>
   )
 }
 
