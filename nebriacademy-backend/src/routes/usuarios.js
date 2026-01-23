@@ -1,6 +1,9 @@
 const express = require("express");
 const router = express.Router();
 const Usuarios = require("../models/Usuarios.js");
+const Alumnos = require("../models/Alumnos.js");
+const Profesores = require("../models/Profesores.js");
+const Administradores = require("../models/Administradores.js");
 
 // Obtener todos los usuarios
 router.get("/", (req, res) => {
@@ -19,17 +22,33 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`GET /usuarios/${id}`);
-    Usuarios.findAll().then((resultado) => {
-      const usuario = resultado.find((u) => u.id === id);
+    const { tipo } = req.query;
+
+    if (!tipo) {
+      return res.status(400).json({ error: "Tipo de usuario es requerido" });
+    }
+
+    let modelo;
+    if (tipo === "alumno") {
+      modelo = Alumnos;
+    } else if (tipo === "profesor") {
+      modelo = Profesores;
+    } else if (tipo === "administrador") {
+      modelo = Administradores;
+    } else {
+      return res.status(400).json({ error: "Tipo de usuario no válido" });
+    }
+
+    modelo.findByPk(id).then((usuario) => {
       if (usuario) {
         res.json(usuario);
       } else {
         res.status(404).json({ error: "Usuario no encontrado" });
       }
+    }).catch((error) => {
+      res.status(500).json({ error: "Error al obtener usuario: " + error.message });
     });
   } catch (error) {
-    console.error("Error al obtener usuario:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
@@ -51,18 +70,34 @@ router.post("/", (req, res) => {
 router.put("/:id", (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`PUT /usuarios/${id}`);
-    Usuarios.findAll().then((resultado) => {
-      const usuario = resultado.find((u) => u.id === id);
+    const { tipo } = req.body;
+
+    let modelo;
+    if (tipo === "alumno") {
+      modelo = Alumnos;
+    } else if (tipo === "profesor") {
+      modelo = Profesores;
+    } else if (tipo === "administrador") {
+      modelo = Administradores;
+    } else {
+      return res.status(400).json({ error: "Tipo de usuario no válido" });
+    }
+
+    modelo.findByPk(id).then((usuario) => {
       if (usuario) {
-        usuario.update(req.body).then((actualizado) => res.json(actualizado));
+        usuario.update(req.body).then((actualizado) => {
+          res.json(actualizado);
+        }).catch((error) => {
+          res.status(500).json({ error: "Error al actualizar usuario: " + error.message });
+        });
       } else {
         res.status(404).json({ error: "Usuario no encontrado" });
       }
+    }).catch((error) => {
+      res.status(500).json({ error: "Error al buscar usuario: " + error.message });
     });
   } catch (error) {
-    console.error("Error al actualizar usuario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ error: "Error interno del servidor: " + error.message });
   }
 });
 

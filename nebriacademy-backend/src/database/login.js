@@ -25,9 +25,15 @@ router.post("/auth", (req, res) => {
             usuario: {
               id: admin.id,
               usuarioId: admin.usuarioId,
+              dni: admin.dni,
               nombre: admin.nombre,
               apellidos: admin.apellidos,
-              email: admin.email
+              email: admin.email,
+              contrasena: admin.contrasena,
+              numTelefono: admin.numTelefono,
+              redes: admin.redes,
+              pais: admin.pais,
+              localidad: admin.localidad
             }
           });
         }
@@ -42,9 +48,16 @@ router.post("/auth", (req, res) => {
               usuario: {
                 id: alumno.id,
                 usuarioId: alumno.usuarioId,
+                dni: alumno.dni,
                 nombre: alumno.nombre,
                 apellidos: alumno.apellidos,
-                email: alumno.email
+                email: alumno.email,
+                contrasena: alumno.contrasena,
+                numeroTarjeta: alumno.numeroTarjeta,
+                numTelefono: alumno.numTelefono,
+                redes: alumno.redes,
+                pais: alumno.pais,
+                localidad: alumno.localidad
               }
             });
           }
@@ -59,9 +72,17 @@ router.post("/auth", (req, res) => {
                 usuario: {
                   id: profesor.id,
                   usuarioId: profesor.usuarioId,
+                  dni: profesor.dni,
                   nombre: profesor.nombre,
                   apellidos: profesor.apellidos,
-                  email: profesor.email
+                  email: profesor.email,
+                  contrasena: profesor.contrasena,
+                  numCuentaBancaria: profesor.numCuentaBancaria,
+                  numTelefono: profesor.numTelefono,
+                  redes: profesor.redes,
+                  pais: profesor.pais,
+                  localidad: profesor.localidad,
+                  especializacion: profesor.especializacion
                 }
               });
             }
