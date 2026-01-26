@@ -157,3 +157,71 @@
     text-align: center;
     margin-bottom: 10px;
 }
+/* RESPONSIVE Perfil 768px */
+@media (max-width: 768px) {
+    .perfil {
+        flex-direction: column;
+        gap: 20px;
+        padding: 20px;
+        margin-bottom: 60px;
+    }
+
+    .datosPerfil {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .datosPerfil h1 {
+        font-size: 20px;
+    }
+
+    .imagenPerfil {
+        width: 120px;
+        height: 120px;
+    }
+
+    .nombrePerfil {
+        font-size: 18px;
+        margin-top: 8px;
+    }
+
+    .correoPerfil {
+        font-size: 12px;
+    }
+
+    .telPerfil,
+    .paisPerfil,
+    .especializacionPerfil {
+        font-size: 12px;
+        margin-top: 4px;
+    }
+
+    .formularioEditarPerfil {
+        width: 100%;
+        padding: 20px;
+    }
+
+    .formularioEditarPerfil h3 {
+        font-size: 18px;
+        margin-bottom: 15px;
+    }
+
+    .formularioEditarPerfil form {
+        grid-template-columns: 1fr;
+        gap: 15px;
+    }
+
+    .formulario-grupo label {
+        font-size: 13px;
+    }
+
+    .formulario-grupo input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .boton-editar-perfil {
+        padding: 12px;
+        font-size: 14px;
+    }
+}

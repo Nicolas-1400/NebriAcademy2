@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+
 function RegisterAlumnoExternoGrid() {
   const [nombre, setNombre] = useState("");
   const [apellidos, setApellidos] = useState("");
@@ -53,9 +54,9 @@ function RegisterAlumnoExternoGrid() {
   };
 
   return (
-    <div className="login-grid">
-      <div className="formulario-login-contenedor">
-        <form className="formulario-login" onSubmit={handleRegister}>
+    <div className="register-grid-externo">
+      <div className="formulario-register-contenedor">
+        <form className="formulario-register" onSubmit={handleRegister}>
           <input
             type="text"
             placeholder="Nombre"

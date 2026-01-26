@@ -165,3 +165,75 @@
 .boton-profesor img {
     width: 50px; 
 }
+/* RESPONSIVE Login 768px */
+@media (max-width: 768px) {
+    .login-grid {
+        flex-direction: column;
+        padding: 20px;
+        min-height: auto;
+        background-position: center bottom;
+        background-size: contain;
+        gap: 30px;
+    }
+
+    .formulario-login-contenedor {
+        width: 100%;
+        padding: 40px 30px;
+    }
+
+    .formulario-login input,
+    .formulario-login select {
+        padding: 12px;
+        font-size: 13px;
+    }
+
+    .formulario-login button {
+        padding: 12px;
+        font-size: 14px;
+    }
+
+    /* PreRegisterGrid */
+    .pre-register-grid {
+        width: 100%;
+        height: auto;
+        margin: 30px auto;
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .pre-register-grid h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .contenedor-botones {
+        flex-direction: column;
+        gap: 20px;
+        margin-bottom: 20px;
+        align-items: center;
+    }
+
+    .boton-estudiante-si,
+    .boton-estudiante-no {
+        width: 100%;
+        max-width: 280px;
+        height: 200px;
+        font-size: 18px;
+    }
+
+    .boton-profesor {
+        width: 100%;
+        max-width: 280px;
+        height: 60px;
+        font-size: 16px;
+    }
+
+    .boton-estudiante-si img,
+    .boton-estudiante-no img {
+        width: 60px;
+    }
+
+    .boton-profesor img {
+        width: 40px;
+    }
+}

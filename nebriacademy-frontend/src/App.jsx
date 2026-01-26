@@ -4,6 +4,7 @@ import './styles/Header.css';
 import './styles/Nav.css';
 import './styles/Footer.css';
 import './styles/Login.css';
+import './styles/RegisterAlumnoExterno.css';
 import './styles/Perfil.css';
 import './styles/TodosCursos.css';
 

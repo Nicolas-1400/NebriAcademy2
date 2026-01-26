@@ -173,3 +173,75 @@
         grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     }
 }
+
+/* RESPONSIVE Todos Cursos Grid 768px */
+@media (max-width: 768px) {
+    .todos-cursos-grid {
+        gap: 15px;
+        padding: 20px;
+        flex-direction: column;
+    }
+
+    .buscador-sidebar {
+        width: 100%;
+        position: static;
+        padding: 20px;
+    }
+
+    .formulario-busqueda {
+        gap: 8px;
+        margin-bottom: 20px;
+    }
+
+    .formulario-busqueda input {
+        padding: 10px;
+        font-size: 13px;
+    }
+
+    .formulario-busqueda button {
+        padding: 10px;
+        font-size: 12px;
+    }
+
+    .categorias-sidebar h3 {
+        font-size: 16px;
+        margin-bottom: 12px;
+    }
+
+    .categorias-sidebar ul {
+        gap: 8px;
+    }
+
+    .categorias-sidebar a {
+        font-size: 13px;
+        padding: 6px 10px;
+    }
+
+    .cursos-contenedor {
+        width: 100%;
+    }
+
+    .cursos-contenedor h2 {
+        font-size: 22px;
+        margin-bottom: 20px;
+    }
+
+    .cursos-grid {
+        grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+        gap: 15px;
+    }
+
+    .tarjeta-curso {
+        padding: 15px;
+    }
+
+    .tarjeta-curso h3 {
+        font-size: 16px;
+        margin-bottom: 8px;
+    }
+
+    .tarjeta-curso p {
+        font-size: 12px;
+        margin-bottom: 6px;
+    }
+}

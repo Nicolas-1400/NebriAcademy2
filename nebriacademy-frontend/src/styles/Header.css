@@ -24,3 +24,23 @@
     font-size: 28px;
     margin: 0;
 }
+/* RESPONSIVE Header 768px */
+@media (max-width: 768px) {
+    .header {
+        padding: 8px 15px;
+    }
+
+    .contenedor-header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .logo-header {
+        height: 45px;
+    }
+
+    .header h1 {
+        font-size: 20px;
+    }
+}

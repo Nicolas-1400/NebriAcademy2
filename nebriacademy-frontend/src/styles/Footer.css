@@ -67,3 +67,39 @@
     letter-spacing: 0.5px;
     text-align: center;
 }
+/* RESPONSIVE Footer 768px */
+@media (max-width: 768px) {
+    .footer {
+        padding: 12px;
+        margin-top: 40px;
+    }
+
+    .footer-politicas {
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .footer-politicas a {
+        font-size: 12px;
+    }
+
+    .footer-redes {
+        gap: 15px;
+        margin-bottom: 15px;
+    }
+
+    .footer-redes a {
+        width: 35px;
+        height: 35px;
+    }
+
+    .footer-redes img {
+        width: 18px;
+        height: 18px;
+    }
+
+    .footer p {
+        font-size: 12px;
+        margin: 6px 0;
+    }
+}
