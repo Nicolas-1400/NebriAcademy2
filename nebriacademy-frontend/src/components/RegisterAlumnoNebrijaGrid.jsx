@@ -8,6 +8,8 @@ function RegisterAlumnoNebrijaGrid() {
   const [contrasena, setContrasena] = useState("");
   const [email, setEmail] = useState("");
   const [alumnoId, setAlumnoId] = useState("");
+  const [pais, setPais] = useState("");
+  const [localidad, setLocalizacion] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
@@ -40,6 +42,8 @@ function RegisterAlumnoNebrijaGrid() {
             dni: dni,
             contrasena: contrasena,
             email: email,
+            pais: pais,
+            localidad: localidad
           }),
         },
       );
@@ -97,6 +101,39 @@ function RegisterAlumnoNebrijaGrid() {
             onChange={(e) => setContrasena(e.target.value)}
             required
           />
+
+          
+          <select
+            value={pais}
+            onChange={(e) => setPais(e.target.value)}
+            required
+          >
+            <option value="" disabled>Seleccione un país</option>
+            <option value="España">España</option>
+            <option value="México">México</option>
+            <option value="Colombia">Colombia</option>
+            <option value="Argentina">Argentina</option>
+            <option value="Chile">Chile</option>
+            <option value="Perú">Perú</option>
+            <option value="Estados Unidos">Estados Unidos</option>
+            <option value="Reino Unido">Reino Unido</option>
+            <option value="Alemania">Alemania</option>
+            <option value="Francia">Francia</option>
+            <option value="Otro">Otro</option>
+          </select>
+          <select
+            value={localidad}
+            onChange={(e) => setLocalizacion(e.target.value)}
+            required
+          >
+            <option value="" disabled>Seleccione una localidad</option>
+            <option value="Madrid">Madrid</option>
+            <option value="Barcelona">Barcelona</option>
+            <option value="Valencia">Valencia</option>
+            <option value="Sevilla">Sevilla</option>
+            <option value="Bilbao">Bilbao</option>
+            <option value="Otro">Otro</option>
+          </select>
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>

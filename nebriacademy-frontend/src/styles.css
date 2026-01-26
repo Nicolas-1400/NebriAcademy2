@@ -300,7 +300,8 @@ body {
     margin-bottom: 20px;
 }
 
-.formulario-login input {
+.formulario-login input,
+.formulario-login select {
     padding: 15px;
     font-size: 14px;
     border: 2px solid #ddd;

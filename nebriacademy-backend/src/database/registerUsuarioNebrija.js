@@ -63,10 +63,10 @@ router.post("/auth", (req, res) => {
 // Completar registro del alumno Nebrija
 router.post("/completar", (req, res) => {
   try {
-    const { alumnoId, nombre, apellidos, dni, contrasena, email } = req.body;
+    const { alumnoId, nombre, apellidos, dni, contrasena, pais, localidad } = req.body;
     console.log(`POST /verificacionnebrija/completar - AlumnoId: ${alumnoId}`);
 
-    if (!alumnoId || !nombre || !apellidos || !dni || !contrasena) {
+    if (!alumnoId || !nombre || !apellidos || !dni || !contrasena || !pais || !localidad) {
       return res.status(400).json({ error: "Todos los campos son requeridos" });
     }
 
@@ -81,7 +81,9 @@ router.post("/completar", (req, res) => {
         nombre: nombre,
         apellidos: apellidos,
         dni: dni,
-        contrasena: contrasena
+        contrasena: contrasena,
+        pais: pais,
+        localidad: localidad
       }).then((alumnoActualizado) => {
         res.status(200).json({
           mensaje: "Registro completado exitosamente",
@@ -90,7 +92,9 @@ router.post("/completar", (req, res) => {
             nombre: alumnoActualizado.nombre,
             apellidos: alumnoActualizado.apellidos,
             email: alumnoActualizado.email,
-            dni: alumnoActualizado.dni
+            dni: alumnoActualizado.dni,
+            pais: alumnoActualizado.pais,
+            localidad: alumnoActualizado.localidad
           }
         });
       }).catch((error) => {
