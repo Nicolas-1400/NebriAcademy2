@@ -1,0 +1,154 @@
+@import './general.css';
+
+/* NAV */
+.nav {
+    background-color: var(--rojo-nebrija);
+    padding: 10px 20px;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    gap: 20px;
+}
+
+.contenedor-logo-titulo {
+    display: flex;
+    align-items: baseline;
+    gap: 10px;
+    padding: 0 20px;
+}
+
+.nav a {
+    text-decoration: none;
+}
+
+.contenedor-logo-titulo h2 {
+    color: white;
+    font-size: 24px;
+    text-decoration: none;
+}
+
+.contenedor-botones-nav {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-left: auto;
+}
+
+.boton-nav {
+    width: 90px;
+    height: 30px;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 2px 2px 1px black;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.boton-nav:hover {
+    border: 1px solid var(--color-secundario);
+    color: var(--color-secundario);
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.barra-busqueda-nav {
+    padding: 8px;
+    border-radius: 5px;
+    border: 2px solid gray;
+    font-size: 14px;
+    height: 35px;
+    width: 300px;
+    order: 3;
+}
+
+.logo-nav {
+    height: 50px;
+    background-color: white;
+    border: 5px solid white;
+    border-radius: 100%;
+}
+.perfil-nav {
+    height: 40px;
+    background-color: white;
+    border-radius: 100%;
+    border: 1px solid white;
+}
+
+/* desplegable PERFIL */
+.perfil-desplegable-container {
+    position: relative;
+    display: flex;
+    align-items: center;
+    order: 4;
+}
+
+.perfil-button {
+    background: none;
+    border: none;
+    padding: 0;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.perfil-button:hover {
+    transform: scale(1.1);
+}
+
+.desplegable-menu {
+    position: absolute;
+    top: 100%;
+    right: 0;
+    margin-top: 10px;
+    background-color: white;
+    border-radius: 8px;
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.15);
+    min-width: 280px;
+    overflow: hidden;
+    z-index: 1000;
+}
+
+.desplegable-menu h3 {
+    padding: 10px 5px 10px 15px;
+    font-size: 15px;
+    font-weight: 600;
+    border-bottom: 1px solid #e5e5e5;
+    font-family: 'Arial', sans-serif;
+}
+.desplegable-menu p {
+    font-size: 14px;
+    padding: 10px 5px 10px 15px;
+    color: #777;
+    font-family: 'Arial', sans-serif;
+}
+
+.desplegable-item {
+    width: 100%;
+    padding: 12px 16px;
+    border: none;
+    background-color: rgb(229, 229, 229);
+    text-align: left;
+    cursor: pointer;
+    font-size: 14px;
+    color: #333;
+    transition: all 0.2s ease;
+    font-family: 'Arial', sans-serif;
+}
+
+.desplegable-item:hover {
+    background-color: #f5f5f5;
+    color: var(--rojo-nebrija);
+    font-weight: 600;
+}
+
+.desplegable-item:last-child {
+    border-top: 1px solid #e5e5e5;
+    color: var(--rojo-nebrija);
+}
+
+.desplegable-item:last-child:hover {
+    background-color: #ffe0e0;
+    font-weight: 600;
+}

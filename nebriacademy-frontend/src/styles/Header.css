@@ -1,0 +1,26 @@
+@import './general.css';
+
+/* HEADER */
+.header {
+    background-color: var(--rojo-nebrija);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px 20px;
+}
+
+.contenedor-header{
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.logo-header {
+    height: 60px;
+}
+
+.header h1 {
+    color: white;
+    font-size: 28px;
+    margin: 0;
+}

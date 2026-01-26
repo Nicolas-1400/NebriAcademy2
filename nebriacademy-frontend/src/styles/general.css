@@ -1,0 +1,23 @@
+
+/* ESTILOS GENERALES */
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+
+body {
+    font-family: 'Arial', sans-serif;
+    color: #000000;
+    background-color: var(--color-fondo);
+}
+
+/*VARIABLES*/
+:root {
+    --rojo-nebrija: #C2002F;
+    --color-secundario: #7a001f;
+    --color-fondo:#ebebeb;
+    --color-hover-boton: ;
+
+}
