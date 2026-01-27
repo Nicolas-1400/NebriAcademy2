@@ -152,8 +152,9 @@
     background-color: #ffe0e0;
     font-weight: 600;
 }
-/* RESPONSIVE Nav 768px */
-@media (max-width: 768px) {
+
+/* RESPONSIVE */
+@media (max-width: 955px) {
     .nav {
         flex-wrap: wrap;
         padding: 10px;

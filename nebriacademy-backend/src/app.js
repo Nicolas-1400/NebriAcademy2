@@ -12,6 +12,7 @@ app.use('/administradores', require('./routes/administradores'));
 app.use('/alumnos', require('./routes/alumnos'));
 app.use('/apuntes', require('./routes/apuntes'));
 app.use('/cursos', require('./routes/cursos'));
+app.use('/addCurso', require('./database/addCurso'));
 app.use('/cursosalumnos', require('./routes/cursosalumnos'));
 app.use('/ejercicios', require('./routes/ejercicios'));
 app.use('/incidencias', require('./routes/incidencias'));

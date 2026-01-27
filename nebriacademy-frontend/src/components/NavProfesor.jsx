@@ -2,6 +2,7 @@ import { useNavigate } from 'react-router-dom'
 import { useState, useRef, useEffect } from 'react'
 import Logo from '../assets/nebriLogo.png'
 import ImagenPerfil from '../assets/imagenPerfilUsuario.png'
+import ImagenBotonMas from '../assets/botonMas.png'
 
 
 function NavProfesor() {
@@ -16,20 +17,8 @@ function NavProfesor() {
         setUsuario(JSON.parse(usuarioIniciado))
     }, []);
 
-    const clickBtnMiEspacio = () => {
-        navigate('/Home/MiEspacio')
-    }
-
-     const clickBtnCursos = () => {
-        navigate('/Home/Cursos')
-    }
-
-       const clickBtnProfesores = () => {
-        navigate('/Home/Profesores')
-    }
-
-       const clickBtnApuntes = () => {
-        navigate('/Home/Apuntes')
+     const clickBtnAddCurso = () => {
+        navigate('/Home/AddCurso')
     }
 
     const handleProfileClick = () => {
@@ -61,18 +50,16 @@ function NavProfesor() {
 
   return (
     <div className="nav">
-        <a href="/Home">
+        <a href="/HomeProfesor">
         <div className="contenedor-logo-titulo">
             <img className="logo-nav" src={Logo} alt="Logo Nebriacademy" />
             <h2>NebriAcademy</h2>
         </div>
         </a>
-        <div className="contenedor-botones-nav">
-            <button type="button" className="boton-nav" onClick={clickBtnMiEspacio}>Mi espacio</button>
-            <button type="button" className="boton-nav" onClick={clickBtnCursos}>Cursos</button>
-            <button type="button" className="boton-nav" onClick={clickBtnProfesores}>Profesores</button>
-            <button type="button" className="boton-nav" onClick={clickBtnApuntes}>Apuntes</button>
-        </div>
+        <button className="boton-añadir-curso" onClick={clickBtnAddCurso}>
+            <h3>Añadir curso</h3>
+            <img className="icono-boton-mas" src={ImagenBotonMas} alt="Icono añadir curso" />
+        </button>
         <input type="search" className="barra-busqueda-nav" placeholder="Buscar..." />
         <div className="perfil-desplegable-container" ref={desplegableRef}>
             <button 
@@ -99,4 +86,4 @@ function NavProfesor() {
   )
 }
 
-export default NavProfesor
+export default NavProfesor;
