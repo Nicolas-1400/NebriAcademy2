@@ -121,6 +121,7 @@ function PerfilGrid() {
                 <p className="tipoPerfil">Alumno</p>
                 {usuario?.numTelefono && <p className="telPerfil">📱 {usuario.numTelefono}</p>}
                 {usuario?.pais && <p className="paisPerfil">🌍 {usuario.pais}</p>}
+                {usuario?.localidad && <p className="localidadPerfil">🏙️ {usuario.localidad}</p>}
             </div>
             <div className="formularioEditarPerfil">
                 <h3>Editar Perfil</h3>

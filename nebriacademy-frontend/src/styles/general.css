@@ -16,8 +16,8 @@ body {
 /*VARIABLES*/
 :root {
     --rojo-nebrija: #C2002F;
-    --color-secundario: #7a001f;
+    --color-secundario: #d92552d1;
     --color-fondo:#ebebeb;
-    --color-hover-boton: ;
+    --color-hover-boton: #ffe0e0;
 
 }

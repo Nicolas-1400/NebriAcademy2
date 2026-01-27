@@ -63,9 +63,9 @@
 }
 
 .formulario-register button:hover {
-    background-color: var(--rojo-nebrija);
+    background-color: var(--color-secundario);
     transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(220, 126, 126, 0.4);
+    box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
 }
 
 .formulario-register-contenedor a {
@@ -84,6 +84,17 @@
     text-align: center;
     color: var(--color-secundario);    
 }
+
+
+select {
+    cursor: pointer;
+}
+option {
+    cursor: pointer;
+    border-radius: 15px;
+    background-color: var(--color-hover-boton);
+}
+
 /* RESPONSIVE Register Alumno Externo 768px */
 @media (max-width: 768px) {
     .register-grid-externo {

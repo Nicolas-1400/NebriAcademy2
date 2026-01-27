@@ -1,3 +1,67 @@
-@import './general.css';
-@import './Nav.css';
+@import "./general.css";
+@import "./Nav.css";
 
+/* NAV PROFESOR */
+
+.contenedor-elementos-nav-profesor {
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: right;
+    margin-left: auto;
+}
+
+.boton-añadir-curso h3 {
+  margin: 0;
+  font-size: 16px;
+  font-weight: 700;
+}
+
+.boton-añadir-curso {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: center;
+    gap: 8px;
+    width: 200px;
+    height: 30px;
+    font-weight: bold;
+    background-color: white;
+    border: 1px solid black;
+    border-radius: 10px;
+    box-shadow: 2px 2px 1px black;
+    color: black;
+    font-size: 16px;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+.boton-añadir-curso:hover {
+    border: 1px solid var(--color-secundario);
+    color: var(--color-secundario);
+    background-color: var(--color-hover-boton);
+    transition: all 0.3s ease;
+    transform: translateY(1px);
+    box-shadow: none;
+}
+
+.icono-boton-mas {
+  width: 20px;
+  height: 20px;
+}
+
+@media (max-width: 768px) {
+    .boton-añadir-curso {
+        width: 120px;
+        height: 28px;
+        font-size: 14px;
+    }
+
+    .boton-añadir-curso h3 {
+        font-size: 14px;
+    }
+
+    .icono-boton-mas {
+        width: 16px;
+        height: 16px;
+    }
+}
