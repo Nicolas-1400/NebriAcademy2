@@ -6,7 +6,7 @@ import './styles/NavProfesor.css';
 import './styles/AddCurso.css';
 import './styles/Footer.css';
 import './styles/Login.css';
-import './styles/RegisterAlumnoExterno.css';
+import './styles/RegisterExterno.css';
 import './styles/Perfil.css';
 import './styles/TodosCursos.css';
 

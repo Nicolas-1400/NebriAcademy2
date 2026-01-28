@@ -130,10 +130,10 @@ function TodosCursosGrid() {
                             key={curso.id}
                             name={curso.nombreCurso}
                             cursoId={curso.id}
-                            categoria={`Categoría: ${curso.categoria}`}
+                            categoria={curso.categoria}
                             descripcion={curso.descripcion}
                             profesor={obtenerNombreProfesor(curso)}
-                            valoracion={`Valoración: ${curso.valoracion}`}
+                            valoracion={curso.valoracion}
                         />
                     ))}
                 </div>

@@ -55,9 +55,9 @@ function RegisterProfesorGrid() {
   };
 
   return (
-    <div className="login-grid">
-      <div className="formulario-login-contenedor">
-        <form className="formulario-login" onSubmit={handleRegister}>
+    <div className="register-grid-externo">
+      <div className="formulario-register-contenedor">
+        <form className="formulario-register" onSubmit={handleRegister}>
           <input
             type="text"
             placeholder="Nombre"
@@ -153,6 +153,7 @@ function RegisterProfesorGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
+        <p>¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a></p>
       </div>
     </div>
   );

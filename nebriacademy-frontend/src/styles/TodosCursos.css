@@ -1,4 +1,5 @@
 @import './general.css';
+@import './TarjetaCurso.css';
 
 /* TODOS CURSOS GRID */
 .todos-cursos-grid {
@@ -136,6 +137,10 @@
 }
 
 .cursos-contenedor h2 {
+    color: var(--rojo-nebrija);
+    margin-bottom: 15px;
+    padding-bottom: 10px;
+    border-bottom: 2px solid var(--rojo-nebrija);
     font-size: 28px;
     color: #333;
     margin-bottom: 30px;
@@ -145,48 +150,6 @@
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
     gap: 25px;
-}
-
-.tarjeta-curso {
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    flex-direction: column;
-}
-
-.tarjeta-curso:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(194, 0, 47, 0.2);
-}
-
-.tarjeta-curso h3 {
-    font-size: 18px;
-    color: var(--rojo-nebrija);
-    margin-bottom: 10px;
-}
-
-.tarjeta-curso p {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-    line-height: 1.5;
-}
-
-.tarjeta-curso p:nth-of-type(1) {
-    font-weight: bold;
-    color: #999;
-    text-transform: capitalize;
-    margin-bottom: 12px;
-}
-
-.tarjeta-curso p:last-of-type {
-    margin-top: auto;
-    color: var(--rojo-nebrija);
-    font-weight: bold;
 }
 
 /* RESPONSIVE Todos Cursos Grid */
@@ -221,7 +184,7 @@
     }
 
     .buscador-sidebar {
-        min-width: 25%;
+        min-width: 35%;
         position: static;
         padding: 20px;
     }

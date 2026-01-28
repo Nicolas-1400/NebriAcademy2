@@ -133,6 +133,7 @@ function RegisterAlumnoExternoGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
+        <p>¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a></p>
       </div>
     </div>
   );

@@ -14,10 +14,10 @@ function TarjetaCursos({ name, cursoId, categoria, descripcion, profesor, valora
         onClick={() => handleCursoClick(cursoId)}
     >
         <h3>{name}</h3>
-        <p>{categoria}</p>
+        <p>Categoría: {categoria}</p>
         <p>{descripcion}</p>
         <p>{profesor}</p>
-        <p>{valoracion}</p>
+        <p>Valoración: {valoracion}</p>
     </div>
   )
 }

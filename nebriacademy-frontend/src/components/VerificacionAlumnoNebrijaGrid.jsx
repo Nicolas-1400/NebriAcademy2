@@ -52,6 +52,7 @@ function VerificacionAlumnoNebrijaGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Verificar Email</button>
         </form>
+        <p>¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a></p>
       </div>
     </div>
   );
