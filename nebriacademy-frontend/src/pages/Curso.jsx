@@ -1,8 +1,14 @@
-import React from 'react'
+import Nav from "../components/Nav"
+import CursoGrid from "../components/CursoGrid"
+import Footer from "../components/Footer"
 
 function Curso() {
   return (
-    <div>Curso</div>
+    <div>
+      <Nav />
+      <CursoGrid />
+      <Footer />
+    </div>
   )
 }
 

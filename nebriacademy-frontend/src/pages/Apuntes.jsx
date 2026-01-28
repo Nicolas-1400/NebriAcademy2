@@ -1,8 +1,13 @@
-
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
 
 function Apuntes() {
   return (
-    <div>Apuntes</div>
+    <div>
+      <Nav />
+      Apuntes
+      <Footer />
+    </div>
   )
 }
 

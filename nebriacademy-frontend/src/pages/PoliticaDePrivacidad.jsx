@@ -1,8 +1,13 @@
-import React from 'react'
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
 
 function PoliticaDePrivacidad() {
   return (
-    <div>PoliticaDePrivacidad</div>
+    <div>
+      <Nav />
+      PoliticaDePrivacidad
+      <Footer />
+    </div>
   )
 }
 

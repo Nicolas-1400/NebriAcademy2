@@ -7,9 +7,10 @@ function TodosCursosGrid() {
     const [error, setError] = useState(null);
     const [selectedCategory, setSelectedCategory] = useState("");
     const [selectedNivel, setSelectedNivel] = useState("");
+    const [searchTerm, setSearchTerm] = useState("");
 
-    // Opciones coherentes con AddCursoGrid.jsx
-    const CATEGORIAS = ["Programacion", "Diseno", "Ciberseguridad", "BDD", "Marketing"];
+    
+    const CATEGORIAS = ["Programación", "Diseño", "Ciberseguridad", "BDD", "Marketing"];
     const NIVELES = ["Básico", "Intermedio", "Avanzado"];
 
     useEffect(() => {
@@ -31,12 +32,25 @@ function TodosCursosGrid() {
             })
     }, []);
 
-    // Filtrado sencillo: aplica los filtros si están seleccionados
+    const handleSearch = (e) => {
+        e.preventDefault();
+    };
+
     const filteredCursos = cursos.filter((curso) => {
         if (selectedCategory && curso.categoria !== selectedCategory) return false;
-        if (selectedNivel && curso.nivel !== selectedNivel) return false;
-        return true;
+        if (selectedNivel) {
+            const cursoNivel = (curso.nivel || "").toString().toLowerCase();
+            const selNivel = selectedNivel.toString().toLowerCase();
+            if (cursoNivel !== selNivel) return false;
+        }
+
+        const term = searchTerm.trim().toLowerCase();
+        if (term === "") return true;
+
+        const nombre = (curso.nombreCurso || "").toString().toLowerCase();
+        return nombre.includes(term);
     });
+    
     const obtenerNombreProfesor = (curso) => {
         const profId = curso.profesor;
         if (!profId) return "Profesor: Desconocido";
@@ -49,9 +63,14 @@ function TodosCursosGrid() {
     return (
         <div className="todos-cursos-grid">
             <aside className="buscador-sidebar">
-                <form role="search" className="formulario-busqueda">
-                    <input type="search" placeholder="Buscar cursos..." aria-label="Buscar cursos" />
-                    <button type="submit">Buscar</button>
+                <form role="search" className="formulario-busqueda" onSubmit={handleSearch}>
+                    <input
+                        type="search"
+                        value={searchTerm}
+                        onChange={(e) => setSearchTerm(e.target.value)}
+                        placeholder="Buscar cursos..."
+                        aria-label="Buscar cursos"
+                    />
                 </form>
                 <div className="categorias-sidebar">
                     <h3>Categorías</h3>
@@ -70,7 +89,7 @@ function TodosCursosGrid() {
                                     onClick={() => setSelectedCategory(cat)}
                                     className={selectedCategory === cat ? "activo" : ""}
                                 >
-                                    {cat === "Programacion" ? "Programación" : cat === "Diseno" ? "Diseño" : cat}
+                                    {cat}
                                 </button>
                             </li>
                         ))}

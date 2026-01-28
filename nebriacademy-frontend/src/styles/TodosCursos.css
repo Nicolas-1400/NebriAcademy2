@@ -42,24 +42,6 @@
     box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
 }
 
-.formulario-busqueda button {
-    padding: 12px;
-    background-color: var(--rojo-nebrija);
-    color: white;
-    border: none;
-    border-radius: 5px;
-    font-size: 14px;
-    font-weight: bold;
-    cursor: pointer;
-    transition: all 0.3s ease;
-}
-
-.formulario-busqueda button:hover {
-    background-color: var(--color-secundario);
-    transform: translateY(-2px);
-    box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
-}
-
 .categorias-sidebar h3 {
     font-size: 18px;
     color: var(--rojo-nebrija);
@@ -77,6 +59,9 @@
 
 .categorias-sidebar li {
     margin: 0;
+    width: 100%;
+    padding: 1px;
+    border-radius: 5px;
 }
 
 .categorias-sidebar a {
@@ -98,8 +83,9 @@
 
 /* Estilos para botones de filtros (categorías y niveles) */
 .categorias-sidebar button {
+    width: 100%;
+    border: solid var(--rojo-nebrija) 1px;
     background: none;
-    border: none;
     color: #333;
     text-align: left;
     font-size: 14px;
@@ -206,12 +192,15 @@
 /* RESPONSIVE Todos Cursos Grid */
 @media (max-width: 1024px) {
     .todos-cursos-grid {
-        flex-direction: column;
+        gap: 15px;
+        padding: 20px;
+        flex-direction: row;
     }
     
     .buscador-sidebar {
-        width: 100%;
+        max-width: 25%;
         position: static;
+        padding: 20px;
     }
     
     .cursos-contenedor {
@@ -228,11 +217,11 @@
     .todos-cursos-grid {
         gap: 15px;
         padding: 20px;
-        flex-direction: column;
+        flex-direction: row;
     }
 
     .buscador-sidebar {
-        width: 100%;
+        min-width: 25%;
         position: static;
         padding: 20px;
     }
@@ -245,11 +234,6 @@
     .formulario-busqueda input {
         padding: 10px;
         font-size: 13px;
-    }
-
-    .formulario-busqueda button {
-        padding: 10px;
-        font-size: 12px;
     }
 
     .categorias-sidebar h3 {

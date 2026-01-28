@@ -1,8 +1,13 @@
-import React from 'react'
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
 
 function NotaLegal() {
   return (
-    <div>NotaLegal</div>
+    <div>
+      <Nav />
+      NotaLegal
+      <Footer />
+    </div>
   )
 }
 
