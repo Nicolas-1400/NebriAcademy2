@@ -16,21 +16,6 @@ function Nav() {
         setUsuario(JSON.parse(usuarioIniciado))
     }, []);
 
-    const clickBtnMiEspacio = () => {
-        navigate('/Home/MiEspacio')
-    }
-
-     const clickBtnCursos = () => {
-        navigate('/Home/Cursos')
-    }
-
-       const clickBtnProfesores = () => {
-        navigate('/Home/Profesores')
-    }
-
-       const clickBtnApuntes = () => {
-        navigate('/Home/Apuntes')
-    }
 
     const handleProfileClick = () => {
         setIsdesplegableOpen(!isdesplegableOpen);
@@ -68,10 +53,10 @@ function Nav() {
         </div>
         </a>
         <div className="contenedor-botones-nav">
-            <button type="button" className="boton-nav" onClick={clickBtnMiEspacio}>Mi espacio</button>
-            <button type="button" className="boton-nav" onClick={clickBtnCursos}>Cursos</button>
-            <button type="button" className="boton-nav" onClick={clickBtnProfesores}>Profesores</button>
-            <button type="button" className="boton-nav" onClick={clickBtnApuntes}>Apuntes</button>
+            <button type="button" className="boton-nav" onClick={() => navigate('/Home/MiEspacio')}>Mi espacio</button>
+            <button type="button" className="boton-nav" onClick={() => navigate('/Home/Cursos')}>Cursos</button>
+            <button type="button" className="boton-nav" onClick={() => navigate('/Home/Profesores')}>Profesores</button>
+            <button type="button" className="boton-nav" onClick={() => navigate('/Home/Apuntes')}>Apuntes</button>
         </div>
         <input type="search" className="barra-busqueda-nav" placeholder="Buscar..." />
         <div className="perfil-desplegable-container" ref={desplegableRef}>
