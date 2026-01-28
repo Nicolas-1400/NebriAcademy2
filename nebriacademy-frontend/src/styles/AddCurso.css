@@ -57,18 +57,25 @@
 .boton-go-back {
   display: flex;
   align-items: center;
-  justify-content: center;
-  
-  width: 50%;
-  padding: 12px;
-  background-color: var(--rojo-nebrija);
-  color: #fff;
-  border: none;
+  gap: 8px;
+  margin-top: 16px;
+  background: var(--rojo-nebrija);
   border-radius: 8px;
-  font-weight: 700;
+  border: none;
+  color: white;
+  font-weight: 600;
   cursor: pointer;
-  margin-top: 10px;
 }
+.boton-go-back img {
+  width: 10px;
+  height: 20px;
+}
+
+.boton-go-back:hover {
+  background-color: var(--color-hover-boton);
+  transition: all 0.3s ease;
+}
+
 
 .mensaje-error {
   padding: 10px;
