@@ -54,6 +54,22 @@
   cursor: pointer;
 }
 
+.boton-go-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  
+  width: 50%;
+  padding: 12px;
+  background-color: var(--rojo-nebrija);
+  color: #fff;
+  border: none;
+  border-radius: 8px;
+  font-weight: 700;
+  cursor: pointer;
+  margin-top: 10px;
+}
+
 .mensaje-error {
   padding: 10px;
   background-color: #f8d7da;
