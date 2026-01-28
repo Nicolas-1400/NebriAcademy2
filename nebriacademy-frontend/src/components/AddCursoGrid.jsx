@@ -1,7 +1,7 @@
 import { useState } from "react";
-import { Navigate } from "react-router-dom";
+import { useNavigate } from "react-router-dom";
 import "../styles/AddCurso.css";
-import flecha from "../assets/flecha-izquierda.png";
+import flecha from "../assets/flecha-correcta.png";
 
 function AddCursoGrid() {
   const [nombreCurso, setNombreCurso] = useState("");
@@ -11,6 +11,7 @@ function AddCursoGrid() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
+  const navigate = useNavigate();
   
 
   const handleSubmit = async (e) => {
@@ -119,7 +120,7 @@ function AddCursoGrid() {
             error && <p className="mensaje-error">{error}</p>
           )}
           <button type="submit" className="boton-editar-perfil">Crear curso</button>
-          <button className="boton-go-back" onClick={() => Navigate('/HomeProfesor')}>
+          <button className="boton-go-back" onClick={() => navigate('/HomeProfesor')}>
             <img src={flecha} alt="Volver" />
             <p>Volver</p>
           </button>

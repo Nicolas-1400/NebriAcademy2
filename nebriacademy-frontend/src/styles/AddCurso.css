@@ -1,4 +1,4 @@
-@import './Perfil.css';
+@import "./Perfil.css";
 
 .perfil-curso {
   display: flex;
@@ -13,7 +13,7 @@
   background-color: white;
   padding: 24px;
   border-radius: 10px;
-  box-shadow: 0 6px 18px rgba(0,0,0,0.08);
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
 .formularioEditarPerfil h3 {
@@ -57,25 +57,41 @@
 .boton-go-back {
   display: flex;
   align-items: center;
+  justify-content: center;
   gap: 8px;
-  margin-top: 16px;
-  background: var(--rojo-nebrija);
-  border-radius: 8px;
-  border: none;
-  color: white;
-  font-weight: 600;
+  width: 150px;
+  height: 30px;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px black;
+  color: black;
+  font-size: 16px;
   cursor: pointer;
+  transition: color 0.3s ease;
 }
+
 .boton-go-back img {
-  width: 10px;
+  width: 20px;
   height: 20px;
+  border-radius: 100%;
+  transform: rotate(180deg);
 }
 
 .boton-go-back:hover {
+  border: 1px solid var(--color-secundario);
+  color: var(--color-secundario);
+  background-color: var(--color-hover-boton);
+  transition: all 0.3s ease;
+  transform: translateY(1px);
+  box-shadow: none;
+}
+
+.boton-go-back img:hover {
   background-color: var(--color-hover-boton);
   transition: all 0.3s ease;
 }
-
 
 .mensaje-error {
   padding: 10px;
@@ -95,5 +111,8 @@
 }
 
 @media (max-width: 768px) {
-  .formularioEditarPerfil { width: 100%; padding: 16px; }
+  .formularioEditarPerfil {
+    width: 100%;
+    padding: 16px;
+  }
 }
