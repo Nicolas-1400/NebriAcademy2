@@ -1,8 +1,13 @@
-import React from 'react'
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
 
 function PoliticaDeCookies() {
   return (
-    <div>PoliticaDeCookies</div>
+    <div>
+      <Nav />
+      PoliticaDeCookies
+      <Footer />
+    </div>
   )
 }
 

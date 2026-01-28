@@ -1,8 +1,13 @@
-
+import Nav from "../components/Nav"
+import Footer from "../components/Footer"
 
 function Profesores() {
   return (
-    <div>Profesores</div>
+    <div>
+      <Nav />
+      Profesores
+      <Footer />
+    </div>
   )
 }
 
