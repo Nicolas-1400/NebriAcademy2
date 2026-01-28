@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import TarjetaCursos from './TarjetaCursos';
 
 function HomeProfesorGrid() {
     const [usuario, setUsuario] = useState(null);
@@ -9,6 +10,7 @@ function HomeProfesorGrid() {
             setUsuario(JSON.parse(usuarioIniciado))
             }
         }, []);
+        
     return (
         <div>
             <h1>Bienvenido/a {usuario ? `${usuario.nombre} ${usuario.apellidos}` : 'Usuario'}</h1>

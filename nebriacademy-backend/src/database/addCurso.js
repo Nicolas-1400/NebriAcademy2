@@ -8,7 +8,6 @@ const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 router.post('/', async (req, res) => {
   try {
     const data = req.body || {};
-    const colaboradores = Array.isArray(data.colaboradores) ? data.colaboradores : (data.colaboradores ? data.colaboradores : []);
     const profesorInput = data.profesor;
 
     // Resolver el profesor creador: primero por PK, si no por usuarioId
@@ -25,7 +24,6 @@ router.post('/', async (req, res) => {
 
     // Preparar datos del curso
     const cursoData = { ...data, profesor: profesorDbId };
-    delete cursoData.colaboradores;
 
     // Crear el curso
     const nuevo = await Cursos.create(cursoData);
@@ -36,21 +34,7 @@ router.post('/', async (req, res) => {
       await ProfesoresCursos.create({ profesorId: profesorDbId, cursoId });
     }
 
-    // Si hay colaboradores, asignarlos (solo profesores)
-    if (Array.isArray(colaboradores) && colaboradores.length) {
-      const lista = await Profesores.findAll();
-      for (const nombreCollab of colaboradores) {
-        const nombreTrim = (nombreCollab || '').replace(/\s+/g, ' ').trim();
-        if (!nombreTrim) continue;
-        const encontrado = lista.find((p) => {
-          const full = `${(p.nombre || '').trim()} ${(p.apellidos || '').trim()}`.replace(/\s+/g, ' ').trim();
-          return full.toLowerCase() === nombreTrim.toLowerCase();
-        });
-        if (encontrado) {
-          await ProfesoresCursos.create({ profesorId: encontrado.id, cursoId });
-        }
-      }
-    }
+    
 
     res.status(201).json(nuevo);
   } catch (err) {

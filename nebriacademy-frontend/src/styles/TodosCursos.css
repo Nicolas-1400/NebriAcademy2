@@ -96,6 +96,55 @@
     padding-left: 18px;
 }
 
+/* Estilos para botones de filtros (categorías y niveles) */
+.categorias-sidebar button {
+    background: none;
+    border: none;
+    color: #333;
+    text-align: left;
+    font-size: 14px;
+    padding: 8px 12px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.2s ease;
+    display: block;
+}
+
+.categorias-sidebar button:hover {
+    background-color: rgba(194, 0, 47, 0.06);
+    color: var(--rojo-nebrija);
+    font-weight: 600;
+    padding-left: 18px;
+}
+
+.categorias-sidebar button.activo {
+    background-color: rgba(194, 0, 47, 0.08);
+    color: var(--rojo-nebrija);
+    font-weight: 700;
+    padding-left: 18px;
+}
+
+/* Espaciado entre secciones */
+.categorias-sidebar .subtitulo-nivel {
+    margin-top: 1rem;
+}
+
+.categorias-sidebar .limpiar-filtros {
+    margin-top: 0.75rem;
+}
+
+.categorias-sidebar .limpiar-filtros button {
+    padding: 8px 12px;
+    background-color: transparent;
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    cursor: pointer;
+}
+
+.categorias-sidebar .limpiar-filtros button:hover {
+    background-color: rgba(0,0,0,0.03);
+}
+
 .cursos-contenedor {
     width: 75%;
 }

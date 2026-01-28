@@ -6,7 +6,6 @@ function AddCursoGrid() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
-  const [colaboradores, setColaboradores] = useState("");
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -25,50 +24,6 @@ function AddCursoGrid() {
       const usuario = JSON.parse(localStorage.getItem("usuario")) || {};
       const profesorId = usuario.id || null;
 
-      const collabArray = colaboradores
-        .split(",")
-        .map((s) => s.trim())
-        .filter((s) => s.length > 0);
-
-
-      if (collabArray.length > 0) {
-        const tieneApellidoFaltante = collabArray.some((c) => c.split(/\s+/).length < 3);
-        if (tieneApellidoFaltante) {
-          setError("Incluye nombre y DOS apellidos para cada colaborador (ej. Ana Pérez Gómez)");
-          return;
-        }
-      }
-
-      // Verificar que cada colaborador existe en la base de datos
-      if (collabArray.length > 0) {
-        try {
-          const profResp = await fetch("http://localhost:3000/profesores");
-          const profData = await profResp.json();
-          const profesores = profData.Profesores || profData.profesores || [];
-
-          const nombresEnBD = new Set(
-            profesores.map((p) =>
-              `${(p.nombre || "").trim()} ${(p.apellidos || "").trim()}`.toLowerCase()
-            )
-          );
-
-          const missing = collabArray.filter((c) => {
-            const normalized = c.replace(/\s+/g, " ").trim().toLowerCase();
-            return !nombresEnBD.has(normalized);
-          });
-
-          if (missing.length > 0) {
-            setError(
-              "Los siguientes colaboradores no existen como profesores: " + missing.join(", ")
-            );
-            return;
-          }
-        } catch (err) {
-          setError("No se pudo verificar colaboradores en la base de datos de profesores");
-          console.error(err);
-          return;
-        }
-      }
 
       const res = await fetch("http://localhost:3000/addCurso", {
         method: "POST",
@@ -79,7 +34,6 @@ function AddCursoGrid() {
           descripcion,
           nivel,
           profesor: profesorId,
-          colaboradores: collabArray,
         }),
       });
 
@@ -92,7 +46,6 @@ function AddCursoGrid() {
         setCategoria("");
         setDescripcion("");
         setNivel("");
-        setColaboradores("");
         setTimeout(() => setSuccess(""), 6000);
       } else {
         setError(datos.error || "Error al crear curso");
@@ -121,13 +74,16 @@ function AddCursoGrid() {
 
           <div className="formulario-grupo">
             <label>Categoría</label>
-            <input
-              type="text"
-              placeholder="Categoría"
-              value={categoria}
-              onChange={(e) => setCategoria(e.target.value)}
-              required
-            />
+            <select value={categoria} onChange={(e) => setCategoria(e.target.value)} required>
+              <option value="" disabled>
+                Selecciona categoría
+              </option>
+            <option value="Programacion">Programación</option>
+            <option value="Diseno">Diseño</option>
+            <option value="Ciberseguridad">Ciberseguridad</option>
+            <option value="BDD">Base de datos</option>
+            <option value="Marketing">Marketing</option>
+            </select>
           </div>
 
           <div className="formulario-grupo">
@@ -153,15 +109,7 @@ function AddCursoGrid() {
             </select>
           </div>
 
-          <div className="formulario-grupo">
-            <label>Colaboradores (Formato: nombre y apellidos, nombre y apellidos, ...)</label>
-            <input
-              type="text"
-              placeholder="Ana Pérez, Juan García"
-              value={colaboradores}
-              onChange={(e) => setColaboradores(e.target.value)}
-            />
-          </div>
+          
 
           {success ? (
             <p className="mensaje-exito">{success}</p>

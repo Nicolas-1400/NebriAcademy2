@@ -10,6 +10,7 @@ function RegisterProfesorGrid() {
   const [numeroCuentaBancaria, setCuentaBancaria] = useState("");
   const [pais, setPais] = useState("");
   const [localidad, setLocalizacion] = useState("");
+  const [especializacion, setEspecializacion] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
@@ -34,6 +35,7 @@ function RegisterProfesorGrid() {
             numeroCuentaBancaria: numeroCuentaBancaria,
             pais: pais,
             localidad: localidad,
+            especializacion: especializacion,
           }),
         },
       );
@@ -103,7 +105,9 @@ function RegisterProfesorGrid() {
             onChange={(e) => setPais(e.target.value)}
             required
           >
-            <option value="" disabled>Seleccione un país</option>
+            <option value="" disabled>
+              Seleccione un país
+            </option>
             <option value="España">España</option>
             <option value="México">México</option>
             <option value="Colombia">Colombia</option>
@@ -121,7 +125,9 @@ function RegisterProfesorGrid() {
             onChange={(e) => setLocalizacion(e.target.value)}
             required
           >
-            <option value="" disabled>Seleccione una localidad</option>
+            <option value="" disabled>
+              Seleccione una localidad
+            </option>
             <option value="Madrid">Madrid</option>
             <option value="Barcelona">Barcelona</option>
             <option value="Valencia">Valencia</option>
@@ -129,6 +135,21 @@ function RegisterProfesorGrid() {
             <option value="Bilbao">Bilbao</option>
             <option value="Otro">Otro</option>
           </select>
+          <select
+            value={especializacion}
+            onChange={(e) => setEspecializacion(e.target.value)}
+            required
+          >
+            <option value="" disabled>
+              Seleccione una especialización
+            </option>
+            <option value="Programacion">Programación</option>
+            <option value="Diseno">Diseño</option>
+            <option value="Ciberseguridad">Ciberseguridad</option>
+            <option value="BDD">Base de datos</option>
+            <option value="Marketing">Marketing</option>
+          </select>
+
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
