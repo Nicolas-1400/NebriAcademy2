@@ -57,6 +57,7 @@ function RegisterProfesorGrid() {
   return (
     <div className="register-grid-externo">
       <div className="formulario-register-contenedor">
+        <h2>Registrate</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
             type="text"
