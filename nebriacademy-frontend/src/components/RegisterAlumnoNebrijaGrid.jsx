@@ -7,7 +7,6 @@ function RegisterAlumnoNebrijaGrid() {
   const [dni, setDni] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [email, setEmail] = useState("");
-  const [alumnoId, setAlumnoId] = useState("");
   const [pais, setPais] = useState("");
   const [localidad, setLocalizacion] = useState("");
   const [error, setError] = useState("");
@@ -17,9 +16,6 @@ function RegisterAlumnoNebrijaGrid() {
   useEffect(() => {
     if (location.state?.email) {
       setEmail(location.state.email);
-    }
-    if (location.state?.alumnoId) {
-      setAlumnoId(location.state.alumnoId);
     }
   }, [location.state]);
 
@@ -36,7 +32,6 @@ function RegisterAlumnoNebrijaGrid() {
             "Content-Type": "application/json",
           },
           body: JSON.stringify({
-            alumnoId: alumnoId,
             nombre: nombre,
             apellidos: apellidos,
             dni: dni,
@@ -65,6 +60,7 @@ function RegisterAlumnoNebrijaGrid() {
   return (
     <div className="login-grid">
       <div className="formulario-login-contenedor">
+        <h2>Regístrate</h2>
         <form className="formulario-login" onSubmit={handleRegister}>
           <input
             type="email"

@@ -10,15 +10,24 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
+import Flecha from "../assets/flecha-correcta.png";
+import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 
 function CursoGrid() {
   const [curso, setCurso] = useState(null);
   const [profesor, setProfesor] = useState(null);
   const [error, setError] = useState(null);
+  const [registroCA, setRegistroCA] = useState(null);
+  const [comentario, setComentario] = useState("");
   const { id } = useParams();
+  const [usuario, setUsuario] = useState(null);
+  useEffect(() => {
+    const usuarioIniciado = localStorage.getItem('usuario');
+    setUsuario(JSON.parse(usuarioIniciado));
+  }, []);
+  const alumnoId = usuario ? usuario.id : null;
 
   useEffect(() => {
-    if (!id) return;
     setError(null);
     fetch(`http://localhost:3000/cursos/${id}`)
       .then((r) => {
@@ -39,6 +48,8 @@ function CursoGrid() {
                 console.error('Error cargando profesor:', err);
               });
           }
+
+          // la carga del registro se hace en un useEffect separado
         })
       .catch((err) => {
         console.error('Error cargando curso:', err);
@@ -46,8 +57,78 @@ function CursoGrid() {
       });
   }, [id]);
 
+  // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
+  useEffect(() => {
+    const toBool = (v) => v === true || v === 1 || v === '1';
+    if (!alumnoId) return;
+    fetch(`http://localhost:3000/cursosalumnos/registro?cursoId=${parseInt(id)}&alumnoId=${alumnoId}`)
+      .then(async (r) => {
+        return r.json();
+      })
+      .then((registro) => {
+        const normalized = {
+          ...registro,
+          favorito: toBool(registro.favorito),
+          apuntado: toBool(registro.apuntado),
+          valoracion: registro.valoracion === null || registro.valoracion === undefined ? null : toBool(registro.valoracion),
+          comentario: registro.comentario || ""
+        };
+        setRegistroCA(normalized);
+        setComentario(normalized.comentario || "");
+      })
+      .catch((e) => console.error('Error cargando cursosAlumnos', e));
+  }, [alumnoId, id]);
+
+  // acciones: votar, toggle favorito/apuntado, comentar
+  const handleVote = async (voteBool) => {
+    try {
+      const res = await fetch('http://localhost:3000/cursosalumnos/vote', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, vote: voteBool })
+      });
+      const data = await res.json();
+      if (res.ok) {
+        if (data.registro) setRegistroCA(data.registro);
+        if (data.curso && curso) setCurso({ ...curso, valoracion: data.curso.valoracion });
+      } else console.error(data);
+    } catch (e) { console.error('vote error', e); }
+  };
+
+  const handleToggleFav = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/cursosalumnos/toggle-fav', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cursoId: parseInt(id), alumnoId })
+      });
+      const data = await res.json();
+      if (res.ok) setRegistroCA(data);
+    } catch (e) { console.error('fav error', e); }
+  };
+
+  const handleToggleApuntado = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/cursosalumnos/toggle-apuntado', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cursoId: parseInt(id), alumnoId })
+      });
+      const data = await res.json();
+      if (res.ok) setRegistroCA(data);
+    } catch (e) { console.error('apuntado error', e); }
+  };
+
+  const handleSubmitComment = async () => {
+    try {
+      const res = await fetch('http://localhost:3000/cursosalumnos/comment', {
+        method: 'POST', headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, comentario })
+      });
+      const data = await res.json();
+      if (res.ok) setRegistroCA(data);
+    } catch (e) { console.error('comment error', e); }
+  };
+
   if (error) return <p>{error}</p>;
-  if (!curso) return <p>Cargando curso...</p>;
+  if (!curso) return;
 
   const FotoSelector = (() => {
     const Foto = (curso.id || id) % 10;
@@ -64,13 +145,34 @@ function CursoGrid() {
   })();
 
   return (
-    <div className="CursoGrid curso-detalle">
+    <div className="CursoGrid">
       <div className="curso-card">
         <img src={FotoSelector} alt="Imagen del curso" />
         <h2>{curso.nombreCurso}</h2>
-        <p><strong>Categoría:</strong> {curso.categoria}</p>
+        <p>{curso.categoria}</p>
         <p><strong>Nivel:</strong> {curso.nivel}</p>
-        <p><strong>Valoración:</strong> {curso.valoracion}</p>
+        {alumnoId ? (
+          <>
+            <p>
+              <strong>Valoración:</strong> {curso.valoracion}
+              <button className="vote" onClick={() => handleVote(true)} >
+                <img src={registroCA && registroCA.valoracion === true ? FlechaMarcada : Flecha} alt="up" />
+              </button>
+              <button className="vote" onClick={() => handleVote(false)} >
+                <img src={registroCA && registroCA.valoracion === false ? FlechaMarcada : Flecha} alt="down" />
+              </button>
+            </p>
+            <p>
+              <button onClick={handleToggleFav}>{registroCA && registroCA.favorito ? '★ Favorito' : '☆ Favorito'}</button>
+              <button onClick={handleToggleApuntado} >{registroCA && registroCA.apuntado ? '✔ Apuntado' : 'Apuntarme'}</button>
+            </p>
+            <p>
+              <textarea maxLength={500} placeholder="Escribe un comentario (max 500)" value={comentario} onChange={(e)=>setComentario(e.target.value)} />
+              <br />
+              <button onClick={handleSubmitComment}>Enviar comentario</button>
+            </p>
+          </>
+        ) : null}
         <p><strong>Profesor:</strong> {profesor ? `${profesor.nombre} ${profesor.apellidos}` : (curso.profesor ? `Profesor ID: ${curso.profesor}` : 'Desconocido')}</p>
         <p><strong>Comentarios:</strong> {curso.comentarios}</p>
         <p><strong>Descripción:</strong> {curso.descripcion}</p>

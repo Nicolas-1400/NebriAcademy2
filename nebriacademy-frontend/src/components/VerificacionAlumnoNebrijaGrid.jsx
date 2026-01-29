@@ -28,7 +28,7 @@ function VerificacionAlumnoNebrijaGrid() {
 
       if (respuesta.ok) {
         console.log("Verificación exitosa:", datos);
-        navigate("/RegisterAlumnoNebrija", { state: { email: email, alumnoId: datos.alumnoId } });
+        navigate("/RegisterAlumnoNebrija", { state: { email: email } });
       } else {
         setError(datos.error || "Error en la verificación");
       }

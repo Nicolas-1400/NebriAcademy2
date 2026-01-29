@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 26-01-2026 a las 09:38:00
+-- Tiempo de generación: 29-01-2026 a las 12:41:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -77,7 +77,8 @@ CREATE TABLE `alumnos` (
 INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numeroTarjeta`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
 (1, 2, 'Nicolás', 'García-Sampedro', '12345678B', 'nico@example.com', 'pass123', '123', '432512', '', 'España', 'Madrid'),
 (2, 3, 'María', 'López Díaz', '87654321C', 'maria@example.com', 'pass456', '4222222222222222', '622222222', '@marialopez', 'España', 'Valencia'),
-(6, 2, 'Luis', 'Fernández Ruiz', '87654321B', 'luis.fernandez@example.com', 'alumno2025', '4000000000000002', '+34666777888', '{\"linkedin\":\"/in/luisfr\"}', 'España', 'Sevilla');
+(6, 2, 'Luis', 'Fernández Ruiz', '87654321B', 'luis.fernandez@example.com', 'alumno2025', '4000000000000002', '+34666777888', '{\"linkedin\":\"/in/luisfr\"}', 'España', 'Sevilla'),
+(13, 22, 'prueba', 'Proba', '12346', 'pruebaa@alumnos.nebrija.es', 'a', NULL, NULL, NULL, 'España', 'Madrid');
 
 -- --------------------------------------------------------
 
@@ -128,8 +129,10 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `comentarios`, `descripcion`) VALUES
-(1, 'Introducción a Python', 'Programación', 1, 'Principiante', 4.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
-(2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.');
+(1, 'Introducción a Python', 'Programación', 1, '', 4.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
+(2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.'),
+(22, 'a', '', 15, 'Avanzado', 0, NULL, 'a'),
+(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba');
 
 -- --------------------------------------------------------
 
@@ -140,15 +143,19 @@ INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `va
 CREATE TABLE `cursosalumnos` (
   `id` int(11) NOT NULL,
   `cursoId` int(11) NOT NULL,
-  `alumnoId` int(11) NOT NULL
+  `alumnoId` int(11) NOT NULL,
+  `favorito` tinyint(1) DEFAULT NULL,
+  `apuntado` tinyint(1) DEFAULT NULL,
+  `valoración` tinyint(1) DEFAULT NULL,
+  `comentario` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cursosalumnos`
 --
 
-INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`) VALUES
-(13, 1, 1);
+INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`, `comentario`) VALUES
+(13, 1, 1, 1, 1, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -229,7 +236,8 @@ INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `emai
 (2, 5, 'Jorge', 'Pérez Torres', '22222222E', 'jorge@prof.com', 'prof456', 'ES6600190020961234567890', '644444444', '@profeJorge', 'España', 'Madrid', 'Ciberseguridad'),
 (6, 3, 'Ana', 'López García', '23456789C', 'ana.lopez@example.com', 'prof!2025', 'ES7620770024003102575766', '+34900111233', '{\"twitter\":\"@analopez\"}', 'España', 'Barcelona', 'Programación Web'),
 (13, 19, 'Hola', 'afafa', 'f32rf', 'elo@alo.com', 'pass123', NULL, NULL, NULL, 'eqwrq', 'rqrqr', NULL),
-(14, 20, 'profesor', 'profesor', '1234', 'profesor@profesor.com', '1234', 'jiri32r1', NULL, NULL, 'España', 'Madrid', NULL);
+(14, 20, 'profesor', 'profesor', '1234', 'profesor@profesor.com', '1234', 'jiri32r1', NULL, NULL, 'España', 'Madrid', NULL),
+(15, 21, 'a', 'a', 'asa', 'a@a.com', 'a', 'a', 'a', 'a', 'a', 'a', 'a');
 
 -- --------------------------------------------------------
 
@@ -242,13 +250,6 @@ CREATE TABLE `profesorescursos` (
   `profesorId` int(11) NOT NULL,
   `cursoId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `profesorescursos`
---
-
-INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
-(10, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -304,7 +305,9 @@ INSERT INTO `usuarios` (`id`, `tipo`) VALUES
 (13, 'alumno'),
 (18, 'alumno'),
 (19, 'profesor'),
-(20, 'profesor');
+(20, 'profesor'),
+(21, 'profesor'),
+(22, 'alumno');
 
 -- --------------------------------------------------------
 
@@ -443,7 +446,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
@@ -455,7 +458,7 @@ ALTER TABLE `apuntes`
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
@@ -479,13 +482,13 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
@@ -497,7 +500,7 @@ ALTER TABLE `puntuacionesejercicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`
