@@ -1,4 +1,6 @@
 import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
 function PerfilProfesorGrid() {
@@ -117,6 +119,8 @@ function PerfilProfesorGrid() {
       setMensajeError("Error al conectar con el servidor");
     }
   };
+
+  const navigate = useNavigate();
 
   return (
     <div className="perfil">
@@ -286,6 +290,10 @@ function PerfilProfesorGrid() {
 
           <button type="submit" className="boton-editar-perfil">
             Guardar Cambios
+          </button>
+          <button className="boton-go-back" onClick={() => navigate(-1)}>
+            <img src={flecha} alt="Volver" />
+            <p>Volver</p>
           </button>
         </form>
       </div>

@@ -135,6 +135,7 @@ function RegisterAlumnoExternoGrid() {
         </form>
         <p>¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a></p>
       </div>
+      <div className="register-precios"></div>
     </div>
   );
 }
