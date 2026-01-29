@@ -56,6 +56,7 @@ function RegisterAlumnoExternoGrid() {
   return (
     <div className="register-grid-externo">
       <div className="formulario-register-contenedor">
+        <h2>Registrate</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
             type="text"
@@ -133,9 +134,27 @@ function RegisterAlumnoExternoGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
-        <p>¿Ya tienes cuenta? <a href="/Login">Inicia sesión</a></p>
+        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
       </div>
-      <div className="register-precios"></div>
+      <div className="register-precios">
+        <h2>Precio</h2>
+        <div className="precios-contenido">
+          <div className="precio">Por solo 5.99€/mes.</div> 
+          <div className="descripcion-precio">
+            <p>Acceso completo a nuestra plataforma educativa:</p>
+            <ul>
+              <li>📚 Acceso ilimitado a todos los cursos disponibles</li>
+              <li>📖 Materiales de estudio exclusivos y actualizados</li>
+              <li>🎥 Videos tutoriales y clases grabadas</li>
+              <li>✏️ Ejercicios prácticos con retroalimentación</li>
+              <li>📝 Apuntes descargables en PDF</li>
+              <li>🏆 Seguimiento de tu progreso académico</li>
+              <li>💬 Soporte y comunicación con profesores</li>
+              <li>🎓 Certificados de finalización de cursos</li>
+            </ul>
+          </div>     
+        </div>
+      </div>
     </div>
   );
 }
