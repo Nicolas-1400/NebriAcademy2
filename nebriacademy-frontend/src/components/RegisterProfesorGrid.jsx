@@ -20,7 +20,7 @@ function RegisterProfesorGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/registerProfesor/auth",
+        "http://localhost:3000/profesores/registerProfesor/auth",
         {
           method: "POST",
           headers: {

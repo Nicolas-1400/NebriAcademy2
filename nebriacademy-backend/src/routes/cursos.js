@@ -1,6 +1,8 @@
 const express = require("express");
 const router = express.Router();
 const Cursos = require("../models/Cursos.js");
+const Profesores = require("../models/Profesores.js");
+const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
 // Obtener todos los cursos
 router.get("/", (req, res) => {
@@ -34,16 +36,37 @@ router.get("/:id", (req, res) => {
   }
 });
 
-// Crear un curso
-router.post("/", (req, res) => {
+
+// Crear un curso con asignación a profesor
+router.post("/add", async (req, res) => {
   try {
-    console.log("POST /cursos");
-    Cursos.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear curso:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const data = req.body || {};
+    const profesorInput = data.profesor;
+
+    let profesorDbId = null;
+    if (profesorInput) {
+      const porId = await Profesores.findByPk(profesorInput);
+      if (porId) {
+        profesorDbId = porId.id;
+      } else {
+        const porUsuario = await Profesores.findOne({ where: { usuarioId: profesorInput } });
+        if (porUsuario) profesorDbId = porUsuario.id;
+      }
+    }
+
+    const cursoData = { ...data, profesor: profesorDbId };
+
+    const nuevo = await Cursos.create(cursoData);
+    const cursoId = nuevo.id;
+
+    if (profesorDbId) {
+      await ProfesoresCursos.create({ profesorId: profesorDbId, cursoId });
+    }
+
+    res.status(201).json(nuevo);
+  } catch (err) {
+    console.error('Error en /cursos/add:', err);
+    res.status(500).json({ error: 'Error al crear curso', detail: err.message });
   }
 });
 

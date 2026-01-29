@@ -1,6 +1,7 @@
 const express = require("express");
 const router = express.Router();
 const Profesores = require("../models/Profesores.js");
+const Usuarios = require("../models/Usuarios.js");
 
 // Obtener todos los profesores
 router.get("/", (req, res) => {
@@ -33,19 +34,6 @@ router.get("/:id", (req, res) => {
     });
   } catch (error) {
     console.error("Error al obtener profesor:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// Crear un profesor
-router.post("/", (req, res) => {
-  try {
-    console.log("POST /profesores");
-    Profesores.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear profesor:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
@@ -91,3 +79,60 @@ router.delete("/:id", (req, res) => {
 });
 
 module.exports = router;
+
+// Registrar profesor
+router.post("/registerProfesor/auth", (req, res) => {
+  try {
+    const { nombre, apellidos, dni, email, contrasena, numeroCuentaBancaria, pais, localidad } = req.body;
+    console.log(`POST /profesores/registerProfesor/auth - Email: ${email}`);
+
+    if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroCuentaBancaria || !pais || !localidad) {
+      return res.status(400).json({ error: "Todos los campos son requeridos" });
+    }
+
+    Profesores.findAll().then((profesores) => {
+      const usuarioExistente = profesores.find((a) => a.email === email);
+      if (usuarioExistente) {
+        return res.status(400).json({ error: "El email ya está registrado" });
+      }
+
+      Usuarios.create({ tipo: "profesor" }).then((nuevoUsuario) => {
+        Profesores.create({
+          usuarioId: nuevoUsuario.id,
+          nombre: nombre,
+          apellidos: apellidos,
+          dni: dni,
+          email: email,
+          contrasena: contrasena,
+          numCuentaBancaria: numeroCuentaBancaria,
+          pais: pais,
+          localidad: localidad
+        }).then((nuevoProfesor) => {
+          res.status(201).json({
+            mensaje: "Registro exitoso",
+            usuario: {
+              id: nuevoProfesor.id,
+              nombre: nuevoProfesor.nombre,
+              apellidos: nuevoProfesor.apellidos,
+              dni: nuevoProfesor.dni,
+              email: nuevoProfesor.email
+            }
+          });
+        }).catch((error) => {
+          console.error("Error al crear profesor:", error);
+          nuevoUsuario.destroy();
+          res.status(500).json({ error: "Error al crear el profesor" });
+        });
+      }).catch((error) => {
+        console.error("Error al crear usuario:", error);
+        res.status(500).json({ error: "Error al crear el usuario" });
+      });
+    }).catch((error) => {
+      console.error("Error al verificar email:", error);
+      res.status(500).json({ error: "Error interno del servidor" });
+    });
+  } catch (error) {
+    console.error("Error en registro:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});

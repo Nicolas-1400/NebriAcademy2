@@ -20,7 +20,7 @@ function RegisterAlumnoExternoGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/registerAlumnoExterno/auth",
+        "http://localhost:3000/alumnos/registerAlumnoExterno/auth",
         {
           method: "POST",
           headers: {

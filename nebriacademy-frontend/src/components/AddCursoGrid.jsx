@@ -28,7 +28,7 @@ function AddCursoGrid() {
       const profesorId = usuario.id || null;
 
 
-      const res = await fetch("http://localhost:3000/addCurso", {
+      const res = await fetch("http://localhost:3000/cursos/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

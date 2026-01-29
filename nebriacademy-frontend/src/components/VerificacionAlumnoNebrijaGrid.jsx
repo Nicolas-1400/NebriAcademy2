@@ -12,7 +12,7 @@ function VerificacionAlumnoNebrijaGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/verificacionnebrija/auth",
+        "http://localhost:3000/alumnos/verificacionnebrija/auth",
         {
           method: "POST",
           headers: {
