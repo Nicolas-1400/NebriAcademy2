@@ -4,8 +4,9 @@ const sequelize = require('../database/connection');
 const Videos = sequelize.define('videos', {
   autor: DataTypes.INTEGER,
   curso: DataTypes.INTEGER,
-  duracion: DataTypes.INTEGER,
-  valoracion: DataTypes.FLOAT
+  nombre: DataTypes.STRING,
+  archivo: DataTypes.STRING,
+  valoracion: { type: DataTypes.FLOAT, defaultValue: 0 }
 }, { timestamps: false });
 
 module.exports = Videos;

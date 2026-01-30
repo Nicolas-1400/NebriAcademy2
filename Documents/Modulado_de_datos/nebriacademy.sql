@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-01-2026 a las 11:05:09
+-- Tiempo de generación: 30-01-2026 a las 12:29:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -95,6 +95,16 @@ CREATE TABLE `apuntes` (
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `apuntes`
+--
+
+INSERT INTO `apuntes` (`id`, `autor`, `curso`, `archivo`, `descripcion`, `valoracion`) VALUES
+(19, 21, 32, '1769770901951.pdf', 'Prueba video', 0),
+(20, 21, 33, '1769771262323.pdf', 'jeje', 0),
+(21, 21, 34, '1769771360844.pdf', 'sfsdgs', 0),
+(22, 21, 35, '1769771456223.pdf', 'sgdsgds', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -120,7 +130,11 @@ INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `va
 (1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 5.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
 (2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.'),
 (22, 'a', '', 15, 'Avanzado', 0, NULL, 'a'),
-(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba');
+(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba'),
+(32, 'Prueba video', 'Programacion', 15, 'Intermedio', 0, NULL, 'Prueba video'),
+(33, 'alo', 'BDD', 15, 'Intermedio', 0, NULL, 'ola'),
+(34, 'fdsfs', 'Marketing', 15, 'Intermedio', 0, NULL, 'sfsdf'),
+(35, 'gsgds', 'Diseno', 15, 'Avanzado', 0, NULL, 'gsgsg');
 
 -- --------------------------------------------------------
 
@@ -248,7 +262,11 @@ INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
 (24, 1, 1),
 (25, 2, 2),
 (26, 15, 22),
-(27, 15, 23);
+(27, 15, 23),
+(28, 15, 32),
+(29, 15, 33),
+(30, 15, 34),
+(31, 15, 35);
 
 -- --------------------------------------------------------
 
@@ -318,7 +336,8 @@ CREATE TABLE `videos` (
   `id` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
   `curso` int(11) NOT NULL,
-  `duracion` int(11) DEFAULT NULL,
+  `nombre` varchar(1000) NOT NULL,
+  `archivo` varchar(1000) NOT NULL,
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -326,9 +345,8 @@ CREATE TABLE `videos` (
 -- Volcado de datos para la tabla `videos`
 --
 
-INSERT INTO `videos` (`id`, `autor`, `curso`, `duracion`, `valoracion`) VALUES
-(1, 1, 1, 600, 4.8),
-(2, 2, 2, 900, 4.2);
+INSERT INTO `videos` (`id`, `autor`, `curso`, `nombre`, `archivo`, `valoracion`) VALUES
+(13, 15, 35, 'prueba', '1769771456245.mp4', 0);
 
 --
 -- Índices para tablas volcadas
@@ -451,19 +469,19 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`
@@ -487,7 +505,7 @@ ALTER TABLE `profesores`
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
@@ -505,7 +523,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
 
 --
 -- Restricciones para tablas volcadas

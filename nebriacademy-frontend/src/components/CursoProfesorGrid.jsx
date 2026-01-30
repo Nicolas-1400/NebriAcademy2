@@ -22,6 +22,7 @@ function CursoProfesorGrid() {
   const [comentario, setComentario] = useState("");
   const { id } = useParams();
   const [usuario, setUsuario] = useState(null);
+  const [videos, setVideos] = useState([]);
   useEffect(() => {
     const usuarioIniciado = localStorage.getItem('usuario');
     setUsuario(JSON.parse(usuarioIniciado));
@@ -68,6 +69,18 @@ function CursoProfesorGrid() {
         setApuntes(filtered);
       })
       .catch((e) => console.error('Error cargando apuntes:', e));
+  }, [id]);
+
+  useEffect(() => {
+    if (!id) return;
+    fetch('http://localhost:3000/videos')
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data.Videos) ? data.Videos : (data || []);
+        const filtered = list.filter(v => String(v.curso) === String(id));
+        setVideos(filtered);
+      })
+      .catch((e) => console.error('Error cargando videos:', e));
   }, [id]);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
@@ -206,6 +219,23 @@ function CursoProfesorGrid() {
           </div>
         ) : (
           <p>No hay apuntes para este curso.</p>
+        )}
+        {videos && videos.length > 0 ? (
+          <div className="videos-list">
+            <h4>Vídeos</h4>
+            {videos.map((v) => (
+              <div key={v.id} className="video-item">
+                {v.nombre ? <h5>{v.nombre}</h5> : null}
+                <video controls>
+                  <source src={`http://localhost:3000/videos/files/${v.archivo}`} type="video/mp4" />
+                  Tu navegador no soporta el elemento <code>video</code>.
+                </video>
+                
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p>No hay vídeos para este curso.</p>
         )}
       </div>
     </div>

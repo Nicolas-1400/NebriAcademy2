@@ -9,6 +9,8 @@ app.use(express.json());
 // Servir archivos de apuntes guardados en el frontend (para descargas)
 // Servir archivos de apuntes del frontend (ruta absoluta desde el workspace root)
 app.use('/apuntes/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Apuntes')));
+// Servir archivos de videos guardados en el frontend
+app.use('/videos/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Videos')));
 
 
 // Rutas por recurso

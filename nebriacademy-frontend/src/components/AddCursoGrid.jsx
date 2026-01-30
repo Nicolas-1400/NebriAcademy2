@@ -10,7 +10,10 @@ function AddCursoGrid() {
   const [nivel, setNivel] = useState("");
   const [fileApunte, setFileApunte] = useState(null);
   const [descripcionApunte, setDescripcionApunte] = useState("");
+  const [fileVideo, setFileVideo] = useState(null);
+  const [nombreVideo, setNombreVideo] = useState("");
   const fileInputRef = useRef(null);
+  const fileVideoInputRef = useRef(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -46,9 +49,10 @@ function AddCursoGrid() {
       const datos = await res.json();
 
       if (res.ok) {
+        // Determinar courseId una sola vez para usarlo en ambas subidas
+        const courseId = datos.id ?? datos.idCurso ?? datos.cursoId ?? datos.id_curso ?? null;
         // Si hay un fichero de apunte, subirlo con FormData al endpoint /apuntes
         try {
-          const courseId = datos.id ?? datos.idCurso ?? datos.cursoId ?? datos.id_curso ?? null;
           if (fileApunte && courseId) {
             const formData = new FormData();
             formData.append("archivo", fileApunte);
@@ -72,6 +76,33 @@ function AddCursoGrid() {
           setError("Error al subir apunte");
         }
 
+        // Subir vídeo si existe (nombre y archivo deben ir juntos)
+        try {
+          if ((nombreVideo && !fileVideo) || (fileVideo && !nombreVideo)) {
+            setError("Debes proporcionar nombre del vídeo y fichero juntos");
+          } else if (fileVideo && courseId) {
+            const formDataV = new FormData();
+            formDataV.append("archivo", fileVideo);
+            formDataV.append("autor", profesorId);
+            formDataV.append("curso", courseId);
+            formDataV.append("nombre", nombreVideo);
+
+            const resVideo = await fetch("http://localhost:3000/videos", {
+              method: "POST",
+              body: formDataV,
+            });
+
+            const videoBody = await resVideo.json().catch(() => null);
+            if (!resVideo.ok) {
+              console.error("Error al subir video:", resVideo.status, videoBody);
+              setError("Error al subir vídeo");
+            }
+          }
+        } catch (errV) {
+          console.error("Error al subir video:", errV);
+          setError("Error al subir vídeo");
+        }
+
         setSuccess("Curso creado correctamente");
         setError("");
         setNombreCurso("");
@@ -81,6 +112,9 @@ function AddCursoGrid() {
         setFileApunte(null);
         setDescripcionApunte("");
         if (fileInputRef.current) fileInputRef.current.value = "";
+        if (fileVideoInputRef.current) fileVideoInputRef.current.value = "";
+        setFileVideo(null);
+        setNombreVideo("");
         setTimeout(() => setSuccess(""), 6000);
       } else {
         setError(datos.error || "Error al crear curso");
@@ -137,6 +171,7 @@ function AddCursoGrid() {
             <input
               type="file"
               name="archivo"
+              ref={fileInputRef}
               accept=".pdf,.doc,.docx,.ppt,.pptx"
               onChange={(e) => setFileApunte(e.target.files[0] || null)}
             />
@@ -149,6 +184,27 @@ function AddCursoGrid() {
               placeholder="Descripción del apunte"
               value={descripcionApunte}
               onChange={(e) => setDescripcionApunte(e.target.value)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Subir vídeo (opcional)</label>
+            <input
+              type="file"
+              name="archivo"
+              ref={fileVideoInputRef}
+              accept="video/*"
+              onChange={(e) => setFileVideo(e.target.files[0] || null)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Nombre del vídeo (opcional)</label>
+            <input
+              type="text"
+              placeholder="Nombre del vídeo"
+              value={nombreVideo}
+              onChange={(e) => setNombreVideo(e.target.value)}
             />
           </div>
 
