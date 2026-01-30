@@ -24,7 +24,7 @@ function NavProfesor() {
   };
 
   const handleNavigateProfile = () => {
-    navigate("/HomeProfesor/PerfilProfesor");
+    navigate("/Home/Perfil");
     setIsdesplegableOpen(false);
   };
 
@@ -50,7 +50,7 @@ function NavProfesor() {
 
   return (
     <div className="nav">
-      <a href="/HomeProfesor">
+      <a href="/Home  ">
         <div className="contenedor-logo-titulo">
           <img className="logo-nav" src={Logo} alt="Logo Nebriacademy" />
           <h2>NebriAcademy</h2>

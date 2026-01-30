@@ -1,7 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "../pages/Login.jsx"
 import Home from "../pages/Home.jsx"
-import HomeProfesor from "../pages/HomeProfesor.jsx"
 import MiEspacio from "../pages/MiEspacio.jsx"
 import TodosCursos from "../pages/TodosCursos.jsx"
 import Curso from "../pages/Curso.jsx"
@@ -14,7 +13,6 @@ import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx"
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx"
 import RegisterProfesor from "../pages/RegisterProfesor.jsx"
 import Perfil from "../pages/Perfil.jsx"
-import PerfilProfesor from "../pages/PerfilProfesor.jsx"
 import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx"
 import NotaLegal from "../pages/NotaLegal.jsx"
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx"
@@ -30,7 +28,6 @@ function AppRouter() {
         <Route path="/Register/RegisterAlumnoExterno" element={<RegisterAlumnoExterno />} />
         <Route path="/Register/RegisterProfesor" element={<RegisterProfesor />} />
         <Route path="/Home" element={<Home />} />
-        <Route path="/HomeProfesor" element={<HomeProfesor />} />
         <Route path="/Home/MiEspacio" element={<MiEspacio/>} />
         <Route path="/Home/Cursos" element={<TodosCursos />} />
         <Route path="/Home/Cursos/:id" element={<Curso />} />
@@ -38,7 +35,6 @@ function AppRouter() {
         <Route path="/Home/Profesores" element={<Profesores />} />
         <Route path="/Home/Apuntes" element={<Apuntes />} />
         <Route path="/Home/Perfil" element={<Perfil />} />
-        <Route path="/HomeProfesor/PerfilProfesor" element={<PerfilProfesor />} />
         <Route path="/Home/PoliticaDePrivacidad" element={<PoliticaDePrivacidad />} />
         <Route path="/Home/NotaLegal" element={<NotaLegal />} />
         <Route path="/Home/PoliticaDeCookies" element={<PoliticaDeCookies />} />
