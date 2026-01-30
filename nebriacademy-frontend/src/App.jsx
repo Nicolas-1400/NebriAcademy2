@@ -9,6 +9,7 @@ import './styles/Login.css';
 import './styles/RegisterExterno.css';
 import './styles/Perfil.css';
 import './styles/TodosCursos.css';
+import './styles/Politicas.css';
 
 function App() {
 
