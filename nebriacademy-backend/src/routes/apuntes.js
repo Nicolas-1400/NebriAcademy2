@@ -80,7 +80,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
     console.error("Error al crear apunte:", error);
-    return res.status(500).json({ error: "Error interno del servidor", detail: error.message });
+      return res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 

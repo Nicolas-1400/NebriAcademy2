@@ -1,6 +1,17 @@
 const express = require("express");
 const router = express.Router();
 const Videos = require("../models/Videos.js");
+const multer = require("multer");
+const path = require("path");
+const Profesores = require("../models/Profesores.js");
+
+// Multer storage: save into frontend assets/Videos (must exist)
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Videos"),
+  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
+});
+
+const upload = multer({ storage });
 
 // Obtener todos los videos
 router.get("/", (req, res) => {
@@ -35,15 +46,43 @@ router.get("/:id", (req, res) => {
 });
 
 // Crear un video
-router.post("/", (req, res) => {
+router.post("/", upload.single('archivo'), async (req, res) => {
   try {
-    console.log("POST /videos");
-    Videos.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
+    if (!req.file) return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
+
+    // El campo 'autor' en la tabla `videos` referencia a `profesores.id`.
+    // Aceptamos como entrada tanto el `profesor.id` como el `usuarios.id` asociado.
+    let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
+    let autor = null;
+    if (autorInput) {
+      // Si existe un profesor con ese id, úsalo directamente
+      const pById = await Profesores.findByPk(autorInput);
+      if (pById) {
+        autor = autorInput; // profesor.id
+      } else {
+        // Si no, quizá nos pasaron un usuarioId: buscar el profesor asociado
+        const pByUsuario = await Profesores.findOne({ where: { usuarioId: autorInput } });
+        if (pByUsuario) autor = pByUsuario.id;
+      }
+    }
+
+    const curso = req.body.curso ? parseInt(req.body.curso) : null;
+    const archivo = req.file ? req.file.filename : null;
+    // Preserve the provided name exactly (allow spaces anywhere)
+    const nombre = req.body.nombre ? String(req.body.nombre) : null;
+
+    // Validación: nombre y archivo deben venir juntos (ambos presentes)
+    if ((nombre && !archivo) || (archivo && !nombre)) {
+      return res.status(400).json({ error: "El campo 'nombre' y el archivo deben proporcionarse juntos" });
+    }
+
+    if (!curso) return res.status(400).json({ error: "Campo 'curso' es requerido" });
+
+    const nuevo = await Videos.create({ autor, curso, nombre, archivo, valoracion: 0 });
+    return res.status(201).json({ id: nuevo.id, archivo, curso, autor, nombre });
   } catch (error) {
     console.error("Error al crear video:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    return res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
