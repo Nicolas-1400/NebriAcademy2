@@ -1,0 +1,75 @@
+/* Estilos comunes para páginas de políticas */
+.PoliticaDeCookiesGrid,
+.NotaLegalGrid,
+.PoliticaDePrivacidadGrid {
+	max-width: 900px;
+	margin: 40px auto;
+	padding: 24px;
+	background: #ffffff;
+	border-radius: 8px;
+	box-shadow: 0 8px 20px rgba(19, 35, 47, 0.06);
+	color: #1f2937;
+	font-family: Inter, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+	line-height: 1.6;
+}
+
+.PoliticaDeCookiesGrid h1,
+.NotaLegalGrid h1,
+.PoliticaDePrivacidadGrid h1 {
+	font-size: 28px;
+	margin-bottom: 12px;
+	color: #0f172a;
+}
+
+.PoliticaDeCookiesGrid h2,
+.NotaLegalGrid h2,
+.PoliticaDePrivacidadGrid h2 {
+	font-size: 18px;
+	margin-top: 20px;
+	margin-bottom: 8px;
+	color: #0b1220;
+}
+
+.PoliticaDeCookiesGrid p,
+.NotaLegalGrid p,
+.PoliticaDePrivacidadGrid p {
+	margin: 10px 0;
+	font-size: 15px;
+}
+
+.PoliticaDeCookiesGrid ul,
+.NotaLegalGrid ul,
+.PoliticaDePrivacidadGrid ul {
+	margin: 8px 0 16px 20px;
+	padding: 0;
+}
+
+.PoliticaDeCookiesGrid li,
+.NotaLegalGrid li,
+.PoliticaDePrivacidadGrid li {
+	margin-bottom: 6px;
+}
+
+.PoliticaDeCookiesGrid a,
+.NotaLegalGrid a,
+.PoliticaDePrivacidadGrid a {
+	color: #0b5fff;
+	text-decoration: underline;
+}
+
+/* Responsive */
+@media (max-width: 640px) {
+	.PoliticaDeCookiesGrid,
+	.NotaLegalGrid,
+	.PoliticaDePrivacidadGrid {
+		margin: 20px;
+		padding: 16px;
+		border-radius: 6px;
+	}
+	.PoliticaDeCookiesGrid h1,
+	.NotaLegalGrid h1,
+	.PoliticaDePrivacidadGrid h1 {
+		font-size: 22px;
+	}
+}
+
