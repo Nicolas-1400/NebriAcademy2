@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 29-01-2026 a las 12:41:55
+-- Tiempo de generación: 30-01-2026 a las 11:05:09
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -90,22 +90,10 @@ CREATE TABLE `apuntes` (
   `id` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
   `curso` int(11) NOT NULL,
-  `contenido` text DEFAULT NULL,
+  `archivo` varchar(1000) NOT NULL,
+  `descripcion` text DEFAULT NULL,
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `apuntes`
---
-
-INSERT INTO `apuntes` (`id`, `autor`, `curso`, `contenido`, `valoracion`) VALUES
-(1, 2, 1, 'Resumen de funciones en Python', 5),
-(2, 4, 1, 'Apunte del profesor sobre listas y tuplas', 4),
-(3, 3, 2, 'Notas sobre firewall y seguridad básica', 5),
-(6, 2, 1, 'Resumen de la lección 1: fundamentos de Node.js', 4),
-(7, 2, 1, 'Resumen de la lección 1: fundamentos de Node.js', 4),
-(8, 2, 1, 'Resumen de la lección 1: fundamentos de Node.js', 4),
-(10, 2, 1, 'Resumen de la lección 1: fundamentos de Node.js', 4);
 
 -- --------------------------------------------------------
 
@@ -129,7 +117,7 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `comentarios`, `descripcion`) VALUES
-(1, 'Introducción a Python', 'Programación', 1, '', 4.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
+(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 5.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
 (2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.'),
 (22, 'a', '', 15, 'Avanzado', 0, NULL, 'a'),
 (23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba');
@@ -155,7 +143,8 @@ CREATE TABLE `cursosalumnos` (
 --
 
 INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`, `comentario`) VALUES
-(13, 1, 1, 1, 1, 1, NULL);
+(13, 1, 1, 1, 1, 1, NULL),
+(14, 1, 2, 0, 0, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -250,6 +239,16 @@ CREATE TABLE `profesorescursos` (
   `profesorId` int(11) NOT NULL,
   `cursoId` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `profesorescursos`
+--
+
+INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
+(24, 1, 1),
+(25, 2, 2),
+(26, 15, 22),
+(27, 15, 23);
 
 -- --------------------------------------------------------
 
@@ -452,19 +451,19 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`
@@ -488,7 +487,7 @@ ALTER TABLE `profesores`
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`

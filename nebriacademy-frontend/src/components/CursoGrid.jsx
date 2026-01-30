@@ -16,6 +16,7 @@ import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 function CursoGrid() {
   const [curso, setCurso] = useState(null);
   const [profesor, setProfesor] = useState(null);
+  const [apuntes, setApuntes] = useState([]);
   const [error, setError] = useState(null);
   const [registroCA, setRegistroCA] = useState(null);
   const [comentario, setComentario] = useState("");
@@ -55,6 +56,19 @@ function CursoGrid() {
         console.error('Error cargando curso:', err);
         setError('No se pudo cargar el curso');
       });
+  }, [id]);
+
+  // Cargar apuntes y filtrar por curso
+  useEffect(() => {
+    if (!id) return;
+    fetch('http://localhost:3000/apuntes')
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data.Apuntes) ? data.Apuntes : (data || []);
+        const filtered = list.filter(a => String(a.curso) === String(id));
+        setApuntes(filtered);
+      })
+      .catch((e) => console.error('Error cargando apuntes:', e));
   }, [id]);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
@@ -145,7 +159,7 @@ function CursoGrid() {
   })();
 
   return (
-    <div className="CursoGrid">
+    <div className="cursoGrid">
       <div className="curso-card">
         <img src={FotoSelector} alt="Imagen del curso" />
         <h2>{curso.nombreCurso}</h2>
@@ -176,6 +190,24 @@ function CursoGrid() {
         <p><strong>Profesor:</strong> {profesor ? `${profesor.nombre} ${profesor.apellidos}` : (curso.profesor ? `Profesor ID: ${curso.profesor}` : 'Desconocido')}</p>
         <p><strong>Comentarios:</strong> {curso.comentarios}</p>
         <p><strong>Descripción:</strong> {curso.descripcion}</p>
+      </div>
+      <div className="contenido-curso">
+        <h3>Contenido del curso</h3>
+        {apuntes && apuntes.length > 0 ? (
+          <div className="apuntes-list">
+            <h4>Apuntes</h4>
+            <ul>
+              {apuntes.map((a) => (
+                <li key={a.id}>
+                  <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">{a.archivo}</a>
+                  {a.descripcion ? <p>{a.descripcion}</p> : null}
+                </li>
+              ))}
+            </ul>
+          </div>
+        ) : (
+          <p>No hay apuntes para este curso.</p>
+        )}
       </div>
     </div>
   );

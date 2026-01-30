@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import "../styles/AddCurso.css";
 import flecha from "../assets/flecha-correcta.png";
@@ -8,6 +8,9 @@ function AddCursoGrid() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
+  const [fileApunte, setFileApunte] = useState(null);
+  const [descripcionApunte, setDescripcionApunte] = useState("");
+  const fileInputRef = useRef(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -43,12 +46,41 @@ function AddCursoGrid() {
       const datos = await res.json();
 
       if (res.ok) {
+        // Si hay un fichero de apunte, subirlo con FormData al endpoint /apuntes
+        try {
+          const courseId = datos.id ?? datos.idCurso ?? datos.cursoId ?? datos.id_curso ?? null;
+          if (fileApunte && courseId) {
+            const formData = new FormData();
+            formData.append("archivo", fileApunte);
+            formData.append("autor", profesorId);
+            formData.append("curso", courseId);
+            formData.append("descripcion", descripcionApunte);
+
+            const resApunte = await fetch("http://localhost:3000/apuntes", {
+              method: "POST",
+              body: formData,
+            });
+
+            const apunteBody = await resApunte.json().catch(() => null);
+            if (!resApunte.ok) {
+              console.error("Error al subir apunte:", resApunte.status, apunteBody);
+              setError("Error al subir apunte");
+            }
+          }
+        } catch (errUpload) {
+          console.error("Error al subir apunte:", errUpload);
+          setError("Error al subir apunte");
+        }
+
         setSuccess("Curso creado correctamente");
         setError("");
         setNombreCurso("");
         setCategoria("");
         setDescripcion("");
         setNivel("");
+        setFileApunte(null);
+        setDescripcionApunte("");
+        if (fileInputRef.current) fileInputRef.current.value = "";
         setTimeout(() => setSuccess(""), 6000);
       } else {
         setError(datos.error || "Error al crear curso");
@@ -97,6 +129,26 @@ function AddCursoGrid() {
               value={descripcion}
               onChange={(e) => setDescripcion(e.target.value)}
               required
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Subir apunte (opcional)</label>
+            <input
+              type="file"
+              name="archivo"
+              accept=".pdf,.doc,.docx,.ppt,.pptx"
+              onChange={(e) => setFileApunte(e.target.files[0] || null)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Descripción del apunte (opcional)</label>
+            <textarea
+              className="descripcion-textarea"
+              placeholder="Descripción del apunte"
+              value={descripcionApunte}
+              onChange={(e) => setDescripcionApunte(e.target.value)}
             />
           </div>
 

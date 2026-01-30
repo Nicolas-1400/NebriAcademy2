@@ -1,9 +1,14 @@
 const express = require('express');
 const cors = require('cors');
 const app = express();
+const path = require('path');
 
 app.use(cors());
 app.use(express.json());
+
+// Servir archivos de apuntes guardados en el frontend (para descargas)
+// Servir archivos de apuntes del frontend (ruta absoluta desde el workspace root)
+app.use('/apuntes/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Apuntes')));
 
 
 // Rutas por recurso

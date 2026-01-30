@@ -4,8 +4,10 @@ const sequelize = require('../database/connection');
 const Apuntes = sequelize.define('apuntes', {
   autor: DataTypes.INTEGER,
   curso: DataTypes.INTEGER,
-  contenido: DataTypes.TEXT,
-  valoracion: DataTypes.FLOAT
+  archivo: DataTypes.STRING,
+  descripcion: DataTypes.TEXT,
+  valoracion: { type: DataTypes.FLOAT, defaultValue: 0 }
+
 }, { timestamps: false });
 
 module.exports = Apuntes;
