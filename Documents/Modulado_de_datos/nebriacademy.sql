@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 30-01-2026 a las 12:29:55
+-- Tiempo de generación: 01-02-2026 a las 20:06:47
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -127,7 +127,7 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `comentarios`, `descripcion`) VALUES
-(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 5.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
+(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 4.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
 (2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.'),
 (22, 'a', '', 15, 'Avanzado', 0, NULL, 'a'),
 (23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba'),
@@ -157,8 +157,11 @@ CREATE TABLE `cursosalumnos` (
 --
 
 INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`, `comentario`) VALUES
-(13, 1, 1, 1, 1, 1, NULL),
-(14, 1, 2, 0, 0, 1, NULL);
+(13, 1, 1, 1, 1, NULL, 'aaaaaaaaaa'),
+(14, 1, 2, 0, 0, 1, NULL),
+(16, 35, 1, 1, 0, NULL, 'q'),
+(17, 2, 1, 0, 0, NULL, NULL),
+(18, 34, 1, 1, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -481,7 +484,7 @@ ALTER TABLE `cursos`
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`

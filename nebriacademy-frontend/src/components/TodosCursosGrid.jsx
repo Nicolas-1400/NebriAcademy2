@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 
 function TodosCursosGrid() {
+    const location = useLocation();
     const [cursos, setCursos] = useState([]);
     const [profesores, setProfesores] = useState([]);
     const [error, setError] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState("");
+    const [selectedCategory, setSelectedCategory] = useState(location.state?.selectedCategory || "");
     const [selectedNivel, setSelectedNivel] = useState("");
     const [searchTerm, setSearchTerm] = useState("");
 
@@ -131,6 +133,7 @@ function TodosCursosGrid() {
                             name={curso.nombreCurso}
                             cursoId={curso.id}
                             categoria={curso.categoria}
+                            nivel={curso.nivel}
                             descripcion={curso.descripcion}
                             profesor={obtenerNombreProfesor(curso)}
                             valoracion={curso.valoracion}

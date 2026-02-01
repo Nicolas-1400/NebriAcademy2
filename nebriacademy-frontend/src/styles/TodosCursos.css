@@ -17,7 +17,6 @@
     border-radius: 10px;
     box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
     height: fit-content;
-    position: sticky;
     top: 20px;
 }
 
@@ -82,7 +81,7 @@
     padding-left: 18px;
 }
 
-/* Estilos para botones de filtros (categorías y niveles) */
+/* Estilos para botones de filtros */
 .categorias-sidebar button {
     width: 100%;
     border: solid var(--rojo-nebrija) 1px;
@@ -111,7 +110,6 @@
     padding-left: 18px;
 }
 
-/* Espaciado entre secciones */
 .categorias-sidebar .subtitulo-nivel {
     margin-top: 1rem;
 }

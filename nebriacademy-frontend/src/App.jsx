@@ -10,6 +10,9 @@ import './styles/RegisterExterno.css';
 import './styles/Perfil.css';
 import './styles/TodosCursos.css';
 import './styles/Politicas.css';
+import './styles/Curso.css';
+import './styles/HomeFeed.css';
+import './styles/TarjetaCursoPequena.css'
 
 function App() {
 

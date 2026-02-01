@@ -24,7 +24,7 @@ function CursoGrid() {
   const [usuario, setUsuario] = useState(null);
   const [videos, setVideos] = useState([]);
   useEffect(() => {
-    const usuarioIniciado = localStorage.getItem('usuario');
+    const usuarioIniciado = localStorage.getItem("usuario");
     setUsuario(JSON.parse(usuarioIniciado));
   }, []);
   const alumnoId = usuario ? usuario.id : null;
@@ -33,61 +33,63 @@ function CursoGrid() {
     setError(null);
     fetch(`http://localhost:3000/cursos/${id}`)
       .then((r) => {
-        if (!r.ok) throw new Error('Error en la respuesta');
+        if (!r.ok) throw new Error("Error en la respuesta");
         return r.json();
       })
       .then((data) => {
-          setCurso(data);
-          const profId = data && data.profesor;
-          if (profId) {
-            fetch(`http://localhost:3000/profesores/${profId}`)
-              .then((r) => {
-                if (!r.ok) throw new Error('Error al obtener profesor');
-                return r.json();
-              })
-              .then((pData) => setProfesor(pData))
-              .catch((err) => {
-                console.error('Error cargando profesor:', err);
-              });
-          }
+        setCurso(data);
+        const profId = data && data.profesor;
+        if (profId) {
+          fetch(`http://localhost:3000/profesores/${profId}`)
+            .then((r) => {
+              if (!r.ok) throw new Error("Error al obtener profesor");
+              return r.json();
+            })
+            .then((pData) => setProfesor(pData))
+            .catch((err) => {
+              console.error("Error cargando profesor:", err);
+            });
+        }
 
-          // la carga del registro se hace en un useEffect separado
-        })
+        // la carga del registro se hace en un useEffect separado
+      })
       .catch((err) => {
-        console.error('Error cargando curso:', err);
-        setError('No se pudo cargar el curso');
+        console.error("Error cargando curso:", err);
+        setError("No se pudo cargar el curso");
       });
   }, [id]);
 
   useEffect(() => {
     if (!id) return;
-    fetch('http://localhost:3000/apuntes')
+    fetch("http://localhost:3000/apuntes")
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data.Apuntes) ? data.Apuntes : (data || []);
-        const filtered = list.filter(a => String(a.curso) === String(id));
+        const list = Array.isArray(data.Apuntes) ? data.Apuntes : data || [];
+        const filtered = list.filter((a) => String(a.curso) === String(id));
         setApuntes(filtered);
       })
-      .catch((e) => console.error('Error cargando apuntes:', e));
+      .catch((e) => console.error("Error cargando apuntes:", e));
   }, [id]);
 
   useEffect(() => {
     if (!id) return;
-    fetch('http://localhost:3000/videos')
+    fetch("http://localhost:3000/videos")
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data.Videos) ? data.Videos : (data || []);
-        const filtered = list.filter(v => String(v.curso) === String(id));
+        const list = Array.isArray(data.Videos) ? data.Videos : data || [];
+        const filtered = list.filter((v) => String(v.curso) === String(id));
         setVideos(filtered);
       })
-      .catch((e) => console.error('Error cargando videos:', e));
+      .catch((e) => console.error("Error cargando videos:", e));
   }, [id]);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
   useEffect(() => {
-    const toBool = (v) => v === true || v === 1 || v === '1';
+    const toBool = (v) => v === true || v === 1 || v === "1";
     if (!alumnoId) return;
-    fetch(`http://localhost:3000/cursosalumnos/registro?cursoId=${parseInt(id)}&alumnoId=${alumnoId}`)
+    fetch(
+      `http://localhost:3000/cursosalumnos/registro?cursoId=${parseInt(id)}&alumnoId=${alumnoId}`,
+    )
       .then(async (r) => {
         return r.json();
       })
@@ -96,61 +98,87 @@ function CursoGrid() {
           ...registro,
           favorito: toBool(registro.favorito),
           apuntado: toBool(registro.apuntado),
-          valoracion: registro.valoracion === null || registro.valoracion === undefined ? null : toBool(registro.valoracion),
-          comentario: registro.comentario || ""
+          valoracion:
+            registro.valoracion === null || registro.valoracion === undefined
+              ? null
+              : toBool(registro.valoracion),
+          comentario: registro.comentario || "",
         };
         setRegistroCA(normalized);
         setComentario(normalized.comentario || "");
       })
-      .catch((e) => console.error('Error cargando cursosAlumnos', e));
+      .catch((e) => console.error("Error cargando cursosAlumnos", e));
   }, [alumnoId, id]);
 
   // acciones: votar, toggle favorito/apuntado, comentar
   const handleVote = async (voteBool) => {
     try {
-      const res = await fetch('http://localhost:3000/cursosalumnos/vote', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, vote: voteBool })
+      const res = await fetch("http://localhost:3000/cursosalumnos/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cursoId: parseInt(id),
+          alumnoId,
+          vote: voteBool,
+        }),
       });
       const data = await res.json();
       if (res.ok) {
         if (data.registro) setRegistroCA(data.registro);
-        if (data.curso && curso) setCurso({ ...curso, valoracion: data.curso.valoracion });
+        if (data.curso && curso)
+          setCurso({ ...curso, valoracion: data.curso.valoracion });
       } else console.error(data);
-    } catch (e) { console.error('vote error', e); }
+    } catch (e) {
+      console.error("vote error", e);
+    }
   };
 
   const handleToggleFav = async () => {
     try {
-      const res = await fetch('http://localhost:3000/cursosalumnos/toggle-fav', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cursoId: parseInt(id), alumnoId })
-      });
+      const res = await fetch(
+        "http://localhost:3000/cursosalumnos/toggle-fav",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cursoId: parseInt(id), alumnoId }),
+        },
+      );
       const data = await res.json();
       if (res.ok) setRegistroCA(data);
-    } catch (e) { console.error('fav error', e); }
+    } catch (e) {
+      console.error("fav error", e);
+    }
   };
 
   const handleToggleApuntado = async () => {
     try {
-      const res = await fetch('http://localhost:3000/cursosalumnos/toggle-apuntado', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cursoId: parseInt(id), alumnoId })
-      });
+      const res = await fetch(
+        "http://localhost:3000/cursosalumnos/toggle-apuntado",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ cursoId: parseInt(id), alumnoId }),
+        },
+      );
       const data = await res.json();
       if (res.ok) setRegistroCA(data);
-    } catch (e) { console.error('apuntado error', e); }
+    } catch (e) {
+      console.error("apuntado error", e);
+    }
   };
 
   const handleSubmitComment = async () => {
     try {
-      const res = await fetch('http://localhost:3000/cursosalumnos/comment', {
-        method: 'POST', headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, comentario })
+      const res = await fetch("http://localhost:3000/cursosalumnos/comment", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, comentario }),
       });
       const data = await res.json();
       if (res.ok) setRegistroCA(data);
-    } catch (e) { console.error('comment error', e); }
+    } catch (e) {
+      console.error("comment error", e);
+    }
   };
 
   if (error) return <p>{error}</p>;
@@ -171,72 +199,135 @@ function CursoGrid() {
   })();
 
   return (
-    <div className="cursoGrid">
-      <div className="curso-card">
-        <img src={FotoSelector} alt="Imagen del curso" />
-        <h2>{curso.nombreCurso}</h2>
-        <p>{curso.categoria}</p>
-        <p><strong>Nivel:</strong> {curso.nivel}</p>
+    <div className="curso-grid">
+      {/* HEADER CON IMAGEN DE FONDO Y BOTONES */}
+      <div 
+        className="curso-header" 
+        style={{ backgroundImage: `url(${FotoSelector})` }}
+      >
+        <div className="curso-header-info">
+          <h2>{curso.nombreCurso}</h2>
+          <p>{curso.categoria}</p>
+          <p>Nivel: {curso.nivel}</p>
+        </div>
         {alumnoId ? (
-          <>
+          <div className="curso-header-botones">
             <p>
-              <strong>Valoración:</strong> {curso.valoracion}
-              <button className="vote" onClick={() => handleVote(true)} >
-                <img src={registroCA && registroCA.valoracion === true ? FlechaMarcada : Flecha} alt="up" />
+              <strong>Valoración: {curso.valoracion}</strong>
+              <button className="vote-up" onClick={() => handleVote(true)}>
+                <img
+                  src={
+                    registroCA && registroCA.valoracion === true
+                      ? FlechaMarcada
+                      : Flecha
+                  }
+                  alt="up"
+                />
               </button>
-              <button className="vote" onClick={() => handleVote(false)} >
-                <img src={registroCA && registroCA.valoracion === false ? FlechaMarcada : Flecha} alt="down" />
+              <button className="vote-down" onClick={() => handleVote(false)}>
+                <img
+                  src={
+                    registroCA && registroCA.valoracion === false
+                      ? FlechaMarcada
+                      : Flecha
+                  }
+                  alt="down"
+                />
               </button>
             </p>
             <p>
-              <button onClick={handleToggleFav}>{registroCA && registroCA.favorito ? '★ Favorito' : '☆ Favorito'}</button>
-              <button onClick={handleToggleApuntado} >{registroCA && registroCA.apuntado ? '✔ Apuntado' : 'Apuntarme'}</button>
+              <button className="btn-favorito" onClick={handleToggleFav}>
+                {registroCA && registroCA.favorito
+                  ? "★ Favorito"
+                  : "☆ Favorito"}
+              </button>
+              <button className="btn-apuntarme" onClick={handleToggleApuntado}>
+                {registroCA && registroCA.apuntado ? "✔ Apuntado" : "Apuntarme"}
+              </button>
             </p>
-            <p>
-              <textarea maxLength={500} placeholder="Escribe un comentario (max 500)" value={comentario} onChange={(e)=>setComentario(e.target.value)} />
-              <br />
-              <button onClick={handleSubmitComment}>Enviar comentario</button>
-            </p>
-          </>
+          </div>
         ) : null}
-        <p><strong>Profesor:</strong> {profesor ? `${profesor.nombre} ${profesor.apellidos}` : (curso.profesor ? `Profesor ID: ${curso.profesor}` : 'Desconocido')}</p>
-        <p><strong>Comentarios:</strong> {curso.comentarios}</p>
-        <p><strong>Descripción:</strong> {curso.descripcion}</p>
       </div>
-      <div className="contenido-curso">
-        <h3>Contenido del curso</h3>
-        {apuntes && apuntes.length > 0 ? (
-          <div className="apuntes-list">
-            <h4>Apuntes</h4>
-            <ul>
-              {apuntes.map((a) => (
-                <li key={a.id}>
-                  <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">{a.archivo}</a>
-                  {a.descripcion ? <p>{a.descripcion}</p> : null}
-                </li>
+
+      {/* CONTENIDO PRINCIPAL: 75% + DETALLES: 25% */}
+      <div className="curso-contenedor-principal">
+        {/* CONTENIDO DEL CURSO - 75% */}
+        <div className="contenido-curso">
+          <h3>Contenido del curso</h3>
+          {videos && videos.length > 0 ? (
+            <div className="videos-list">
+              <h4>Vídeos</h4>
+              {videos.map((v) => (
+                <div key={v.id} className="video-item">
+                  {v.nombre ? <h5>{v.nombre}</h5> : null}
+                  <video controls>
+                    <source
+                      src={`http://localhost:3000/videos/files/${v.archivo}`}
+                      type="video/mp4"
+                    />
+                    Tu navegador no soporta el elemento <code>video</code>.
+                  </video>
+                </div>
               ))}
-            </ul>
+            </div>
+          ) : (
+            <p>No hay vídeos para este curso.</p>
+          )}
+          {apuntes && apuntes.length > 0 ? (
+            <div className="apuntes-list">
+              <h4>Apuntes</h4>
+              <ul>
+                {apuntes.map((a) => (
+                  <li key={a.id}>
+                    <a
+                      href={`http://localhost:3000/apuntes/files/${a.archivo}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {a.archivo}
+                    </a>
+                    {a.descripcion ? <p>{a.descripcion}</p> : null}
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No hay apuntes para este curso.</p>
+          )}
+        </div>
+
+        {/* DETALLES - 25% */}
+        <div className="curso-detalles">
+          <div className="detalles-profesor">
+            <p>Profesor</p>
+            {profesor
+              ? `${profesor.nombre} ${profesor.apellidos}`
+              : curso.profesor
+                ? `Profesor ID: ${curso.profesor}`
+                : "Desconocido"}
           </div>
-        ) : (
-          <p>No hay apuntes para este curso.</p>
-        )}
-        {videos && videos.length > 0 ? (
-          <div className="videos-list">
-            <h4>Vídeos</h4>
-            {videos.map((v) => (
-              <div key={v.id} className="video-item">
-                {v.nombre ? <h5>{v.nombre}</h5> : null}
-                <video controls>
-                  <source src={`http://localhost:3000/videos/files/${v.archivo}`} type="video/mp4" />
-                  Tu navegador no soporta el elemento <code>video</code>.
-                </video>
-                
+          <div className="detalles-descripcion">
+            <p>Descripción</p>
+            {curso.descripcion}
+          </div>
+          <div className="detalles-comentarios">
+            <p>Comentarios</p>
+            <div className="comentarios-existentes">
+              {curso.comentarios}
+            </div>
+            {alumnoId ? (
+              <div className="escribir-comentario">
+                <textarea
+                  maxLength={500}
+                  placeholder="Escribe un comentario (max 500)"
+                  value={comentario}
+                  onChange={(e) => setComentario(e.target.value)}
+                />
+                <button onClick={handleSubmitComment}>Enviar comentario</button>
               </div>
-            ))}
+            ) : null}
           </div>
-        ) : (
-          <p>No hay vídeos para este curso.</p>
-        )}
+        </div>
       </div>
     </div>
   );

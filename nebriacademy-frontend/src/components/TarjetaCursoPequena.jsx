@@ -10,7 +10,7 @@ import Foto8 from "../assets/ImagenesCursos/Foto8.jpg"
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg"
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg"
 
-function TarjetaCursos({ name, cursoId, categoria, nivel, descripcion, profesor, valoracion }) {
+function TarjetaCursoPequena({ name, cursoId, nivel, valoracion }) {
 
     const navigate = useNavigate();
 
@@ -20,7 +20,7 @@ function TarjetaCursos({ name, cursoId, categoria, nivel, descripcion, profesor,
 
   return (
     <div
-        className="tarjeta-curso"
+        className="tarjeta-curso-pequena"
         onClick={() => handleCursoClick(cursoId)}
     >
         {
@@ -50,13 +50,10 @@ function TarjetaCursos({ name, cursoId, categoria, nivel, descripcion, profesor,
             })()
         }
         <h3>{name}</h3>
-        <p className="p-categoria">Categoría: {categoria}</p>
         <p className="p-nivel">Nivel: {nivel}</p>
-        <p className="p-descripcion">{descripcion}</p>
-        <p className="p-profesor">{profesor}</p>
-        <p className="p-valoracion">Valoración: {valoracion}</p>
+        <p className="p-valoracion">⭐ {valoracion}</p>
     </div>
   )
 }
 
-export default TarjetaCursos
+export default TarjetaCursoPequena
