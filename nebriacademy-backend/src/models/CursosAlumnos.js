@@ -6,9 +6,7 @@ const CursosAlumnos = sequelize.define('cursosalumnos', {
   alumnoId: DataTypes.INTEGER,
   favorito: DataTypes.BOOLEAN,
   apuntado: DataTypes.BOOLEAN,
-  // map DB column "valoración" to JS attribute `valoracion` (boolean)
-  valoracion: { type: DataTypes.BOOLEAN, field: 'valoración' },
-  comentario: DataTypes.TEXT
+  valoracion: { type: DataTypes.BOOLEAN, field: 'valoración' }
 }, { timestamps: false });
 
 module.exports = CursosAlumnos;

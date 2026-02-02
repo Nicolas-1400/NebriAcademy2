@@ -23,6 +23,9 @@ function CursoGrid() {
   const { id } = useParams();
   const [usuario, setUsuario] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [comentariosList, setComentariosList] = useState([]);
+  const [editingId, setEditingId] = useState(null);
+  const [editingText, setEditingText] = useState("");
   useEffect(() => {
     const usuarioIniciado = localStorage.getItem("usuario");
     setUsuario(JSON.parse(usuarioIniciado));
@@ -61,6 +64,14 @@ function CursoGrid() {
 
   useEffect(() => {
     if (!id) return;
+    // cargar comentarios para este curso
+    fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data.Comentarios) ? data.Comentarios : data || [];
+        setComentariosList(list);
+      })
+      .catch((e) => console.error('Error cargando comentarios:', e));
     fetch("http://localhost:3000/apuntes")
       .then((r) => r.json())
       .then((data) => {
@@ -169,16 +180,63 @@ function CursoGrid() {
 
   const handleSubmitComment = async () => {
     try {
-      const res = await fetch("http://localhost:3000/cursosalumnos/comment", {
+      const res = await fetch("http://localhost:3000/comentarioalumnocurso", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cursoId: parseInt(id), alumnoId, comentario }),
+        body: JSON.stringify({ cursoId: parseInt(id), usuarioId: alumnoId, comentario }),
       });
       const data = await res.json();
-      if (res.ok) setRegistroCA(data);
+      if (res.ok) {
+        // recargar lista de comentarios
+        const r2 = await fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`);
+        const d2 = await r2.json();
+        const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
+        setComentariosList(list);
+        setComentario("");
+      }
     } catch (e) {
       console.error("comment error", e);
     }
+  };
+
+  const handleStartEdit = (c) => {
+    setEditingId(c.id);
+    setEditingText(c.comentario || "");
+  };
+
+  const handleCancelEdit = () => {
+    setEditingId(null);
+    setEditingText("");
+  };
+
+  const handleSaveEdit = async (idToEdit) => {
+    try {
+      const res = await fetch(`http://localhost:3000/comentarioalumnocurso/${idToEdit}`, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ usuarioId: alumnoId, comentario: editingText })
+      });
+      if (res.ok) {
+        const r2 = await fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`);
+        const d2 = await r2.json();
+        const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
+        setComentariosList(list);
+        handleCancelEdit();
+      } else {
+        console.error('Error editando comentario');
+      }
+    } catch (e) { console.error('edit error', e); }
+  };
+
+  const handleDelete = async (idToDelete) => {
+    try {
+      const res = await fetch(`http://localhost:3000/comentarioalumnocurso/${idToDelete}?usuarioId=${alumnoId}`, { method: 'DELETE' });
+      if (res.ok) {
+        setComentariosList((prev) => prev.filter((c) => c.id !== idToDelete));
+      } else {
+        console.error('Error borrando comentario');
+      }
+    } catch (e) { console.error('delete error', e); }
   };
 
   if (error) return <p>{error}</p>;
@@ -313,7 +371,38 @@ function CursoGrid() {
           <div className="detalles-comentarios">
             <p>Comentarios</p>
             <div className="comentarios-existentes">
-              {curso.comentarios}
+              {comentariosList && comentariosList.length > 0 ? (
+                comentariosList.map((c) => (
+                  <div key={c.id} className="comentario-item">
+                    <div className="comentario-autor" style={{ fontSize: '0.85em', color: '#555' }}>
+                      {c.nombre || 'Usuario'} {c.apellidos || ''}
+                    </div>
+                    <div className="comentario-texto">
+                      {editingId === c.id ? (
+                        <div>
+                          <textarea value={editingText} onChange={(e) => setEditingText(e.target.value)} maxLength={500} />
+                          <button onClick={() => handleSaveEdit(c.id)}>Guardar</button>
+                          <button onClick={handleCancelEdit}>Cancelar</button>
+                        </div>
+                      ) : (
+                        <p>{c.comentario}</p>
+                      )}
+                    </div>
+                    {alumnoId && c.usuarioId === alumnoId ? (
+                      <div className="comentario-acciones">
+                        {editingId !== c.id ? (
+                          <>
+                            <button onClick={() => handleStartEdit(c)}>Editar</button>
+                            <button onClick={() => handleDelete(c.id)}>Borrar</button>
+                          </>
+                        ) : null}
+                      </div>
+                    ) : null}
+                  </div>
+                ))
+              ) : (
+                <p>No hay comentarios para este curso.</p>
+              )}
             </div>
             {alumnoId ? (
               <div className="escribir-comentario">

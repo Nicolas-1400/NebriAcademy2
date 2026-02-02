@@ -17,6 +17,7 @@ router.get('/', (req, res) => {
 		+"<br>/profesorescursos"
 		+"<br>/puntuacionesejercicios"
 		+"<br>/usuarios"
+		+"<br>/comentarioalumnocurso"
 		+"<br>/videos");
 });
 

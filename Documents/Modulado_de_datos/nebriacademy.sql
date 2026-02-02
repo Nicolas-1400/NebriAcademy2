@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 01-02-2026 a las 20:06:47
+-- Tiempo de generación: 02-02-2026 a las 17:03:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -108,6 +108,26 @@ INSERT INTO `apuntes` (`id`, `autor`, `curso`, `archivo`, `descripcion`, `valora
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `comentarioalumnocurso`
+--
+
+CREATE TABLE `comentarioalumnocurso` (
+  `id` int(11) NOT NULL,
+  `usuarioId` int(11) NOT NULL,
+  `cursoId` int(11) NOT NULL,
+  `comentario` text DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `comentarioalumnocurso`
+--
+
+INSERT INTO `comentarioalumnocurso` (`id`, `usuarioId`, `cursoId`, `comentario`) VALUES
+(1, 2, 1, 'Hola');
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `cursos`
 --
 
@@ -118,7 +138,6 @@ CREATE TABLE `cursos` (
   `profesor` int(11) NOT NULL,
   `nivel` varchar(50) DEFAULT NULL,
   `valoracion` float DEFAULT 0,
-  `comentarios` text DEFAULT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -126,15 +145,15 @@ CREATE TABLE `cursos` (
 -- Volcado de datos para la tabla `cursos`
 --
 
-INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `comentarios`, `descripcion`) VALUES
-(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 4.5, 'Muy buen curso', 'Curso básico para aprender Python.'),
-(2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Contenido útil', 'Curso sobre fundamentos de redes y seguridad informática.'),
-(22, 'a', '', 15, 'Avanzado', 0, NULL, 'a'),
-(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, NULL, 'Prueba'),
-(32, 'Prueba video', 'Programacion', 15, 'Intermedio', 0, NULL, 'Prueba video'),
-(33, 'alo', 'BDD', 15, 'Intermedio', 0, NULL, 'ola'),
-(34, 'fdsfs', 'Marketing', 15, 'Intermedio', 0, NULL, 'sfsdf'),
-(35, 'gsgds', 'Diseno', 15, 'Avanzado', 0, NULL, 'gsgsg');
+INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `descripcion`) VALUES
+(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 4.5, 'Curso básico para aprender Python.'),
+(2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Curso sobre fundamentos de redes y seguridad informática.'),
+(22, 'a', '', 15, 'Avanzado', 0, 'a'),
+(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, 'Prueba'),
+(32, 'Prueba video', 'Programacion', 15, 'Intermedio', 0, 'Prueba video'),
+(33, 'alo', 'BDD', 15, 'Intermedio', 0, 'ola'),
+(34, 'fdsfs', 'Marketing', 15, 'Intermedio', 0, 'sfsdf'),
+(35, 'gsgds', 'Diseno', 15, 'Avanzado', 0, 'gsgsg');
 
 -- --------------------------------------------------------
 
@@ -148,20 +167,21 @@ CREATE TABLE `cursosalumnos` (
   `alumnoId` int(11) NOT NULL,
   `favorito` tinyint(1) DEFAULT NULL,
   `apuntado` tinyint(1) DEFAULT NULL,
-  `valoración` tinyint(1) DEFAULT NULL,
-  `comentario` text DEFAULT NULL
+  `valoración` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cursosalumnos`
 --
 
-INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`, `comentario`) VALUES
-(13, 1, 1, 1, 1, NULL, 'aaaaaaaaaa'),
-(14, 1, 2, 0, 0, 1, NULL),
-(16, 35, 1, 1, 0, NULL, 'q'),
-(17, 2, 1, 0, 0, NULL, NULL),
-(18, 34, 1, 1, NULL, NULL, NULL);
+INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`) VALUES
+(13, 1, 1, 1, 1, NULL),
+(14, 1, 2, 1, 1, 1),
+(16, 35, 1, 1, 0, NULL),
+(17, 2, 1, 0, 0, NULL),
+(18, 34, 1, 1, NULL, NULL),
+(23, 35, 2, NULL, NULL, NULL),
+(24, 2, 2, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -383,6 +403,14 @@ ALTER TABLE `apuntes`
   ADD KEY `curso` (`curso`);
 
 --
+-- Indices de la tabla `comentarioalumnocurso`
+--
+ALTER TABLE `comentarioalumnocurso`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `usuarioId` (`usuarioId`),
+  ADD KEY `cursoId` (`cursoId`);
+
+--
 -- Indices de la tabla `cursos`
 --
 ALTER TABLE `cursos`
@@ -475,6 +503,12 @@ ALTER TABLE `apuntes`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
 
 --
+-- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
+--
+ALTER TABLE `comentarioalumnocurso`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+
+--
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
@@ -484,7 +518,7 @@ ALTER TABLE `cursos`
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`
@@ -550,6 +584,13 @@ ALTER TABLE `alumnos`
 ALTER TABLE `apuntes`
   ADD CONSTRAINT `apuntes_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `apuntes_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+
+--
+-- Filtros para la tabla `comentarioalumnocurso`
+--
+ALTER TABLE `comentarioalumnocurso`
+  ADD CONSTRAINT `comentarioalumnocurso_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`),
+  ADD CONSTRAINT `comentarioalumnocurso_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`);
 
 --
 -- Filtros para la tabla `cursos`
