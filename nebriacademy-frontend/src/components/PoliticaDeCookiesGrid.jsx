@@ -22,7 +22,7 @@ function PoliticaDeCookiesGrid() {
         otros datos análogos del usuario que se ha conectado.
       </p>
 
-      <h2>Qué tipos de cookies hay?</h2>
+      <h2>¿Qué tipos de cookies hay?</h2>
       <p>
         Las cookies pueden ser propias o de terceros. Las propias son aquéllas
         que se envían al equipo terminal del usuario desde un equipo o dominio

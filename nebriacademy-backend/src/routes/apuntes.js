@@ -56,12 +56,10 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
     let autor = null;
     if (autorInput) {
-      // Try as Usuarios id
       const u = await Usuarios.findByPk(autorInput);
       if (u) {
         autor = autorInput;
       } else {
-        // Try as Profesor id -> map to usuarioId
         const p = await Profesores.findByPk(autorInput);
         if (p && p.usuarioId) {
           autor = p.usuarioId;

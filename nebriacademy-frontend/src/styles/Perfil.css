@@ -55,7 +55,8 @@
 
 .telPerfil,
 .paisPerfil,
-.localidadPerfil {
+.localidadPerfil,
+.redesPerfil {
     font-size: 13px;
     color: #666;
     margin-top: 5px;

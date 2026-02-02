@@ -5,7 +5,6 @@ import TarjetaCursoPequena from "./TarjetaCursoPequena";
 function HomeFeed() {
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
-  const [profesores, setProfesores] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
@@ -26,12 +25,10 @@ function HomeFeed() {
 
     Promise.all([
       fetch("http://localhost:3000/cursos").then((r) => r.json()),
-      fetch("http://localhost:3000/profesores").then((r) => r.json()),
       fetch("http://localhost:3000/cursosalumnos").then((r) => r.json()),
     ])
-      .then(([cursosData, profesoresData, cursosAlumnosData]) => {
+      .then(([cursosData, cursosAlumnosData]) => {
         setCursos(cursosData.Cursos || []);
-        setProfesores(profesoresData.Profesores || []);
         setCursosAlumnos(cursosAlumnosData.CursosAlumnos || []);
       })
       .catch((err) => {
@@ -64,13 +61,10 @@ function HomeFeed() {
       .slice(0, 4);
   };
 
-  const obtenerNombreProfesor = (profesorId) => {
-    const prof = profesores.find((p) => p.id === profesorId);
-    return prof ? `${prof.nombre} ${prof.apellidos}` : "Desconocido";
-  };
+  
 
   const handleCategoryClick = (categoria) => {
-    navigate(`/Home/TodosCursos`, { state: { selectedCategory: categoria } });
+    navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };
 
   if (loading) {
@@ -136,7 +130,23 @@ function HomeFeed() {
           </div>
         </div>
 
-        {/* Sección 3: Cursos Populares */}
+        {/* Sección 3: Categorías */}
+        <div className="HomeFeed-seccion-categorias">
+          <h2>Categorías</h2>
+          <div className="HomeFeed-categorias-buttons">
+            {CATEGORIAS.map((categoria) => (
+              <button
+                key={categoria}
+                className="categoria-btn"
+                onClick={() => handleCategoryClick(categoria)}
+              >
+                {categoria}
+              </button>
+            ))}
+          </div>
+        </div>
+
+        {/* Sección 4: Cursos Populares */}
         <div className="HomeFeed-seccion-cursos-populares">
           <h2>Cursos populares</h2>
           <div className="HomeFeed-cursos-populares-carousel">
@@ -153,22 +163,6 @@ function HomeFeed() {
             ) : (
               <p className="mensaje-vacio">No hay cursos disponibles</p>
             )}
-          </div>
-        </div>
-
-        {/* Sección 4: Categorías */}
-        <div className="HomeFeed-seccion-categorias">
-          <h2>Categorías</h2>
-          <div className="HomeFeed-categorias-buttons">
-            {CATEGORIAS.map((categoria) => (
-              <button
-                key={categoria}
-                className="categoria-btn"
-                onClick={() => handleCategoryClick(categoria)}
-              >
-                {categoria}
-              </button>
-            ))}
           </div>
         </div>
       </div>

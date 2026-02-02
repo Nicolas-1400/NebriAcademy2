@@ -228,7 +228,7 @@ function AddCursoGrid() {
             error && <p className="mensaje-error">{error}</p>
           )}
           <button type="submit" className="boton-editar-perfil">Crear curso</button>
-          <button className="boton-go-back" onClick={() => navigate('/HomeProfesor')}>
+          <button className="boton-go-back" onClick={() => navigate('/Home')}>
             <img src={flecha} alt="Volver" />
             <p>Volver</p>
           </button>

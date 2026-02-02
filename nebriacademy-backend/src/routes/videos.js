@@ -51,24 +51,18 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     if (!req.file) return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
 
     // El campo 'autor' en la tabla `videos` referencia a `profesores.id`.
-    // Aceptamos como entrada tanto el `profesor.id` como el `usuarios.id` asociado.
-    let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
-    let autor = null;
-    if (autorInput) {
-      // Si existe un profesor con ese id, úsalo directamente
-      const pById = await Profesores.findByPk(autorInput);
-      if (pById) {
-        autor = autorInput; // profesor.id
-      } else {
-        // Si no, quizá nos pasaron un usuarioId: buscar el profesor asociado
-        const pByUsuario = await Profesores.findOne({ where: { usuarioId: autorInput } });
-        if (pByUsuario) autor = pByUsuario.id;
-      }
+    // Requerimos que el cliente envíe el `id` del profesor y que exista.
+    const autor = req.body.autor ? parseInt(req.body.autor) : null;
+    if (!autor || Number.isNaN(autor)) {
+      return res.status(400).json({ error: "Campo 'autor' es requerido y debe ser un id de profesor" });
+    }
+    const profesor = await Profesores.findByPk(autor);
+    if (!profesor) {
+      return res.status(400).json({ error: "Profesor no encontrado para el campo 'autor'" });
     }
 
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
     const archivo = req.file ? req.file.filename : null;
-    // Preserve the provided name exactly (allow spaces anywhere)
     const nombre = req.body.nombre ? String(req.body.nombre) : null;
 
     // Validación: nombre y archivo deben venir juntos (ambos presentes)

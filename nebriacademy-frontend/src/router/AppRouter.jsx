@@ -5,7 +5,8 @@ import MiEspacio from "../pages/MiEspacio.jsx"
 import TodosCursos from "../pages/TodosCursos.jsx"
 import Curso from "../pages/Curso.jsx"
 import AddCurso from "../pages/AddCurso.jsx"
-import Profesores from "../pages/Profesores.jsx"
+import TodosProfesores from "../pages/TodosProfesores.jsx"
+import InfoProfesor from "../pages/InfoProfesor.jsx"
 import Apuntes from "../pages/Apuntes.jsx"
 import PreRegister from "../pages/PreRegister.jsx"
 import VerificacionAlumnoNebrija from "../pages/VerificacionAlumnoNebrija.jsx"
@@ -32,7 +33,8 @@ function AppRouter() {
         <Route path="/Home/Cursos" element={<TodosCursos />} />
         <Route path="/Home/Cursos/:id" element={<Curso />} />
         <Route path="/Home/AddCurso" element={<AddCurso />} />
-        <Route path="/Home/Profesores" element={<Profesores />} />
+        <Route path="/Home/Profesores" element={<TodosProfesores />} />
+        <Route path="/Home/Profesores/:id" element={<InfoProfesor />} />
         <Route path="/Home/Apuntes" element={<Apuntes />} />
         <Route path="/Home/Perfil" element={<Perfil />} />
         <Route path="/Home/PoliticaDePrivacidad" element={<PoliticaDePrivacidad />} />

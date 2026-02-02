@@ -57,6 +57,7 @@ function NavProfesor() {
         </div>
       </a>
       <div className="contenedor-elementos-nav-profesor">
+        <button type="button" className="boton-nav" onClick={() => navigate('/Home/Apuntes')}>Apuntes</button>
         <button className="boton-añadir-curso" onClick={clickBtnAddCurso}>
           <img
             className="icono-boton-mas"
