@@ -1,26 +1,34 @@
-@import './general.css';
-
 .TodosProfesoresGrid {
   padding: 40px 20px;
-  max-width: 1200px;
-  margin: 0 auto;
-}
-
-.TodosProfesoresGrid h2 {
-  font-size: 28px;
-  color: var(--rojo-nebrija);
-  margin: 0 0 20px 0;
-  font-weight: 700;
+  width: 100%;
+  background-image: url("../assets/fondo-clase.jpg");
+  background-size: cover;
+  background-position: center;
 }
 
 .profesores-grid {
+  background-color: rgba(255, 255, 255, 0.8);
+  border-radius: 10px;
+}
+
+.profesores-grid h2 {
+  margin: 0 20px;
+  font-size: 28px;
+  color: black;
+  padding: 10px 15px;
+  border-bottom: 5px solid var(--rojo-nebrija);
+  font-weight: 700;
+}
+
+.profesores-contenedor {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
   align-items: stretch;
+  padding: 20px;
 }
 
-.profesores-grid .tarjeta-profesor {
+.profesores-contenedor .tarjeta-profesor {
   flex: 0 0 240px;
 }
 
@@ -35,16 +43,16 @@
 }
 
 /* Scrollbar cuando haya overflow horizontal */
-.profesores-grid::-webkit-scrollbar {
+.profesores-contenedor::-webkit-scrollbar {
   height: 8px;
 }
 
-.profesores-grid::-webkit-scrollbar-track {
+.profesores-contenedor::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
-.profesores-grid::-webkit-scrollbar-thumb {
+.profesores-contenedor::-webkit-scrollbar-thumb {
   background: var(--rojo-nebrija);
   border-radius: 10px;
 }
@@ -60,19 +68,19 @@
     margin-bottom: 18px;
   }
 
-  .profesores-grid .tarjeta-profesor {
+  .profesores-contenedor .tarjeta-profesor {
     flex: 0 0 48%;
   }
 }
 
 /* RESPONSIVE 480px */
 @media (max-width: 480px) {
-  .profesores-grid {
+  .profesores-contenedor {
     gap: 12px;
     justify-content: center;
   }
 
-  .profesores-grid .tarjeta-profesor {
+  .profesores-contenedor .tarjeta-profesor {
     flex: 0 0 100%;
     max-width: 420px;
   }

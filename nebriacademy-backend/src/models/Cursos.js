@@ -7,7 +7,6 @@ const Cursos = sequelize.define('cursos', {
   profesor: DataTypes.INTEGER,
   nivel: DataTypes.STRING,
   valoracion: DataTypes.FLOAT,
-  comentarios: DataTypes.TEXT,
   descripcion: DataTypes.TEXT
 }, { timestamps: false });
 

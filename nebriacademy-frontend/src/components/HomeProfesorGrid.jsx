@@ -43,6 +43,7 @@ function HomeProfesorGrid() {
                             name={c.nombreCurso}
                             cursoId={c.id}
                             categoria={c.categoria}
+                            nivel={c.nivel}
                             descripcion={c.descripcion}
                             profesor={usuario ? `${usuario.nombre} ${usuario.apellidos}` : ''}
                             valoracion={c.valoracion}

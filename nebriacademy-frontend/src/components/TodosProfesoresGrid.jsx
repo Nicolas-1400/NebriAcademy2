@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
@@ -11,7 +10,9 @@ function TodosProfesoresGrid() {
     fetch("http://localhost:3000/profesores")
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data.Profesores) ? data.Profesores : data || [];
+        const list = Array.isArray(data.Profesores)
+          ? data.Profesores
+          : data || [];
         setProfesores(list);
       })
       .catch((e) => {
@@ -24,18 +25,20 @@ function TodosProfesoresGrid() {
 
   return (
     <div className="TodosProfesoresGrid">
-      <h2>Profesores</h2>
       {profesores && profesores.length > 0 ? (
         <div className="profesores-grid">
-          {profesores.map((p) => (
-            <TarjetaProfesores
-              key={p.id}
-              nombre={p.nombre}
-              apellidos={p.apellidos}
-              especializacion={p.especializacion}
-              profesorId={p.id}
-            />
-          ))}
+          <h2>Profesores</h2>
+          <div className="profesores-contenedor">
+            {profesores.map((p) => (
+              <TarjetaProfesores
+                key={p.id}
+                nombre={p.nombre}
+                apellidos={p.apellidos}
+                especializacion={p.especializacion}
+                profesorId={p.id}
+              />
+            ))}
+          </div>
         </div>
       ) : (
         <p>No hay profesores disponibles.</p>
