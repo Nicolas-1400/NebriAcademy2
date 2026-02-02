@@ -1,0 +1,76 @@
+@import './general.css';
+
+/* Contenedor principal */
+.HomeProfesorGrid {
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+/* Título de bienvenida */
+.HomeProfesorGrid h1 {
+  font-size: 32px;
+  color: var(--rojo-nebrija);
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+/* Grid de cursos del profesor */
+.grid-cursos-profesor {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+  gap: 30px;
+  padding: 20px 0;
+}
+
+/* Mensaje vacío */
+.grid-cursos-profesor > p {
+  color: #999;
+  font-size: 16px;
+  font-style: italic;
+  padding: 40px 20px;
+  text-align: center;
+  grid-column: 1 / -1;
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  border: 1px dashed #ddd;
+}
+
+/* RESPONSIVE - Tablets (768px) */
+@media (max-width: 768px) {
+  .HomeProfesorGrid {
+    padding: 30px 15px;
+  }
+
+  .HomeProfesorGrid h1 {
+    font-size: 26px;
+    margin-bottom: 30px;
+  }
+
+  .grid-cursos-profesor {
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: 20px;
+  }
+}
+
+/* RESPONSIVE - Mobile (480px) */
+@media (max-width: 480px) {
+  .HomeProfesorGrid {
+    padding: 20px 10px;
+  }
+
+  .HomeProfesorGrid h1 {
+    font-size: 22px;
+    margin-bottom: 25px;
+  }
+
+  .grid-cursos-profesor {
+    grid-template-columns: 1fr;
+    gap: 15px;
+  }
+
+  .grid-cursos-profesor > p {
+    padding: 30px 15px;
+    font-size: 14px;
+  }
+}

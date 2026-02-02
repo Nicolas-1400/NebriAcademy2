@@ -1,0 +1,186 @@
+@import './general.css';
+
+.MiEspacio {
+  padding: 40px 20px;
+  max-width: 1400px;
+  margin: 0 auto;
+}
+
+.MiEspacio h1 {
+  font-size: 32px;
+  color: var(--rojo-nebrija);
+  margin-bottom: 40px;
+  font-weight: 700;
+}
+
+.MiEspacio-secciones {
+  display: flex;
+  flex-direction: column;
+  gap: 50px;
+}
+
+/* Secciones de Carouseles */
+.MiEspacio-seccion-cursos-proceso,
+.MiEspacio-seccion-cursos-favoritos,
+.MiEspacio-seccion-tus-apuntes,
+.MiEspacio-seccion-apuntes-guardados {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+
+.MiEspacio-seccion-cursos-proceso h2,
+.MiEspacio-seccion-cursos-favoritos h2,
+.MiEspacio-seccion-tus-apuntes h2,
+.MiEspacio-seccion-apuntes-guardados h2 {
+  font-size: 24px;
+  color: #333;
+  margin: 0;
+  font-weight: 600;
+}
+
+.MiEspacio-cursos-proceso-carousel,
+.MiEspacio-cursos-favoritos-carousel,
+.MiEspacio-tus-apuntes-carousel,
+.MiEspacio-apuntes-guardados-carousel {
+  display: flex;
+  flex-direction: row;
+  gap: 20px;
+  overflow-x: auto;
+  padding: 10px 0;
+  scroll-behavior: smooth;
+  flex-wrap: wrap;
+}
+
+
+
+.mensaje-vacio {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Tarjeta de Apunte */
+.tarjeta-apunte {
+  max-width: 250px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  border-left: 4px solid var(--rojo-nebrija);
+}
+
+.tarjeta-apunte:hover {
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(194, 0, 47, 0.2);
+}
+
+.tarjeta-apunte h4 {
+  font-size: 15px;
+  color: var(--rojo-nebrija);
+  margin: 0;
+  font-weight: 600;
+  line-height: 1.3;
+}
+
+.tarjeta-apunte p {
+  font-size: 12px;
+  color: #666;
+  margin: 0;
+  line-height: 1.4;
+  overflow: hidden;
+}
+
+/* RESPONSIVE 768px */
+@media (max-width: 768px) {
+  .MiEspacio {
+    padding: 30px 15px;
+  }
+
+  .MiEspacio h1 {
+    font-size: 24px;
+    margin-bottom: 30px;
+  }
+
+  .MiEspacio-secciones {
+    gap: 35px;
+  }
+
+  .MiEspacio-seccion-cursos-proceso h2,
+  .MiEspacio-seccion-cursos-favoritos h2,
+  .MiEspacio-seccion-tus-apuntes h2,
+  .MiEspacio-seccion-apuntes-guardados h2 {
+    font-size: 18px;
+  }
+
+  .MiEspacio-cursos-proceso-carousel,
+  .MiEspacio-cursos-favoritos-carousel,
+  .MiEspacio-tus-apuntes-carousel,
+  .MiEspacio-apuntes-guardados-carousel {
+    gap: 15px;
+  }
+
+  .tarjeta-apunte {
+    max-width: 200px;
+    padding: 12px;
+  }
+
+  .tarjeta-apunte h4 {
+    font-size: 13px;
+  }
+
+  .tarjeta-apunte p {
+    font-size: 11px;
+  }
+}
+
+/* RESPONSIVE 480px */
+@media (max-width: 480px) {
+  .MiEspacio {
+    padding: 20px 10px;
+  }
+
+  .MiEspacio h1 {
+    font-size: 20px;
+    margin-bottom: 25px;
+  }
+
+  .MiEspacio-secciones {
+    gap: 30px;
+  }
+
+  .MiEspacio-seccion-cursos-proceso h2,
+  .MiEspacio-seccion-cursos-favoritos h2,
+  .MiEspacio-seccion-tus-apuntes h2,
+  .MiEspacio-seccion-apuntes-guardados h2 {
+    font-size: 16px;
+  }
+
+  .MiEspacio-cursos-proceso-carousel,
+  .MiEspacio-cursos-favoritos-carousel,
+  .MiEspacio-tus-apuntes-carousel,
+  .MiEspacio-apuntes-guardados-carousel {
+    gap: 12px;
+  }
+
+  .tarjeta-apunte {
+    max-width: 150px;
+    padding: 10px;
+  }
+
+  .tarjeta-apunte h4 {
+    font-size: 12px;
+  }
+
+  .tarjeta-apunte p {
+    font-size: 10px;
+  }
+}

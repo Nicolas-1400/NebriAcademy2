@@ -16,6 +16,8 @@ import './styles/TarjetaCursoPequena.css'
 import './styles/TarjetaProfesor.css'
 import './styles/TodosProfesores.css'
 import './styles/TodosProfesores.css';
+import './styles/MiEspacio.css';
+import './styles/HomeProfesor.css';
 
 function App() {
 
