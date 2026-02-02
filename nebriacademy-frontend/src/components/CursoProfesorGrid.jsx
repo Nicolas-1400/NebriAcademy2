@@ -14,7 +14,7 @@ import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 
 function CursoProfesorGrid() {
-   const [curso, setCurso] = useState(null);
+  const [curso, setCurso] = useState(null);
   const [profesor, setProfesor] = useState(null);
   const [apuntes, setApuntes] = useState([]);
   const [error, setError] = useState(null);
@@ -201,8 +201,8 @@ function CursoProfesorGrid() {
   return (
     <div className="curso-grid">
       {/* HEADER CON IMAGEN DE FONDO Y BOTONES */}
-      <div 
-        className="curso-header" 
+      <div
+        className="curso-header"
         style={{ backgroundImage: `url(${FotoSelector})` }}
       >
         <div className="curso-header-info">
@@ -312,9 +312,7 @@ function CursoProfesorGrid() {
           </div>
           <div className="detalles-comentarios">
             <p>Comentarios</p>
-            <div className="comentarios-existentes">
-              {curso.comentarios}
-            </div>
+            <div className="comentarios-existentes">{curso.comentarios}</div>
             {alumnoId ? (
               <div className="escribir-comentario">
                 <textarea

@@ -13,6 +13,9 @@ import './styles/Politicas.css';
 import './styles/Curso.css';
 import './styles/HomeFeed.css';
 import './styles/TarjetaCursoPequena.css'
+import './styles/TarjetaProfesor.css'
+import './styles/TodosProfesores.css'
+import './styles/TodosProfesores.css';
 
 function App() {
 
