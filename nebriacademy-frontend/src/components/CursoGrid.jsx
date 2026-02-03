@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
 import Foto3 from "../assets/ImagenesCursos/Foto3.jpg";
@@ -12,6 +12,8 @@ import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
+import Mas from "../assets/mas.png";
+import Editar from "../assets/lapiz.png";
 
 function CursoGrid() {
   const [curso, setCurso] = useState(null);
@@ -26,6 +28,8 @@ function CursoGrid() {
   const [comentariosList, setComentariosList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const navigate = useNavigate();
+
   useEffect(() => {
     const usuarioIniciado = localStorage.getItem("usuario");
     setUsuario(JSON.parse(usuarioIniciado));
@@ -239,6 +243,10 @@ function CursoGrid() {
     } catch (e) { console.error('delete error', e); }
   };
 
+  const handleNavigateAddContenido = () => {
+    navigate(`/Home/Cursos/${id}/AddContenidoCurso`);
+  };
+
   if (error) return <p>{error}</p>;
   if (!curso) return;
 
@@ -375,9 +383,9 @@ function CursoGrid() {
                 comentariosList.map((c) => (
                   <div key={c.id} className="comentario-item">
                     <div className="comentario-autor">
-                      {c.nombre || 'Usuario'} {c.apellidos || ''}
+                      {c.nombre} {c.apellidos}
                     </div>
-                    <div className="comentario-texto">
+                    <div>
                       {editingId === c.id ? (
                         <div>
                           <textarea value={editingText} onChange={(e) => setEditingText(e.target.value)} maxLength={500} />
@@ -389,7 +397,7 @@ function CursoGrid() {
                       )}
                     </div>
                     {alumnoId && c.usuarioId === alumnoId ? (
-                      <div className="comentario-acciones">
+                      <div>
                         {editingId !== c.id ? (
                           <>
                             <button onClick={() => handleStartEdit(c)}>Editar</button>
@@ -418,6 +426,14 @@ function CursoGrid() {
           </div>
         </div>
       </div>
+      {localStorage.getItem("tipo") === "profesor" ? (
+        <button className="editarCurso">
+          <img src={Editar} alt="Editar contenido" />
+        </button>
+      ) : (null)}
+      <button className="subirContenidoCurso" onClick={handleNavigateAddContenido}>
+        <img src={Mas} alt="Subir contenido" />
+      </button>
     </div>
   );
 }

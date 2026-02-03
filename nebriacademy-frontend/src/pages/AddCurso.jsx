@@ -1,11 +1,11 @@
-import NavProfesor from "../components/NavProfesor"
+import Nav from "../components/Nav"
 import AddCursoGrid from "../components/AddCursoGrid"
 import Footer from "../components/Footer"
 
 function AddCurso() {
   return (
     <div>
-    <NavProfesor />
+    <Nav />
     <AddCursoGrid />
     <Footer />
     </div>
