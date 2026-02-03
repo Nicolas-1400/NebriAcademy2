@@ -8,6 +8,7 @@ app.use(express.json());
 
 app.use('/apuntes/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Apuntes')));
 app.use('/videos/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Videos')));
+app.use('/ejercicios/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Ejercicios')));
 
 
 // Rutas por recurso

@@ -1,6 +1,20 @@
 const express = require("express");
 const router = express.Router();
 const Ejercicios = require("../models/Ejercicios.js");
+const multer = require("multer");
+const path = require("path");
+const Profesores = require("../models/Profesores.js");
+const Usuarios = require("../models/Usuarios.js");
+
+// Multer: guarda en la carpeta de assets del frontend (Ejercicios)
+const storage = multer.diskStorage({
+  destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Ejercicios"),
+  filename: (req, file, cb) => {
+    cb(null, Date.now() + path.extname(file.originalname));
+  },
+});
+
+const upload = multer({ storage });
 
 // Obtener todos los ejercicios
 router.get("/", (req, res) => {
@@ -37,16 +51,39 @@ router.get("/:id", (req, res) => {
   }
 });
 
-// Crear un ejercicio
-router.post("/", (req, res) => {
+// Crear un ejercicio (subida de archivo)
+router.post("/", upload.single('archivo'), async (req, res) => {
   try {
-    console.log("POST /ejercicios");
-    Ejercicios.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
+    let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
+    const curso = req.body.curso ? parseInt(req.body.curso) : null;
+    const nombre = req.body.nombre || null;
+
+    // Requerimos archivo; si no llega, devolvemos 400
+    if (!req.file) {
+      return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
+    }
+    const archivo = req.file.filename;
+
+    // Resolver autor de forma análoga a apuntes: puede ser id de usuario o id de profesor
+    let autor = null;
+    if (autorInput) {
+      const u = await Usuarios.findByPk(autorInput);
+      if (u) {
+        autor = autorInput;
+      } else {
+        const p = await Profesores.findByPk(autorInput);
+        if (p && p.usuarioId) {
+          autor = p.usuarioId;
+        }
+      }
+    }
+
+    const nuevo = await Ejercicios.create({ autor, curso, nombre, archivo });
+
+    return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
     console.error("Error al crear ejercicio:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    return res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 

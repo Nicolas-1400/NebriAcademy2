@@ -60,7 +60,6 @@ function Nav() {
         {localStorage.getItem("tipo") === "profesor" ? (
             <div className="contenedor-elementos-nav-profesor">
                 <button type="button" className="boton-nav" onClick={() => navigate('/Home/Apuntes')}>Apuntes</button>
-                <button type="button" className="boton-nav" onClick={() => navigate('/Home/Videos')}>Videos</button>
                 <button className="boton-añadir-curso" onClick={() => navigate('/Home/AddCurso')}>
                     <img className="icono-boton-mas" src={ImagenBotonMas} alt="Icono añadir curso" />
                     <h3>Añadir curso</h3>

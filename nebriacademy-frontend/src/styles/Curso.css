@@ -229,6 +229,13 @@
   border-bottom: 3px solid var(--rojo-nebrija);
 }
 
+.contenido-curso h4 {
+  color: var(--rojo-nebrija);
+  font-size: 20px;
+  font-weight: 700;
+  margin: 0;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    9. SECCIÓN DE VÍDEOS
    ───────────────────────────────────────────────────────────────────────────── */
@@ -237,13 +244,6 @@
   display: flex;
   flex-direction: column;
   gap: 25px;
-}
-
-.videos-list h4 {
-  color: var(--rojo-nebrija);
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
 }
 
 .video-item {
@@ -285,13 +285,6 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
-}
-
-.apuntes-list h4 {
-  color: var(--rojo-nebrija);
-  font-size: 20px;
-  font-weight: 700;
-  margin: 0;
 }
 
 .apuntes-list ul {

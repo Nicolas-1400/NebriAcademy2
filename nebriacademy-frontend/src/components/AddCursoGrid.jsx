@@ -12,8 +12,11 @@ function AddCursoGrid() {
   const [descripcionApunte, setDescripcionApunte] = useState("");
   const [fileVideo, setFileVideo] = useState(null);
   const [nombreVideo, setNombreVideo] = useState("");
+  const [fileEjercicio, setFileEjercicio] = useState(null);
+  const [nombreEjercicio, setNombreEjercicio] = useState("");
   const fileInputRef = useRef(null);
   const fileVideoInputRef = useRef(null);
+  const fileEjercicioInputRef = useRef(null);
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
@@ -103,6 +106,33 @@ function AddCursoGrid() {
           setError("Error al subir vídeo");
         }
 
+        // Subir ejercicio si existe (nombre y archivo deben ir juntos)
+        try {
+          if ((nombreEjercicio && !fileEjercicio) || (fileEjercicio && !nombreEjercicio)) {
+            setError("Debes proporcionar nombre del ejercicio y fichero juntos");
+          } else if (fileEjercicio && courseId) {
+            const formDataE = new FormData();
+            formDataE.append("archivo", fileEjercicio);
+            formDataE.append("autor", profesorId);
+            formDataE.append("curso", courseId);
+            formDataE.append("nombre", nombreEjercicio);
+
+            const resEjercicio = await fetch("http://localhost:3000/ejercicios", {
+              method: "POST",
+              body: formDataE,
+            });
+
+            const ejercicioBody = await resEjercicio.json().catch(() => null);
+            if (!resEjercicio.ok) {
+              console.error("Error al subir ejercicio:", resEjercicio.status, ejercicioBody);
+              setError("Error al subir ejercicio");
+            }
+          }
+        } catch (errE) {
+          console.error("Error al subir ejercicio:", errE);
+          setError("Error al subir ejercicio");
+        }
+
         setSuccess("Curso creado correctamente");
         setError("");
         setNombreCurso("");
@@ -113,8 +143,11 @@ function AddCursoGrid() {
         setDescripcionApunte("");
         if (fileInputRef.current) fileInputRef.current.value = "";
         if (fileVideoInputRef.current) fileVideoInputRef.current.value = "";
+        if (fileEjercicioInputRef.current) fileEjercicioInputRef.current.value = "";
         setFileVideo(null);
         setNombreVideo("");
+        setFileEjercicio(null);
+        setNombreEjercicio("");
         setTimeout(() => setSuccess(""), 6000);
       } else {
         setError(datos.error || "Error al crear curso");
@@ -195,6 +228,27 @@ function AddCursoGrid() {
               ref={fileVideoInputRef}
               accept="video/*"
               onChange={(e) => setFileVideo(e.target.files[0] || null)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Subir ejercicio (opcional)</label>
+            <input
+              type="file"
+              name="archivo"
+              ref={fileEjercicioInputRef}
+              accept=".pdf,.doc,.docx,.zip,.rar"
+              onChange={(e) => setFileEjercicio(e.target.files[0] || null)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Nombre del ejercicio (opcional)</label>
+            <input
+              type="text"
+              placeholder="Nombre del ejercicio"
+              value={nombreEjercicio}
+              onChange={(e) => setNombreEjercicio(e.target.value)}
             />
           </div>
 

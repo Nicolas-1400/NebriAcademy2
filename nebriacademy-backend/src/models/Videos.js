@@ -6,7 +6,6 @@ const Videos = sequelize.define('videos', {
   curso: DataTypes.INTEGER,
   nombre: DataTypes.STRING,
   archivo: DataTypes.STRING,
-  valoracion: { type: DataTypes.FLOAT, defaultValue: 0 }
 }, { timestamps: false });
 
 module.exports = Videos;

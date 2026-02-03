@@ -28,6 +28,7 @@ function CursoGrid() {
   const [comentariosList, setComentariosList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
+  const [ejercicios, setEjercicios] = useState([]);
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -96,6 +97,14 @@ function CursoGrid() {
         setVideos(filtered);
       })
       .catch((e) => console.error("Error cargando videos:", e));
+    fetch("http://localhost:3000/ejercicios")
+      .then((r) => r.json())
+      .then((data) => {
+        const list = Array.isArray(data.Ejercicios) ? data.Ejercicios : data || [];
+        const filtered = list.filter((v) => String(v.curso) === String(id));
+        setEjercicios(filtered);
+      })
+      .catch((e) => console.error("Error cargando ejercicios:", e));
   }, [id]);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
@@ -320,6 +329,7 @@ function CursoGrid() {
         {/* CONTENIDO DEL CURSO - 75% */}
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
+          <h4>Vídeos</h4>
           {videos && videos.length > 0 ? (
             <div className="videos-list">
               <h4>Vídeos</h4>
@@ -339,9 +349,9 @@ function CursoGrid() {
           ) : (
             <p>No hay vídeos para este curso.</p>
           )}
+          <h4>Apuntes</h4>
           {apuntes && apuntes.length > 0 ? (
             <div className="apuntes-list">
-              <h4>Apuntes</h4>
               <ul>
                 {apuntes.map((a) => (
                   <li key={a.id}>
@@ -359,6 +369,28 @@ function CursoGrid() {
             </div>
           ) : (
             <p>No hay apuntes para este curso.</p>
+          )}
+          <h4>Ejercicios</h4>
+          {ejercicios && ejercicios.length > 0 ? (
+            <div className="ejercicios-list">
+              <ul>
+                {ejercicios.map((e) => (
+                  <li key={e.id}>
+                    {e.nombre ? <strong>{e.nombre}</strong> : null}
+                    <br />
+                    <a
+                      href={`http://localhost:3000/ejercicios/files/${e.archivo}`}
+                      target="_blank"
+                      rel="noreferrer"
+                    >
+                      {e.archivo}
+                    </a>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ) : (
+            <p>No hay ejercicios para este curso.</p>
           )}
         </div>
 
