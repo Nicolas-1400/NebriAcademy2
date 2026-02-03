@@ -404,6 +404,23 @@
   color: white;
 }
 
+.comentario-acciones button {
+  padding: 6px 12px;
+  border: 2px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  background-color: transparent;
+  color: var(--rojo-nebrija);
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 13px;
+  transition: all 0.3s ease;
+}
+
+.comentario-autor{
+  font-size: '0.85em';
+  color: '#555' ;
+}
+
 /* .detalles-profesor > *:not(p),
 .detalles-descripcion > *:not(p) {
   color: #333;

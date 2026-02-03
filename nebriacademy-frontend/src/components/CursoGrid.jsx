@@ -374,7 +374,7 @@ function CursoGrid() {
               {comentariosList && comentariosList.length > 0 ? (
                 comentariosList.map((c) => (
                   <div key={c.id} className="comentario-item">
-                    <div className="comentario-autor" style={{ fontSize: '0.85em', color: '#555' }}>
+                    <div className="comentario-autor">
                       {c.nombre || 'Usuario'} {c.apellidos || ''}
                     </div>
                     <div className="comentario-texto">

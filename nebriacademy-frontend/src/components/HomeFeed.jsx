@@ -10,7 +10,13 @@ function HomeFeed() {
   const [loading, setLoading] = useState(true);
   const navigate = useNavigate();
 
-  const CATEGORIAS = ["Programación", "Diseño", "Ciberseguridad", "BDD", "Marketing"];
+  const CATEGORIAS = [
+    "Programación",
+    "Diseño",
+    "Ciberseguridad",
+    "BDD",
+    "Marketing",
+  ];
 
   useEffect(() => {
     const usuarioIniciado = localStorage.getItem("usuario");
@@ -50,7 +56,10 @@ function HomeFeed() {
 
   // Sección 2: Novedades (cursos más recientes, ordenados por ID descendente)
   const novedades = () => {
-    return cursos.slice().sort((a, b) => b.id - a.id).slice(0, 4);
+    return cursos
+      .slice()
+      .sort((a, b) => b.id - a.id)
+      .slice(0, 4);
   };
 
   // Sección 3: Cursos Populares (ordenados por valoración descendente)
@@ -58,10 +67,8 @@ function HomeFeed() {
     return cursos
       .slice()
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0))
-      .slice(0, 4);
+      .slice(0, 10);
   };
-
-  
 
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
@@ -90,27 +97,7 @@ function HomeFeed() {
         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="HomeFeed-secciones">
-        {/* Sección 1: Tus Cursos */}
-        <div className="HomeFeed-seccion-tus-cursos">
-          <h2>Tus cursos</h2>
-          <div className="HomeFeed-tus-cursos-carousel">
-            {tusCursos().length > 0 ? (
-              tusCursos().map((curso) => (
-                <TarjetaCursoPequena
-                  key={curso.id}
-                  name={curso.nombreCurso}
-                  cursoId={curso.id}
-                  nivel={curso.nivel}
-                  valoracion={curso.valoracion || 0}
-                />
-              ))
-            ) : (
-              <p className="mensaje-vacio">No estás apuntado a ningún curso aún</p>
-            )}
-          </div>
-        </div>
-
-        {/* Sección 2: Novedades */}
+        {/* Sección 1: Novedades */}
         <div className="HomeFeed-seccion-novedades">
           <h2>Novedades</h2>
           <div className="HomeFeed-novedades-carousel">
@@ -126,6 +113,28 @@ function HomeFeed() {
               ))
             ) : (
               <p className="mensaje-vacio">No hay cursos disponibles</p>
+            )}
+          </div>
+        </div>
+
+        {/* Sección 2: Tus Cursos */}
+        <div className="HomeFeed-seccion-tus-cursos">
+          <h2>Tus cursos</h2>
+          <div className="HomeFeed-tus-cursos-carousel">
+            {tusCursos().length > 0 ? (
+              tusCursos().map((curso) => (
+                <TarjetaCursoPequena
+                  key={curso.id}
+                  name={curso.nombreCurso}
+                  cursoId={curso.id}
+                  nivel={curso.nivel}
+                  valoracion={curso.valoracion || 0}
+                />
+              ))
+            ) : (
+              <p className="mensaje-vacio">
+                No estás apuntado a ningún curso aún
+              </p>
             )}
           </div>
         </div>
