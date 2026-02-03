@@ -1,7 +1,7 @@
 @import './general.css';
 
 .tarjeta-curso-pequena {
-    max-width: 250px;
+    max-width: 225px;
     background-color: white;
     border-radius: 10px;
     padding: 12px;
