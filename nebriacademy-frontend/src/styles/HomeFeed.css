@@ -28,6 +28,13 @@
   gap: 20px;
 }
 
+/* Contenedor de carousel con botones */
+.HomeFeed-carousel-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .HomeFeed-seccion-tus-cursos h2,
 .HomeFeed-seccion-novedades h2,
 .HomeFeed-seccion-cursos-populares h2 {
@@ -42,31 +49,71 @@
 .HomeFeed-cursos-populares-carousel {
   display: flex;
   gap: 20px;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 10px 0;
   scroll-behavior: smooth;
-  flex-wrap: wrap;
+  flex: 1;
+  width: 100%;
 }
 
-.HomeFeed-tus-cursos-carousel::-webkit-scrollbar,
-.HomeFeed-novedades-carousel::-webkit-scrollbar,
-.HomeFeed-cursos-populares-carousel::-webkit-scrollbar {
-  height: 8px;
+/* Contenedor del carousel con controles */
+.HomeFeed-seccion-novedades,
+.HomeFeed-seccion-tus-cursos,
+.HomeFeed-seccion-cursos-populares {
+  position: relative;
 }
 
-.HomeFeed-tus-cursos-carousel::-webkit-scrollbar-track,
-.HomeFeed-novedades-carousel::-webkit-scrollbar-track,
-.HomeFeed-cursos-populares-carousel::-webkit-scrollbar-track {
-  background: #f1f1f1;
-  border-radius: 10px;
+/* Botones de navegación del carousel */
+.carousel-btn {
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(194, 0, 47, 0.3);
+  flex-shrink: 0;
 }
 
-.HomeFeed-tus-cursos-carousel::-webkit-scrollbar-thumb,
-.HomeFeed-novedades-carousel::-webkit-scrollbar-thumb,
-.HomeFeed-cursos-populares-carousel::-webkit-scrollbar-thumb {
-  background: var(--rojo-nebrija);
-  border-radius: 10px;
+.carousel-btn:hover {
+  background-color: #a00038;
+  box-shadow: 0 4px 12px rgba(194, 0, 47, 0.5);
+  transform: scale(1.1);
 }
+
+.carousel-btn:active {
+  transform: scale(0.95);
+}
+
+.carousel-btn-left {
+  order: -1;
+}
+
+.carousel-btn-right {
+  order: 1;
+}
+
+/* Overrides for react-slick inline width on .slick-track */
+.HomeFeed-tus-cursos-carousel .slick-track {
+  display: flex !important;
+  width: 2484px !important;
+}
+/* .slick-slide {
+  display: block !important;
+  width: auto !important;
+}
+.slick-list {
+  overflow: hidden !important;
+} */
 
 .mensaje-vacio {
   color: #999;
