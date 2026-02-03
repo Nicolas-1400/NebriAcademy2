@@ -1,11 +1,10 @@
 import Nav from "../components/Nav"
-import NavProfesor from "../components/NavProfesor"
 import Footer from "../components/Footer"
 
 function Apuntes() {
   return (
     <div>
-      {localStorage.getItem('tipo') === "profesor" ? <NavProfesor /> : <Nav />}
+      <Nav />
       Apuntes
       <Footer />
     </div>

@@ -51,7 +51,7 @@ function HomeFeed() {
       .filter((ca) => ca.alumnoId === usuario.id && ca.apuntado)
       .map((ca) => cursos.find((c) => c.id === ca.cursoId))
       .filter((c) => c);
-    return cursosApuntados.slice(0, 4);
+    return cursosApuntados.slice(0, 10);
   };
 
   // Sección 2: Novedades (cursos más recientes, ordenados por ID descendente)
@@ -59,7 +59,7 @@ function HomeFeed() {
     return cursos
       .slice()
       .sort((a, b) => b.id - a.id)
-      .slice(0, 4);
+      .slice(0, 5);
   };
 
   // Sección 3: Cursos Populares (ordenados por valoración descendente)
@@ -91,10 +91,10 @@ function HomeFeed() {
   }
 
   return (
+    
     <div className="HomeFeed">
       <h1>
-        Bienvenido/a{" "}
-        {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
+        Bienvenido/a {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="HomeFeed-secciones">
         {/* Sección 1: Novedades */}

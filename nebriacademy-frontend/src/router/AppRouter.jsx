@@ -5,6 +5,8 @@ import MiEspacio from "../pages/MiEspacio.jsx"
 import TodosCursos from "../pages/TodosCursos.jsx"
 import Curso from "../pages/Curso.jsx"
 import AddCurso from "../pages/AddCurso.jsx"
+import AddContenidoCurso from "../pages/AddContenidoCurso.jsx"
+import EditarContenidoCurso from "../pages/EditarContenidoCurso.jsx"
 import TodosProfesores from "../pages/TodosProfesores.jsx"
 import InfoProfesor from "../pages/InfoProfesor.jsx"
 import Apuntes from "../pages/Apuntes.jsx"
@@ -32,6 +34,8 @@ function AppRouter() {
         <Route path="/Home/MiEspacio" element={<MiEspacio/>} />
         <Route path="/Home/Cursos" element={<TodosCursos />} />
         <Route path="/Home/Cursos/:id" element={<Curso />} />
+        <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<AddContenidoCurso />} />
+        <Route path="/Home/Cursos/:id/EditarContenidoCurso" element={<EditarContenidoCurso />} />
         <Route path="/Home/AddCurso" element={<AddCurso />} />
         <Route path="/Home/Profesores" element={<TodosProfesores />} />
         <Route path="/Home/Profesores/:id" element={<InfoProfesor />} />
