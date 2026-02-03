@@ -8,6 +8,8 @@ app.use(express.json());
 
 app.use('/apuntes/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Apuntes')));
 app.use('/videos/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Videos')));
+app.use('/ejercicios/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'Ejercicios')));
+app.use('/ejerciciosalumnos/files', express.static(path.join(__dirname, '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'EjerciciosAlumnos')));
 
 
 // Rutas por recurso
@@ -19,6 +21,7 @@ app.use('/cursos', require('./routes/cursos'));
 app.use('/cursosalumnos', require('./routes/cursosalumnos'));
 app.use('/comentarioalumnocurso', require('./routes/comentarioalumnocurso'));
 app.use('/ejercicios', require('./routes/ejercicios'));
+app.use('/ejerciciosalumnos', require('./routes/ejerciciosalumnos'));
 app.use('/incidencias', require('./routes/incidencias'));
 app.use('/profesores', require('./routes/profesores'));
 app.use('/profesorescursos', require('./routes/profesorescursos'));
