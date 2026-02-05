@@ -102,6 +102,7 @@
   order: 1;
 }
 
+
 /* Overrides for react-slick inline width on .slick-track */
 .HomeFeed-tus-cursos-carousel .slick-track {
   display: flex !important;
