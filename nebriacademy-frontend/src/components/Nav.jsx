@@ -3,6 +3,7 @@ import { useState, useRef, useEffect } from 'react'
 import Logo from '../assets/nebriLogo.png'
 import ImagenPerfil from '../assets/imagenPerfilUsuario.png'
 import ImagenBotonMas from '../assets/botonMas.png'
+import useAuthStore from '../store/useAuthStore'
 
 
 function Nav() {
@@ -10,12 +11,9 @@ function Nav() {
     const navigate = useNavigate();
     const [isdesplegableOpen, setIsdesplegableOpen] = useState(false);
     const desplegableRef = useRef(null);
-    const [usuario, setUsuario] = useState(null);
-
-    useEffect(() => {
-        const usuarioIniciado = localStorage.getItem('usuario')
-        setUsuario(JSON.parse(usuarioIniciado))
-    }, []);
+    const usuario = useAuthStore(state => state.user)
+    const tipo = useAuthStore(state => state.tipo)
+    const logoutStore = useAuthStore(state => state.logout)
 
 
     const handleProfileClick = () => {
@@ -28,7 +26,7 @@ function Nav() {
     }
 
     const handleLogout = () => {
-        localStorage.clear();
+        logoutStore();
         navigate('/');
         setIsdesplegableOpen(false);
     }
@@ -57,7 +55,7 @@ function Nav() {
             <h2>NebriAcademy</h2>
         </div>
 
-        {localStorage.getItem("tipo") === "profesor" ? (
+        {tipo === "profesor" ? (
             <div className="contenedor-elementos-nav-profesor">
                 <button type="button" className="boton-nav" onClick={() => navigate('/Home/Apuntes')}>Apuntes</button>
                 <button className="boton-añadir-curso" onClick={() => navigate('/Home/AddCurso')}>

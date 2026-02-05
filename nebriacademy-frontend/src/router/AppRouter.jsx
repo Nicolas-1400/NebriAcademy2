@@ -16,6 +16,7 @@ import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx"
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx"
 import RegisterProfesor from "../pages/RegisterProfesor.jsx"
 import Perfil from "../pages/Perfil.jsx"
+import ProtectedRoute from './ProtectedRoute'
 import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx"
 import NotaLegal from "../pages/NotaLegal.jsx"
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx"
@@ -30,20 +31,20 @@ function AppRouter() {
         <Route path="/RegisterAlumnoNebrija" element={<RegisterAlumnoNebrija />} />
         <Route path="/Register/RegisterAlumnoExterno" element={<RegisterAlumnoExterno />} />
         <Route path="/Register/RegisterProfesor" element={<RegisterProfesor />} />
-        <Route path="/Home" element={<Home />} />
-        <Route path="/Home/MiEspacio" element={<MiEspacio/>} />
-        <Route path="/Home/Cursos" element={<TodosCursos />} />
-        <Route path="/Home/Cursos/:id" element={<Curso />} />
-        <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<AddContenidoCurso />} />
-        <Route path="/Home/Cursos/:id/EditarContenidoCurso" element={<EditarContenidoCurso />} />
-        <Route path="/Home/AddCurso" element={<AddCurso />} />
-        <Route path="/Home/Profesores" element={<TodosProfesores />} />
-        <Route path="/Home/Profesores/:id" element={<InfoProfesor />} />
-        <Route path="/Home/Apuntes" element={<Apuntes />} />
-        <Route path="/Home/Perfil" element={<Perfil />} />
-        <Route path="/Home/PoliticaDePrivacidad" element={<PoliticaDePrivacidad />} />
-        <Route path="/Home/NotaLegal" element={<NotaLegal />} />
-        <Route path="/Home/PoliticaDeCookies" element={<PoliticaDeCookies />} />
+        <Route path="/Home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
+        <Route path="/Home/MiEspacio" element={<ProtectedRoute><MiEspacio/></ProtectedRoute>} />
+        <Route path="/Home/Cursos" element={<ProtectedRoute><TodosCursos /></ProtectedRoute>} />
+        <Route path="/Home/Cursos/:id" element={<ProtectedRoute><Curso /></ProtectedRoute>} />
+        <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<ProtectedRoute requiredTipo="profesor"><AddContenidoCurso /></ProtectedRoute>} />
+        <Route path="/Home/Cursos/:id/EditarContenidoCurso" element={<ProtectedRoute requiredTipo="profesor"><EditarContenidoCurso /></ProtectedRoute>} />
+        <Route path="/Home/AddCurso" element={<ProtectedRoute requiredTipo="profesor"><AddCurso /></ProtectedRoute>} />
+        <Route path="/Home/Profesores" element={<ProtectedRoute><TodosProfesores /></ProtectedRoute>} />
+        <Route path="/Home/Profesores/:id" element={<ProtectedRoute><InfoProfesor /></ProtectedRoute>} />
+        <Route path="/Home/Apuntes" element={<ProtectedRoute><Apuntes /></ProtectedRoute>} />
+        <Route path="/Home/Perfil" element={<ProtectedRoute><Perfil /></ProtectedRoute>} />
+        <Route path="/Home/PoliticaDePrivacidad" element={<ProtectedRoute><PoliticaDePrivacidad /></ProtectedRoute>} />
+        <Route path="/Home/NotaLegal" element={<ProtectedRoute><NotaLegal /></ProtectedRoute>} />
+        <Route path="/Home/PoliticaDeCookies" element={<ProtectedRoute><PoliticaDeCookies /></ProtectedRoute>} />
       </Routes>
     </BrowserRouter>
   )

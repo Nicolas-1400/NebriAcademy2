@@ -1,4 +1,5 @@
 import { useEffect, useState } from 'react'
+import useAuthStore from '../store/useAuthStore'
 import TarjetaCursos from './TarjetaCursos';
 
 function HomeProfesorGrid() {
@@ -6,14 +7,12 @@ function HomeProfesorGrid() {
     const [cursos, setCursos] = useState([]);
     const [error, setError] = useState(null);
 
+    const storeUser = useAuthStore(state => state.user)
     useEffect(() => {
-        const usuarioIniciado = localStorage.getItem('usuario')
-        if (usuarioIniciado) {
-            const parsed = JSON.parse(usuarioIniciado)
-            setUsuario(parsed)
-            fetchCursosProfesor(parsed.id);
-        }
-    }, []);
+        if (!storeUser) return
+        setUsuario(storeUser)
+        fetchCursosProfesor(storeUser.id);
+    }, [storeUser]);
 
     const fetchCursosProfesor = async (profesorId) => {
         try {

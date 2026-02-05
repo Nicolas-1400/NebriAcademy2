@@ -1,10 +1,14 @@
 import { useEffect, useState } from "react";
+import useAuthStore from '../store/useAuthStore'
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
 function PerfilGrid() {
   const [usuario, setUsuario] = useState(null);
+  const storeUser = useAuthStore(state => state.user)
+  const tipo = useAuthStore(state => state.tipo)
+  const setUser = useAuthStore(state => state.setUser)
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -17,53 +21,46 @@ function PerfilGrid() {
   });
   const [mensajeExito, setMensajeExito] = useState("");
   const [mensajeError, setMensajeError] = useState("");
-
   useEffect(() => {
-    const usuarioIniciado = localStorage.getItem("usuario");
-    const tipoIniciado =
-      localStorage.getItem("tipo") || localStorage.getItem("tipoUsuario");
+    if (!storeUser) return
+    if (tipo !== 'alumno') return
 
-    if (usuarioIniciado && tipoIniciado === "alumno") {
-      const usuarioParsed = JSON.parse(usuarioIniciado);
-      setUsuario(usuarioParsed);
+    setUsuario(storeUser)
 
-      fetch(`http://localhost:3000/usuarios/${usuarioParsed.id}?tipo=alumno`)
-        .then((response) => {
-          if (!response.ok) {
-            throw new Error("Error al obtener datos del usuario");
-          }
-          return response.json();
+    fetch(`http://localhost:3000/usuarios/${storeUser.id}?tipo=alumno`)
+      .then((response) => {
+        if (!response.ok) throw new Error('Error al obtener datos del usuario')
+        return response.json()
+      })
+      .then((datosCompletos) => {
+        setUsuario(datosCompletos)
+        setUser(datosCompletos, 'alumno')
+
+        setFormData({
+          nombre: datosCompletos.nombre || "",
+          apellidos: datosCompletos.apellidos || "",
+          contrasena: "",
+          numeroTarjeta: datosCompletos.numeroTarjeta || "",
+          numTelefono: datosCompletos.numTelefono || "",
+          redes: datosCompletos.redes || "",
+          pais: datosCompletos.pais || "",
+          localidad: datosCompletos.localidad || "",
         })
-        .then((datosCompletos) => {
-          setUsuario(datosCompletos);
-          localStorage.setItem("usuario", JSON.stringify(datosCompletos));
-
-          setFormData({
-            nombre: datosCompletos.nombre || "",
-            apellidos: datosCompletos.apellidos || "",
-            contrasena: "",
-            numeroTarjeta: datosCompletos.numeroTarjeta || "",
-            numTelefono: datosCompletos.numTelefono || "",
-            redes: datosCompletos.redes || "",
-            pais: datosCompletos.pais || "",
-            localidad: datosCompletos.localidad || "",
-          });
-        })
-        .catch((error) => {
-          const usuarioParsed = JSON.parse(usuarioIniciado);
-          setFormData({
-            nombre: usuarioParsed.nombre || "",
-            apellidos: usuarioParsed.apellidos || "",
-            contrasena: "",
-            numeroTarjeta: usuarioParsed.numeroTarjeta || "",
-            numTelefono: usuarioParsed.numTelefono || "",
-            redes: usuarioParsed.redes || "",
-            pais: usuarioParsed.pais || "",
-            localidad: usuarioParsed.localidad || "",
-          });
-        });
-    }
-  }, []);
+      })
+      .catch(() => {
+        setFormData((prev) => ({
+          ...prev,
+          nombre: storeUser.nombre || "",
+          apellidos: storeUser.apellidos || "",
+          contrasena: "",
+          numeroTarjeta: storeUser.numeroTarjeta || "",
+          numTelefono: storeUser.numTelefono || "",
+          redes: storeUser.redes || "",
+          pais: storeUser.pais || "",
+          localidad: storeUser.localidad || "",
+        }))
+      })
+  }, [storeUser, tipo, setUser]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -100,7 +97,7 @@ function PerfilGrid() {
 
       if (response.ok) {
         const usuarioActualizado = await response.json();
-        localStorage.setItem("usuario", JSON.stringify(usuarioActualizado));
+        setUser(usuarioActualizado, 'alumno')
         setUsuario(usuarioActualizado);
         setMensajeExito("¡Perfil actualizado correctamente!");
         setFormData((prevState) => ({

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useAuthStore from '../store/useAuthStore'
 import { useParams, useNavigate } from "react-router-dom";
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
@@ -31,10 +32,11 @@ function CursoGrid() {
   const [ejercicios, setEjercicios] = useState([]);
   const navigate = useNavigate();
 
+  const storeUser = useAuthStore(state => state.user)
+  const tipo = useAuthStore(state => state.tipo)
   useEffect(() => {
-    const usuarioIniciado = localStorage.getItem("usuario");
-    setUsuario(JSON.parse(usuarioIniciado));
-  }, []);
+    if (storeUser) setUsuario(storeUser)
+  }, [storeUser]);
   const alumnoId = usuario ? usuario.id : null;
 
   useEffect(() => {
@@ -458,7 +460,7 @@ function CursoGrid() {
           </div>
         </div>
       </div>
-      {localStorage.getItem("tipo") === "profesor" ? (
+      {tipo === "profesor" ? (
         <button className="editarCurso">
           <img src={Editar} alt="Editar contenido" />
         </button>

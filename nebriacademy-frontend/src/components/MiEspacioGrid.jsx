@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import useAuthStore from '../store/useAuthStore'
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
 function MiEspacioGrid() {
@@ -9,12 +10,11 @@ function MiEspacioGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
+  const storeUser = useAuthStore(state => state.user)
+
   useEffect(() => {
-    const usuarioIniciado = localStorage.getItem("usuario");
-    if (usuarioIniciado) {
-      setUsuario(JSON.parse(usuarioIniciado));
-    }
-  }, []);
+    if (storeUser) setUsuario(storeUser)
+  }, [storeUser]);
 
   useEffect(() => {
     setLoading(true);

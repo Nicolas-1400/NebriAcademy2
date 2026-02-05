@@ -1,4 +1,5 @@
 import { useState, useRef } from "react";
+import useAuthStore from '../store/useAuthStore'
 import { useNavigate } from "react-router-dom";
 import "../styles/AddCurso.css";
 import flecha from "../assets/flecha-correcta.png";
@@ -21,6 +22,7 @@ function AddCursoGrid() {
   const [success, setSuccess] = useState("");
 
   const navigate = useNavigate();
+  const usuarioStore = useAuthStore(state => state.user)
   
 
   const handleSubmit = async (e) => {
@@ -33,7 +35,7 @@ function AddCursoGrid() {
     }
 
     try {
-      const usuario = JSON.parse(localStorage.getItem("usuario")) || {};
+      const usuario = usuarioStore || {}
       const profesorId = usuario.id || null;
 
 

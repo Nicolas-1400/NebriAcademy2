@@ -1,4 +1,5 @@
 import { useEffect, useState, useRef } from "react";
+import useAuthStore from '../store/useAuthStore'
 import { useNavigate } from "react-router-dom";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 import Slider from "react-slick";
@@ -24,12 +25,10 @@ function HomeFeed() {
     "Marketing",
   ];
 
+  const storeUser = useAuthStore(state => state.user)
   useEffect(() => {
-    const usuarioIniciado = localStorage.getItem("usuario");
-    if (usuarioIniciado) {
-      setUsuario(JSON.parse(usuarioIniciado));
-    }
-  }, []);
+    if (storeUser) setUsuario(storeUser)
+  }, [storeUser]);
 
   useEffect(() => {
     setLoading(true);

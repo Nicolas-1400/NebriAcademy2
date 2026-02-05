@@ -29,7 +29,6 @@ router.post("/auth", (req, res) => {
               nombre: admin.nombre,
               apellidos: admin.apellidos,
               email: admin.email,
-              contrasena: admin.contrasena,
               numTelefono: admin.numTelefono,
               redes: admin.redes,
               pais: admin.pais,
@@ -41,7 +40,7 @@ router.post("/auth", (req, res) => {
         // Buscar en alumnos
         return Alumnos.findAll().then((alumnos) => {
           const alumno = alumnos.find((a) => a.email === email && a.contrasena === contrasena);
-          if (alumno) {
+            if (alumno) {
             return res.json({
               mensaje: "Login exitoso",
               tipo: "alumno",
@@ -52,7 +51,6 @@ router.post("/auth", (req, res) => {
                 nombre: alumno.nombre,
                 apellidos: alumno.apellidos,
                 email: alumno.email,
-                contrasena: alumno.contrasena,
                 numeroTarjeta: alumno.numeroTarjeta,
                 numTelefono: alumno.numTelefono,
                 redes: alumno.redes,
@@ -76,7 +74,6 @@ router.post("/auth", (req, res) => {
                   nombre: profesor.nombre,
                   apellidos: profesor.apellidos,
                   email: profesor.email,
-                  contrasena: profesor.contrasena,
                   numCuentaBancaria: profesor.numCuentaBancaria,
                   numTelefono: profesor.numTelefono,
                   redes: profesor.redes,

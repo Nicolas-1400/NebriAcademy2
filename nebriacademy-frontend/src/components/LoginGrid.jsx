@@ -1,11 +1,13 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import useAuthStore from '../store/useAuthStore'
 
 function LoginGrid() {
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const setUser = useAuthStore(state => state.setUser)
 
   const handleLogin = async (e) => {
     e.preventDefault();
@@ -30,9 +32,8 @@ function LoginGrid() {
 
       if (respuesta.ok) {
         console.log("Login exitoso:", datos);
-        localStorage.setItem("usuario", JSON.stringify(datos.usuario));
-        localStorage.setItem("tipo", datos.tipo);
-          navigate("/Home");
+        setUser(datos.usuario, datos.tipo)
+        navigate("/Home");
       } else {
         setError(datos.error || "Error en el login");
       }
