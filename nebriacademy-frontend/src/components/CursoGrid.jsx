@@ -30,6 +30,7 @@ function CursoGrid() {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [ejercicios, setEjercicios] = useState([]);
+  const [editingMode, setEditingMode] = useState(false);
   const navigate = useNavigate();
 
   const storeUser = useAuthStore(state => state.user)
@@ -258,6 +259,42 @@ function CursoGrid() {
     navigate(`/Home/Cursos/${id}/AddContenidoCurso`);
   };
 
+  const [showAddMenu, setShowAddMenu] = useState(false);
+
+  const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
+    // cerrar menú si estaba abierto
+    setShowAddMenu(false);
+    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, { state: { tipo: tipoSeleccion, cursoId: id } });
+  };
+
+  const handleToggleAddMenu = () => {
+    setShowAddMenu((s) => !s);
+  };
+  
+  const handleToggleEditingMode = () => {
+    setEditingMode((s) => !s);
+  };
+  
+  const handleEditNavigate = (tipo, item) => {
+    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, { state: { tipo, item, cursoId: id } });
+  };
+  
+  const handleDeleteContenido = async (tipo, itemId) => {
+    if (!window.confirm('¿Seguro que quieres eliminar este elemento?')) return;
+    try {
+      const endpoint = tipo === 'video' ? 'videos' : tipo === 'apunte' ? 'apuntes' : 'ejercicios';
+      const res = await fetch(`http://localhost:3000/${endpoint}/${itemId}`, { method: 'DELETE' });
+      if (!res.ok) throw new Error('Error borrando');
+      // actualizar estado local según tipo
+      if (tipo === 'video') setVideos((prev) => prev.filter((v) => v.id !== itemId));
+      if (tipo === 'apunte') setApuntes((prev) => prev.filter((a) => a.id !== itemId));
+      if (tipo === 'ejercicio') setEjercicios((prev) => prev.filter((e) => e.id !== itemId));
+    } catch (e) {
+      console.error('delete content error', e);
+      alert('No se pudo borrar el elemento');
+    }
+  };
+
   if (error) return <p>{error}</p>;
   if (!curso) return;
 
@@ -331,13 +368,22 @@ function CursoGrid() {
         {/* CONTENIDO DEL CURSO - 75% */}
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
-          <h4>Vídeos</h4>
           {videos && videos.length > 0 ? (
             <div className="videos-list">
               <h4>Vídeos</h4>
               {videos.map((v) => (
                 <div key={v.id} className="video-item">
-                  {v.nombre ? <h5>{v.nombre}</h5> : null}
+                  <div className="item-row">
+                    {v.nombre ? <h5>{v.nombre}</h5> : null}
+                    {tipo === 'profesor' && editingMode ? (
+                      <div className="edit-controls">
+                        <button onClick={() => handleEditNavigate('video', v)} title="Editar video">
+                          <img src={Editar} alt="Editar" />
+                        </button>
+                        <button onClick={() => handleDeleteContenido('video', v.id)} title="Borrar video">✖</button>
+                      </div>
+                    ) : null}
+                  </div>
                   <video controls>
                     <source
                       src={`http://localhost:3000/videos/files/${v.archivo}`}
@@ -356,15 +402,25 @@ function CursoGrid() {
             <div className="apuntes-list">
               <ul>
                 {apuntes.map((a) => (
-                  <li key={a.id}>
-                    <a
-                      href={`http://localhost:3000/apuntes/files/${a.archivo}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {a.archivo}
-                    </a>
-                    {a.descripcion ? <p>{a.descripcion}</p> : null}
+                  <li key={a.id} className="item-row">
+                    <div className="item-main">
+                      <a
+                        href={`http://localhost:3000/apuntes/files/${a.archivo}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {a.archivo}
+                      </a>
+                      {a.descripcion ? <p>{a.descripcion}</p> : null}
+                    </div>
+                    {tipo === 'profesor' && editingMode ? (
+                      <div className="edit-controls">
+                        <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
+                          <img src={Editar} alt="Editar" />
+                        </button>
+                        <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
+                      </div>
+                    ) : null}
                   </li>
                 ))}
               </ul>
@@ -377,16 +433,26 @@ function CursoGrid() {
             <div className="ejercicios-list">
               <ul>
                 {ejercicios.map((e) => (
-                  <li key={e.id}>
-                    {e.nombre ? <strong>{e.nombre}</strong> : null}
-                    <br />
-                    <a
-                      href={`http://localhost:3000/ejercicios/files/${e.archivo}`}
-                      target="_blank"
-                      rel="noreferrer"
-                    >
-                      {e.archivo}
-                    </a>
+                  <li key={e.id} className="item-row">
+                    <div className="item-main">
+                      {e.descripcion ? <strong>{e.descripcion}</strong> : null}
+                      <br />
+                      <a
+                        href={`http://localhost:3000/ejercicios/files/${e.archivo}`}
+                        target="_blank"
+                        rel="noreferrer"
+                      >
+                        {e.archivo}
+                      </a>
+                    </div>
+                    {tipo === 'profesor' && editingMode ? (
+                      <div className="edit-controls">
+                        <button onClick={() => handleEditNavigate('ejercicio', e)} title="Editar ejercicio">
+                          <img src={Editar} alt="Editar" />
+                        </button>
+                        <button onClick={() => handleDeleteContenido('ejercicio', e.id)} title="Borrar ejercicio">✖</button>
+                      </div>
+                    ) : null}
                   </li>
                 ))}
               </ul>
@@ -461,13 +527,30 @@ function CursoGrid() {
         </div>
       </div>
       {tipo === "profesor" ? (
-        <button className="editarCurso">
-          <img src={Editar} alt="Editar contenido" />
-        </button>
-      ) : (null)}
-      <button className="subirContenidoCurso" onClick={handleNavigateAddContenido}>
-        <img src={Mas} alt="Subir contenido" />
-      </button>
+        <div className="fixed-action-group">
+          <button className="editarCurso" onClick={handleToggleEditingMode} title={editingMode ? 'Salir de edición' : 'Editar contenido'}>
+            <img src={Editar} alt="Editar contenido" />
+          </button>
+          <div style={{ position: 'relative' }}>
+            <button className="subirContenidoCurso" onClick={handleToggleAddMenu} title="Añadir contenido">
+              <img src={Mas} alt="Subir contenido" />
+            </button>
+            {showAddMenu ? (
+              <div className="add-menu">
+                <button onClick={() => handleNavigateAddContenidoTipo('apunte')}>Subir apunte</button>
+                <button onClick={() => handleNavigateAddContenidoTipo('video')}>Subir vídeo</button>
+                <button onClick={() => handleNavigateAddContenidoTipo('ejercicio')}>Subir ejercicio</button>
+              </div>
+            ) : null}
+          </div>
+        </div>
+      ) : (
+        <div className="fixed-action-group">
+          <button className="subirContenidoCurso" onClick={() => handleNavigateAddContenidoTipo('apunte')} title="Subir apunte">
+            <img src={Mas} alt="Subir contenido" />
+          </button>
+        </div>
+      )}
     </div>
   );
 }

@@ -56,7 +56,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
   try {
     let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
-    const nombre = req.body.nombre || null;
+    const descripcion = req.body.descripcion || null;
 
     // Requerimos archivo; si no llega, devolvemos 400
     if (!req.file) {
@@ -78,7 +78,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
       }
     }
 
-    const nuevo = await Ejercicios.create({ autor, curso, nombre, archivo });
+    const nuevo = await Ejercicios.create({ autor, curso, descripcion, archivo });
 
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
@@ -87,14 +87,17 @@ router.post("/", upload.single('archivo'), async (req, res) => {
   }
 });
 
-// Actualizar un ejercicio por ID
-router.put("/:id", (req, res) => {
+// Actualizar un ejercicio por ID (acepta multipart si se envía archivo)
+router.put("/:id", upload.single('archivo'), (req, res) => {
   try {
     const id = parseInt(req.params.id);
     console.log(`PUT /ejercicios/${id}`);
     Ejercicios.findAll().then((resultado) => {
       const ejercicio = resultado.find((e) => e.id === id);
       if (ejercicio) {
+        if (req.file) {
+          req.body.archivo = req.file.filename;
+        }
         ejercicio.update(req.body).then((actualizado) => res.json(actualizado));
       } else {
         res.status(404).json({ error: "Ejercicio no encontrado" });

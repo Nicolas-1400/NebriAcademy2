@@ -82,14 +82,17 @@ router.post("/", upload.single('archivo'), async (req, res) => {
   }
 });
 
-// Actualizar un apunte por ID
-router.put("/:id", (req, res) => {
+// Actualizar un apunte por ID (acepta multipart si se envía archivo)
+router.put("/:id", upload.single('archivo'), (req, res) => {
   try {
     const id = parseInt(req.params.id);
     console.log(`PUT /apuntes/${id}`);
     Apuntes.findAll().then((resultado) => {
       const apunte = resultado.find((a) => a.id === id);
       if (apunte) {
+        if (req.file) {
+          req.body.archivo = req.file.filename;
+        }
         apunte.update(req.body).then((actualizado) => res.json(actualizado));
       } else {
         res.status(404).json({ error: "Apunte no encontrado" });

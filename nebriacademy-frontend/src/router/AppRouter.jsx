@@ -35,7 +35,7 @@ function AppRouter() {
         <Route path="/Home/MiEspacio" element={<ProtectedRoute><MiEspacio/></ProtectedRoute>} />
         <Route path="/Home/Cursos" element={<ProtectedRoute><TodosCursos /></ProtectedRoute>} />
         <Route path="/Home/Cursos/:id" element={<ProtectedRoute><Curso /></ProtectedRoute>} />
-        <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<ProtectedRoute requiredTipo="profesor"><AddContenidoCurso /></ProtectedRoute>} />
+        <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<ProtectedRoute><AddContenidoCurso /></ProtectedRoute>} />
         <Route path="/Home/Cursos/:id/EditarContenidoCurso" element={<ProtectedRoute requiredTipo="profesor"><EditarContenidoCurso /></ProtectedRoute>} />
         <Route path="/Home/AddCurso" element={<ProtectedRoute requiredTipo="profesor"><AddCurso /></ProtectedRoute>} />
         <Route path="/Home/Profesores" element={<ProtectedRoute><TodosProfesores /></ProtectedRoute>} />

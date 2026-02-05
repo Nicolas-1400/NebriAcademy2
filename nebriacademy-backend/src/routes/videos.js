@@ -80,14 +80,17 @@ router.post("/", upload.single('archivo'), async (req, res) => {
   }
 });
 
-// Actualizar un video por ID
-router.put("/:id", (req, res) => {
+// Actualizar un video por ID (acepta multipart si se envía archivo)
+router.put("/:id", upload.single('archivo'), (req, res) => {
   try {
     const id = parseInt(req.params.id);
     console.log(`PUT /videos/${id}`);
     Videos.findAll().then((resultado) => {
       const video = resultado.find((v) => v.id === id);
       if (video) {
+        if (req.file) {
+          req.body.archivo = req.file.filename;
+        }
         video.update(req.body).then((actualizado) => res.json(actualizado));
       } else {
         res.status(404).json({ error: "Video no encontrado" });

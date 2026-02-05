@@ -14,7 +14,7 @@ function AddCursoGrid() {
   const [fileVideo, setFileVideo] = useState(null);
   const [nombreVideo, setNombreVideo] = useState("");
   const [fileEjercicio, setFileEjercicio] = useState(null);
-  const [nombreEjercicio, setNombreEjercicio] = useState("");
+  const [descripcionEjercicio, setDescripcionEjercicio] = useState("");
   const fileInputRef = useRef(null);
   const fileVideoInputRef = useRef(null);
   const fileEjercicioInputRef = useRef(null);
@@ -110,14 +110,14 @@ function AddCursoGrid() {
 
         // Subir ejercicio si existe (nombre y archivo deben ir juntos)
         try {
-          if ((nombreEjercicio && !fileEjercicio) || (fileEjercicio && !nombreEjercicio)) {
-            setError("Debes proporcionar nombre del ejercicio y fichero juntos");
+            if ((descripcionEjercicio && !fileEjercicio) || (fileEjercicio && !descripcionEjercicio)) {
+            setError("Debes proporcionar descripción del ejercicio y fichero juntos");
           } else if (fileEjercicio && courseId) {
             const formDataE = new FormData();
             formDataE.append("archivo", fileEjercicio);
             formDataE.append("autor", profesorId);
             formDataE.append("curso", courseId);
-            formDataE.append("nombre", nombreEjercicio);
+            formDataE.append("descripcion", descripcionEjercicio);
 
             const resEjercicio = await fetch("http://localhost:3000/ejercicios", {
               method: "POST",
@@ -149,7 +149,7 @@ function AddCursoGrid() {
         setFileVideo(null);
         setNombreVideo("");
         setFileEjercicio(null);
-        setNombreEjercicio("");
+        setDescripcionEjercicio("");
         setTimeout(() => setSuccess(""), 6000);
       } else {
         setError(datos.error || "Error al crear curso");
@@ -245,12 +245,12 @@ function AddCursoGrid() {
           </div>
 
           <div className="formulario-grupo">
-            <label>Nombre del ejercicio (opcional)</label>
+            <label>Descripción del ejercicio (opcional)</label>
             <input
               type="text"
-              placeholder="Nombre del ejercicio"
-              value={nombreEjercicio}
-              onChange={(e) => setNombreEjercicio(e.target.value)}
+              placeholder="Descripción del ejercicio"
+              value={descripcionEjercicio}
+              onChange={(e) => setDescripcionEjercicio(e.target.value)}
             />
           </div>
 

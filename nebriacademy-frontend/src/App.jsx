@@ -11,7 +11,10 @@ import './styles/Perfil.css';
 import './styles/TodosCursos.css';
 import './styles/Politicas.css';
 import './styles/Curso.css';
+import './styles/AddContenidoCurso.css';
+import './styles/EditarCurso.css';
 import './styles/HomeFeed.css';
+import './styles/Apuntes.css'
 import './styles/TarjetaCursoPequena.css'
 import './styles/TarjetaProfesor.css'
 import './styles/TodosProfesores.css'

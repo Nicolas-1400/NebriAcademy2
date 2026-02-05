@@ -1,0 +1,43 @@
+/* Estilos para la página de Apuntes */
+.ApuntesGrid {
+  max-width: 1100px;
+  margin: 30px auto;
+  padding: 20px;
+}
+
+.apuntes-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 18px;
+}
+.apuntes-header h2 { color: var(--rojo-nebrija); margin: 0; }
+
+.autores-list {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  gap: 16px;
+}
+
+.autor-card {
+  background: white;
+  border-radius: 10px;
+  padding: 16px;
+  box-shadow: 0 6px 20px rgba(0,0,0,0.06);
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+.autor-card .autor-nombre { font-weight: 800; color: #222; }
+.autor-card .autor-meta { color: #666; font-size: 13px; }
+
+.lista-apuntes { display: flex; flex-direction: column; gap: 8px; margin-top: 8px; }
+.apunte-item { padding: 10px; border-radius: 8px; background: #f8f8f8; border-left: 4px solid var(--rojo-nebrija); }
+.apunte-item a { color: var(--rojo-nebrija); font-weight: 700; text-decoration: none; }
+.apunte-item p { margin: 6px 0 0 0; color: #555; font-size: 13px; }
+
+.no-apuntes { text-align: center; color: #777; padding: 30px; }
+
+@media (max-width: 768px) {
+  .ApuntesGrid { padding: 12px; }
+}
