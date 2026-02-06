@@ -1,0 +1,104 @@
+Cosas para el FUTURO
+
+Fran: 
+- Imágenes dar a elegir (10),
+- Profesores tendrían que poder ver los cursos, tienen que pedir permiso a los administradores
+- Administradores para que puedan supervisar la página (A futuro)
+- Comentarios de profesores no funcionan
+- No funciona la edición de perfil
+
+
+Opcional:
+Trasladarlo a Vue.
+
+Para registrarse:
+Crear una BDD con los alumnos de la Nebrija.
+Comparar si al crear el usuario, coincide.
+Enviar un código al correo del alumno.
+
+NavBar: 
+**Desplegable en los botones, por ejemplo en cursos, que aparezcan los tipos**
+
+Zustand (distintos usuarios):
+Alumnos y Profesores
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crear nuevo back:
+
+Microsoft Windows [Versión 10.0.26200.7623]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB>cd back
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (back)
+version: (1.0.0)                                                                                                                                                   
+description:                                                                                                                                                       
+entry point: (index.js)                                                                                                                                            
+test command:                                                                                                                                                      
+git repository:                                                                                                                                                    
+keywords:                                                                                                                                                          
+author:                                                                                                                                                            
+license: (ISC)                                                                                                                                                     
+About to write to C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back\package.json:
+
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes)
+
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm i -g nodemon
+
+changed 29 packages in 4s
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm i express
+
+added 65 packages, and audited 66 packages in 6s
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>  

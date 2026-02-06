@@ -28,7 +28,7 @@ function AppRouter() {
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
         <Route path="/Register/VerificacionAlumnoNebrija" element={<VerificacionAlumnoNebrija />} />
-        <Route path="/RegisterAlumnoNebrija" element={<RegisterAlumnoNebrija />} />
+        <Route path="/RegisterAlumnoNebrija" element={<ProtectedRoute><RegisterAlumnoNebrija /></ProtectedRoute>} />
         <Route path="/Register/RegisterAlumnoExterno" element={<RegisterAlumnoExterno />} />
         <Route path="/Register/RegisterProfesor" element={<RegisterProfesor />} />
         <Route path="/Home" element={<ProtectedRoute><Home /></ProtectedRoute>} />
