@@ -54,6 +54,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
 
     let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
+    const nombre = req.body.nombre || null;
     let autor = null;
     if (autorInput) {
       const u = await Usuarios.findByPk(autorInput);
@@ -73,7 +74,11 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     const archivo = req.file.filename;
     const descripcion = req.body.descripcion || null;
 
-    const nuevo = await Apuntes.create({ autor, curso, archivo, descripcion, valoracion: 0 });
+    if (!nombre || String(nombre).trim() === '') {
+      return res.status(400).json({ error: "Campo 'nombre' es requerido para apuntes" });
+    }
+
+    const nuevo = await Apuntes.create({ autor, curso, archivo, descripcion, valoracion: 0, nombre });
 
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
@@ -92,6 +97,9 @@ router.put("/:id", upload.single('archivo'), (req, res) => {
       if (apunte) {
         if (req.file) {
           req.body.archivo = req.file.filename;
+        }
+        if (req.body.nombre && String(req.body.nombre).trim() === '') {
+          return res.status(400).json({ error: "Campo 'nombre' no puede estar vacío" });
         }
         apunte.update(req.body).then((actualizado) => res.json(actualizado));
       } else {

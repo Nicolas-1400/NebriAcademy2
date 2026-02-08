@@ -45,6 +45,23 @@
   z-index: 0;
 }
 
+/* Imagen de fondo del header: ahora usamos un <img> posicionado absolutamente */
+.curso-header-bg {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: 0;
+  pointer-events: none;
+}
+
+/* Contenedor relativo reutilizable */
+.relative-container {
+  position: relative;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    3. INFO DEL HEADER - NOMBRE, CATEGORÍA Y NIVEL (ESQUINA INFERIOR IZQUIERDA)
    ───────────────────────────────────────────────────────────────────────────── */

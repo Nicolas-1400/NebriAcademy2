@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 05-02-2026 a las 16:01:32
+-- Tiempo de generación: 08-02-2026 a las 16:58:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -90,6 +90,7 @@ CREATE TABLE `apuntes` (
   `id` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
   `curso` int(11) NOT NULL,
+  `nombre` text NOT NULL,
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL,
   `valoracion` float DEFAULT 0
@@ -99,12 +100,13 @@ CREATE TABLE `apuntes` (
 -- Volcado de datos para la tabla `apuntes`
 --
 
-INSERT INTO `apuntes` (`id`, `autor`, `curso`, `archivo`, `descripcion`, `valoracion`) VALUES
-(19, 21, 32, '1769770901951.pdf', 'Prueba video', 0),
-(20, 21, 33, '1769771262323.pdf', 'jeje', 0),
-(21, 21, 34, '1769771360844.pdf', 'sfsdgs', 0),
-(22, 21, 35, '1769771456223.pdf', 'sgdsgds', 0),
-(23, 1, 35, '1770284606795.pdf', 'Prueba', 0);
+INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `valoracion`) VALUES
+(19, 21, 32, '', '1769770901951.pdf', 'Prueba video', 0),
+(20, 21, 33, '', '1769771262323.pdf', 'jeje', 0),
+(21, 21, 34, '', '1769771360844.pdf', 'sfsdgs', 0),
+(22, 21, 35, '', '1769771456223.pdf', 'sgdsgds', 0),
+(23, 1, 35, '', '1770284606795.pdf', 'Prueba', 0),
+(24, 21, 35, 'Prueba', '1770566205261.pdf', 'shiufhasbfo', 0);
 
 -- --------------------------------------------------------
 
@@ -211,6 +213,7 @@ CREATE TABLE `ejercicios` (
   `id` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
   `curso` int(11) NOT NULL,
+  `nombre` text NOT NULL,
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
@@ -505,7 +508,7 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`

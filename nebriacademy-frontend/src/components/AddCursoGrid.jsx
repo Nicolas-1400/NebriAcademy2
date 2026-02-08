@@ -11,10 +11,12 @@ function AddCursoGrid() {
   const [nivel, setNivel] = useState("");
   const [fileApunte, setFileApunte] = useState(null);
   const [descripcionApunte, setDescripcionApunte] = useState("");
+  const [nombreApunte, setNombreApunte] = useState("");
   const [fileVideo, setFileVideo] = useState(null);
   const [nombreVideo, setNombreVideo] = useState("");
   const [fileEjercicio, setFileEjercicio] = useState(null);
   const [descripcionEjercicio, setDescripcionEjercicio] = useState("");
+  const [nombreEjercicio, setNombreEjercicio] = useState("");
   const fileInputRef = useRef(null);
   const fileVideoInputRef = useRef(null);
   const fileEjercicioInputRef = useRef(null);
@@ -59,21 +61,26 @@ function AddCursoGrid() {
         // Si hay un fichero de apunte, subirlo con FormData al endpoint /apuntes
         try {
           if (fileApunte && courseId) {
-            const formData = new FormData();
-            formData.append("archivo", fileApunte);
-            formData.append("autor", profesorId);
-            formData.append("curso", courseId);
-            formData.append("descripcion", descripcionApunte);
+            if (!nombreApunte || !nombreApunte.trim()) {
+              setError('Debes proporcionar un nombre para el apunte');
+            } else {
+              const formData = new FormData();
+              formData.append("archivo", fileApunte);
+              formData.append("autor", profesorId);
+              formData.append("curso", courseId);
+              formData.append("descripcion", descripcionApunte);
+              formData.append("nombre", nombreApunte);
 
-            const resApunte = await fetch("http://localhost:3000/apuntes", {
-              method: "POST",
-              body: formData,
-            });
+              const resApunte = await fetch("http://localhost:3000/apuntes", {
+                method: "POST",
+                body: formData,
+              });
 
-            const apunteBody = await resApunte.json().catch(() => null);
-            if (!resApunte.ok) {
-              console.error("Error al subir apunte:", resApunte.status, apunteBody);
-              setError("Error al subir apunte");
+              const apunteBody = await resApunte.json().catch(() => null);
+              if (!resApunte.ok) {
+                console.error("Error al subir apunte:", resApunte.status, apunteBody);
+                setError("Error al subir apunte");
+              }
             }
           }
         } catch (errUpload) {
@@ -113,21 +120,26 @@ function AddCursoGrid() {
             if ((descripcionEjercicio && !fileEjercicio) || (fileEjercicio && !descripcionEjercicio)) {
             setError("Debes proporcionar descripción del ejercicio y fichero juntos");
           } else if (fileEjercicio && courseId) {
-            const formDataE = new FormData();
-            formDataE.append("archivo", fileEjercicio);
-            formDataE.append("autor", profesorId);
-            formDataE.append("curso", courseId);
-            formDataE.append("descripcion", descripcionEjercicio);
+            if (!nombreEjercicio || !nombreEjercicio.trim()) {
+              setError('Debes proporcionar un nombre para el ejercicio');
+            } else {
+              const formDataE = new FormData();
+              formDataE.append("archivo", fileEjercicio);
+              formDataE.append("autor", profesorId);
+              formDataE.append("curso", courseId);
+              formDataE.append("descripcion", descripcionEjercicio);
+              formDataE.append("nombre", nombreEjercicio);
 
-            const resEjercicio = await fetch("http://localhost:3000/ejercicios", {
-              method: "POST",
-              body: formDataE,
-            });
+              const resEjercicio = await fetch("http://localhost:3000/ejercicios", {
+                method: "POST",
+                body: formDataE,
+              });
 
-            const ejercicioBody = await resEjercicio.json().catch(() => null);
-            if (!resEjercicio.ok) {
-              console.error("Error al subir ejercicio:", resEjercicio.status, ejercicioBody);
-              setError("Error al subir ejercicio");
+              const ejercicioBody = await resEjercicio.json().catch(() => null);
+              if (!resEjercicio.ok) {
+                console.error("Error al subir ejercicio:", resEjercicio.status, ejercicioBody);
+                setError("Error al subir ejercicio");
+              }
             }
           }
         } catch (errE) {
@@ -223,6 +235,16 @@ function AddCursoGrid() {
           </div>
 
           <div className="formulario-grupo">
+            <label>Nombre del apunte (requerido si subes archivo)</label>
+            <input
+              type="text"
+              placeholder="Nombre del apunte"
+              value={nombreApunte}
+              onChange={(e) => setNombreApunte(e.target.value)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
             <label>Subir vídeo (opcional)</label>
             <input
               type="file"
@@ -251,6 +273,16 @@ function AddCursoGrid() {
               placeholder="Descripción del ejercicio"
               value={descripcionEjercicio}
               onChange={(e) => setDescripcionEjercicio(e.target.value)}
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label>Nombre del ejercicio (requerido si subes archivo)</label>
+            <input
+              type="text"
+              placeholder="Nombre del ejercicio"
+              value={nombreEjercicio}
+              onChange={(e) => setNombreEjercicio(e.target.value)}
             />
           </div>
 

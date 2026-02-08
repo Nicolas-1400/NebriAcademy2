@@ -1,6 +1,5 @@
 import React, { useEffect, useState } from 'react'
 import { useLocation, useNavigate } from 'react-router-dom'
-import '../styles/EditarCurso.css'
 
 function EditarContenidoCursoGrid() {
   const location = useLocation();
@@ -29,8 +28,9 @@ function EditarContenidoCursoGrid() {
       let res;
       if (newFile) {
         const form = new FormData();
-        if (tipo === 'video') form.append('nombre', nombre);
-        else form.append('descripcion', descripcion);
+        // enviar nombre para todos los tipos que tienen fichero
+        form.append('nombre', nombre);
+        if (tipo !== 'video') form.append('descripcion', descripcion);
         form.append('archivo', newFile);
         res = await fetch(`http://localhost:3000/${endpoint}/${item.id}`, {
           method: 'PUT',
@@ -38,8 +38,8 @@ function EditarContenidoCursoGrid() {
         });
       } else {
         const body = {};
-        if (tipo === 'video') body.nombre = nombre;
-        else body.descripcion = descripcion;
+        body.nombre = nombre;
+        if (tipo !== 'video') body.descripcion = descripcion;
         res = await fetch(`http://localhost:3000/${endpoint}/${item.id}`, {
           method: 'PUT',
           headers: { 'Content-Type': 'application/json' },
@@ -73,18 +73,17 @@ function EditarContenidoCursoGrid() {
       {tipo ? <p>Tipo: {tipo}</p> : null}
       {item ? (
         <div>
-          <p><strong>Archivo:</strong> {item.archivo ? <a href={fileLink()} target="_blank" rel="noreferrer">{item.archivo}</a> : 'Sin archivo'}</p>
-          {tipo === 'video' ? (
-            <div className="ec-form-group">
-              <label>Nombre del vídeo</label>
-              <input className="ec-input" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-            </div>
-          ) : (
-            <div className="ec-form-group">
-              <label>Descripción</label>
-              <textarea className="ec-textarea" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-            </div>
-          )}
+              <p><strong>Archivo:</strong> {item.archivo ? <a href={fileLink()} target="_blank" rel="noreferrer">{item.nombre || item.archivo}</a> : 'Sin archivo'}</p>
+              <div className="ec-form-group">
+                <label>Nombre</label>
+                <input className="ec-input" value={nombre} onChange={(e) => setNombre(e.target.value)} />
+              </div>
+              {tipo !== 'video' ? (
+                <div className="ec-form-group">
+                  <label>Descripción</label>
+                  <textarea className="ec-textarea" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+                </div>
+              ) : null}
 
           <div className="ec-form-group">
             <label>Cambiar archivo</label>

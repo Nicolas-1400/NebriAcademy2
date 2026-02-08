@@ -1,5 +1,4 @@
 import { useEffect, useState } from 'react'
-import '../styles/Apuntes.css'
 
 function ApuntesGrid() {
   const [apuntes, setApuntes] = useState([])
@@ -84,7 +83,7 @@ function ApuntesGrid() {
                 <div className="lista-apuntes">
                   {ac.items.map((it) => (
                     <div key={it.id} className="apunte-item">
-                      <a href={`http://localhost:3000/apuntes/files/${it.archivo}`} target="_blank" rel="noreferrer">{it.archivo}</a>
+                      <a href={`http://localhost:3000/apuntes/files/${it.archivo}`} target="_blank" rel="noreferrer">{it.nombre || it.archivo}</a>
                       {it.descripcion ? <p>{it.descripcion}</p> : null}
                     </div>
                   ))}

@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from 'react'
 import { useLocation, useNavigate, useParams } from 'react-router-dom'
 import useAuthStore from '../store/useAuthStore'
-import '../styles/AddContenidoCurso.css'
 
 function AddContenidoCursoGrid() {
   const location = useLocation()
@@ -31,14 +30,16 @@ function AddContenidoCursoGrid() {
     e.preventDefault()
     setError(null)
     if (!file) return setError('Selecciona un archivo')
+    if ((tipo === 'apunte' || tipo === 'ejercicio') && (!nombre || nombre.trim() === '')) return setError('El nombre es obligatorio')
     setLoading(true)
     try {
       const endpoint = tipo === 'video' ? 'videos' : tipo === 'apunte' ? 'apuntes' : 'ejercicios'
       const form = new FormData()
       form.append('archivo', file)
       form.append('curso', parseInt(cursoId))
-      if (tipo === 'video') form.append('nombre', nombre)
-      else form.append('descripcion', descripcion)
+      // todos los tipos con fichero deben enviar nombre (obligatorio para apunte/ejercicio/video)
+      form.append('nombre', nombre)
+      if (tipo !== 'video') form.append('descripcion', descripcion)
       // autor: enviamos el id del usuario autenticado
       if (usuario && usuario.id) form.append('autor', usuario.id)
 
@@ -64,17 +65,14 @@ function AddContenidoCursoGrid() {
       <h2>Añadir contenido al curso</h2>
       <p>Tipo: {tipo}</p>
       <form onSubmit={handleSubmit} className="add-contenido-form">
-        {tipo === 'video' ? (
-          <div className="form-group">
-            <label>Nombre del vídeo</label>
-            <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
-          </div>
-        ) : (
-          <div className="form-group">
-            <label>Descripción</label>
-            <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-          </div>
-        )}
+        <div className="form-group">
+          <label>Nombre</label>
+          <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+        </div>
+        <div className="form-group">
+          <label>Descripción</label>
+          <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+        </div>
         <div className="form-group">
           <label>Archivo</label>
           <input type="file" onChange={(e) => setFile(e.target.files && e.target.files[0])} />

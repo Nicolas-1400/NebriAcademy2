@@ -57,12 +57,17 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
     const descripcion = req.body.descripcion || null;
+    const nombre = req.body.nombre || null;
 
     // Requerimos archivo; si no llega, devolvemos 400
     if (!req.file) {
       return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
     }
     const archivo = req.file.filename;
+
+    if (!nombre || String(nombre).trim() === '') {
+      return res.status(400).json({ error: "Campo 'nombre' es requerido para ejercicios" });
+    }
 
     // Resolver autor de forma análoga a apuntes: puede ser id de usuario o id de profesor
     let autor = null;
@@ -78,7 +83,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
       }
     }
 
-    const nuevo = await Ejercicios.create({ autor, curso, descripcion, archivo });
+    const nuevo = await Ejercicios.create({ autor, curso, descripcion, archivo, nombre });
 
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
@@ -97,6 +102,10 @@ router.put("/:id", upload.single('archivo'), (req, res) => {
       if (ejercicio) {
         if (req.file) {
           req.body.archivo = req.file.filename;
+        }
+        // Ensure nombre is not empty if provided
+        if (req.body.nombre && String(req.body.nombre).trim() === '') {
+          return res.status(400).json({ error: "Campo 'nombre' no puede estar vacío" });
         }
         ejercicio.update(req.body).then((actualizado) => res.json(actualizado));
       } else {

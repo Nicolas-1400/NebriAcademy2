@@ -138,7 +138,7 @@ function MiEspacioGrid() {
             {tusApuntes().length > 0 ? (
               tusApuntes().map((apunte) => (
                 <div key={apunte.id} className="tarjeta-apunte">
-                  <h4>{apunte.titulo}</h4>
+                  <h4>{apunte.nombre || apunte.titulo}</h4>
                   <p>{apunte.descripcion || "Sin descripción"}</p>
                 </div>
               ))
@@ -153,7 +153,7 @@ function MiEspacioGrid() {
             {apuntesGuardados().length > 0 ? (
               apuntesGuardados().map((apunte) => (
                 <div key={apunte.id} className="tarjeta-apunte">
-                  <h4>{apunte.titulo}</h4>
+                  <h4>{apunte.nombre || apunte.titulo}</h4>
                   <p>{apunte.descripcion || "Sin descripción"}</p>
                 </div>
               ))

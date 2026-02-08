@@ -315,10 +315,8 @@ function CursoGrid() {
   return (
     <div className="curso-grid">
       {/* HEADER CON IMAGEN DE FONDO Y BOTONES */}
-      <div 
-        className="curso-header" 
-        style={{ backgroundImage: `url(${FotoSelector})` }}
-      >
+      <div className="curso-header">
+        <img className="curso-header-bg" src={FotoSelector} alt="" />
         <div className="curso-header-info">
           <h2>{curso.nombreCurso}</h2>
           <p>{curso.categoria}</p>
@@ -409,7 +407,7 @@ function CursoGrid() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {a.archivo}
+                        {a.nombre || a.archivo}
                       </a>
                       {a.descripcion ? <p>{a.descripcion}</p> : null}
                     </div>
@@ -442,7 +440,7 @@ function CursoGrid() {
                         target="_blank"
                         rel="noreferrer"
                       >
-                        {e.archivo}
+                        {e.nombre || e.archivo}
                       </a>
                     </div>
                     {tipo === 'profesor' && editingMode ? (
@@ -531,7 +529,7 @@ function CursoGrid() {
           <button className="editarCurso" onClick={handleToggleEditingMode} title={editingMode ? 'Salir de edición' : 'Editar contenido'}>
             <img src={Editar} alt="Editar contenido" />
           </button>
-          <div style={{ position: 'relative' }}>
+          <div className="relative-container">
             <button className="subirContenidoCurso" onClick={handleToggleAddMenu} title="Añadir contenido">
               <img src={Mas} alt="Subir contenido" />
             </button>
