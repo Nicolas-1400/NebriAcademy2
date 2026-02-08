@@ -30,7 +30,7 @@ function HomeProfesorGrid() {
     if (error) return <div>{error}</div>
 
     return (
-        <div>
+        <div className='home-profesor-grid'>
             <h1>Bienvenido/a {usuario ? `${usuario.nombre} ${usuario.apellidos}` : 'Usuario'}</h1>
             <div className="grid-cursos-profesor">
                 {cursos.length === 0 ? (

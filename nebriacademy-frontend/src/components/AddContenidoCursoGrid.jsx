@@ -67,7 +67,7 @@ function AddContenidoCursoGrid() {
       <form onSubmit={handleSubmit} className="add-contenido-form">
         <div className="form-group">
           <label>Nombre</label>
-          <input value={nombre} onChange={(e) => setNombre(e.target.value)} />
+          <input className="input-area" value={nombre} onChange={(e) => setNombre(e.target.value)} />
         </div>
         <div className="form-group">
           <label>Descripción</label>
@@ -75,11 +75,11 @@ function AddContenidoCursoGrid() {
         </div>
         <div className="form-group">
           <label>Archivo</label>
-          <input type="file" onChange={(e) => setFile(e.target.files && e.target.files[0])} />
+          <input className="input-area" type="file" onChange={(e) => setFile(e.target.files && e.target.files[0])} />
         </div>
         {error ? <p className="error">{error}</p> : null}
-        <div className="form-actions">
-          <button type="submit" className="btn-submit" disabled={loading}>{loading ? 'Subiendo...' : 'Subir'}</button>
+        <div className="form-botones">
+          <button type="submit" className="btn-subir" disabled={loading}>{loading ? 'Subiendo...' : 'Subir'}</button>
           <button type="button" className="btn-cancel" onClick={() => navigate(`/Home/Cursos/${cursoId}`)}>Cancelar</button>
         </div>
       </form>

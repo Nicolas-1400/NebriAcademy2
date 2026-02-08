@@ -1,25 +1,102 @@
 /* Estilos para AddContenidoCursoGrid */
-.addcontenidocursogrid {
-	max-width: 900px;
-	margin: 30px auto;
-	padding: 24px;
-	background: white;
-	border-radius: 10px;
-	box-shadow: 0 6px 24px rgba(0,0,0,0.06);
+.addcontenidocursogrid,
+.editar-curso-container {
+  max-width: 900px;
+  margin: 30px auto;
+  padding: 24px;
+  background: white;
+  border-radius: 10px;
+  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
 }
 
-.addcontenidocursogrid h2 { color: var(--rojo-nebrija); margin-top: 0; }
+.addcontenidocursogrid h2,
+.editar-curso-container h2 {
+  color: var(--rojo-nebrija);
+  border-bottom: 2px solid var(--rojo-nebrija);
+  margin-bottom: 10px;
+}
 
-.add-contenido-form { display: flex; flex-direction: column; gap: 12px; }
-.form-group { display: flex; flex-direction: column; gap: 6px; }
-.form-group label { font-weight: 700; color: #333; }
-.form-group input[type="text"], .form-group input[type="file"], .form-group textarea { padding: 10px; border: 1px solid #ddd; border-radius: 6px; }
-.form-group textarea { min-height: 120px; resize: vertical; }
+.addcontenidocursogrid p {
+  color: black;
+  font-size: 16px;
+}
 
-.error { color: #b00020; }
+.add-contenido-form {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  padding: 8px;
+}
+.form-group {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+.form-group label {
+  font-weight: 700;
+  color: black;
+}
 
-.form-actions { margin-top: 12px; display:flex; gap:8px; }
-.btn-submit { background: var(--rojo-nebrija); color: white; padding: 10px 16px; border: 0; border-radius: 8px; cursor: pointer; font-weight: 700; }
-.btn-submit:disabled { opacity: 0.6; cursor: default; }
-.btn-cancel { background: #eee; padding: 10px 16px; border-radius: 8px; border: 0; cursor: pointer; }
+.input-area {
+  padding: 10px;
+  border: 2px solid black;
+  border-radius: 6px;
+}
 
+.input-area:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+}
+
+.form-group textarea {
+  min-height: 120px;
+  border: 2px solid black;
+  border-radius: 6px;
+  resize: vertical;
+}
+
+.form-group textarea:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+}
+
+.error {
+  color: #b00020;
+}
+
+.form-botones {
+  margin-top: 12px;
+  display: flex;
+  gap: 8px;
+}
+.btn-subir {
+  background: var(--rojo-nebrija);
+  color: white;
+  padding: 10px 16px;
+  border: 2px transparent solid;
+  border-radius: 8px;
+  cursor: pointer;
+  font-weight: 700;
+  transition: all 0.3s ease;
+}
+
+.btn-subir:hover {
+  background: transparent;
+  border: 2px solid var(--rojo-nebrija);
+  color: var(--rojo-nebrija);
+}
+
+.btn-cancel {
+  background: #eee;
+  padding: 10px 16px;
+  border-radius: 8px;
+  border: 2px transparent solid;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.btn-cancel:hover {
+  background: transparent;
+  border: 2px solid var(--rojo-nebrija);
+  color: var(--rojo-nebrija);
+}

@@ -72,28 +72,27 @@ function EditarContenidoCursoGrid() {
       <h2>Editar contenido</h2>
       {tipo ? <p>Tipo: {tipo}</p> : null}
       {item ? (
-        <div>
-              <p><strong>Archivo:</strong> {item.archivo ? <a href={fileLink()} target="_blank" rel="noreferrer">{item.nombre || item.archivo}</a> : 'Sin archivo'}</p>
-              <div className="ec-form-group">
-                <label>Nombre</label>
-                <input className="ec-input" value={nombre} onChange={(e) => setNombre(e.target.value)} />
-              </div>
-              {tipo !== 'video' ? (
-                <div className="ec-form-group">
-                  <label>Descripción</label>
-                  <textarea className="ec-textarea" value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
-                </div>
-              ) : null}
-
-          <div className="ec-form-group">
-            <label>Cambiar archivo</label>
-            <input type="file" onChange={(e) => setNewFile(e.target.files && e.target.files[0])} />
-            <small className="ec-help">Si subes un nuevo archivo, este reemplazará al anterior.</small>
+        <div className="add-contenido-form">
+          <p><strong>Archivo:</strong> {item.archivo ? <a href={fileLink()} target="_blank" rel="noreferrer">{item.nombre || item.archivo}</a> : 'Sin archivo'}</p>
+          <div className="form-group">
+            <label>Nombre</label>
+            <input className="input-area" value={nombre} onChange={(e) => setNombre(e.target.value)} />
           </div>
-          {error ? <p className="ec-error">{error}</p> : null}
-          <div className="ec-actions">
-            <button onClick={handleSave} disabled={loading}>{loading ? 'Guardando...' : 'Guardar'}</button>
-            <button onClick={() => navigate(`/Home/Cursos/${cursoId}`)}>Cancelar</button>
+          {tipo !== 'video' ? (
+            <div className="form-group">
+              <label>Descripción</label>
+              <textarea value={descripcion} onChange={(e) => setDescripcion(e.target.value)} />
+            </div>
+          ) : null}
+          <div className="form-group">
+            <label>Cambiar archivo</label>
+            <input className="input-area" type="file" onChange={(e) => setNewFile(e.target.files && e.target.files[0])} />
+            <small style={{ color: '#666', fontSize: '14px' }}>Si subes un nuevo archivo, este reemplazará al anterior.</small>
+          </div>
+          {error ? <p className="error">{error}</p> : null}
+          <div className="form-botones">
+            <button className="btn-subir" onClick={handleSave} disabled={loading}>{loading ? 'Guardando...' : 'Guardar'}</button>
+            <button className="btn-cancel" onClick={() => navigate(`/Home/Cursos/${cursoId}`)}>Cancelar</button>
           </div>
         </div>
       ) : (

@@ -1,17 +1,10 @@
 @import './general.css';
 
-/* Contenedor principal */
-.HomeProfesorGrid {
-  padding: 40px 20px;
-  max-width: 1400px;
-  margin: 0 auto;
-}
-
 /* Título de bienvenida */
-.HomeProfesorGrid h1 {
+.home-profesor-grid h1 {
   font-size: 32px;
   color: var(--rojo-nebrija);
-  margin-bottom: 40px;
+  margin:  20px;
   font-weight: 700;
 }
 
@@ -20,7 +13,7 @@
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
-  padding: 20px 0;
+  padding: 20px;
 }
 
 /* Mensaje vacío */
@@ -38,11 +31,11 @@
 
 /* RESPONSIVE - Tablets (768px) */
 @media (max-width: 768px) {
-  .HomeProfesorGrid {
+  .home-profesor-grid {
     padding: 30px 15px;
   }
 
-  .HomeProfesorGrid h1 {
+  .home-profesor-grid h1 {
     font-size: 26px;
     margin-bottom: 30px;
   }
@@ -55,11 +48,11 @@
 
 /* RESPONSIVE - Mobile (480px) */
 @media (max-width: 480px) {
-  .HomeProfesorGrid {
+  .home-profesor-grid {
     padding: 20px 10px;
   }
 
-  .HomeProfesorGrid h1 {
+  .home-profesor-grid h1 {
     font-size: 22px;
     margin-bottom: 25px;
   }
