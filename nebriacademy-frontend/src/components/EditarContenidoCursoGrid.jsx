@@ -69,8 +69,7 @@ function EditarContenidoCursoGrid() {
 
   return (
     <div className="editar-curso-container">
-      <h2>Editar contenido</h2>
-      {tipo ? <p>Tipo: {tipo}</p> : null}
+      <h2>Editar {tipo}</h2>
       {item ? (
         <div className="add-contenido-form">
           <p><strong>Archivo:</strong> {item.archivo ? <a href={fileLink()} target="_blank" rel="noreferrer">{item.nombre || item.archivo}</a> : 'Sin archivo'}</p>

@@ -279,7 +279,7 @@ function PerfilProfesorGrid() {
                 Seleccione una especialización
               </option>
               <option value="Programacion">Programación</option>
-              <option value="Diseno">Diseño</option>
+              <option value="Diseño">Diseño</option>
               <option value="Ciberseguridad">Ciberseguridad</option>
               <option value="BDD">Base de datos</option>
               <option value="Marketing">Marketing</option>

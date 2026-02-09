@@ -254,11 +254,6 @@ function CursoGrid() {
       }
     } catch (e) { console.error('delete error', e); }
   };
-
-  const handleNavigateAddContenido = () => {
-    navigate(`/Home/Cursos/${id}/AddContenidoCurso`);
-  };
-
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
@@ -322,10 +317,10 @@ function CursoGrid() {
           <p>{curso.categoria}</p>
           <p>Nivel: {curso.nivel}</p>
         </div>
-        {alumnoId ? (
-          <div className="curso-header-botones">
+          {tipo === 'alumno' ? (
+            <div className="curso-header-botones">
             <p>
-              <strong>Valoración: {curso.valoracion}</strong>
+              <strong>Valoración: </strong>
               <button className="vote-up" onClick={() => handleVote(true)}>
                 <img
                   src={
@@ -336,6 +331,7 @@ function CursoGrid() {
                   alt="up"
                 />
               </button>
+              <strong> {curso.valoracion} </strong>
               <button className="vote-down" onClick={() => handleVote(false)}>
                 <img
                   src={
@@ -357,8 +353,13 @@ function CursoGrid() {
                 {registroCA && registroCA.apuntado ? "✔ Apuntado" : "Apuntarme"}
               </button>
             </p>
-          </div>
-        ) : null}
+          </div>) : (
+            <div className="curso-header-botones">
+              <p>
+                <strong>Valoración: {curso.valoracion}</strong>
+              </p>
+            </div>
+          )}
       </div>
 
       {/* CONTENIDO PRINCIPAL: 75% + DETALLES: 25% */}

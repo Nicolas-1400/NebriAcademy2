@@ -1,7 +1,6 @@
 import { useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import "../styles/AddCurso.css";
 import flecha from "../assets/flecha-correcta.png";
 
 function AddCursoGrid() {
@@ -220,7 +219,7 @@ function AddCursoGrid() {
                   Selecciona categoría
                 </option>
                 <option value="Programacion">Programación</option>
-                <option value="Diseno">Diseño</option>
+                <option value="Diseño">Diseño</option>
                 <option value="Ciberseguridad">Ciberseguridad</option>
                 <option value="BDD">Base de datos</option>
                 <option value="Marketing">Marketing</option>
