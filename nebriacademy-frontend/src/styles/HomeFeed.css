@@ -104,10 +104,10 @@
 
 
 /* Overrides for react-slick inline width on .slick-track */
-.HomeFeed-tus-cursos-carousel .slick-track {
+/* .HomeFeed-tus-cursos-carousel .slick-track {
   display: flex !important;
   width: 2484px !important;
-}
+} */
 /* .slick-slide {
   display: block !important;
   width: auto !important;

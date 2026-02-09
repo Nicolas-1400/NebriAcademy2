@@ -1,4 +1,4 @@
-@import './general.css';
+@import "./general.css";
 
 .MiEspacio {
   padding: 40px 20px;
@@ -29,6 +29,13 @@
   gap: 20px;
 }
 
+/* Contenedor de carousel con botones */
+.MiEspacio-carousel-container {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
 .MiEspacio-seccion-cursos-proceso h2,
 .MiEspacio-seccion-cursos-favoritos h2,
 .MiEspacio-seccion-tus-apuntes h2,
@@ -44,15 +51,84 @@
 .MiEspacio-tus-apuntes-carousel,
 .MiEspacio-apuntes-guardados-carousel {
   display: flex;
-  flex-direction: row;
   gap: 20px;
-  overflow-x: auto;
+  overflow: hidden;
   padding: 10px 0;
   scroll-behavior: smooth;
-  flex-wrap: wrap;
+  flex: 1;
+  width: 100%;
 }
 
+/* Contenedor del carousel con controles */
+.MiEspacio-seccion-cursos-proceso,
+.MiEspacio-seccion-cursos-favoritos,
+.MiEspacio-seccion-tus-apuntes,
+.MiEspacio-seccion-apuntes-guardados {
+  position: relative;
+}
 
+/* Botones de navegación del carousel */
+.carousel-btn {
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  min-width: 40px;
+  min-height: 40px;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(194, 0, 47, 0.3);
+  flex-shrink: 0;
+}
+
+.carousel-btn:hover {
+  background-color: #a00038;
+  box-shadow: 0 4px 12px rgba(194, 0, 47, 0.5);
+  transform: scale(1.1);
+}
+
+.carousel-btn:active {
+  transform: scale(0.95);
+}
+
+.carousel-btn-left {
+  order: -1;
+}
+
+.carousel-btn-right {
+  order: 1;
+}
+
+/* Overrides for react-slick inline width on .slick-track */
+/* .MiEspacio-cursos-proceso-carousel .slick-track,
+.MiEspacio-cursos-favoritos-carousel .slick-track,
+.MiEspacio-tus-apuntes-carousel .slick-track,
+.MiEspacio-apuntes-guardados-carousel .slick-track {
+  display: flex !important;
+  width: 2484px !important;
+}
+
+.MiEspacio-cursos-proceso-carousel .slick-slide,
+.MiEspacio-cursos-favoritos-carousel .slick-slide,
+.MiEspacio-tus-apuntes-carousel .slick-slide,
+.MiEspacio-apuntes-guardados-carousel .slick-slide {
+  display: block !important;
+  width: auto !important;
+}
+
+.MiEspacio-cursos-proceso-carousel .slick-list,
+.MiEspacio-cursos-favoritos-carousel .slick-list,
+.MiEspacio-tus-apuntes-carousel .slick-list,
+.MiEspacio-apuntes-guardados-carousel .slick-list {
+  overflow: hidden !important;
+} */
 
 .mensaje-vacio {
   color: #999;
