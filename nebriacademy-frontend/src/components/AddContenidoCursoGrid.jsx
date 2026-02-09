@@ -62,8 +62,7 @@ function AddContenidoCursoGrid() {
 
   return (
     <div className="addcontenidocursogrid">
-      <h2>Añadir contenido al curso</h2>
-      <p>Tipo: {tipo}</p>
+      <h2>Añadir {tipo} al curso</h2>
       <form onSubmit={handleSubmit} className="add-contenido-form">
         <div className="form-group">
           <label>Nombre</label>
@@ -80,7 +79,7 @@ function AddContenidoCursoGrid() {
         {error ? <p className="error">{error}</p> : null}
         <div className="form-botones">
           <button type="submit" className="btn-subir" disabled={loading}>{loading ? 'Subiendo...' : 'Subir'}</button>
-          <button type="button" className="btn-cancel" onClick={() => navigate(`/Home/Cursos/${cursoId}`)}>Cancelar</button>
+          <button type="button" className="btn-cancel" onClick={() => navigate(-1)}>Cancelar</button>
         </div>
       </form>
     </div>
