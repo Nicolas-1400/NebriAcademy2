@@ -439,6 +439,19 @@
   font-style: italic;
 }
 
+/* Wrapper para dos columnas de apuntes: profesor (izquierda) y alumnos (derecha) */
+.apuntes-columns-wrapper {
+  display: flex;
+  gap: 20px;
+  align-items: flex-start;
+}
+.apuntes-columns-wrapper .apuntes-list {
+  flex: 1 1 0;
+  min-width: 0;
+}
+.apuntes-columns-wrapper .profesor-apuntes { order: 0; }
+.apuntes-columns-wrapper .alumnos-apuntes { order: 1; }
+
 /* ─────────────────────────────────────────────────────────────────────────────
    11. MENSAJE SIN CONTENIDO (vacío)
    ───────────────────────────────────────────────────────────────────────────── */
