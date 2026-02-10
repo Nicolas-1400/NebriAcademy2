@@ -63,6 +63,30 @@
   font-size: 13px;
 }
 
+/* Like button for apuntes */
+.apunte-like {
+  display: inline-flex;
+  align-items: center;
+  margin-left: 8px;
+}
+.apunte-like .like-icon {
+  width: 22px;
+  height: 22px;
+  cursor: pointer;
+  filter: grayscale(1);
+  transition: filter 120ms ease-in-out, transform 120ms ease-in-out;
+}
+.apunte-like .like-icon:hover {
+  transform: scale(1.05);
+}
+.apunte-like .like-icon.liked {
+  filter: grayscale(0) brightness(0);
+}
+.apunte-like .like-count {
+  margin-left: 6px;
+  font-weight: 700;
+}
+
 .no-apuntes {
   text-align: center;
   color: #777;

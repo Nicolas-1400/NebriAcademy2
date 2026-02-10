@@ -5,6 +5,8 @@ const multer = require("multer");
 const path = require("path");
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
+const Cursos = require("../models/Cursos.js");
+const { Op } = require('sequelize');
 
 // Multer: guarda en la carpeta de assets del frontend
 const storage = multer.diskStorage({
@@ -73,12 +75,27 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     }
     const archivo = req.file.filename;
     const descripcion = req.body.descripcion || null;
+    // categoria puede venir en body si se sube desde la página Apuntes
+    let categoria = req.body.categoria || null;
 
     if (!nombre || String(nombre).trim() === '') {
       return res.status(400).json({ error: "Campo 'nombre' es requerido para apuntes" });
     }
 
-    const nuevo = await Apuntes.create({ autor, curso, archivo, descripcion, valoracion: 0, nombre });
+    // Si viene curso, obtener la categoria del curso y sobreescribir
+    if (curso) {
+      const cursoDb = await Cursos.findByPk(curso);
+      if (cursoDb && cursoDb.categoria) {
+        categoria = cursoDb.categoria;
+      }
+    }
+
+    // Si no hay curso, requerimos que se indique categoria
+    if (!curso && !categoria) {
+      return res.status(400).json({ error: "Campo 'categoria' es requerido cuando no se sube desde un curso" });
+    }
+
+    const nuevo = await Apuntes.create({ autor, curso, categoria, archivo, descripcion, valoracion: 0, nombre });
 
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
@@ -130,5 +147,6 @@ router.delete("/:id", (req, res) => {
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
+
 
 module.exports = router;

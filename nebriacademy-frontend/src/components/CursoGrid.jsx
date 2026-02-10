@@ -15,6 +15,8 @@ import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 import Mas from "../assets/mas.png";
 import Editar from "../assets/lapiz.png";
+import MeGusta from "../assets/me-gusta.png";
+import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 
 function CursoGrid() {
   const [curso, setCurso] = useState(null);
@@ -26,6 +28,7 @@ function CursoGrid() {
   const { id } = useParams();
   const [usuario, setUsuario] = useState(null);
   const [videos, setVideos] = useState([]);
+  const [likedIds, setLikedIds] = useState([]);
   const [comentariosList, setComentariosList] = useState([]);
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
@@ -39,6 +42,39 @@ function CursoGrid() {
     if (storeUser) setUsuario(storeUser)
   }, [storeUser]);
   const alumnoId = usuario ? usuario.id : null;
+
+  useEffect(() => {
+    if (!usuario || !usuario.id) return;
+    // cargar los likes del alumno para apuntes
+    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`)
+      .then((r) => r.json())
+      .then((d) => {
+        setLikedIds(Array.isArray(d.apunteIds) ? d.apunteIds : []);
+      })
+      .catch(() => {});
+  }, [usuario]);
+
+  const handleToggleApunteLike = async (apunte) => {
+    if (!usuario || !usuario.id) return;
+    try {
+      const r = await fetch(`http://localhost:3000/apuntesalumnos/vote`, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true })
+      });
+      const d = await r.json();
+      if (!r.ok) throw new Error(d.error || 'Error like');
+      if (d.registro) {
+        const likedNow = d.registro.valoracion === true;
+        setLikedIds((prev) => (likedNow ? [...new Set([...prev, apunte.id])] : prev.filter(x => x !== apunte.id)));
+      }
+      if (d.apunte) {
+        setApuntes((prev) => prev.map(a => a.id === apunte.id ? { ...a, valoracion: d.apunte.valoracion } : a));
+      }
+    } catch (e) {
+      console.error('Error toggling apunte like', e);
+    }
+  };
 
   useEffect(() => {
     setError(null);
@@ -307,6 +343,17 @@ function CursoGrid() {
     return Foto10;
   })();
 
+  const isApunteDelProfesor = (a) => {
+    const autor = a && (a.autor || a.usuarioId || a.autorId) ? String(a.autor || a.usuarioId || a.autorId) : "";
+    const cursoProf = curso && curso.profesor ? String(curso.profesor) : "";
+    const profId = profesor && profesor.id ? String(profesor.id) : "";
+    const profUsuarioId = profesor && profesor.usuarioId ? String(profesor.usuarioId) : "";
+    return autor === cursoProf || autor === profId || autor === profUsuarioId;
+  };
+
+  const profesorApuntes = apuntes.filter((a) => isApunteDelProfesor(a));
+  const alumnosApuntes = apuntes.filter((a) => !isApunteDelProfesor(a));
+
   return (
     <div className="curso-grid">
       {/* HEADER CON IMAGEN DE FONDO Y BOTONES */}
@@ -398,31 +445,79 @@ function CursoGrid() {
           )}
           <h4>Apuntes</h4>
           {apuntes && apuntes.length > 0 ? (
-            <div className="apuntes-list">
-              <ul>
-                {apuntes.map((a) => (
-                  <li key={a.id} className="item-row">
-                    <div className="item-main">
-                      <a
-                        href={`http://localhost:3000/apuntes/files/${a.archivo}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {a.nombre || a.archivo}
-                      </a>
-                      {a.descripcion ? <p>{a.descripcion}</p> : null}
-                    </div>
-                    {tipo === 'profesor' && editingMode ? (
-                      <div className="edit-controls">
-                        <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
-                          <img src={Editar} alt="Editar" />
-                        </button>
-                        <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
-                      </div>
-                    ) : null}
-                  </li>
-                ))}
-              </ul>
+            <div className="apuntes-columns-wrapper">
+              <div className="apuntes-list profesor-apuntes">
+                <h5>Apuntes del profesor</h5>
+                {profesorApuntes && profesorApuntes.length > 0 ? (
+                  <ul>
+                    {profesorApuntes.map((a) => (
+                      <li key={a.id} className="item-row">
+                        <div className="item-main">
+                          <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">
+                            {a.nombre || a.archivo}
+                          </a>
+                          {a.descripcion ? <p>{a.descripcion}</p> : null}
+                        </div>
+                        {tipo === 'profesor' && editingMode ? (
+                          <div className="edit-controls">
+                            <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
+                              <img src={Editar} alt="Editar" />
+                            </button>
+                            <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
+                          </div>
+                        ) : null}
+                        <div className="apunte-like">
+                          <img
+                            src={likedIds.includes(a.id) ? MeGustaMarcado : MeGusta}
+                            alt="like"
+                            className={likedIds.includes(a.id) ? 'like-icon liked' : 'like-icon'}
+                            onClick={() => handleToggleApunteLike(a)}
+                          />
+                          <span className="like-count">{a.valoracion || 0}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No hay apuntes del profesor.</p>
+                )}
+              </div>
+              <div className="apuntes-list alumnos-apuntes">
+                <h5>Apuntes de los estudiantes</h5>
+                {alumnosApuntes && alumnosApuntes.length > 0 ? (
+                  <ul>
+                    {alumnosApuntes.map((a) => (
+                      <li key={a.id} className="item-row">
+                        <div className="item-main">
+                          <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">
+                            {a.nombre || a.archivo}
+                          </a>
+                          {a.descripcion ? <p>{a.descripcion}</p> : null}
+                        </div>
+                        {tipo === 'profesor' && editingMode ? (
+                          <div className="edit-controls">
+                            <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
+                              <img src={Editar} alt="Editar" />
+                            </button>
+                            <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
+                          </div>
+                        ) : null}
+                        <div className="apunte-like">
+                          <img
+                            src={likedIds.includes(a.id) ? MeGustaMarcado : MeGusta}
+                            alt="like"
+                            className={likedIds.includes(a.id) ? 'like-icon liked' : 'like-icon'}
+                            onClick={() => handleToggleApunteLike(a)}
+                          />
+                          <span className="like-count">{a.valoracion || 0}</span>
+                        </div>
+                      </li>
+                    ))}
+                  </ul>
+                ) : (
+                  <p>No hay apuntes de alumnos.</p>
+                )}
+              </div>
             </div>
           ) : (
             <p>No hay apuntes para este curso.</p>
