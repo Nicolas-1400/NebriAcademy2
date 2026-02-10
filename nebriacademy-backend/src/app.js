@@ -17,6 +17,7 @@ app.use('/', require('./routes/index'));
 app.use('/administradores', require('./routes/administradores'));
 app.use('/alumnos', require('./routes/alumnos'));
 app.use('/apuntes', require('./routes/apuntes'));
+app.use('/apuntesalumnos', require('./routes/apuntesalumnos'));
 app.use('/cursos', require('./routes/cursos'));
 app.use('/cursosalumnos', require('./routes/cursosalumnos'));
 app.use('/comentarioalumnocurso', require('./routes/comentarioalumnocurso'));

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 08-02-2026 a las 16:58:00
+-- Tiempo de generación: 09-02-2026 a las 17:21:55
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -93,6 +93,7 @@ CREATE TABLE `apuntes` (
   `nombre` text NOT NULL,
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL,
+  `categoria` varchar(100) NOT NULL,
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -100,13 +101,41 @@ CREATE TABLE `apuntes` (
 -- Volcado de datos para la tabla `apuntes`
 --
 
-INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `valoracion`) VALUES
-(19, 21, 32, '', '1769770901951.pdf', 'Prueba video', 0),
-(20, 21, 33, '', '1769771262323.pdf', 'jeje', 0),
-(21, 21, 34, '', '1769771360844.pdf', 'sfsdgs', 0),
-(22, 21, 35, '', '1769771456223.pdf', 'sgdsgds', 0),
-(23, 1, 35, '', '1770284606795.pdf', 'Prueba', 0),
-(24, 21, 35, 'Prueba', '1770566205261.pdf', 'shiufhasbfo', 0);
+INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `categoria`, `valoracion`) VALUES
+(19, 21, 32, 'Prueba video', '1769770901951.pdf', 'Prueba video', 'Programación', 0),
+(20, 21, 33, 'jeje', '1769771262323.pdf', 'jeje', 'BDD', 0),
+(21, 21, 34, 'sfsdgs', '1769771360844.pdf', 'sfsdgs', 'Marketing', 0),
+(22, 21, 35, 'sgdsgds', '1769771456223.pdf', 'sgdsgds', 'Diseño', 0),
+(23, 1, 35, 'Prueba2', '1770284606795.pdf', 'Prueba', 'Diseño', 0),
+(24, 21, 35, 'Prueba', '1770566205261.pdf', 'shiufhasbfo', 'Diseño', 0),
+(25, 1, 35, 'prueeeeba', '1770653475536.pdf', 'dasdad', 'Diseño', 1),
+(26, 21, 35, 'dadha', '1770653505192.pdf', 'dadadadadadada', 'Diseño', 1),
+(27, 21, 35, 'otra más ', '1770653680835.txt', 'fdgnjdwkvnkdnv', 'Diseño', 1),
+(28, 1, 35, 'pruebaa estudiante', '1770654013086.pdf', 'by8giygiy', 'Diseño', 0);
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `apuntesalumnos`
+--
+
+CREATE TABLE `apuntesalumnos` (
+  `id` int(11) NOT NULL,
+  `alumnoId` int(11) NOT NULL,
+  `apunteId` int(11) NOT NULL,
+  `megusta` tinyint(1) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `apuntesalumnos`
+--
+
+INSERT INTO `apuntesalumnos` (`id`, `alumnoId`, `apunteId`, `megusta`) VALUES
+(1, 1, 19, NULL),
+(2, 1, 23, NULL),
+(3, 1, 27, 1),
+(4, 1, 25, 1),
+(5, 1, 26, 1);
 
 -- --------------------------------------------------------
 
@@ -153,12 +182,12 @@ CREATE TABLE `cursos` (
 INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `descripcion`) VALUES
 (1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 4.5, 'Curso básico para aprender Python.'),
 (2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Curso sobre fundamentos de redes y seguridad informática.'),
-(22, 'a', '', 15, 'Avanzado', 0, 'a'),
+(22, 'a', 'BDD', 15, 'Avanzado', 0, 'a'),
 (23, 'Prueba', 'Programación', 15, 'Intermedio', 0, 'Prueba'),
 (32, 'Prueba video', 'Programacion', 15, 'Intermedio', 1, 'Prueba video'),
 (33, 'alo', 'BDD', 15, 'Intermedio', 0, 'ola'),
 (34, 'fdsfs', 'Marketing', 15, 'Intermedio', 0, 'sfsdf'),
-(35, 'gsgds', 'Diseno', 15, 'Avanzado', 0, 'gsgsg');
+(35, 'gsgds', 'Diseño', 15, 'Avanzado', 2, 'gsgsg');
 
 -- --------------------------------------------------------
 
@@ -182,10 +211,10 @@ CREATE TABLE `cursosalumnos` (
 INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`) VALUES
 (13, 1, 1, 1, 1, NULL),
 (14, 1, 2, 1, 1, 1),
-(16, 35, 1, 1, 1, NULL),
+(16, 35, 1, 1, 1, 1),
 (17, 2, 1, 0, 0, NULL),
 (18, 34, 1, 1, NULL, NULL),
-(23, 35, 2, NULL, NULL, NULL),
+(23, 35, 2, 1, 1, 1),
 (24, 2, 2, NULL, NULL, NULL),
 (25, 33, 1, 1, NULL, NULL),
 (26, 32, 1, 0, 0, 1);
@@ -403,6 +432,14 @@ ALTER TABLE `apuntes`
   ADD KEY `curso` (`curso`);
 
 --
+-- Indices de la tabla `apuntesalumnos`
+--
+ALTER TABLE `apuntesalumnos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `alumnoId` (`alumnoId`),
+  ADD KEY `apunteId` (`apunteId`);
+
+--
 -- Indices de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
@@ -508,7 +545,13 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=25;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+
+--
+-- AUTO_INCREMENT de la tabla `apuntesalumnos`
+--
+ALTER TABLE `apuntesalumnos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
@@ -526,7 +569,7 @@ ALTER TABLE `cursos`
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicioalumnos`
@@ -598,6 +641,13 @@ ALTER TABLE `alumnos`
 ALTER TABLE `apuntes`
   ADD CONSTRAINT `apuntes_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `usuarios` (`id`),
   ADD CONSTRAINT `apuntes_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+
+--
+-- Filtros para la tabla `apuntesalumnos`
+--
+ALTER TABLE `apuntesalumnos`
+  ADD CONSTRAINT `apuntesalumnos_ibfk_1` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`),
+  ADD CONSTRAINT `apuntesalumnos_ibfk_2` FOREIGN KEY (`apunteId`) REFERENCES `apuntes` (`id`);
 
 --
 -- Filtros para la tabla `comentarioalumnocurso`

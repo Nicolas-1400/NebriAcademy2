@@ -1,13 +1,19 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
+import MeGusta from "../assets/me-gusta.png";
+import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import useAuthStore from '../store/useAuthStore'
 
 function ApuntesGrid() {
   const [apuntes, setApuntes] = useState([]);
   const [profesores, setProfesores] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [error, setError] = useState(null);
+  const [likedIds, setLikedIds] = useState([]);
   const { id } = useParams();
+
+  const usuario = useAuthStore((s) => s.user)
 
   const navigate = useNavigate();
 
@@ -32,6 +38,13 @@ function ApuntesGrid() {
         setApuntes(listAp);
         setProfesores(listProf);
         setAlumnos(listAlum);
+
+        // si hay usuario, cargar sus likes desde /apuntesalumnos/likes
+        if (usuario && usuario.id) {
+          fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`).then((r) => r.json()).then((d) => {
+            setLikedIds(Array.isArray(d.apunteIds) ? d.apunteIds : []);
+          }).catch(() => {});
+        }
       })
       .catch((e) => {
         console.error("Error cargando apuntes/autores:", e);
@@ -40,7 +53,8 @@ function ApuntesGrid() {
   }, []);
 
   const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
-    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, { state: { tipo: tipoSeleccion, cursoId: id } });
+    const targetId = (id && Number(id) > 0) ? id : 0
+    navigate(`/Home/Cursos/${targetId}/AddContenidoCurso`, { state: { tipo: tipoSeleccion, cursoId: id } });
   };
 
   if (error) return <p>{error}</p>;
@@ -109,6 +123,35 @@ function ApuntesGrid() {
                         {it.nombre || it.archivo}
                       </a>
                       {it.descripcion ? <p>{it.descripcion}</p> : null}
+                      <div className="apunte-like">
+                        <img
+                          src={likedIds.includes(it.id) ? MeGustaMarcado : MeGusta}
+                          alt="like"
+                          className={likedIds.includes(it.id) ? 'like-icon liked' : 'like-icon'}
+                          onClick={async () => {
+                            if (!usuario || !usuario.id) return;
+                            try {
+                              const r = await fetch(`http://localhost:3000/apuntesalumnos/vote`, {
+                                method: 'POST',
+                                headers: { 'Content-Type': 'application/json' },
+                                body: JSON.stringify({ apunteId: it.id, alumnoId: usuario.id, vote: true })
+                              });
+                              const d = await r.json();
+                              if (!r.ok) throw new Error(d.error || 'Error like');
+                              if (d.registro) {
+                                const likedNow = d.registro.valoracion === true;
+                                setLikedIds((prev) => (likedNow ? [...new Set([...prev, it.id])] : prev.filter(x => x !== it.id)));
+                              }
+                              if (d.apunte) {
+                                setApuntes((prev) => prev.map(a => a.id === it.id ? { ...a, valoracion: d.apunte.valoracion } : a));
+                              }
+                            } catch (e) {
+                              console.error('Error toggling like', e);
+                            }
+                          }}
+                        />
+                        <span className="like-count">{it.valoracion || 0}</span>
+                      </div>
                     </div>
                   ))}
                 </div>
