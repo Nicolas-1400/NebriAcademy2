@@ -73,8 +73,33 @@
     font-size: 13px;
 }
 
-/* RESPONSIVE 768px */
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+    .tarjeta-curso {
+        padding: 18px;
+        max-width: 380px;
+    }
 
+    .tarjeta-curso img {
+        height: 180px;
+        margin-bottom: 14px;
+    }
+
+    .tarjeta-curso h3 {
+        font-size: 17px;
+        margin-bottom: 9px;
+    }
+
+    .tarjeta-curso p {
+        font-size: 12px;
+    }
+
+    .tarjeta-curso .p-descripcion {
+        margin: 8px 0;
+    }
+}
+
+/* RESPONSIVE 768px */
 @media (max-width: 768px) {
 
 .tarjeta-curso {

@@ -49,6 +49,23 @@
   height: 20px;
 }
 
+@media (max-width: 1024px) {
+    .boton-añadir-curso {
+        width: 170px;
+        height: 30px;
+        font-size: 15px;
+    }
+
+    .boton-añadir-curso h3 {
+        font-size: 15px;
+    }
+
+    .icono-boton-mas {
+        width: 18px;
+        height: 18px;
+    }
+}
+
 @media (max-width: 768px) {
     .boton-añadir-curso {
         width: 120px;

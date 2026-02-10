@@ -24,7 +24,6 @@
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
-  align-items: stretch;
   padding: 20px;
 }
 
@@ -55,6 +54,27 @@
 .profesores-contenedor::-webkit-scrollbar-thumb {
   background: var(--rojo-nebrija);
   border-radius: 10px;
+}
+
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+  .TodosProfesoresGrid {
+    padding: 35px 20px;
+  }
+
+  .profesores-grid h2 {
+    font-size: 26px;
+    margin-bottom: 15px;
+  }
+
+  .profesores-contenedor {
+    gap: 18px;
+    padding: 18px;
+  }
+
+  .profesores-contenedor .tarjeta-profesor {
+    flex: 0 0 220px;
+  }
 }
 
 /* RESPONSIVE 768px */

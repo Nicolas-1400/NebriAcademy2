@@ -54,6 +54,30 @@
     font-size: 12px;
 }
 
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+    .tarjeta-curso-pequena {
+        max-width: 215px;
+        padding: 11px;
+    }
+
+    .tarjeta-curso-pequena img {
+        height: 140px;
+    }
+
+    .tarjeta-curso-pequena h3 {
+        font-size: 14px;
+    }
+
+    .tarjeta-curso-pequena p {
+        font-size: 11px;
+    }
+
+    .tarjeta-curso-pequena .p-nivel {
+        font-size: 10px;
+    }
+}
+
 /* RESPONSIVE 768px */
 
 @media (max-width: 768px) {

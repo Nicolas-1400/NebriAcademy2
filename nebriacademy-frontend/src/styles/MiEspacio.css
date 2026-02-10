@@ -175,6 +175,33 @@
   overflow: hidden;
 }
 
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+  .MiEspacio {
+    padding: 35px 20px;
+  }
+
+  .MiEspacio h1 {
+    font-size: 28px;
+    margin-bottom: 35px;
+  }
+
+  .MiEspacio-seccion-cursos-proceso h2,
+  .MiEspacio-seccion-cursos-favoritos h2,
+  .MiEspacio-seccion-tus-apuntes h2,
+  .MiEspacio-seccion-apuntes-guardados h2 {
+    font-size: 20px;
+  }
+
+  .tarjeta-apunte {
+    max-width: 230px;
+  }
+
+  .tarjeta-apunte h4 {
+    font-size: 14px;
+  }
+}
+
 /* RESPONSIVE 768px */
 @media (max-width: 768px) {
   .MiEspacio {

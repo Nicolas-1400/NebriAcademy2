@@ -29,6 +29,23 @@
   border: 1px dashed #ddd;
 }
 
+/* RESPONSIVE - Tablets (1024px) */
+@media (max-width: 1024px) {
+  .home-profesor-grid {
+    padding: 30px 20px;
+  }
+
+  .home-profesor-grid h1 {
+    font-size: 28px;
+    margin-bottom: 32px;
+  }
+
+  .grid-cursos-profesor {
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 25px;
+  }
+}
+
 /* RESPONSIVE - Tablets (768px) */
 @media (max-width: 768px) {
   .home-profesor-grid {

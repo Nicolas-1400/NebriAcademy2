@@ -231,7 +231,7 @@
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
-  padding: 30px;
+  padding: 15px;
   display: flex;
   flex-direction: column;
   gap: 35px;
@@ -460,6 +460,7 @@
   display: flex;
   flex-direction: column;
   gap: 20px;
+  padding: 0 15px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -588,21 +589,6 @@
    ═════════════════════════════════════════════════════════════════════════════ */
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   RESPONSIVE - Pantalla grande (1200px)
-   ───────────────────────────────────────────────────────────────────────────── */
-@media (max-width: 1200px) {
-  .curso-contenedor-principal {
-    grid-template-columns: 70% 30%;
-    gap: 25px;
-    padding: 30px;
-  }
-
-  .curso-header {
-    padding: 40px;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
    RESPONSIVE - Tablets (1024px)
    ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
@@ -628,7 +614,7 @@
   }
 
   .contenido-curso {
-    padding: 25px;
+    padding: 15px;
   }
 
   .detalles-profesor,
@@ -689,7 +675,7 @@
 
   .curso-contenedor-principal {
     padding: 20px;
-    gap: 25px;
+    gap: 10px;
   }
 
   .contenido-curso h3 {
@@ -705,75 +691,5 @@
   .detalles-descripcion p,
   .detalles-comentarios p {
     font-size: 15px;
-  }
-}
-
-/* ─────────────────────────────────────────────────────────────────────────────
-   RESPONSIVE - Móviles pequeños (480px)
-   ───────────────────────────────────────────────────────────────────────────── */
-@media (max-width: 480px) {
-  .curso-header {
-    padding: 20px;
-    min-height: 250px;
-  }
-
-  .curso-header-info h2 {
-    font-size: 20px;
-  }
-
-  .curso-header-info p {
-    font-size: 14px;
-  }
-
-  .curso-header-botones {
-    bottom: 20px;
-    right: 20px;
-    gap: 8px;
-  }
-
-  .curso-header-botones p {
-    font-size: 11px;
-  }
-
-  .curso-header-botones button {
-    padding: 6px 10px;
-    font-size: 10px;
-  }
-
-  .vote-up,
-  .vote-down {
-    width: 32px;
-    height: 32px;
-  }
-
-  .vote-up img,
-  .vote-down img {
-    width: 16px;
-    height: 16px;
-  }
-
-  .curso-contenedor-principal {
-    padding: 15px;
-    gap: 20px;
-  }
-
-  .contenido-curso {
-    padding: 15px;
-    gap: 25px;
-  }
-
-  .contenido-curso h3 {
-    font-size: 18px;
-  }
-
-  .detalles-profesor,
-  .detalles-descripcion,
-  .detalles-comentarios {
-    padding: 15px;
-  }
-
-  .video-item,
-  .apuntes-list li {
-    padding: 12px;
   }
 }

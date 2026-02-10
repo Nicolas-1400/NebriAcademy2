@@ -49,6 +49,32 @@
     margin-top: auto;
 }
 
+/* RESPONSIVE 1024px */
+
+@media (max-width: 1024px) {
+
+    .tarjeta-profesor {
+        max-width: 230px;
+        padding: 11px;
+    }
+
+    .tarjeta-profesor img {
+        height: 140px;
+    }
+
+    .tarjeta-profesor h3 {
+        font-size: 14px;
+    }
+
+    .tarjeta-profesor p {
+        font-size: 11px;
+    }
+
+    .tarjeta-profesor .p-especializacion {
+        font-size: 10px;
+    }
+}
+
 /* RESPONSIVE 768px */
 
 @media (max-width: 768px) {

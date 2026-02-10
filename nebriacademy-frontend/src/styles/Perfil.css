@@ -168,6 +168,58 @@
     padding-bottom: 20px;
 }
 
+/* RESPONSIVE Perfil 1024px */
+@media (max-width: 1024px) {
+    .perfil {
+        gap: 30px;
+        padding: 35px;
+        margin-bottom: 70px;
+    }
+
+    .datosPerfil {
+        width: 35%;
+        padding: 25px;
+    }
+
+    .datosPerfil h1 {
+        font-size: 22px;
+    }
+
+    .imagenPerfil {
+        width: 140px;
+        height: 140px;
+    }
+
+    .nombrePerfil {
+        font-size: 18px;
+    }
+
+    .formularioEditarPerfil {
+        width: 65%;
+        padding: 25px;
+    }
+
+    .formularioEditarPerfil h3 {
+        font-size: 20px;
+        margin-bottom: 18px;
+    }
+
+    .formularioEditarPerfil form {
+        grid-template-columns: 1fr 1fr;
+        gap: 18px;
+    }
+
+    .formulario-grupo input {
+        font-size: 13px;
+        padding: 11px;
+    }
+
+    .boton-editar-perfil {
+        padding: 13px;
+        font-size: 15px;
+    }
+}
+
 /* RESPONSIVE Perfil 768px */
 @media (max-width: 768px) {
     .perfil {

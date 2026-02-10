@@ -110,9 +110,110 @@
   margin-bottom: 12px;
 }
 
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+  .perfil-curso {
+    padding: 35px 20px;
+  }
+
+  .formularioEditarPerfil {
+    width: 90%;
+    max-width: 800px;
+    padding: 22px;
+  }
+
+  .formulario-grupo input,
+  .formulario-grupo textarea,
+  .formulario-grupo select {
+    font-size: 13px;
+    padding: 11px;
+  }
+
+  .descripcion-textarea {
+    min-height: 130px;
+  }
+
+  .boton-go-back {
+    width: 140px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .boton-go-back img {
+    width: 18px;
+    height: 18px;
+  }
+}
+
+/* RESPONSIVE 768px */
 @media (max-width: 768px) {
+  .perfil-curso {
+    padding: 25px 15px;
+    min-height: auto;
+  }
+
   .formularioEditarPerfil {
     width: 100%;
     padding: 16px;
   }
+
+  .formularioEditarPerfil h3 {
+    font-size: 18px;
+    margin-bottom: 14px;
+  }
+
+  .formulario-grupo {
+    gap: 6px;
+    margin-bottom: 10px;
+  }
+
+  .formulario-grupo input,
+  .formulario-grupo textarea,
+  .formulario-grupo select {
+    padding: 10px;
+    font-size: 12px;
+  }
+
+  .descripcion-textarea {
+    min-height: 100px;
+  }
+
+  .boton-editar-perfil {
+    padding: 10px;
+    font-size: 14px;
+  }
+
+  .boton-go-back {
+    width: 130px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .boton-go-back img {
+    width: 16px;
+    height: 16px;
+  }
+
+  .mensaje-error,
+  .mensaje-exito {
+    padding: 8px;
+    font-size: 12px;
+  }
 }
+
+/* RESPONSIVE mobile (480px) */
+@media (max-width: 480px) {
+  .perfil-curso {
+    padding: 15px 10px;
+  }
+
+  .formularioEditarPerfil {
+    padding: 12px;
+  }
+
+  .boton-go-back {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
+
