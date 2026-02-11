@@ -107,7 +107,7 @@
 }
 
 /* Overrides for react-slick inline width on .slick-track */
-/* .MiEspacio-cursos-proceso-carousel .slick-track,
+.MiEspacio-cursos-proceso-carousel .slick-track,
 .MiEspacio-cursos-favoritos-carousel .slick-track,
 .MiEspacio-tus-apuntes-carousel .slick-track,
 .MiEspacio-apuntes-guardados-carousel .slick-track {
@@ -115,6 +115,7 @@
   width: 2484px !important;
 }
 
+/*
 .MiEspacio-cursos-proceso-carousel .slick-slide,
 .MiEspacio-cursos-favoritos-carousel .slick-slide,
 .MiEspacio-tus-apuntes-carousel .slick-slide,
