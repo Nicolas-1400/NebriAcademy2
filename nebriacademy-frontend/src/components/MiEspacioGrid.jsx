@@ -284,7 +284,7 @@ function MiEspacioGrid() {
           </div>
         </div>
         <div className="MiEspacio-seccion-apuntes-guardados">
-          <h2>Apuntes guardados</h2>
+          <h2>Apuntes favoritos</h2>
           <div className="MiEspacio-carousel-container">
             <button
               className="carousel-btn carousel-btn-left"
