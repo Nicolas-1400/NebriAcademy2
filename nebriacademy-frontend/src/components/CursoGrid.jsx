@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import useAuthStore from '../store/useAuthStore'
+import useAuthStore from "../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
@@ -17,6 +17,9 @@ import Mas from "../assets/mas.png";
 import Editar from "../assets/lapiz.png";
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import TarjetaApunteCurso from "./TarjetaApunteCurso";
+import TarjetaVideoCurso from "./TarjetaVideoCurso";
+import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
 
 function CursoGrid() {
   const [curso, setCurso] = useState(null);
@@ -37,10 +40,10 @@ function CursoGrid() {
   const [editingMode, setEditingMode] = useState(false);
   const navigate = useNavigate();
 
-  const storeUser = useAuthStore(state => state.user)
-  const tipo = useAuthStore(state => state.tipo)
+  const storeUser = useAuthStore((state) => state.user);
+  const tipo = useAuthStore((state) => state.tipo);
   useEffect(() => {
-    if (storeUser) setUsuario(storeUser)
+    if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
   const alumnoId = usuario ? usuario.id : null;
 
@@ -59,21 +62,33 @@ function CursoGrid() {
     if (!usuario || !usuario.id) return;
     try {
       const r = await fetch(`http://localhost:3000/apuntesalumnos/vote`, {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true })
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apunteId: apunte.id,
+          alumnoId: usuario.id,
+          vote: true,
+        }),
       });
       const d = await r.json();
-      if (!r.ok) throw new Error(d.error || 'Error like');
+      if (!r.ok) throw new Error(d.error || "Error like");
       if (d.registro) {
         const likedNow = d.registro.valoracion === true;
-        setLikedIds((prev) => (likedNow ? [...new Set([...prev, apunte.id])] : prev.filter(x => x !== apunte.id)));
+        setLikedIds((prev) =>
+          likedNow
+            ? [...new Set([...prev, apunte.id])]
+            : prev.filter((x) => x !== apunte.id),
+        );
       }
       if (d.apunte) {
-        setApuntes((prev) => prev.map(a => a.id === apunte.id ? { ...a, valoracion: d.apunte.valoracion } : a));
+        setApuntes((prev) =>
+          prev.map((a) =>
+            a.id === apunte.id ? { ...a, valoracion: d.apunte.valoracion } : a,
+          ),
+        );
       }
     } catch (e) {
-      console.error('Error toggling apunte like', e);
+      console.error("Error toggling apunte like", e);
     }
   };
 
@@ -113,10 +128,12 @@ function CursoGrid() {
     fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data.Comentarios) ? data.Comentarios : data || [];
+        const list = Array.isArray(data.Comentarios)
+          ? data.Comentarios
+          : data || [];
         setComentariosList(list);
       })
-      .catch((e) => console.error('Error cargando comentarios:', e));
+      .catch((e) => console.error("Error cargando comentarios:", e));
     fetch("http://localhost:3000/apuntes")
       .then((r) => r.json())
       .then((data) => {
@@ -140,7 +157,9 @@ function CursoGrid() {
     fetch("http://localhost:3000/ejercicios")
       .then((r) => r.json())
       .then((data) => {
-        const list = Array.isArray(data.Ejercicios) ? data.Ejercicios : data || [];
+        const list = Array.isArray(data.Ejercicios)
+          ? data.Ejercicios
+          : data || [];
         const filtered = list.filter((v) => String(v.curso) === String(id));
         setEjercicios(filtered);
       })
@@ -152,7 +171,9 @@ function CursoGrid() {
     fetch("http://localhost:3000/profesores")
       .then((r) => r.json())
       .then((pRes) => {
-        const profs = Array.isArray(pRes.Profesores) ? pRes.Profesores : pRes || [];
+        const profs = Array.isArray(pRes.Profesores)
+          ? pRes.Profesores
+          : pRes || [];
         setProfesoresList(profs);
       })
       .catch(() => {});
@@ -247,12 +268,18 @@ function CursoGrid() {
       const res = await fetch("http://localhost:3000/comentarioalumnocurso", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ cursoId: parseInt(id), usuarioId: alumnoId, comentario }),
+        body: JSON.stringify({
+          cursoId: parseInt(id),
+          usuarioId: alumnoId,
+          comentario,
+        }),
       });
       const data = await res.json();
       if (res.ok) {
         // recargar lista de comentarios
-        const r2 = await fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`);
+        const r2 = await fetch(
+          `http://localhost:3000/comentarioalumnocurso?cursoId=${id}`,
+        );
         const d2 = await r2.json();
         const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
         setComentariosList(list);
@@ -275,66 +302,95 @@ function CursoGrid() {
 
   const handleSaveEdit = async (idToEdit) => {
     try {
-      const res = await fetch(`http://localhost:3000/comentarioalumnocurso/${idToEdit}`, {
-        method: 'PUT',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ usuarioId: alumnoId, comentario: editingText })
-      });
+      const res = await fetch(
+        `http://localhost:3000/comentarioalumnocurso/${idToEdit}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            usuarioId: alumnoId,
+            comentario: editingText,
+          }),
+        },
+      );
       if (res.ok) {
-        const r2 = await fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`);
+        const r2 = await fetch(
+          `http://localhost:3000/comentarioalumnocurso?cursoId=${id}`,
+        );
         const d2 = await r2.json();
         const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
         setComentariosList(list);
         handleCancelEdit();
       } else {
-        console.error('Error editando comentario');
+        console.error("Error editando comentario");
       }
-    } catch (e) { console.error('edit error', e); }
+    } catch (e) {
+      console.error("edit error", e);
+    }
   };
 
   const handleDelete = async (idToDelete) => {
     try {
-      const res = await fetch(`http://localhost:3000/comentarioalumnocurso/${idToDelete}?usuarioId=${alumnoId}`, { method: 'DELETE' });
+      const res = await fetch(
+        `http://localhost:3000/comentarioalumnocurso/${idToDelete}?usuarioId=${alumnoId}`,
+        { method: "DELETE" },
+      );
       if (res.ok) {
         setComentariosList((prev) => prev.filter((c) => c.id !== idToDelete));
       } else {
-        console.error('Error borrando comentario');
+        console.error("Error borrando comentario");
       }
-    } catch (e) { console.error('delete error', e); }
+    } catch (e) {
+      console.error("delete error", e);
+    }
   };
   const [showAddMenu, setShowAddMenu] = useState(false);
 
   const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
     // cerrar menú si estaba abierto
     setShowAddMenu(false);
-    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, { state: { tipo: tipoSeleccion, cursoId: id } });
+    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+      state: { tipo: tipoSeleccion, cursoId: id },
+    });
   };
 
   const handleToggleAddMenu = () => {
     setShowAddMenu((s) => !s);
   };
-  
+
   const handleToggleEditingMode = () => {
     setEditingMode((s) => !s);
   };
-  
+
   const handleEditNavigate = (tipo, item) => {
-    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, { state: { tipo, item, cursoId: id } });
+    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+      state: { tipo, item, cursoId: id },
+    });
   };
-  
+
   const handleDeleteContenido = async (tipo, itemId) => {
-    if (!window.confirm('¿Seguro que quieres eliminar este elemento?')) return;
+    if (!window.confirm("¿Seguro que quieres eliminar este elemento?")) return;
     try {
-      const endpoint = tipo === 'video' ? 'videos' : tipo === 'apunte' ? 'apuntes' : 'ejercicios';
-      const res = await fetch(`http://localhost:3000/${endpoint}/${itemId}`, { method: 'DELETE' });
-      if (!res.ok) throw new Error('Error borrando');
+      const endpoint =
+        tipo === "video"
+          ? "videos"
+          : tipo === "apunte"
+            ? "apuntes"
+            : "ejercicios";
+      const res = await fetch(`http://localhost:3000/${endpoint}/${itemId}`, {
+        method: "DELETE",
+      });
+      if (!res.ok) throw new Error("Error borrando");
       // actualizar estado local según tipo
-      if (tipo === 'video') setVideos((prev) => prev.filter((v) => v.id !== itemId));
-      if (tipo === 'apunte') setApuntes((prev) => prev.filter((a) => a.id !== itemId));
-      if (tipo === 'ejercicio') setEjercicios((prev) => prev.filter((e) => e.id !== itemId));
+      if (tipo === "video")
+        setVideos((prev) => prev.filter((v) => v.id !== itemId));
+      if (tipo === "apunte")
+        setApuntes((prev) => prev.filter((a) => a.id !== itemId));
+      if (tipo === "ejercicio")
+        setEjercicios((prev) => prev.filter((e) => e.id !== itemId));
     } catch (e) {
-      console.error('delete content error', e);
-      alert('No se pudo borrar el elemento');
+      console.error("delete content error", e);
+      alert("No se pudo borrar el elemento");
     }
   };
 
@@ -356,10 +412,14 @@ function CursoGrid() {
   })();
 
   const isApunteDelProfesor = (a) => {
-    const autor = a && (a.autor || a.usuarioId || a.autorId) ? String(a.autor || a.usuarioId || a.autorId) : "";
+    const autor =
+      a && (a.autor || a.usuarioId || a.autorId)
+        ? String(a.autor || a.usuarioId || a.autorId)
+        : "";
     const cursoProf = curso && curso.profesor ? String(curso.profesor) : "";
     const profId = profesor && profesor.id ? String(profesor.id) : "";
-    const profUsuarioId = profesor && profesor.usuarioId ? String(profesor.usuarioId) : "";
+    const profUsuarioId =
+      profesor && profesor.usuarioId ? String(profesor.usuarioId) : "";
     return autor === cursoProf || autor === profId || autor === profUsuarioId;
   };
 
@@ -376,8 +436,8 @@ function CursoGrid() {
           <p>{curso.categoria}</p>
           <p>Nivel: {curso.nivel}</p>
         </div>
-          {tipo === 'alumno' ? (
-            <div className="curso-header-botones">
+        {tipo === "alumno" ? (
+          <div className="curso-header-botones">
             <p>
               <strong>Valoración: </strong>
               <button className="vote-up" onClick={() => handleVote(true)}>
@@ -412,13 +472,14 @@ function CursoGrid() {
                 {registroCA && registroCA.apuntado ? "✔ Apuntado" : "Apuntarme"}
               </button>
             </p>
-          </div>) : (
-            <div className="curso-header-botones">
-              <p>
-                <strong>Valoración: {curso.valoracion}</strong>
-              </p>
-            </div>
-          )}
+          </div>
+        ) : (
+          <div className="curso-header-botones">
+            <p>
+              <strong>Valoración: {curso.valoracion}</strong>
+            </p>
+          </div>
+        )}
       </div>
 
       {/* CONTENIDO PRINCIPAL: 75% + DETALLES: 25% */}
@@ -430,26 +491,14 @@ function CursoGrid() {
             <div className="videos-list">
               <h4>Vídeos</h4>
               {videos.map((v) => (
-                <div key={v.id} className="video-item">
-                  <div className="item-row">
-                    {v.nombre ? <h5>{v.nombre}</h5> : null}
-                    {tipo === 'profesor' && editingMode ? (
-                      <div className="edit-controls">
-                        <button onClick={() => handleEditNavigate('video', v)} title="Editar video">
-                          <img src={Editar} alt="Editar" />
-                        </button>
-                        <button onClick={() => handleDeleteContenido('video', v.id)} title="Borrar video">✖</button>
-                      </div>
-                    ) : null}
-                  </div>
-                  <video controls>
-                    <source
-                      src={`http://localhost:3000/videos/files/${v.archivo}`}
-                      type="video/mp4"
-                    />
-                    Tu navegador no soporta el elemento <code>video</code>.
-                  </video>
-                </div>
+                <TarjetaVideoCurso
+                  key={v.id}
+                  video={v}
+                  tipo={tipo}
+                  editingMode={editingMode}
+                  handleEditNavigate={handleEditNavigate}
+                  handleDeleteContenido={handleDeleteContenido}
+                />
               ))}
             </div>
           ) : (
@@ -463,31 +512,17 @@ function CursoGrid() {
                 {profesorApuntes && profesorApuntes.length > 0 ? (
                   <ul>
                     {profesorApuntes.map((a) => (
-                      <li key={a.id} className="item-row">
-                        <div className="item-main">
-                          <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">
-                            {a.nombre || a.archivo}
-                          </a>
-                          {a.descripcion ? <p>{a.descripcion}</p> : null}
-                        </div>
-                        {tipo === 'profesor' && editingMode ? (
-                          <div className="edit-controls">
-                            <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
-                              <img src={Editar} alt="Editar" />
-                            </button>
-                            <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
-                          </div>
-                        ) : null}
-                        <div className="apunte-like">
-                          <img
-                            src={likedIds.includes(a.id) ? MeGustaMarcado : MeGusta}
-                            alt="like"
-                            className={likedIds.includes(a.id) ? 'like-icon liked' : 'like-icon'}
-                            onClick={() => handleToggleApunteLike(a)}
-                          />
-                          <span className="like-count">{a.valoracion || 0}</span>
-                        </div>
-                      </li>
+                      <TarjetaApunteCurso
+                        key={a.id}
+                        apunte={a}
+                        usuario={usuario}
+                        likedIds={likedIds}
+                        onToggleLike={() => handleToggleApunteLike(a)}
+                        tipo={tipo}
+                        editingMode={editingMode}
+                        handleEditNavigate={handleEditNavigate}
+                        handleDeleteContenido={handleDeleteContenido}
+                      />
                     ))}
                   </ul>
                 ) : (
@@ -499,31 +534,17 @@ function CursoGrid() {
                 {alumnosApuntes && alumnosApuntes.length > 0 ? (
                   <ul>
                     {alumnosApuntes.map((a) => (
-                      <li key={a.id} className="item-row">
-                        <div className="item-main">
-                          <a href={`http://localhost:3000/apuntes/files/${a.archivo}`} target="_blank" rel="noreferrer">
-                            {a.nombre || a.archivo}
-                          </a>
-                          {a.descripcion ? <p>{a.descripcion}</p> : null}
-                        </div>
-                        {tipo === 'profesor' && editingMode ? (
-                          <div className="edit-controls">
-                            <button onClick={() => handleEditNavigate('apunte', a)} title="Editar apunte">
-                              <img src={Editar} alt="Editar" />
-                            </button>
-                            <button onClick={() => handleDeleteContenido('apunte', a.id)} title="Borrar apunte">✖</button>
-                          </div>
-                        ) : null}
-                        <div className="apunte-like">
-                          <img
-                            src={likedIds.includes(a.id) ? MeGustaMarcado : MeGusta}
-                            alt="like"
-                            className={likedIds.includes(a.id) ? 'like-icon liked' : 'like-icon'}
-                            onClick={() => handleToggleApunteLike(a)}
-                          />
-                          <span className="like-count">{a.valoracion || 0}</span>
-                        </div>
-                      </li>
+                      <TarjetaApunteCurso
+                        key={a.id}
+                        apunte={a}
+                        usuario={usuario}
+                        likedIds={likedIds}
+                        onToggleLike={() => handleToggleApunteLike(a)}
+                        tipo={tipo}
+                        editingMode={editingMode}
+                        handleEditNavigate={handleEditNavigate}
+                        handleDeleteContenido={handleDeleteContenido}
+                      />
                     ))}
                   </ul>
                 ) : (
@@ -539,19 +560,14 @@ function CursoGrid() {
             {ejercicios && ejercicios.length > 0 ? (
               <ul>
                 {ejercicios.map((e) => (
-                  <li key={e.id} className="item-row">
-                    <div className="item-main">
-                      <a href={`http://localhost:3000/ejercicios/files/${e.archivo}`} target="_blank" rel="noreferrer">{e.nombre || e.archivo}</a>
-                      <br />
-                      {e.descripcion ? <p>{e.descripcion}</p> : null}
-                    </div>
-                    {tipo === 'profesor' && editingMode ? (
-                      <div className="edit-controls">
-                        <button onClick={() => handleEditNavigate('ejercicio', e)} title="Editar ejercicio"><img src={Editar} alt="Editar" /></button>
-                        <button onClick={() => handleDeleteContenido('ejercicio', e.id)} title="Borrar ejercicio">✖</button>
-                      </div>
-                    ) : null}
-                  </li>
+                  <TarjetaEjercicioCurso
+                    key={e.id}
+                    ejercicio={e}
+                    tipo={tipo}
+                    editingMode={editingMode}
+                    handleEditNavigate={handleEditNavigate}
+                    handleDeleteContenido={handleDeleteContenido}
+                  />
                 ))}
               </ul>
             ) : (
@@ -586,8 +602,14 @@ function CursoGrid() {
                     <div>
                       {editingId === c.id ? (
                         <div>
-                          <textarea value={editingText} onChange={(e) => setEditingText(e.target.value)} maxLength={500} />
-                          <button onClick={() => handleSaveEdit(c.id)}>Guardar</button>
+                          <textarea
+                            value={editingText}
+                            onChange={(e) => setEditingText(e.target.value)}
+                            maxLength={500}
+                          />
+                          <button onClick={() => handleSaveEdit(c.id)}>
+                            Guardar
+                          </button>
                           <button onClick={handleCancelEdit}>Cancelar</button>
                         </div>
                       ) : (
@@ -598,8 +620,12 @@ function CursoGrid() {
                       <div>
                         {editingId !== c.id ? (
                           <>
-                            <button onClick={() => handleStartEdit(c)}>Editar</button>
-                            <button onClick={() => handleDelete(c.id)}>Borrar</button>
+                            <button onClick={() => handleStartEdit(c)}>
+                              Editar
+                            </button>
+                            <button onClick={() => handleDelete(c.id)}>
+                              Borrar
+                            </button>
                           </>
                         ) : null}
                       </div>
@@ -626,25 +652,47 @@ function CursoGrid() {
       </div>
       {tipo === "profesor" ? (
         <div className="fixed-action-group">
-          <button className="editarCurso" onClick={handleToggleEditingMode} title={editingMode ? 'Salir de edición' : 'Editar contenido'}>
+          <button
+            className="editarCurso"
+            onClick={handleToggleEditingMode}
+            title={editingMode ? "Salir de edición" : "Editar contenido"}
+          >
             <img src={Editar} alt="Editar contenido" />
           </button>
           <div className="relative-container">
-            <button className="subirContenidoCurso" onClick={handleToggleAddMenu} title="Añadir contenido">
+            <button
+              className="subirContenidoCurso"
+              onClick={handleToggleAddMenu}
+              title="Añadir contenido"
+            >
               <img src={Mas} alt="Subir contenido" />
             </button>
             {showAddMenu ? (
               <div className="add-menu">
-                <button onClick={() => handleNavigateAddContenidoTipo('apunte')}>Subir apunte</button>
-                <button onClick={() => handleNavigateAddContenidoTipo('video')}>Subir vídeo</button>
-                <button onClick={() => handleNavigateAddContenidoTipo('ejercicio')}>Subir ejercicio</button>
+                <button
+                  onClick={() => handleNavigateAddContenidoTipo("apunte")}
+                >
+                  Subir apunte
+                </button>
+                <button onClick={() => handleNavigateAddContenidoTipo("video")}>
+                  Subir vídeo
+                </button>
+                <button
+                  onClick={() => handleNavigateAddContenidoTipo("ejercicio")}
+                >
+                  Subir ejercicio
+                </button>
               </div>
             ) : null}
           </div>
         </div>
       ) : (
         <div className="fixed-action-group">
-          <button className="subirContenidoCurso" onClick={() => handleNavigateAddContenidoTipo('apunte')} title="Subir apunte">
+          <button
+            className="subirContenidoCurso"
+            onClick={() => handleNavigateAddContenidoTipo("apunte")}
+            title="Subir apunte"
+          >
             <img src={Mas} alt="Subir contenido" />
           </button>
         </div>

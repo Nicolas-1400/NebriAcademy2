@@ -418,6 +418,12 @@
   box-shadow: 0 4px 12px rgba(194, 0, 47, 0.1);
 }
 
+/* Espaciado para slides que contienen apuntes dentro del slider */
+.apuntes-slide {
+  padding: 8px;
+}
+.apuntes-slide .item-row { margin-bottom: 8px; }
+
 .apuntes-list a {
   color: var(--rojo-nebrija);
   text-decoration: none;

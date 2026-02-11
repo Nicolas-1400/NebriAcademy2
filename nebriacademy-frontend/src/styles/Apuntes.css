@@ -87,6 +87,21 @@
   font-weight: 700;
 }
 
+/* Separador entre categoría y likes */
+.apunte-meta {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+.apunte-categoria p {
+  margin: 0;
+  font-size: 13px;
+  color: #666;
+  padding: 4px 8px;
+  background: rgba(0,0,0,0.03);
+  border-radius: 6px;
+}
+
 .no-apuntes {
   text-align: center;
   color: #777;

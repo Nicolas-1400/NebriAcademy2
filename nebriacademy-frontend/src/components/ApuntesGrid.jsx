@@ -1,8 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
-import MeGusta from "../assets/me-gusta.png";
-import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from '../store/useAuthStore'
 
 function ApuntesGrid() {
@@ -59,108 +58,116 @@ function ApuntesGrid() {
 
   if (error) return <p>{error}</p>;
 
-  // agrupar apuntes por autor (usuarioId)
-  const authorsMap = new Map();
-  apuntes.forEach((a) => {
-    const autorId = a.autor || "anon";
-    if (!authorsMap.has(autorId)) authorsMap.set(autorId, []);
-    authorsMap.get(autorId).push(a);
+  const CATEGORIAS = ["Programación", "Diseño", "Ciberseguridad", "BDD", "Marketing"];
+
+  const [selectedCategory, setSelectedCategory] = useState("");
+  const [searchTerm, setSearchTerm] = useState("");
+
+  const handleToggleLike = (apunte) => {
+    if (!usuario || !usuario.id) return;
+    fetch('http://localhost:3000/apuntesalumnos/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        const registro = data.registro || {};
+        const apunteRes = data.apunte || {};
+        setLikedIds((prev) => {
+          const has = prev.includes(apunte.id);
+          if (registro && registro.valoracion === true && !has) return [...prev, apunte.id];
+          if (!registro || registro.valoracion !== true) return prev.filter((id) => id !== apunte.id);
+          return prev;
+        });
+        setApuntes((prev) => prev.map((a) => (a.id === apunte.id ? { ...a, valoracion: apunteRes.valoracion ?? a.valoracion } : a)));
+      })
+      .catch((err) => console.error('Error votando apunte:', err));
+  };
+
+  const resolveAutorNombre = (autorId) => {
+    if (!autorId) return '';
+    const aid = Number(autorId);
+    const alumnoByUsuario = alumnos.find((al) => Number(al.usuarioId) === aid);
+    if (alumnoByUsuario) return `${alumnoByUsuario.nombre} ${alumnoByUsuario.apellidos}`;
+    const profByUsuario = profesores.find((p) => Number(p.usuarioId) === aid);
+    if (profByUsuario) return `${profByUsuario.nombre} ${profByUsuario.apellidos}`;
+    const alumnoById = alumnos.find((al) => Number(al.id) === aid);
+    if (alumnoById) return `${alumnoById.nombre} ${alumnoById.apellidos}`;
+    const profById = profesores.find((p) => Number(p.id) === aid);
+    if (profById) return `${profById.nombre} ${profById.apellidos}`;
+    return String(autorId);
+  };
+
+  const filteredApuntes = apuntes.filter((a) => {
+    if (selectedCategory && a.categoria !== selectedCategory) return false;
+    const term = searchTerm.trim().toLowerCase();
+    if (term === "") return true;
+    const nombre = (a.nombre || a.archivo || "").toString().toLowerCase();
+    return nombre.includes(term);
   });
 
-  const authorCards = [];
-  for (const [autorIdRaw, items] of authorsMap.entries()) {
-    const autorId = Number(autorIdRaw);
-    let nombre = "Anónimo";
-    let tipoAutor = null;
-    if (autorIdRaw !== "anon") {
-      // Priorizar búsqueda en alumnos (usuarioId o id)
-      let al = alumnos.find((aa) => Number(aa.usuarioId) === autorId);
-      if (!al) al = alumnos.find((aa) => Number(aa.id) === autorId);
-      if (al) {
-        nombre = `${al.nombre} ${al.apellidos}`;
-        tipoAutor = "alumno";
-      } else {
-        // intentar buscar en profesores por usuarioId o id
-        let p = profesores.find((pp) => Number(pp.usuarioId) === autorId);
-        if (!p) p = profesores.find((pp) => Number(pp.id) === autorId);
-        if (p) {
-          nombre = `${p.nombre} ${p.apellidos}`;
-          tipoAutor = "profesor";
-        } else {
-          nombre = `Usuario ID: ${autorId}`;
-        }
-      }
-    }
-    authorCards.push({ autorId, nombre, tipoAutor, items });
-  }
-
   return (
-    <div className="ApuntesGrid">
-      {authorCards.length > 0 ? (
-        <div>
-          <div className="apuntes-header">
-            <h2>Apuntes subidos por usuarios</h2>
-          </div>
-          <div className="autores-list">
-            {authorCards.map((ac) => (
-              <div key={ac.autorId} className="autor-card">
-                <div>
-                  <div className="autor-nombre">{ac.nombre}</div>
-                  <div className="autor-meta">
-                    {ac.tipoAutor ? ac.tipoAutor : "Usuario"} —{" "}
-                    {ac.items.length} apuntes
-                  </div>
-                </div>
-                <div className="lista-apuntes">
-                  {ac.items.map((it) => (
-                    <div key={it.id} className="apunte-item">
-                      <a
-                        href={`http://localhost:3000/apuntes/files/${it.archivo}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {it.nombre || it.archivo}
-                      </a>
-                      {it.descripcion ? <p>{it.descripcion}</p> : null}
-                      <div className="apunte-like">
-                        <img
-                          src={likedIds.includes(it.id) ? MeGustaMarcado : MeGusta}
-                          alt="like"
-                          className={likedIds.includes(it.id) ? 'like-icon liked' : 'like-icon'}
-                          onClick={async () => {
-                            if (!usuario || !usuario.id) return;
-                            try {
-                              const r = await fetch(`http://localhost:3000/apuntesalumnos/vote`, {
-                                method: 'POST',
-                                headers: { 'Content-Type': 'application/json' },
-                                body: JSON.stringify({ apunteId: it.id, alumnoId: usuario.id, vote: true })
-                              });
-                              const d = await r.json();
-                              if (!r.ok) throw new Error(d.error || 'Error like');
-                              if (d.registro) {
-                                const likedNow = d.registro.valoracion === true;
-                                setLikedIds((prev) => (likedNow ? [...new Set([...prev, it.id])] : prev.filter(x => x !== it.id)));
-                              }
-                              if (d.apunte) {
-                                setApuntes((prev) => prev.map(a => a.id === it.id ? { ...a, valoracion: d.apunte.valoracion } : a));
-                              }
-                            } catch (e) {
-                              console.error('Error toggling like', e);
-                            }
-                          }}
-                        />
-                        <span className="like-count">{it.valoracion || 0}</span>
-                      </div>
-                    </div>
-                  ))}
-                </div>
-              </div>
+    <div className="todos-cursos-grid">
+      <aside className="buscador-sidebar">
+        <form role="search" className="formulario-busqueda" onSubmit={(e) => e.preventDefault()}>
+          <input
+            type="search"
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+            placeholder="Buscar apuntes..."
+            aria-label="Buscar apuntes"
+          />
+        </form>
+        <div className="categorias-sidebar">
+          <h3>Categorías</h3>
+          <ul>
+            <li>
+              <button
+                onClick={() => setSelectedCategory("")}
+                className={selectedCategory === "" ? "activo" : ""}
+              >
+                Todas
+              </button>
+            </li>
+            {CATEGORIAS.map((cat) => (
+              <li key={cat}>
+                <button
+                  onClick={() => setSelectedCategory(cat)}
+                  className={selectedCategory === cat ? "activo" : ""}
+                >
+                  {cat}
+                </button>
+              </li>
             ))}
+          </ul>
+
+          <div className="limpiar-filtros">
+            <button onClick={() => { setSelectedCategory(""); setSearchTerm(""); }}>Limpiar filtros</button>
           </div>
         </div>
-      ) : (
-        <p className="no-apuntes">No hay apuntes subidos todavía.</p>
-      )}
+      </aside>
+      <main className="cursos-contenedor apuntes-contenedor">
+        <h2>Apuntes</h2>
+        <div className="apuntes-grid">
+          {filteredApuntes.length > 0 ? (
+            <ul className="apuntes-list">
+              {filteredApuntes.map((ap) => (
+                <TarjetaApunte
+                  key={ap.id}
+                  apunte={ap}
+                  usuario={usuario}
+                  likedIds={likedIds}
+                  onToggleLike={handleToggleLike}
+                  autorNombre={resolveAutorNombre(ap.autor)}
+                />
+              ))}
+            </ul>
+          ) : (
+            <p className="no-apuntes">No hay apuntes que coincidan con los filtros.</p>
+          )}
+        </div>
+      </main>
       <div className="fixed-action-group">
         <button
           className="subirContenidoCurso"
