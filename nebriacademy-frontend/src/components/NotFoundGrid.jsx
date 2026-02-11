@@ -1,15 +1,20 @@
-import { useNavigate } from "react-router-dom"
+import { useNavigate } from "react-router-dom";
+import flecha from "../assets/flecha-correcta.png";
 
 function NotFoundGrid() {
-    
-    const navigate = useNavigate();
+  const navigate = useNavigate();
   return (
-    <div className="not-found-grid">
-      <h2>404</h2>
-      <p>Página no encontrada</p>
-      <button onClick={() => navigate(-1)}>Volver atrás</button>
+    <div className="not-found-container">
+      <div className="not-found-content">
+        <h2>404</h2>
+        <p>Página no encontrada</p>
+        <button className="boton-go-back" onClick={() => navigate(-1)}>
+          <img src={flecha} alt="Volver" />
+          <p>Volver</p>
+        </button>
+      </div>
     </div>
-  )
+  );
 }
 
-export default NotFoundGrid
+export default NotFoundGrid;

@@ -20,6 +20,7 @@ import './styles/TodosProfesores.css'
 import './styles/TodosProfesores.css';
 import './styles/MiEspacio.css';
 import './styles/HomeProfesor.css';
+import './styles/NotFound.css';
 
 function App() {
 
