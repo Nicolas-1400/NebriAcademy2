@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom"
 import Login from "../pages/Login.jsx"
+import NotFound from '../pages/NotFound';
 import Home from "../pages/Home.jsx"
 import MiEspacio from "../pages/MiEspacio.jsx"
 import TodosCursos from "../pages/TodosCursos.jsx"
@@ -26,6 +27,7 @@ function AppRouter() {
     <BrowserRouter>
       <Routes>
         <Route path="/" element={<Login />} />
+        <Route path='*' element={<NotFound />} />
         <Route path="/PreRegister" element={<PreRegister />} />
         <Route path="/Register/VerificacionAlumnoNebrija" element={<VerificacionAlumnoNebrija />} />
         <Route path="/RegisterAlumnoNebrija" element={<ProtectedRoute><RegisterAlumnoNebrija /></ProtectedRoute>} />

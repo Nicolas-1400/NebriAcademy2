@@ -33,6 +33,7 @@ function CursoGrid() {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [ejercicios, setEjercicios] = useState([]);
+  const [profesoresList, setProfesoresList] = useState([]);
   const [editingMode, setEditingMode] = useState(false);
   const navigate = useNavigate();
 
@@ -145,6 +146,17 @@ function CursoGrid() {
       })
       .catch((e) => console.error("Error cargando ejercicios:", e));
   }, [id]);
+
+  useEffect(() => {
+    // cargar lista de profesores para mostrar nombres en tarjetas (solo profesores suben ejercicios)
+    fetch("http://localhost:3000/profesores")
+      .then((r) => r.json())
+      .then((pRes) => {
+        const profs = Array.isArray(pRes.Profesores) ? pRes.Profesores : pRes || [];
+        setProfesoresList(profs);
+      })
+      .catch(() => {});
+  }, []);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
   useEffect(() => {
@@ -523,37 +535,29 @@ function CursoGrid() {
             <p>No hay apuntes para este curso.</p>
           )}
           <h4>Ejercicios</h4>
-          {ejercicios && ejercicios.length > 0 ? (
-            <div className="ejercicios-list">
+          <div className="apuntes-list profesores-apuntes">
+            {ejercicios && ejercicios.length > 0 ? (
               <ul>
                 {ejercicios.map((e) => (
                   <li key={e.id} className="item-row">
                     <div className="item-main">
-                      {e.descripcion ? <strong>{e.descripcion}</strong> : null}
+                      <a href={`http://localhost:3000/ejercicios/files/${e.archivo}`} target="_blank" rel="noreferrer">{e.nombre || e.archivo}</a>
                       <br />
-                      <a
-                        href={`http://localhost:3000/ejercicios/files/${e.archivo}`}
-                        target="_blank"
-                        rel="noreferrer"
-                      >
-                        {e.nombre || e.archivo}
-                      </a>
+                      {e.descripcion ? <p>{e.descripcion}</p> : null}
                     </div>
                     {tipo === 'profesor' && editingMode ? (
                       <div className="edit-controls">
-                        <button onClick={() => handleEditNavigate('ejercicio', e)} title="Editar ejercicio">
-                          <img src={Editar} alt="Editar" />
-                        </button>
+                        <button onClick={() => handleEditNavigate('ejercicio', e)} title="Editar ejercicio"><img src={Editar} alt="Editar" /></button>
                         <button onClick={() => handleDeleteContenido('ejercicio', e.id)} title="Borrar ejercicio">✖</button>
                       </div>
                     ) : null}
                   </li>
                 ))}
               </ul>
-            </div>
-          ) : (
-            <p>No hay ejercicios para este curso.</p>
-          )}
+            ) : (
+              <p>No hay ejercicios para este curso.</p>
+            )}
+          </div>
         </div>
 
         {/* DETALLES - 25% */}

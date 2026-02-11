@@ -5,8 +5,8 @@ const Ejercicios = sequelize.define('ejercicios', {
   autor: DataTypes.INTEGER,
   curso: DataTypes.INTEGER,
   nombre: DataTypes.TEXT,
-  descripcion: DataTypes.TEXT,
   archivo: DataTypes.STRING,
+  descripcion: DataTypes.TEXT
 }, { timestamps: false });
 
 module.exports = Ejercicios;

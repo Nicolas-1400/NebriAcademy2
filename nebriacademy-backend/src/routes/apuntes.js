@@ -6,7 +6,6 @@ const path = require("path");
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 const Cursos = require("../models/Cursos.js");
-const { Op } = require('sequelize');
 
 // Multer: guarda en la carpeta de assets del frontend
 const storage = multer.diskStorage({

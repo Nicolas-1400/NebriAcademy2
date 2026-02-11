@@ -19,7 +19,6 @@ const upload = multer({ storage });
 // Obtener todos los ejercicios
 router.get("/", (req, res) => {
   try {
-    console.log("GET /ejercicios");
     Ejercicios.findAll().then((resultado) => {
       res.json({
         "Numero de ejercicios": resultado.length,
@@ -36,7 +35,6 @@ router.get("/", (req, res) => {
 router.get("/:id", (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`GET /ejercicios/${id}`);
     Ejercicios.findAll().then((resultado) => {
       const ejercicio = resultado.find((e) => e.id === id);
       if (ejercicio) {
@@ -59,6 +57,8 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     const descripcion = req.body.descripcion || null;
     const nombre = req.body.nombre || null;
 
+    // `autor` debe ser el id de `profesores`. No hacemos comprobaciones, usamos el id tal cual.
+    let autor = autorInput ? autorInput : null;
     // Requerimos archivo; si no llega, devolvemos 400
     if (!req.file) {
       return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
@@ -69,26 +69,12 @@ router.post("/", upload.single('archivo'), async (req, res) => {
       return res.status(400).json({ error: "Campo 'nombre' es requerido para ejercicios" });
     }
 
-    // Resolver autor de forma análoga a apuntes: puede ser id de usuario o id de profesor
-    let autor = null;
-    if (autorInput) {
-      const u = await Usuarios.findByPk(autorInput);
-      if (u) {
-        autor = autorInput;
-      } else {
-        const p = await Profesores.findByPk(autorInput);
-        if (p && p.usuarioId) {
-          autor = p.usuarioId;
-        }
-      }
-    }
-
     const nuevo = await Ejercicios.create({ autor, curso, descripcion, archivo, nombre });
 
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
-    console.error("Error al crear ejercicio:", error);
-    return res.status(500).json({ error: "Error interno del servidor" });
+    console.error("Error al crear ejercicio:", error && error.stack ? error.stack : error);
+    return res.status(500).json({ error: error && error.message ? error.message : "Error interno del servidor" });
   }
 });
 
@@ -96,7 +82,7 @@ router.post("/", upload.single('archivo'), async (req, res) => {
 router.put("/:id", upload.single('archivo'), (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`PUT /ejercicios/${id}`);
+    
     Ejercicios.findAll().then((resultado) => {
       const ejercicio = resultado.find((e) => e.id === id);
       if (ejercicio) {
@@ -122,7 +108,7 @@ router.put("/:id", upload.single('archivo'), (req, res) => {
 router.delete("/:id", (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`DELETE /ejercicios/${id}`);
+    
     Ejercicios.findAll().then((resultado) => {
       const ejercicio = resultado.find((e) => e.id === id);
       if (ejercicio) {

@@ -100,7 +100,6 @@ function ApuntesGrid() {
         <div>
           <div className="apuntes-header">
             <h2>Apuntes subidos por usuarios</h2>
-            <p>{apuntes.length} apuntes</p>
           </div>
           <div className="autores-list">
             {authorCards.map((ac) => (
