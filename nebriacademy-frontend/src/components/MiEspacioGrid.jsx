@@ -1,6 +1,7 @@
 import { useEffect, useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
+import TarjetaApunte from "./TarjetaApunte";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -9,7 +10,10 @@ function MiEspacioGrid() {
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
+  const [alumnos, setAlumnos] = useState([]);
+  const [profesores, setProfesores] = useState([]);
   const [apuntes, setApuntes] = useState([]);
+  const [likedIds, setLikedIds] = useState([]);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
   const cursosEnProcesoSliderRef = useRef(null);
@@ -31,11 +35,15 @@ function MiEspacioGrid() {
       fetch("http://localhost:3000/cursos").then((r) => r.json()),
       fetch("http://localhost:3000/cursosalumnos").then((r) => r.json()),
       fetch("http://localhost:3000/apuntes").then((r) => r.json()),
+      fetch("http://localhost:3000/alumnos").then((r) => r.json()),
+      fetch("http://localhost:3000/profesores").then((r) => r.json()),
     ])
-      .then(([cursosData, cursosAlumnosData, apuntesData]) => {
+      .then(([cursosData, cursosAlumnosData, apuntesData, alumnosData, profesoresData]) => {
         setCursos(cursosData.Cursos || []);
         setCursosAlumnos(cursosAlumnosData.CursosAlumnos || []);
         setApuntes(apuntesData.Apuntes || []);
+        setAlumnos(alumnosData.Alumnos || []);
+        setProfesores(profesoresData.Profesores || []);
       })
       .catch((err) => {
         console.error("Error cargando datos:", err);
@@ -43,6 +51,21 @@ function MiEspacioGrid() {
       })
       .finally(() => setLoading(false));
   }, []);
+
+  // Traer los ids de apuntes que el usuario ha marcado con me gusta
+  useEffect(() => {
+    if (!usuario) return;
+    const controller = new AbortController();
+    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`, { signal: controller.signal })
+      .then((r) => r.json())
+      .then((data) => {
+        setLikedIds(data.apunteIds || []);
+      })
+      .catch((err) => {
+        if (err.name !== 'AbortError') console.error('Error cargando likes:', err);
+      });
+    return () => controller.abort();
+  }, [usuario]);
 
   // Sección 1: Cursos en proceso (cursos en los que está apuntado)
   const cursosEnProceso = () => {
@@ -71,13 +94,55 @@ function MiEspacioGrid() {
   // Sección 3: Tus apuntes (apuntes creados por el usuario)
   const tusApuntes = () => {
     if (!usuario) return [];
-    return apuntes.filter((a) => a.alumnoId === usuario.id);
+    // El backend guarda el autor en la propiedad 'autor' (comparamos como Number)
+    return apuntes.filter((a) => Number(a.autor) === Number(usuario.id));
   };
 
   // Sección 4: Apuntes guardados (apuntes favoritos del usuario)
   const apuntesGuardados = () => {
     if (!usuario) return [];
-    return apuntes.filter((a) => a.guardado && a.alumnoId !== usuario.id);
+    // Mostrar los apuntes a los que el usuario ha dado 'me gusta'
+    return apuntes.filter((a) => likedIds.includes(a.id));
+  };
+
+  const resolveAutorNombre = (autorId) => {
+    if (!autorId) return '';
+    const aid = Number(autorId);
+    // Primero intentar por usuarioId (cuando autor guarda usuarioId)
+    const alumnoByUsuario = alumnos.find((al) => Number(al.usuarioId) === aid);
+    if (alumnoByUsuario) return `${alumnoByUsuario.nombre} ${alumnoByUsuario.apellidos}`;
+    const profByUsuario = profesores.find((p) => Number(p.usuarioId) === aid);
+    if (profByUsuario) return `${profByUsuario.nombre} ${profByUsuario.apellidos}`;
+    // Si no, intentar por id del alumno/profesor (cuando autor guarda la PK de alumnos/profesores)
+    const alumnoById = alumnos.find((al) => Number(al.id) === aid);
+    if (alumnoById) return `${alumnoById.nombre} ${alumnoById.apellidos}`;
+    const profById = profesores.find((p) => Number(p.id) === aid);
+    if (profById) return `${profById.nombre} ${profById.apellidos}`;
+    return String(autorId);
+  };
+
+  const handleToggleLike = (apunte) => {
+    if (!usuario || !usuario.id) return;
+    // POST /apuntesalumnos/vote body: { apunteId, alumnoId, vote: true }
+    fetch('http://localhost:3000/apuntesalumnos/vote', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true }),
+    })
+      .then((r) => r.json())
+      .then((data) => {
+        // actualizar likedIds y la valoración localmente
+        const registro = data.registro || {};
+        const apunteRes = data.apunte || {};
+        setLikedIds((prev) => {
+          const has = prev.includes(apunte.id);
+          if (registro && registro.valoracion === true && !has) return [...prev, apunte.id];
+          if (!registro || registro.valoracion !== true) return prev.filter((id) => id !== apunte.id);
+          return prev;
+        });
+        setApuntes((prev) => prev.map((a) => (a.id === apunte.id ? { ...a, valoracion: apunteRes.valoracion ?? a.valoracion } : a)));
+      })
+      .catch((err) => console.error('Error votando apunte:', err));
   };
 
   const handleSliderArrow = (sliderRef, direction) => {
@@ -265,10 +330,19 @@ function MiEspacioGrid() {
             >
               {tusApuntes().length > 0 ? (
                 tusApuntes().map((apunte) => (
-                  <div key={apunte.id} className="tarjeta-apunte">
-                    <h4>{apunte.nombre || apunte.titulo}</h4>
-                    <p>{apunte.descripcion || "Sin descripción"}</p>
-                  </div>
+                  <div key={apunte.id} className="apuntes-slide apuntes-list">
+                      <ul>
+                        <TarjetaApunte
+                          apunte={apunte}
+                          usuario={usuario}
+                          likedIds={likedIds}
+                          onToggleLike={handleToggleLike}
+                          autorNombre={(() => {
+                            return resolveAutorNombre(apunte.autor)
+                          })()}
+                        />
+                      </ul>
+                    </div>
                 ))
               ) : (
                 <p className="mensaje-vacio">No tienes apuntes creados aún</p>
@@ -302,9 +376,18 @@ function MiEspacioGrid() {
             >
               {apuntesGuardados().length > 0 ? (
                 apuntesGuardados().map((apunte) => (
-                  <div key={apunte.id} className="tarjeta-apunte">
-                    <h4>{apunte.nombre || apunte.titulo}</h4>
-                    <p>{apunte.descripcion || "Sin descripción"}</p>
+                  <div key={apunte.id} className="apuntes-slide apuntes-list">
+                    <ul>
+                      <TarjetaApunte
+                        apunte={apunte}
+                        usuario={usuario}
+                        likedIds={likedIds}
+                        onToggleLike={handleToggleLike}
+                        autorNombre={(() => {
+                          return resolveAutorNombre(apunte.autor)
+                        })()}
+                      />
+                    </ul>
                   </div>
                 ))
               ) : (
