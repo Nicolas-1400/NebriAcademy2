@@ -1,7 +1,7 @@
 const express = require('express');
 const router = express.Router();
 const EjerciciosAlumnos = require('../models/EjerciciosAlumnos');
-const Cursos = require('../models/Cursos');
+const Ejercicios = require('../models/Ejercicios');
 const Alumnos = require('../models/Alumnos');
 const multer = require('multer');
 const path = require('path');
@@ -10,7 +10,8 @@ const path = require('path');
 const storage = multer.diskStorage({
   destination: path.join(__dirname, '..', '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'EjerciciosAlumnos'),
   filename: (req, file, cb) => {
-    cb(null, Date.now() + '-' + file.originalname);
+    // Guardar con el nombre original del archivo
+    cb(null, path.basename(file.originalname));
   },
 });
 
@@ -50,21 +51,21 @@ router.get('/:id', (req, res) => {
 // Crear (subida de un archivo)
 router.post('/', upload.single('archivo'), async (req, res) => {
   try {
-    const cursoId = req.body.cursoId ? parseInt(req.body.cursoId) : null;
+    const ejercicioId = req.body.ejercicioId ? parseInt(req.body.ejercicioId) : null;
     const alumnoId = req.body.alumnoId ? parseInt(req.body.alumnoId) : null;
 
-    if (!cursoId || !alumnoId) {
-      return res.status(400).json({ error: 'Campos cursoId y alumnoId son requeridos' });
+    if (!ejercicioId || !alumnoId) {
+      return res.status(400).json({ error: 'Campos ejercicioId y alumnoId son requeridos' });
     }
 
-    const curso = await Cursos.findByPk(cursoId);
+    const ejercicio = await Ejercicios.findByPk(ejercicioId);
     const alumno = await Alumnos.findByPk(alumnoId);
-    if (!curso) return res.status(400).json({ error: 'cursoId no válido' });
+    if (!ejercicio) return res.status(400).json({ error: 'ejercicioId no válido' });
     if (!alumno) return res.status(400).json({ error: 'alumnoId no válido' });
 
     const archivo = req.file ? req.file.filename : null;
 
-    const nuevo = await EjerciciosAlumnos.create({ cursoId, alumnoId, archivo });
+    const nuevo = await EjerciciosAlumnos.create({ ejercicioId, alumnoId, archivo });
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
     console.error(error);
@@ -81,7 +82,7 @@ router.put('/:id', upload.single('archivo'), async (req, res) => {
       if (!registro) return res.status(404).json({ error: 'Registro no encontrado' });
 
       const updates = {};
-      if (req.body.cursoId) updates.cursoId = parseInt(req.body.cursoId);
+      if (req.body.ejercicioId) updates.ejercicioId = parseInt(req.body.ejercicioId);
       if (req.body.alumnoId) updates.alumnoId = parseInt(req.body.alumnoId);
 
       if (req.file) {

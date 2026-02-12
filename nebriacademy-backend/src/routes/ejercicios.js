@@ -10,7 +10,8 @@ const Usuarios = require("../models/Usuarios.js");
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Ejercicios"),
   filename: (req, file, cb) => {
-    cb(null, Date.now() + path.extname(file.originalname));
+    // Guardar con el nombre original, manteniendo la extensión
+    cb(null, path.basename(file.originalname));
   },
 });
 

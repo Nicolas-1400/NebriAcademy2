@@ -2,7 +2,7 @@ const { DataTypes } = require('sequelize');
 const sequelize = require('../database/connection');
 
 const EjerciciosAlumnos = sequelize.define('ejerciciosalumnos', {
-  cursoId: DataTypes.INTEGER,
+  ejercicioId: DataTypes.INTEGER,
   alumnoId: DataTypes.INTEGER,
   archivo: DataTypes.STRING
 }, { timestamps: false });

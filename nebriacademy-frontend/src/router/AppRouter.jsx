@@ -8,6 +8,7 @@ import Curso from "../pages/Curso.jsx"
 import AddCurso from "../pages/AddCurso.jsx"
 import AddContenidoCurso from "../pages/AddContenidoCurso.jsx"
 import EditarContenidoCurso from "../pages/EditarContenidoCurso.jsx"
+import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
 import TodosProfesores from "../pages/TodosProfesores.jsx"
 import InfoProfesor from "../pages/InfoProfesor.jsx"
 import Apuntes from "../pages/Apuntes.jsx"
@@ -39,6 +40,7 @@ function AppRouter() {
         <Route path="/Home/Cursos/:id" element={<ProtectedRoute><Curso /></ProtectedRoute>} />
         <Route path="/Home/Cursos/:id/AddContenidoCurso" element={<ProtectedRoute><AddContenidoCurso /></ProtectedRoute>} />
         <Route path="/Home/Cursos/:id/EditarContenidoCurso" element={<ProtectedRoute requiredTipo="profesor"><EditarContenidoCurso /></ProtectedRoute>} />
+        <Route path="/Home/Cursos/:id/CorregirEjercicios/:id" element={<ProtectedRoute requiredTipo="profesor"><CorregirEjerciciosSubidos /></ProtectedRoute>} />
         <Route path="/Home/AddCurso" element={<ProtectedRoute requiredTipo="profesor"><AddCurso /></ProtectedRoute>} />
         <Route path="/Home/Profesores" element={<ProtectedRoute><TodosProfesores /></ProtectedRoute>} />
         <Route path="/Home/Profesores/:id" element={<ProtectedRoute><InfoProfesor /></ProtectedRoute>} />

@@ -8,7 +8,7 @@ const Profesores = require("../models/Profesores.js");
 // Multer storage: save into frontend assets/Videos (must exist)
 const storage = multer.diskStorage({
   destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Videos"),
-  filename: (req, file, cb) => cb(null, Date.now() + path.extname(file.originalname)),
+  filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
 });
 
 const upload = multer({ storage });

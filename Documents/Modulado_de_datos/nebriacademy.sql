@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-02-2026 a las 17:21:55
+-- Tiempo de generación: 12-02-2026 a las 10:11:48
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -111,7 +111,12 @@ INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion
 (25, 1, 35, 'prueeeeba', '1770653475536.pdf', 'dasdad', 'Diseño', 1),
 (26, 21, 35, 'dadha', '1770653505192.pdf', 'dadadadadadada', 'Diseño', 1),
 (27, 21, 35, 'otra más ', '1770653680835.txt', 'fdgnjdwkvnkdnv', 'Diseño', 1),
-(28, 1, 35, 'pruebaa estudiante', '1770654013086.pdf', 'by8giygiy', 'Diseño', 0);
+(28, 1, 35, 'pruebaa estudiante', '1770654013086.pdf', 'by8giygiy', 'Diseño', 0),
+(29, 21, 35, 'afdaf', '1770801445385.pdf', 'adfasf', 'Diseño', 0),
+(30, 21, 35, 'Prueba tarjeta', '1770803749679.jpg', 'sjads', 'Diseño', 0),
+(31, 1, 35, 'Prueba tarjeta', '1770803774213.png', 'fadqwrq', 'Diseño', 0),
+(32, 1, 35, 'dshuigsg', '1770812314315.docx', 'gfsgdds', 'Diseño', 0),
+(33, 1, 35, 'Prueba nombre', 'Red local MV.pdf', 'Hoal', 'Diseño', 0);
 
 -- --------------------------------------------------------
 
@@ -222,19 +227,6 @@ INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `ejercicioalumnos`
---
-
-CREATE TABLE `ejercicioalumnos` (
-  `id` int(11) NOT NULL,
-  `cursoId` int(11) NOT NULL,
-  `alumnoId` int(11) NOT NULL,
-  `archivo` varchar(1000) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `ejercicios`
 --
 
@@ -246,6 +238,35 @@ CREATE TABLE `ejercicios` (
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ejercicios`
+--
+
+INSERT INTO `ejercicios` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`) VALUES
+(25, 15, 35, 'bdfbfdb', '1770801717418.pdf', 'dfdfd'),
+(26, 15, 35, 'Nombre', '1770802135236.docx', 'Desc'),
+(27, 15, 35, 'fewfwe', '1770885815168.jpg', 'fwefewf');
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `ejerciciosalumnos`
+--
+
+CREATE TABLE `ejerciciosalumnos` (
+  `id` int(11) NOT NULL,
+  `ejercicioId` int(11) NOT NULL,
+  `alumnoId` int(11) NOT NULL,
+  `archivo` varchar(1000) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ejerciciosalumnos`
+--
+
+INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VALUES
+(1, 25, 1, '1770887006728-Actividad 2 Power BI.pdf');
 
 -- --------------------------------------------------------
 
@@ -398,7 +419,8 @@ CREATE TABLE `videos` (
 --
 
 INSERT INTO `videos` (`id`, `autor`, `curso`, `nombre`, `archivo`) VALUES
-(13, 15, 35, 'prueba', '1769771456245.mp4');
+(13, 15, 35, 'prueba', '1769771456245.mp4'),
+(15, 15, 35, 'fadsfadsf', '1770801543967.mp4');
 
 --
 -- Índices para tablas volcadas
@@ -463,20 +485,20 @@ ALTER TABLE `cursosalumnos`
   ADD KEY `alumnoId` (`alumnoId`);
 
 --
--- Indices de la tabla `ejercicioalumnos`
---
-ALTER TABLE `ejercicioalumnos`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `cursoId` (`cursoId`),
-  ADD KEY `alumnoId` (`alumnoId`);
-
---
 -- Indices de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
   ADD PRIMARY KEY (`id`),
   ADD KEY `autor` (`autor`),
   ADD KEY `curso` (`curso`);
+
+--
+-- Indices de la tabla `ejerciciosalumnos`
+--
+ALTER TABLE `ejerciciosalumnos`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `ejercicioId` (`ejercicioId`),
+  ADD KEY `alumnoId` (`alumnoId`);
 
 --
 -- Indices de la tabla `incidencias`
@@ -545,7 +567,7 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
@@ -572,16 +594,16 @@ ALTER TABLE `cursosalumnos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
 
 --
--- AUTO_INCREMENT de la tabla `ejercicioalumnos`
---
-ALTER TABLE `ejercicioalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+
+--
+-- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
+--
+ALTER TABLE `ejerciciosalumnos`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `incidencias`
@@ -617,7 +639,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
 
 --
 -- Restricciones para tablas volcadas
@@ -670,18 +692,18 @@ ALTER TABLE `cursosalumnos`
   ADD CONSTRAINT `cursosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
 
 --
--- Filtros para la tabla `ejercicioalumnos`
---
-ALTER TABLE `ejercicioalumnos`
-  ADD CONSTRAINT `ejercicioalumnos_ibfk_1` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`),
-  ADD CONSTRAINT `ejercicioalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
-
---
 -- Filtros para la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
   ADD CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`),
   ADD CONSTRAINT `ejercicios_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+
+--
+-- Filtros para la tabla `ejerciciosalumnos`
+--
+ALTER TABLE `ejerciciosalumnos`
+  ADD CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`),
+  ADD CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
 
 --
 -- Filtros para la tabla `incidencias`
@@ -706,7 +728,7 @@ ALTER TABLE `profesorescursos`
 -- Filtros para la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  ADD CONSTRAINT `puntuacionesejercicios_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`),
+  ADD CONSTRAINT `puntuacionesejercicios_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejerciciosalumnos` (`id`),
   ADD CONSTRAINT `puntuacionesejercicios_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
 
 --
