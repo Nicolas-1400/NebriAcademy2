@@ -1,0 +1,51 @@
+/* fila con contenido principal y controles alineados */
+.item-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.item-main {
+  flex: 1;
+}
+.item-main a {
+  color: var(--rojo-nebrija);
+  font-weight: bold;
+  text-decoration: none;
+}
+
+.item-main p {
+  margin: 6px 0 0 0;
+}
+
+.apunte-meta {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 12px;
+  font-size: 12px;
+  color: #666;
+}
+
+.apunte-categoria {
+  background-color: rgba(194, 0, 47, 0.1);
+  border-radius: 5px;
+  font-size: 12px;
+  color: var(--rojo-nebrija);
+  font-weight: 600;
+}
+
+.apunte-categoria p {
+  margin: 0;
+}
+
+.apunte-like {
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  font-size: 12px;
+  color: #666;
+}
+.apunte-like img {
+  width: 16px;
+  cursor: pointer;
+}

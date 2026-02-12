@@ -507,10 +507,10 @@ function CursoGrid() {
           <h4>Apuntes</h4>
           {apuntes && apuntes.length > 0 ? (
             <div className="apuntes-columns-wrapper">
-              <div className="apuntes-list profesor-apuntes">
+              <div className="profesor-apuntes">
                 <h5>Apuntes del profesor</h5>
                 {profesorApuntes && profesorApuntes.length > 0 ? (
-                  <ul>
+                  <ul className="apuntes-list">
                     {profesorApuntes.map((a) => (
                       <TarjetaApunteCurso
                         key={a.id}
@@ -529,10 +529,10 @@ function CursoGrid() {
                   <p>No hay apuntes del profesor.</p>
                 )}
               </div>
-              <div className="apuntes-list alumnos-apuntes">
+              <div className="alumnos-apuntes">
                 <h5>Apuntes de los estudiantes</h5>
                 {alumnosApuntes && alumnosApuntes.length > 0 ? (
-                  <ul>
+                  <ul className="apuntes-list">
                     {alumnosApuntes.map((a) => (
                       <TarjetaApunteCurso
                         key={a.id}

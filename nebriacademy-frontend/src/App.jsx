@@ -21,6 +21,7 @@ import './styles/TodosProfesores.css';
 import './styles/MiEspacio.css';
 import './styles/HomeProfesor.css';
 import './styles/NotFound.css';
+import './styles/TarjetaApunte.css';
 
 function App() {
 

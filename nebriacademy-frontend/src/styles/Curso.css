@@ -331,13 +331,13 @@
 .editarCurso img { width: 26px; filter: invert(1); }
 
 /* fila con contenido principal y controles alineados */
-.item-row {
+/* .item-row {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 .item-main { flex: 1; }
-.item-main p { margin: 6px 0 0 0; }
+.item-main p { margin: 6px 0 0 0; } */
 
 /* Grupo de acciones fijas (editar + subir) */
 .fixed-action-group {
@@ -418,11 +418,6 @@
   box-shadow: 0 4px 12px rgba(194, 0, 47, 0.1);
 }
 
-/* Espaciado para slides que contienen apuntes dentro del slider */
-.apuntes-slide {
-  padding: 8px;
-}
-.apuntes-slide .item-row { margin-bottom: 8px; }
 
 .apuntes-list a {
   color: var(--rojo-nebrija);
@@ -434,7 +429,7 @@
 }
 
 .apuntes-list a:hover {
-  color: #8b001f;
+  color: var(--color-secundario);
   text-decoration: underline;
 }
 

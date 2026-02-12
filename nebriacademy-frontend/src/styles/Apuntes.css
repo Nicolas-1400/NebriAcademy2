@@ -1,203 +1,245 @@
-/* Estilos para la página de Apuntes */
-.ApuntesGrid {
-  max-width: 1100px;
-  margin: 30px auto;
-  padding: 20px;
-}
+@import "./general.css";
+@import "./TarjetaCurso.css";
 
-.apuntes-header {
+/* TODOS CURSOS GRID */
+.apuntes-grid {
   display: flex;
-  align-items: center;
-  justify-content: space-between;
-  margin-bottom: 18px;
-}
-.apuntes-header h2 {
-  color: var(--rojo-nebrija);
-  margin: 0;
+  gap: 30px;
+  padding: 40px;
+  min-height: calc(100vh - 250px);
+  background-image: url("../assets/fondo-biblioteca.jpg");
+  background-position: center;
 }
 
-.autores-list {
-  display: grid;
-  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
-  gap: 16px;
-}
-
-.autor-card {
-  background: white;
+.buscador-sidebar {
+  width: 25%;
+  background-color: white;
+  padding: 25px;
   border-radius: 10px;
-  padding: 16px;
-  box-shadow: 0 6px 20px rgba(0, 0, 0, 0.06);
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  height: fit-content;
+  top: 20px;
+}
+
+.formulario-busqueda {
   display: flex;
   flex-direction: column;
   gap: 10px;
-}
-.autor-card .autor-nombre {
-  font-weight: 800;
-  color: #222;
-}
-.autor-card .autor-meta {
-  color: #666;
-  font-size: 13px;
+  margin-bottom: 30px;
 }
 
-.lista-apuntes {
+.formulario-busqueda input {
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  font-size: 14px;
+  font-family: "Arial", sans-serif;
+  transition: all 0.3s ease;
+}
+
+.formulario-busqueda input:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
+}
+
+.categorias-sidebar h3 {
+  font-size: 18px;
+  color: var(--rojo-nebrija);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 2px solid var(--rojo-nebrija);
+}
+
+.categorias-sidebar ul {
+  list-style: none;
   display: flex;
   flex-direction: column;
-  gap: 8px;
-  margin-top: 8px;
+  gap: 12px;
 }
-.apunte-item {
-  padding: 10px;
-  border-radius: 8px;
-  background: #f8f8f8;
-  border-left: 4px solid var(--rojo-nebrija);
+
+.categorias-sidebar li {
+  margin: 0;
+  width: 100%;
+  padding: 1px;
+  border-radius: 5px;
 }
-.apunte-item a {
+
+.categorias-sidebar a {
+  color: #333;
+  text-decoration: none;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  display: block;
+}
+
+.categorias-sidebar a:hover {
+  background-color: rgba(194, 0, 47, 0.1);
+  color: var(--rojo-nebrija);
+  font-weight: 600;
+  padding-left: 18px;
+}
+
+/* Estilos para botones de filtros */
+.categorias-sidebar button {
+  width: 100%;
+  border: solid var(--rojo-nebrija) 1px;
+  background: none;
+  color: #333;
+  text-align: left;
+  font-size: 14px;
+  padding: 8px 12px;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: block;
+}
+
+.categorias-sidebar button:hover {
+  background-color: rgba(194, 0, 47, 0.06);
+  color: var(--rojo-nebrija);
+  font-weight: 600;
+  padding-left: 18px;
+}
+
+.categorias-sidebar button.activo {
+  background-color: rgba(194, 0, 47, 0.08);
   color: var(--rojo-nebrija);
   font-weight: 700;
-  text-decoration: none;
-}
-.apunte-item p {
-  margin: 6px 0 0 0;
-  color: #555;
-  font-size: 13px;
+  padding-left: 18px;
 }
 
-/* Like button for apuntes */
-.apunte-like {
-  display: inline-flex;
-  align-items: center;
-  margin-left: 8px;
-}
-.apunte-like .like-icon {
-  width: 22px;
-  height: 22px;
-  cursor: pointer;
-  filter: grayscale(1);
-  transition: filter 120ms ease-in-out, transform 120ms ease-in-out;
-}
-.apunte-like .like-icon:hover {
-  transform: scale(1.05);
-}
-.apunte-like .like-icon.liked {
-  filter: grayscale(0) brightness(0);
-}
-.apunte-like .like-count {
-  margin-left: 6px;
-  font-weight: 700;
+.categorias-sidebar .subtitulo-nivel {
+  margin-top: 1rem;
 }
 
-/* Separador entre categoría y likes */
-.apunte-meta {
-  display: flex;
-  align-items: center;
-  gap: 14px;
+.categorias-sidebar .limpiar-filtros {
+  margin-top: 0.75rem;
 }
-.apunte-categoria p {
-  margin: 0;
-  font-size: 13px;
-  color: #666;
-  padding: 4px 8px;
-  background: rgba(0,0,0,0.03);
+
+.categorias-sidebar .limpiar-filtros button {
+  padding: 8px 12px;
+  background-color: transparent;
+  border: 1px solid #ddd;
   border-radius: 6px;
+  cursor: pointer;
 }
 
-.no-apuntes {
-  text-align: center;
-  color: #777;
-  padding: 30px;
+.categorias-sidebar .limpiar-filtros button:hover {
+  background-color: rgba(0, 0, 0, 0.03);
 }
 
-/* RESPONSIVE 1024px */
+.apuntes-contenedor {
+  width: 75%;
+  background-color: rgba(255, 224, 224, 0.9);
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.apuntes-contenedor h2 {
+  color: var(--rojo-nebrija);
+  margin-bottom: 15px;
+  padding-bottom: 10px;
+  border-bottom: 5px solid var(--rojo-nebrija);
+  font-size: 28px;
+  color: #333;
+  margin-bottom: 30px;
+}
+
+.apuntes-list-container{
+  gap: 25px;
+}
+
+
+
+/* RESPONSIVE Todos Cursos Grid */
 @media (max-width: 1024px) {
-  .ApuntesGrid {
-    max-width: 100%;
-    margin: 25px auto;
-    padding: 18px;
-  }
-
-  .autores-list {
-    grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
-    gap: 14px;
-  }
-
-  .autor-card {
-    padding: 14px;
-  }
-
-  .apunte-item {
-    padding: 9px;
-  }
-
-  .apunte-item a {
-    font-size: 14px;
-  }
-
-  .apunte-item p {
-    font-size: 12px;
-  }
-}
-
-/* RESPONSIVE 768px */
-@media (max-width: 768px) {
-  .ApuntesGrid {
-    padding: 12px;
-  }
-
-  .autores-list {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-    gap: 12px;
-    display: flex;
-    flex-direction: column;
-  }
-
-  .autor-card {
-    padding: 12px;
-  }
-
-  .autor-nombre {
-    font-size: 13px;
-  }
-
-  .autor-meta {
-    font-size: 11px;
-  }
-
-  .apunte-item {
-    padding: 8px;
-    border-left-width: 3px;
-  }
-
-  .apunte-item a {
-    font-size: 12px;
-  }
-
-  .apunte-item p {
-    font-size: 11px;
-    margin-top: 4px;
-  }
-
-  .no-apuntes {
+  .todos-cursos-grid {
+    gap: 15px;
     padding: 20px;
+    flex-direction: row;
+  }
+
+  .buscador-sidebar {
+    max-width: 25%;
+    position: static;
+    padding: 20px;
+  }
+
+  .cursos-contenedor {
+    width: 100%;
+  }
+
+  .cursos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  }
+}
+
+/* RESPONSIVE Todos Cursos Grid 768px */
+@media (max-width: 768px) {
+  .todos-cursos-grid {
+    gap: 15px;
+    padding: 20px;
+    flex-direction: row;
+  }
+
+  .buscador-sidebar {
+    min-width: 35%;
+    position: static;
+    padding: 20px;
+  }
+
+  .formulario-busqueda {
+    gap: 8px;
+    margin-bottom: 20px;
+  }
+
+  .formulario-busqueda input {
+    padding: 10px;
     font-size: 13px;
   }
+
+  .categorias-sidebar h3 {
+    font-size: 16px;
+    margin-bottom: 12px;
+  }
+
+  .categorias-sidebar ul {
+    gap: 8px;
+  }
+
+  .categorias-sidebar a {
+    font-size: 13px;
+    padding: 6px 10px;
+  }
+
+  .cursos-contenedor {
+    width: 100%;
+  }
+
+  .cursos-contenedor h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .cursos-grid {
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 15px;
+  }
+
+  .tarjeta-curso {
+    padding: 15px;
+  }
+
+  .tarjeta-curso h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
+
+  .tarjeta-curso p {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
 }
-
-/* RESPONSIVE mobile (480px) */
-@media (max-width: 480px) {
-  .ApuntesGrid {
-    max-width: 100%;
-    margin: 15px auto;
-    padding: 10px;
-  }
-
-  .autores-list {
-    grid-template-columns: 1fr;
-    gap: 10px;
-  }
-
-  .autor-card {
-    padding: 10px;
-  }
-}
-

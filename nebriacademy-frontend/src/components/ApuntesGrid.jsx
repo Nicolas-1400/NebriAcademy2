@@ -108,7 +108,7 @@ function ApuntesGrid() {
   });
 
   return (
-    <div className="todos-cursos-grid">
+    <div className="apuntes-grid">
       <aside className="buscador-sidebar">
         <form role="search" className="formulario-busqueda" onSubmit={(e) => e.preventDefault()}>
           <input
@@ -147,9 +147,9 @@ function ApuntesGrid() {
           </div>
         </div>
       </aside>
-      <main className="cursos-contenedor apuntes-contenedor">
+      <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
-        <div className="apuntes-grid">
+        <div className="apuntes-list-container">
           {filteredApuntes.length > 0 ? (
             <ul className="apuntes-list">
               {filteredApuntes.map((ap) => (
