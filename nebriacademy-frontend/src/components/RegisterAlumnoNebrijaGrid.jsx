@@ -14,10 +14,15 @@ function RegisterAlumnoNebrijaGrid() {
   const location = useLocation();
 
   useEffect(() => {
+    const verifiedEmail = sessionStorage.getItem('verifiedEmail');
     if (location.state?.email) {
       setEmail(location.state.email);
+    } else if (verifiedEmail) {
+      setEmail(verifiedEmail);
+    } else {
+      navigate('/Register/VerificacionAlumnoNebrija');
     }
-  }, [location.state]);
+  }, [location.state, navigate]);
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -47,6 +52,7 @@ function RegisterAlumnoNebrijaGrid() {
 
       if (respuesta.ok) {
         console.log("Registro exitoso:", datos);
+        sessionStorage.removeItem('verifiedEmail');
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");

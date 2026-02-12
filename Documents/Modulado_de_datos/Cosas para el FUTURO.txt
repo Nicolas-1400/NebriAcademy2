@@ -15,6 +15,7 @@ Para registrarse:
 Crear una BDD con los alumnos de la Nebrija.
 Comparar si al crear el usuario, coincide.
 Enviar un código al correo del alumno.
+Usar claudinary para hacer una api y así no tener que subir las cosas a local
 
 NavBar: 
 **Desplegable en los botones, por ejemplo en cursos, que aparezcan los tipos**

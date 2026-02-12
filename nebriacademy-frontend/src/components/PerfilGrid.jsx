@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useAuthStore from '../store/useAuthStore'
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
@@ -19,11 +19,15 @@ function PerfilGrid() {
     pais: "",
     localidad: "",
   });
+  const [isEditing, setIsEditing] = useState(false);
+  const lastFetchedId = useRef(null);
   const [mensajeExito, setMensajeExito] = useState("");
   const [mensajeError, setMensajeError] = useState("");
   useEffect(() => {
     if (!storeUser) return
     if (tipo !== 'alumno') return
+    if (isEditing) return
+    if (lastFetchedId.current === storeUser.id) return
 
     setUsuario(storeUser)
 
@@ -35,6 +39,8 @@ function PerfilGrid() {
       .then((datosCompletos) => {
         setUsuario(datosCompletos)
         setUser(datosCompletos, 'alumno')
+
+        lastFetchedId.current = storeUser.id
 
         setFormData({
           nombre: datosCompletos.nombre || "",
@@ -48,6 +54,9 @@ function PerfilGrid() {
         })
       })
       .catch(() => {
+        // solo inicializar con storeUser si no estamos ya editando
+        if (isEditing) return
+
         setFormData((prev) => ({
           ...prev,
           nombre: storeUser.nombre || "",
@@ -60,7 +69,7 @@ function PerfilGrid() {
           localidad: storeUser.localidad || "",
         }))
       })
-  }, [storeUser, tipo, setUser]);
+  }, [storeUser, tipo, setUser, isEditing]);
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;
@@ -149,6 +158,8 @@ function PerfilGrid() {
               name="nombre"
               value={formData.nombre}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Tu nombre"
             />
           </div>
@@ -161,6 +172,8 @@ function PerfilGrid() {
               name="apellidos"
               value={formData.apellidos}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Tus apellidos"
             />
           </div>
@@ -173,6 +186,8 @@ function PerfilGrid() {
               name="contrasena"
               value={formData.contrasena}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Dejar en blanco para no cambiar"
             />
           </div>
@@ -185,6 +200,8 @@ function PerfilGrid() {
               name="numeroTarjeta"
               value={formData.numeroTarjeta}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Tu número de tarjeta"
             />
           </div>
@@ -197,6 +214,8 @@ function PerfilGrid() {
               name="numTelefono"
               value={formData.numTelefono}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Tu número de teléfono"
             />
           </div>
@@ -209,13 +228,15 @@ function PerfilGrid() {
               name="redes"
               value={formData.redes}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
               placeholder="Tus redes sociales (ej: @usuario)"
             />
           </div>
 
           <div className="formulario-grupo">
             <label htmlFor="pais">País:</label>
-            <select id="pais" name="pais" value={formData.pais} onChange={handleInputChange}>
+            <select id="pais" name="pais" value={formData.pais} onChange={handleInputChange} onFocus={() => setIsEditing(true)} onBlur={() => setIsEditing(false)}>
               <option value="" disabled>
                 Seleccione un país
               </option>
@@ -240,6 +261,8 @@ function PerfilGrid() {
               name="localidad"
               value={formData.localidad}
               onChange={handleInputChange}
+              onFocus={() => setIsEditing(true)}
+              onBlur={() => setIsEditing(false)}
             >
               <option value="" disabled>
                 Seleccione una localidad

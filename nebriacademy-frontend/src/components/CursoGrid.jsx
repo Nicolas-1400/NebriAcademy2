@@ -36,8 +36,8 @@ function CursoGrid() {
   const [editingId, setEditingId] = useState(null);
   const [editingText, setEditingText] = useState("");
   const [ejercicios, setEjercicios] = useState([]);
-  const [profesoresList, setProfesoresList] = useState([]);
   const [editingMode, setEditingMode] = useState(false);
+  const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
   const navigate = useNavigate();
 
   const storeUser = useAuthStore((state) => state.user);
@@ -178,6 +178,21 @@ function CursoGrid() {
       })
       .catch(() => {});
   }, []);
+
+  useEffect(() => {
+    if (!alumnoId) return;
+    // cargar ejercicios subidos por este alumno
+    fetch(`http://localhost:3000/ejerciciosalumnos`)
+      .then((r) => r.json())
+      .then((data) => {
+        const registros = Array.isArray(data.registros) ? data.registros : data || [];
+        const ids = registros
+          .filter((rec) => parseInt(rec.alumnoId) === parseInt(alumnoId))
+          .map((rec) => parseInt(rec.ejercicioId));
+        setUploadedEjercicios(ids);
+      })
+      .catch(() => {});
+  }, [alumnoId]);
 
   // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
   useEffect(() => {
@@ -556,24 +571,79 @@ function CursoGrid() {
             <p>No hay apuntes para este curso.</p>
           )}
           <h4>Ejercicios</h4>
-          <div className="apuntes-list profesores-apuntes">
-            {ejercicios && ejercicios.length > 0 ? (
-              <ul>
+          {ejercicios && ejercicios.length > 0 ? (
+              <div className="apuntes-list profesores-apuntes">
                 {ejercicios.map((e) => (
-                  <TarjetaEjercicioCurso
-                    key={e.id}
-                    ejercicio={e}
-                    tipo={tipo}
-                    editingMode={editingMode}
-                    handleEditNavigate={handleEditNavigate}
-                    handleDeleteContenido={handleDeleteContenido}
-                  />
+                  <div key={e.id} className="ejercicio-row">
+                    <div className="ejercicio-row-main">
+                      <TarjetaEjercicioCurso
+                        ejercicio={e}
+                        tipo={tipo}
+                        editingMode={editingMode}
+                        handleEditNavigate={handleEditNavigate}
+                        handleDeleteContenido={handleDeleteContenido}
+                      />
+                    </div>
+                    <div className="ejercicio-row-actions">
+                      {tipo === "profesor" ? (
+                        <button
+                          onClick={() => navigate(`/Home/Cursos/${id}/CorregirEjercicios/${e.id}`)}
+                          className="btn-corregir-ejercicio"
+                        >
+                          Corregir ejercicio
+                        </button>
+                      ) : (
+                        <div>
+                          {uploadedEjercicios.includes(e.id) ? (
+                            <button disabled className="btn-ejercicio-subido">Ejercicio subido</button>
+                          ) : (
+                            <>
+                              <input
+                                type="file"
+                                id={`file-input-ej-${e.id}`}
+                                style={{ display: 'none' }}
+                                onChange={async (ev) => {
+                                  const file = ev.target.files && ev.target.files[0];
+                                  if (!file) return;
+                                  const form = new FormData();
+                                  form.append('archivo', file);
+                                  form.append('ejercicioId', e.id);
+                                  form.append('alumnoId', alumnoId);
+                                  try {
+                                    const res = await fetch('http://localhost:3000/ejerciciosalumnos', {
+                                      method: 'POST',
+                                      body: form,
+                                    });
+                                    const d = await res.json();
+                                    if (res.ok) {
+                                      setUploadedEjercicios((prev) => [...new Set([...prev, e.id])]);
+                                    } else {
+                                      alert(d.error || 'Error subiendo archivo');
+                                    }
+                                  } catch (err) {
+                                    console.error('upload error', err);
+                                    alert('Error subiendo archivo');
+                                  }
+                                }}
+                                accept="*"
+                              />
+                              <button
+                                onClick={() => document.getElementById(`file-input-ej-${e.id}`).click()}
+                                className="btn-subir-ejercicio"
+                              >
+                                Subir ejercicio
+                              </button>
+                            </>
+                          )}
+                        </div>
+                      )}
+                    </div>
+                  </div>
                 ))}
-              </ul>
-            ) : (
-              <p>No hay ejercicios para este curso.</p>
-            )}
-          </div>
+              </div>
+          ) : (
+            <p>No hay ejercicios para este curso.</p>
+          )}
         </div>
 
         {/* DETALLES - 25% */}
