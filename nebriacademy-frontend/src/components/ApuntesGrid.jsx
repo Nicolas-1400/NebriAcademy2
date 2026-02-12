@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
 import TarjetaApunte from "./TarjetaApunte";
-import useAuthStore from '../store/useAuthStore'
+import useAuthStore from "../store/useAuthStore";
 
 function ApuntesGrid() {
   const [apuntes, setApuntes] = useState([]);
@@ -12,7 +12,7 @@ function ApuntesGrid() {
   const [likedIds, setLikedIds] = useState([]);
   const { id } = useParams();
 
-  const usuario = useAuthStore((s) => s.user)
+  const usuario = useAuthStore((s) => s.user);
 
   const navigate = useNavigate();
 
@@ -40,9 +40,14 @@ function ApuntesGrid() {
 
         // si hay usuario, cargar sus likes desde /apuntesalumnos/likes
         if (usuario && usuario.id) {
-          fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`).then((r) => r.json()).then((d) => {
-            setLikedIds(Array.isArray(d.apunteIds) ? d.apunteIds : []);
-          }).catch(() => {});
+          fetch(
+            `http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`,
+          )
+            .then((r) => r.json())
+            .then((d) => {
+              setLikedIds(Array.isArray(d.apunteIds) ? d.apunteIds : []);
+            })
+            .catch(() => {});
         }
       })
       .catch((e) => {
@@ -52,23 +57,35 @@ function ApuntesGrid() {
   }, []);
 
   const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
-    const targetId = (id && Number(id) > 0) ? id : 0
-    navigate(`/Home/Cursos/${targetId}/AddContenidoCurso`, { state: { tipo: tipoSeleccion, cursoId: id } });
+    const targetId = id && Number(id) > 0 ? id : 0;
+    navigate(`/Home/Cursos/${targetId}/AddContenidoCurso`, {
+      state: { tipo: tipoSeleccion, cursoId: id },
+    });
   };
 
   if (error) return <p>{error}</p>;
 
-  const CATEGORIAS = ["Programación", "Diseño", "Ciberseguridad", "BDD", "Marketing"];
+  const CATEGORIAS = [
+    "Programación",
+    "Diseño",
+    "Ciberseguridad",
+    "BDD",
+    "Marketing",
+  ];
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
 
   const handleToggleLike = (apunte) => {
     if (!usuario || !usuario.id) return;
-    fetch('http://localhost:3000/apuntesalumnos/vote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true }),
+    fetch("http://localhost:3000/apuntesalumnos/vote", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({
+        apunteId: apunte.id,
+        alumnoId: usuario.id,
+        vote: true,
+      }),
     })
       .then((r) => r.json())
       .then((data) => {
@@ -76,22 +93,32 @@ function ApuntesGrid() {
         const apunteRes = data.apunte || {};
         setLikedIds((prev) => {
           const has = prev.includes(apunte.id);
-          if (registro && registro.valoracion === true && !has) return [...prev, apunte.id];
-          if (!registro || registro.valoracion !== true) return prev.filter((id) => id !== apunte.id);
+          if (registro && registro.valoracion === true && !has)
+            return [...prev, apunte.id];
+          if (!registro || registro.valoracion !== true)
+            return prev.filter((id) => id !== apunte.id);
           return prev;
         });
-        setApuntes((prev) => prev.map((a) => (a.id === apunte.id ? { ...a, valoracion: apunteRes.valoracion ?? a.valoracion } : a)));
+        setApuntes((prev) =>
+          prev.map((a) =>
+            a.id === apunte.id
+              ? { ...a, valoracion: apunteRes.valoracion ?? a.valoracion }
+              : a,
+          ),
+        );
       })
-      .catch((err) => console.error('Error votando apunte:', err));
+      .catch((err) => console.error("Error votando apunte:", err));
   };
 
   const resolveAutorNombre = (autorId) => {
-    if (!autorId) return '';
+    if (!autorId) return "";
     const aid = Number(autorId);
     const alumnoByUsuario = alumnos.find((al) => Number(al.usuarioId) === aid);
-    if (alumnoByUsuario) return `${alumnoByUsuario.nombre} ${alumnoByUsuario.apellidos}`;
+    if (alumnoByUsuario)
+      return `${alumnoByUsuario.nombre} ${alumnoByUsuario.apellidos}`;
     const profByUsuario = profesores.find((p) => Number(p.usuarioId) === aid);
-    if (profByUsuario) return `${profByUsuario.nombre} ${profByUsuario.apellidos}`;
+    if (profByUsuario)
+      return `${profByUsuario.nombre} ${profByUsuario.apellidos}`;
     const alumnoById = alumnos.find((al) => Number(al.id) === aid);
     if (alumnoById) return `${alumnoById.nombre} ${alumnoById.apellidos}`;
     const profById = profesores.find((p) => Number(p.id) === aid);
@@ -109,8 +136,12 @@ function ApuntesGrid() {
 
   return (
     <div className="apuntes-grid">
-      <aside className="buscador-sidebar">
-        <form role="search" className="formulario-busqueda" onSubmit={(e) => e.preventDefault()}>
+      <aside className="buscador-sidebar-apuntes">
+        <form
+          role="search"
+          className="formulario-busqueda"
+          onSubmit={(e) => e.preventDefault()}
+        >
           <input
             type="search"
             value={searchTerm}
@@ -142,9 +173,31 @@ function ApuntesGrid() {
             ))}
           </ul>
 
+            {/* LÍNEA DE SEPARACIÓN */}
+            <hr className="separador-sidebar" />
+            
+
           <div className="limpiar-filtros">
-            <button onClick={() => { setSelectedCategory(""); setSearchTerm(""); }}>Limpiar filtros</button>
+            <button
+              onClick={() => {
+                setSelectedCategory("");
+                setSearchTerm("");
+              }}
+            >
+              Limpiar filtros
+            </button>
           </div>
+          <ul>
+            <li>
+              <button>Mios</button>
+            </li>
+            <li>
+              <button>Populares</button>
+            </li>
+            <li>
+              <button>Novedades</button>
+            </li>
+          </ul>
         </div>
       </aside>
       <main className="apuntes-contenedor">
@@ -164,7 +217,9 @@ function ApuntesGrid() {
               ))}
             </ul>
           ) : (
-            <p className="no-apuntes">No hay apuntes que coincidan con los filtros.</p>
+            <p className="no-apuntes">
+              No hay apuntes que coincidan con los filtros.
+            </p>
           )}
         </div>
       </main>
@@ -176,6 +231,7 @@ function ApuntesGrid() {
         >
           <img src={Mas} alt="Subir contenido" />
         </button>
+        <button className="editarApuntes">Editar</button>
       </div>
     </div>
   );
