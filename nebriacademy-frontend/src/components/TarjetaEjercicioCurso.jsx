@@ -4,7 +4,7 @@ function TarjetaEjercicioCurso({ ejercicio, tipo, editingMode, handleEditNavigat
   return (
     <li key={ejercicio.id} className="item-row">
       <div className="item-main">
-        <a href={`http://localhost:3000/ejercicios/files/${ejercicio.archivo}`} target="_blank" rel="noreferrer">{ejercicio.nombre || ejercicio.archivo}</a>
+        <a href={`http://localhost:3000/ejercicios/files/${ejercicio.archivo}`} target="_blank" rel="noreferrer">{ejercicio.nombre}</a>
         <br />        
         {ejercicio.descripcion ? <p>{ejercicio.descripcion}</p> : null}
       </div>

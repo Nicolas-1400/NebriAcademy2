@@ -9,6 +9,7 @@ function ApuntesGrid() {
   const [profesores, setProfesores] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [error, setError] = useState(null);
+  const [categorias, setCategorias] = useState([]);
   const [likedIds, setLikedIds] = useState([]);
   const { id } = useParams();
 
@@ -38,6 +39,12 @@ function ApuntesGrid() {
         setProfesores(listProf);
         setAlumnos(listAlum);
 
+        // cargar categorias desde endpoint sencillo
+        fetch('http://localhost:3000/apuntes/categorias')
+          .then((r) => r.json())
+          .then((d) => setCategorias(Array.isArray(d.categorias) ? d.categorias : []))
+          .catch(() => setCategorias([]));
+
         // si hay usuario, cargar sus likes desde /apuntesalumnos/likes
         if (usuario && usuario.id) {
           fetch(
@@ -54,27 +61,23 @@ function ApuntesGrid() {
         console.error("Error cargando apuntes/autores:", e);
         setError("No se pudieron cargar los apuntes");
       });
-  }, []);
+  }, [usuario]);
 
   const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
     const targetId = id && Number(id) > 0 ? id : 0;
-    navigate(`/Home/Cursos/${targetId}/AddContenidoCurso`, {
+    navigate("/Home/Apuntes/AddApunte", {
       state: { tipo: tipoSeleccion, cursoId: id },
     });
   };
 
   if (error) return <p>{error}</p>;
 
-  const CATEGORIAS = [
-    "Programación",
-    "Diseño",
-    "Ciberseguridad",
-    "BDD",
-    "Marketing",
-  ];
+  
 
   const [selectedCategory, setSelectedCategory] = useState("");
   const [searchTerm, setSearchTerm] = useState("");
+  const [viewMode, setViewMode] = useState("all");
+  const [editMode, setEditMode] = useState(false);
 
   const handleToggleLike = (apunte) => {
     if (!usuario || !usuario.id) return;
@@ -131,8 +134,24 @@ function ApuntesGrid() {
     const term = searchTerm.trim().toLowerCase();
     if (term === "") return true;
     const nombre = (a.nombre || a.archivo || "").toString().toLowerCase();
-    return nombre.includes(term);
+    const autorStr = resolveAutorNombre(a.autor).toString().toLowerCase();
+    return nombre.includes(term) || autorStr.includes(term);
   });
+
+  const processedApuntes = (() => {
+    let list = [...filteredApuntes];
+    if (viewMode === "misApuntes") {
+      if (!usuario || !usuario.id) return [];
+      list = list.filter((a) => Number(a.autor) === Number(usuario.id));
+    }
+    if (viewMode === "popular") {
+      list.sort((x, y) => (Number(y.valoracion || 0) ?? 0) - (Number(x.valoracion || 0) ?? 0));
+    }
+    if (viewMode === "novedades") {
+      list.sort((x, y) => (Number(y.id) || 0) - (Number(x.id) || 0));
+    }
+    return list;
+  })();
 
   return (
     <div className="apuntes-grid">
@@ -161,7 +180,7 @@ function ApuntesGrid() {
                 Todas
               </button>
             </li>
-            {CATEGORIAS.map((cat) => (
+            {categorias.map((cat) => (
               <li key={cat}>
                 <button
                   onClick={() => setSelectedCategory(cat)}
@@ -173,57 +192,108 @@ function ApuntesGrid() {
             ))}
           </ul>
 
-            {/* LÍNEA DE SEPARACIÓN */}
-            <hr className="separador-sidebar" />
-            
-
+          {/* LÍNEA DE SEPARACIÓN */}
+          <hr className="separador-sidebar" />
+          <ul>
+            <li>
+              <button
+                onClick={() => setViewMode("misApuntes")}
+                className={viewMode === "misApuntes" ? "activo" : ""}
+              >
+                Mis apuntes
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setViewMode("popular")}
+                className={viewMode === "popular" ? "activo" : ""}
+              >
+                Populares
+              </button>
+            </li>
+            <li>
+              <button
+                onClick={() => setViewMode("novedades")}
+                className={viewMode === "novedades" ? "activo" : ""}
+              >
+                Novedades
+              </button>
+            </li>
+          </ul>
+          
+          {/* LÍNEA DE SEPARACIÓN */}
+          <hr className="separador-sidebar" />
           <div className="limpiar-filtros">
             <button
               onClick={() => {
                 setSelectedCategory("");
                 setSearchTerm("");
+                setViewMode("all");
               }}
             >
               Limpiar filtros
             </button>
           </div>
-          <ul>
-            <li>
-              <button>Mios</button>
-            </li>
-            <li>
-              <button>Populares</button>
-            </li>
-            <li>
-              <button>Novedades</button>
-            </li>
-          </ul>
         </div>
       </aside>
+      
       <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
-          {filteredApuntes.length > 0 ? (
+          {processedApuntes.length > 0 ? (
             <ul className="apuntes-list">
-              {filteredApuntes.map((ap) => (
-                <TarjetaApunte
-                  key={ap.id}
-                  apunte={ap}
-                  usuario={usuario}
-                  likedIds={likedIds}
-                  onToggleLike={handleToggleLike}
-                  autorNombre={resolveAutorNombre(ap.autor)}
-                />
+              {processedApuntes.map((ap) => (
+                <li key={ap.id} className="apunte-item">
+                  <TarjetaApunte
+                    apunte={ap}
+                    usuario={usuario}
+                    likedIds={likedIds}
+                    onToggleLike={handleToggleLike}
+                    autorNombre={resolveAutorNombre(ap.autor)}
+                    isEditMode={editMode}
+                  />
+                  {editMode && usuario && Number(usuario.id) === Number(ap.autor) && (
+                    <div className="apunte-edit-controls">
+                      <button
+                        onClick={() =>
+                          navigate("/Home/Apuntes/EditApunte", { state: { apunte: ap } })
+                        }
+                      >
+                        Editar
+                      </button>
+                      <button
+                        onClick={() => {
+                          if (!confirm("¿Eliminar este apunte?")) return;
+                          fetch(`http://localhost:3000/apuntes/${ap.id}`, {
+                            method: "DELETE",
+                          })
+                            .then((r) => {
+                              if (!r.ok) throw new Error("Error borrando");
+                              setApuntes((prev) => prev.filter((x) => x.id !== ap.id));
+                            })
+                            .catch((err) => console.error("Error borrando apunte:", err));
+                        }}
+                      >
+                        Borrar
+                      </button>
+                    </div>
+                  )}
+                </li>
               ))}
             </ul>
           ) : (
-            <p className="no-apuntes">
-              No hay apuntes que coincidan con los filtros.
-            </p>
+            <p className="no-apuntes">No hay apuntes que coincidan con los filtros.</p>
           )}
         </div>
       </main>
       <div className="fixed-action-group">
+        <button
+          className="editarApuntes"
+          onClick={() => setEditMode((s) => !s)}
+          title={editMode ? "Salir de edición" : "Editar"}
+        >
+          {editMode ? "Salir edición" : "Editar"}
+        </button>
         <button
           className="subirContenidoCurso"
           onClick={() => handleNavigateAddContenidoTipo("apunte")}
@@ -231,7 +301,6 @@ function ApuntesGrid() {
         >
           <img src={Mas} alt="Subir contenido" />
         </button>
-        <button className="editarApuntes">Editar</button>
       </div>
     </div>
   );

@@ -4,7 +4,7 @@ const sequelize = require('../database/connection');
 const Apuntes = sequelize.define('apuntes', {
   autor: DataTypes.INTEGER,
   curso: DataTypes.INTEGER,
-  categoria: DataTypes.STRING,
+  categoria: DataTypes.ENUM('Programación','Diseño','Ciberseguridad','BDD','Marketing'),
   nombre: DataTypes.TEXT,
   archivo: DataTypes.STRING,
   descripcion: DataTypes.TEXT,

@@ -4,7 +4,7 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// Obtener todos los cursos
+// Obtener todos los cursos (devuelve también los valores del enum 'categoria')
 router.get("/", (req, res) => {
   try {
     console.log("GET /cursos");
@@ -14,6 +14,17 @@ router.get("/", (req, res) => {
   } catch (error) {
     console.error("Error al obtener cursos:", error);
     res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Endpoint simple para devolver los valores del enum 'categoria' del modelo Cursos
+router.get('/categorias', (req, res) => {
+  try {
+    const vals = (Cursos.rawAttributes && Cursos.rawAttributes.categoria && Cursos.rawAttributes.categoria.values) || [];
+    res.json({ categorias: vals });
+  } catch (e) {
+    console.error('Error devolviendo categorias Cursos:', e);
+    res.status(500).json({ categorias: [] });
   }
 });
 

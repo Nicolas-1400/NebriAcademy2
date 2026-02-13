@@ -5,6 +5,7 @@ const multer = require("multer");
 const path = require("path");
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
+const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
 // Multer: guarda en la carpeta de assets del frontend
@@ -18,7 +19,7 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-// Obtener todos los apuntes
+// Obtener todos los apuntes (incluye valores del enum 'categoria' de Apuntes)
 router.get("/", (req, res) => {
   try {
     console.log("GET /apuntes");
@@ -28,6 +29,17 @@ router.get("/", (req, res) => {
   } catch (error) {
     console.error("Error al obtener apuntes:", error);
     res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Endpoint simple para devolver valores del enum 'categoria' de Apuntes
+router.get('/categorias', (req, res) => {
+  try {
+    const vals = (Apuntes.rawAttributes && Apuntes.rawAttributes.categoria && Apuntes.rawAttributes.categoria.values) || [];
+    res.json({ categorias: vals });
+  } catch (e) {
+    console.error('Error devolviendo categorias Apuntes:', e);
+    res.status(500).json({ categorias: [] });
   }
 });
 
@@ -63,9 +75,14 @@ router.post("/", upload.single('archivo'), async (req, res) => {
       if (u) {
         autor = autorInput;
       } else {
-        const p = await Profesores.findByPk(autorInput);
-        if (p && p.usuarioId) {
-          autor = p.usuarioId;
+        const a = await Alumnos.findByPk(autorInput);
+        if (a && a.usuarioId) {
+          autor = a.usuarioId;
+        } else {
+          const p = await Profesores.findByPk(autorInput);
+          if (p && p.usuarioId) {
+            autor = p.usuarioId;
+          }
         }
       }
     }

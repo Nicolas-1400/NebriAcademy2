@@ -12,8 +12,10 @@ function TodosCursosGrid() {
     const [searchTerm, setSearchTerm] = useState("");
 
     
-    const CATEGORIAS = ["Programación", "Diseño", "Ciberseguridad", "BDD", "Marketing"];
+    const [categorias, setCategorias] = useState([]);
     const NIVELES = ["Básico", "Intermedio", "Avanzado"];
+
+    // las categorias se obtienen junto con /cursos en el siguiente useEffect
 
     useEffect(() => {
         setError(null);
@@ -21,6 +23,11 @@ function TodosCursosGrid() {
             .then((r) => r.json())
             .then((cData) => {
                 setCursos(cData.Cursos);
+                                // cargar categorias desde endpoint sencillo
+                                fetch('http://localhost:3000/cursos/categorias')
+                                    .then((r) => r.json())
+                                    .then((d) => setCategorias(Array.isArray(d.categorias) ? d.categorias : []))
+                                    .catch(() => setCategorias([]));
                 return fetch("http://localhost:3000/profesores");
             })
             .then((r) => r.json())
@@ -85,7 +92,7 @@ function TodosCursosGrid() {
                                 Todas
                             </button>
                         </li>
-                        {CATEGORIAS.map((cat) => (
+                        {categorias.map((cat) => (
                             <li key={cat}>
                                 <button
                                     onClick={() => setSelectedCategory(cat)}

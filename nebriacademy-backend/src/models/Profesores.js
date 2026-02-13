@@ -13,7 +13,7 @@ const Profesores = sequelize.define('profesores', {
   redes: DataTypes.TEXT,
   pais: DataTypes.STRING,
   localidad: DataTypes.STRING,
-  especializacion: DataTypes.STRING
+  especializacion: DataTypes.ENUM('Programación','Diseño','Ciberseguridad','BDD','Marketing')
 }, { timestamps: false });
 
 module.exports = Profesores;

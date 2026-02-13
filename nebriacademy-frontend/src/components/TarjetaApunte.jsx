@@ -6,7 +6,7 @@ function TarjetaApunte({ apunte, usuario, likedIds = [], onToggleLike, autorNomb
   return (
     <li key={apunte.id} className="item-row">
       <div className="item-main">
-        <a href={`http://localhost:3000/apuntes/files/${apunte.archivo}`} target="_blank" rel="noreferrer">{apunte.nombre || apunte.archivo}</a>
+        <a href={`http://localhost:3000/apuntes/files/${apunte.archivo}`} target="_blank" rel="noreferrer">{apunte.nombre}</a>
         {apunte.descripcion ? <p>{apunte.descripcion}</p> : null}
         <p>{autorNombre || apunte.autor}</p>
       </div>

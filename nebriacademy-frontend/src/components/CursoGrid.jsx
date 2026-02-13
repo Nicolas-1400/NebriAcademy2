@@ -502,9 +502,9 @@ function CursoGrid() {
         {/* CONTENIDO DEL CURSO - 75% */}
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
+          <h4>Vídeos</h4>
           {videos && videos.length > 0 ? (
             <div className="videos-list">
-              <h4>Vídeos</h4>
               {videos.map((v) => (
                 <TarjetaVideoCurso
                   key={v.id}
@@ -706,7 +706,8 @@ function CursoGrid() {
                 <p>No hay comentarios para este curso.</p>
               )}
             </div>
-            {alumnoId ? (
+          {tipo === "alumno" ? (
+            usuario ? (
               <div className="escribir-comentario">
                 <textarea
                   maxLength={500}
@@ -716,7 +717,8 @@ function CursoGrid() {
                 />
                 <button onClick={handleSubmitComment}>Enviar comentario</button>
               </div>
-            ) : null}
+            ) : null
+          ) : null}
           </div>
         </div>
       </div>

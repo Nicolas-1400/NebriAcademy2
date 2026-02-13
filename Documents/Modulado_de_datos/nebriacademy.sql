@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 12-02-2026 a las 10:11:48
+-- Tiempo de generación: 13-02-2026 a las 11:47:35
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -46,8 +46,7 @@ CREATE TABLE `administradores` (
 --
 
 INSERT INTO `administradores` (`id`, `usuarioId`, `dni`, `nombre`, `apellidos`, `email`, `contrasena`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
-(1, 1, '00000000A', 'Carlos', 'Ramírez López', 'admin@nebriacademy.com', 'admin123', '600000000', '@adminCarlos', 'España', 'Madrid'),
-(5, 1, '12345678A', 'María', 'García Pérez', 'maria.garcia@example.com', 'pass1234', '+34600111222', 'twitter:@mgarcia', 'España', 'Madrid');
+(1, 14, '00000000Z', 'Admin', 'Principal', 'admin@nebriacademy.com', 'admin123', '600000000', '@admin', 'España', 'Madrid');
 
 -- --------------------------------------------------------
 
@@ -75,10 +74,14 @@ CREATE TABLE `alumnos` (
 --
 
 INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numeroTarjeta`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
-(1, 2, 'Nicolás', 'García-Sampedro', '12345678B', 'nico@example.com', 'pass123', '123', '432512', '', 'España', 'Madrid'),
-(2, 3, 'María', 'López Díaz', '87654321C', 'maria@example.com', 'pass456', '4222222222222222', '622222222', '@marialopez', 'España', 'Valencia'),
-(6, 2, 'Luis', 'Fernández Ruiz', '87654321B', 'luis.fernandez@example.com', 'alumno2025', '4000000000000002', '+34666777888', '{\"linkedin\":\"/in/luisfr\"}', 'España', 'Sevilla'),
-(13, 22, 'prueba', 'Proba', '12346', 'pruebaa@alumnos.nebrija.es', 'a', NULL, NULL, NULL, 'España', 'Madrid');
+(1, 6, 'Juan', 'Fernández Gómez', '66666666F', 'juan.fernandez@alumnos.nebrija.es', 'alumno123', '4111111111111111', '600666777', '@juan_alum', 'España', 'Madrid'),
+(2, 7, 'María', 'Rodríguez Díaz', '77777777G', 'maria.rodriguez@gmail.com', 'alumno456', '4222222222222222', '600777888', '@maria_alum', 'España', 'Sevilla'),
+(3, 8, 'Pedro', 'López Torres', '88888888H', 'pedro.lopez@alumnos.nebrija.es', 'alumno789', '4333333333333333', '600888999', '@pedro_alum', 'España', 'Bilbao'),
+(4, 9, 'Sofía', 'Gómez Ruiz', '99999999I', 'sofia.gomez@hotmail.com', 'alumno000', '4444444444444444', '600999000', '@sofia_alum', 'España', 'Zaragoza'),
+(5, 10, 'David', 'Hernández Martín', '10101010J', 'david.hernandez@alumnos.nebrija.es', 'alumno111', '4555555555555555', '601010101', '@david_alum', 'España', 'Granada'),
+(6, 11, 'Lucía', 'Pérez García', '11111112K', 'lucia.perez@outlook.com', 'alumno222', '4666666666666666', '601111112', '@lucia_alum', 'España', 'Valencia'),
+(7, 12, 'Pablo', 'González Sánchez', '12121212L', 'pablo.gonzalez@yahoo.com', 'alumno333', '4777777777777777', '601212121', '@pablo_alum', 'España', 'Barcelona'),
+(8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga');
 
 -- --------------------------------------------------------
 
@@ -89,34 +92,13 @@ INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`,
 CREATE TABLE `apuntes` (
   `id` int(11) NOT NULL,
   `autor` int(11) NOT NULL,
-  `curso` int(11) NOT NULL,
+  `curso` int(11) DEFAULT NULL,
   `nombre` text NOT NULL,
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL,
-  `categoria` varchar(100) NOT NULL,
+  `categoria` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL,
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `apuntes`
---
-
-INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `categoria`, `valoracion`) VALUES
-(19, 21, 32, 'Prueba video', '1769770901951.pdf', 'Prueba video', 'Programación', 0),
-(20, 21, 33, 'jeje', '1769771262323.pdf', 'jeje', 'BDD', 0),
-(21, 21, 34, 'sfsdgs', '1769771360844.pdf', 'sfsdgs', 'Marketing', 0),
-(22, 21, 35, 'sgdsgds', '1769771456223.pdf', 'sgdsgds', 'Diseño', 0),
-(23, 1, 35, 'Prueba2', '1770284606795.pdf', 'Prueba', 'Diseño', 0),
-(24, 21, 35, 'Prueba', '1770566205261.pdf', 'shiufhasbfo', 'Diseño', 0),
-(25, 1, 35, 'prueeeeba', '1770653475536.pdf', 'dasdad', 'Diseño', 1),
-(26, 21, 35, 'dadha', '1770653505192.pdf', 'dadadadadadada', 'Diseño', 1),
-(27, 21, 35, 'otra más ', '1770653680835.txt', 'fdgnjdwkvnkdnv', 'Diseño', 1),
-(28, 1, 35, 'pruebaa estudiante', '1770654013086.pdf', 'by8giygiy', 'Diseño', 0),
-(29, 21, 35, 'afdaf', '1770801445385.pdf', 'adfasf', 'Diseño', 0),
-(30, 21, 35, 'Prueba tarjeta', '1770803749679.jpg', 'sjads', 'Diseño', 0),
-(31, 1, 35, 'Prueba tarjeta', '1770803774213.png', 'fadqwrq', 'Diseño', 0),
-(32, 1, 35, 'dshuigsg', '1770812314315.docx', 'gfsgdds', 'Diseño', 0),
-(33, 1, 35, 'Prueba nombre', 'Red local MV.pdf', 'Hoal', 'Diseño', 0);
 
 -- --------------------------------------------------------
 
@@ -130,17 +112,6 @@ CREATE TABLE `apuntesalumnos` (
   `apunteId` int(11) NOT NULL,
   `megusta` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `apuntesalumnos`
---
-
-INSERT INTO `apuntesalumnos` (`id`, `alumnoId`, `apunteId`, `megusta`) VALUES
-(1, 1, 19, NULL),
-(2, 1, 23, NULL),
-(3, 1, 27, 1),
-(4, 1, 25, 1),
-(5, 1, 26, 1);
 
 -- --------------------------------------------------------
 
@@ -160,9 +131,14 @@ CREATE TABLE `comentarioalumnocurso` (
 --
 
 INSERT INTO `comentarioalumnocurso` (`id`, `usuarioId`, `cursoId`, `comentario`) VALUES
-(1, 2, 1, 'Hola'),
-(3, 1, 1, 'Prueba'),
-(4, 1, 1, 'Prueba 2');
+(1, 6, 1, 'Excelente curso, muy bien explicado.'),
+(2, 7, 1, 'Me está ayudando mucho a aprender Python.'),
+(3, 8, 4, 'Buen contenido sobre SQL.'),
+(4, 9, 6, 'Interesante introducción a la ciberseguridad.'),
+(5, 10, 12, 'Muy útil para mi negocio.'),
+(6, 11, 15, 'JavaScript explicado de forma clara.'),
+(7, 12, 16, 'Perfecto para empezar con React.'),
+(8, 13, 20, 'Diseño responsive muy práctico.');
 
 -- --------------------------------------------------------
 
@@ -173,7 +149,7 @@ INSERT INTO `comentarioalumnocurso` (`id`, `usuarioId`, `cursoId`, `comentario`)
 CREATE TABLE `cursos` (
   `id` int(11) NOT NULL,
   `nombreCurso` varchar(100) NOT NULL,
-  `categoria` varchar(100) DEFAULT NULL,
+  `categoria` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL,
   `profesor` int(11) NOT NULL,
   `nivel` varchar(50) DEFAULT NULL,
   `valoracion` float DEFAULT 0,
@@ -185,14 +161,26 @@ CREATE TABLE `cursos` (
 --
 
 INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `descripcion`) VALUES
-(1, 'Introducción a Python', 'Programación', 1, 'Intermedio', 4.5, 'Curso básico para aprender Python.'),
-(2, 'Redes y Seguridad', 'Ciberseguridad', 2, 'Intermedio', 4, 'Curso sobre fundamentos de redes y seguridad informática.'),
-(22, 'a', 'BDD', 15, 'Avanzado', 0, 'a'),
-(23, 'Prueba', 'Programación', 15, 'Intermedio', 0, 'Prueba'),
-(32, 'Prueba video', 'Programacion', 15, 'Intermedio', 1, 'Prueba video'),
-(33, 'alo', 'BDD', 15, 'Intermedio', 0, 'ola'),
-(34, 'fdsfs', 'Marketing', 15, 'Intermedio', 0, 'sfsdf'),
-(35, 'gsgds', 'Diseño', 15, 'Avanzado', 2, 'gsgsg');
+(1, 'Python desde Cero', 'Programación', 1, 'Principiante', 0, 'Aprende Python desde cero. Curso ideal para iniciarse en la programación.'),
+(2, 'Python Avanzado', 'Programación', 1, 'Avanzado', 0, 'Programación avanzada con Python: decoradores, generadores y patrones de diseño.'),
+(3, 'Diseño Web con HTML/CSS', 'Diseño', 4, 'Intermedio', 0, 'Crea sitios web modernos con HTML5 y CSS3.'),
+(4, 'SQL y Bases de Datos', 'BDD', 2, 'Intermedio', 0, 'Domina SQL y gestiona bases de datos relacionales con MySQL y PostgreSQL.'),
+(5, 'Diseño de Bases de Datos', 'BDD', 2, 'Avanzado', 0, 'Modelado de datos, normalización y optimización de bases de datos.'),
+(6, 'Fundamentos de Ciberseguridad', 'Ciberseguridad', 3, 'Principiante', 0, 'Introducción a los conceptos básicos de seguridad informática.'),
+(7, 'Seguridad en Redes', 'Ciberseguridad', 3, 'Intermedio', 0, 'Protección de redes, firewalls y análisis de vulnerabilidades.'),
+(8, 'Machine Learning con Python', 'Programación', 1, 'Avanzado', 0, 'Aprende machine learning usando librerías como scikit-learn y TensorFlow.'),
+(9, 'NoSQL y MongoDB', 'BDD', 2, 'Intermedio', 0, 'Bases de datos NoSQL y MongoDB para aplicaciones modernas.'),
+(10, 'Ethical Hacking', 'Ciberseguridad', 3, 'Avanzado', 0, 'Técnicas de hacking ético para auditorías de seguridad.'),
+(11, 'Diseño Gráfico con Figma', 'Diseño', 4, 'Intermedio', 0, 'Aprende a crear interfaces y diseños profesionales con Figma.'),
+(12, 'Marketing Digital', 'Marketing', 5, 'Principiante', 0, 'Estrategias de marketing digital para redes sociales y SEO.'),
+(13, 'SEO Avanzado', 'Marketing', 5, 'Avanzado', 0, 'Optimización de motores de búsqueda para posicionar tu sitio web.'),
+(14, 'Diseño UI/UX', 'Diseño', 4, 'Avanzado', 0, 'Principios de experiencia de usuario y diseño de interfaces.'),
+(15, 'JavaScript Moderno', 'Programación', 1, 'Intermedio', 0, 'Aprende ES6+ y las últimas características de JavaScript.'),
+(16, 'React para Principiantes', 'Diseño', 4, 'Principiante', 0, 'Introducción al desarrollo de interfaces con React.js.'),
+(17, 'Análisis de Datos con SQL', 'BDD', 2, 'Avanzado', 0, 'Técnicas avanzadas de análisis y visualización de datos con SQL.'),
+(18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.'),
+(19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.'),
+(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.');
 
 -- --------------------------------------------------------
 
@@ -214,15 +202,32 @@ CREATE TABLE `cursosalumnos` (
 --
 
 INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`) VALUES
-(13, 1, 1, 1, 1, NULL),
-(14, 1, 2, 1, 1, 1),
-(16, 35, 1, 1, 1, 1),
-(17, 2, 1, 0, 0, NULL),
-(18, 34, 1, 1, NULL, NULL),
-(23, 35, 2, 1, 1, 1),
-(24, 2, 2, NULL, NULL, NULL),
-(25, 33, 1, 1, NULL, NULL),
-(26, 32, 1, 0, 0, 1);
+(1, 1, 1, 1, 1, NULL),
+(2, 1, 2, 1, 1, NULL),
+(3, 2, 1, 0, 1, NULL),
+(4, 3, 3, 1, 1, NULL),
+(5, 4, 3, 1, 1, NULL),
+(6, 4, 4, 1, 1, NULL),
+(7, 5, 5, 0, 1, NULL),
+(8, 6, 2, 1, 1, NULL),
+(9, 6, 3, 1, 1, NULL),
+(10, 7, 4, 0, 1, NULL),
+(11, 8, 1, 1, 1, NULL),
+(12, 9, 5, 1, 1, NULL),
+(13, 10, 2, 0, 1, NULL),
+(14, 11, 4, 1, 1, NULL),
+(15, 12, 5, 1, 1, NULL),
+(16, 13, 3, 0, 1, NULL),
+(17, 14, 1, 1, 1, NULL),
+(18, 15, 6, 1, 1, NULL),
+(19, 16, 7, 1, 1, NULL),
+(20, 17, 8, 0, 1, NULL),
+(21, 18, 6, 1, 1, NULL),
+(22, 19, 7, 1, 1, NULL),
+(23, 20, 8, 1, 1, NULL),
+(24, 3, 6, 1, 1, NULL),
+(25, 12, 8, 0, 1, NULL),
+(26, 20, 1, 0, 0, 1);
 
 -- --------------------------------------------------------
 
@@ -239,15 +244,6 @@ CREATE TABLE `ejercicios` (
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `ejercicios`
---
-
-INSERT INTO `ejercicios` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`) VALUES
-(25, 15, 35, 'bdfbfdb', '1770801717418.pdf', 'dfdfd'),
-(26, 15, 35, 'Nombre', '1770802135236.docx', 'Desc'),
-(27, 15, 35, 'fewfwe', '1770885815168.jpg', 'fwefewf');
-
 -- --------------------------------------------------------
 
 --
@@ -260,13 +256,6 @@ CREATE TABLE `ejerciciosalumnos` (
   `alumnoId` int(11) NOT NULL,
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `ejerciciosalumnos`
---
-
-INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VALUES
-(1, 25, 1, '1770887006728-Actividad 2 Power BI.pdf');
 
 -- --------------------------------------------------------
 
@@ -281,19 +270,6 @@ CREATE TABLE `incidencias` (
   `resuelto` tinyint(1) DEFAULT 0,
   `usuario` int(11) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `incidencias`
---
-
-INSERT INTO `incidencias` (`id`, `tipo`, `descripcion`, `resuelto`, `usuario`) VALUES
-(1, 'Error en plataforma', 'No carga el vídeo del módulo 2', 0, 2),
-(2, 'Pago', 'Problema al registrar tarjeta', 1, 3),
-(3, 'Sugerencia', 'Añadir más ejercicios prácticos', 0, 4),
-(6, 'bug', 'No se puede acceder al curso 1 mediante la API', 0, 2),
-(7, 'bug', 'No se puede acceder al curso 1 mediante la API', 0, 2),
-(8, 'bug', 'No se puede acceder al curso 1 mediante la API', 0, 2),
-(10, 'bug', 'No se puede acceder al curso 1 mediante la API', 0, 2);
 
 -- --------------------------------------------------------
 
@@ -314,7 +290,7 @@ CREATE TABLE `profesores` (
   `redes` text DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
   `localidad` varchar(50) DEFAULT NULL,
-  `especializacion` varchar(50) DEFAULT NULL
+  `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
@@ -322,12 +298,11 @@ CREATE TABLE `profesores` (
 --
 
 INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`, `especializacion`) VALUES
-(1, 4, 'Sofía', 'Martínez Ruiz', '11111111D', 'sofia@prof.com', 'prof123', 'ES9820385778983000760236', '633333333', '@profeSofia', 'España', 'Barcelona', 'Programación'),
-(2, 5, 'Jorge', 'Pérez Torres', '22222222E', 'jorge@prof.com', 'prof456', 'ES6600190020961234567890', '644444444', '@profeJorge', 'España', 'Madrid', 'Ciberseguridad'),
-(6, 3, 'Ana', 'López García', '23456789C', 'ana.lopez@example.com', 'prof!2025', 'ES7620770024003102575766', '+34900111233', '{\"twitter\":\"@analopez\"}', 'España', 'Barcelona', 'Programación Web'),
-(13, 19, 'Hola', 'afafa', 'f32rf', 'elo@alo.com', 'pass123', NULL, NULL, NULL, 'eqwrq', 'rqrqr', NULL),
-(14, 20, 'profesor', 'profesor', '1234', 'profesor@profesor.com', '1234', 'jiri32r1', NULL, NULL, 'España', 'Madrid', NULL),
-(15, 21, 'a', 'a', 'asa', 'a@a.com', 'a', 'a', 'a', 'a', 'a', 'a', 'a');
+(1, 1, 'Ana', 'García López', '11111111A', 'ana.garcia@nebriacademy.com', 'prof123', 'ES1234567890123456789012', '600111222', '@ana_prof', 'España', 'Madrid', 'Programación'),
+(2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD'),
+(3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad'),
+(4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño'),
+(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing');
 
 -- --------------------------------------------------------
 
@@ -346,14 +321,26 @@ CREATE TABLE `profesorescursos` (
 --
 
 INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
-(24, 1, 1),
-(25, 2, 2),
-(26, 15, 22),
-(27, 15, 23),
-(28, 15, 32),
-(29, 15, 33),
-(30, 15, 34),
-(31, 15, 35);
+(1, 1, 1),
+(2, 1, 2),
+(3, 1, 8),
+(4, 1, 15),
+(5, 2, 4),
+(6, 2, 5),
+(7, 2, 9),
+(8, 2, 17),
+(9, 3, 6),
+(10, 3, 7),
+(11, 3, 10),
+(12, 3, 18),
+(13, 4, 3),
+(14, 4, 11),
+(15, 4, 14),
+(16, 4, 16),
+(17, 4, 20),
+(18, 5, 12),
+(19, 5, 13),
+(20, 5, 19);
 
 -- --------------------------------------------------------
 
@@ -384,21 +371,20 @@ CREATE TABLE `usuarios` (
 --
 
 INSERT INTO `usuarios` (`id`, `tipo`) VALUES
-(1, 'administrador'),
-(2, 'alumno'),
-(3, 'alumno'),
+(1, 'profesor'),
+(2, 'profesor'),
+(3, 'profesor'),
 (4, 'profesor'),
 (5, 'profesor'),
+(6, 'alumno'),
+(7, 'alumno'),
+(8, 'alumno'),
 (9, 'alumno'),
 (10, 'alumno'),
 (11, 'alumno'),
 (12, 'alumno'),
 (13, 'alumno'),
-(18, 'alumno'),
-(19, 'profesor'),
-(20, 'profesor'),
-(21, 'profesor'),
-(22, 'alumno');
+(14, 'administrador');
 
 -- --------------------------------------------------------
 
@@ -413,14 +399,6 @@ CREATE TABLE `videos` (
   `nombre` varchar(1000) NOT NULL,
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `videos`
---
-
-INSERT INTO `videos` (`id`, `autor`, `curso`, `nombre`, `archivo`) VALUES
-(13, 15, 35, 'prueba', '1769771456245.mp4'),
-(15, 15, 35, 'fadsfadsf', '1770801543967.mp4');
 
 --
 -- Índices para tablas volcadas
@@ -555,91 +533,91 @@ ALTER TABLE `videos`
 -- AUTO_INCREMENT de la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=14;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=34;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
 --
 ALTER TABLE `apuntesalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=36;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=45;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
 --
 ALTER TABLE `ejerciciosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `incidencias`
 --
 ALTER TABLE `incidencias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=32;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=23;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=16;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- Restricciones para tablas volcadas
@@ -649,94 +627,94 @@ ALTER TABLE `videos`
 -- Filtros para la tabla `administradores`
 --
 ALTER TABLE `administradores`
-  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  ADD CONSTRAINT `apuntes_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `apuntes_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+  ADD CONSTRAINT `apuntes_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `apuntes_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `apuntesalumnos`
 --
 ALTER TABLE `apuntesalumnos`
-  ADD CONSTRAINT `apuntesalumnos_ibfk_1` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`),
-  ADD CONSTRAINT `apuntesalumnos_ibfk_2` FOREIGN KEY (`apunteId`) REFERENCES `apuntes` (`id`);
+  ADD CONSTRAINT `apuntesalumnos_ibfk_1` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `apuntesalumnos_ibfk_2` FOREIGN KEY (`apunteId`) REFERENCES `apuntes` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  ADD CONSTRAINT `comentarioalumnocurso_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`),
-  ADD CONSTRAINT `comentarioalumnocurso_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`);
+  ADD CONSTRAINT `comentarioalumnocurso_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `comentarioalumnocurso_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  ADD CONSTRAINT `cursos_ibfk_1` FOREIGN KEY (`profesor`) REFERENCES `profesores` (`id`);
+  ADD CONSTRAINT `cursos_ibfk_1` FOREIGN KEY (`profesor`) REFERENCES `profesores` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  ADD CONSTRAINT `cursosalumnos_ibfk_1` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`),
-  ADD CONSTRAINT `cursosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
+  ADD CONSTRAINT `cursosalumnos_ibfk_1` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `cursosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  ADD CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`),
-  ADD CONSTRAINT `ejercicios_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+  ADD CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ejercicios_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `ejerciciosalumnos`
 --
 ALTER TABLE `ejerciciosalumnos`
-  ADD CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`),
-  ADD CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
+  ADD CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `incidencias`
 --
 ALTER TABLE `incidencias`
-  ADD CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  ADD CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`);
+  ADD CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  ADD CONSTRAINT `profesorescursos_ibfk_1` FOREIGN KEY (`profesorId`) REFERENCES `profesores` (`id`),
-  ADD CONSTRAINT `profesorescursos_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`);
+  ADD CONSTRAINT `profesorescursos_ibfk_1` FOREIGN KEY (`profesorId`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `profesorescursos_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  ADD CONSTRAINT `puntuacionesejercicios_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejerciciosalumnos` (`id`),
-  ADD CONSTRAINT `puntuacionesejercicios_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`);
+  ADD CONSTRAINT `puntuacionesejercicios_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejerciciosalumnos` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `puntuacionesejercicios_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `videos`
 --
 ALTER TABLE `videos`
-  ADD CONSTRAINT `videos_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`),
-  ADD CONSTRAINT `videos_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`);
+  ADD CONSTRAINT `videos_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `videos_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE CASCADE;
 COMMIT;
 
 /*!40101 SET CHARACTER_SET_CLIENT=@OLD_CHARACTER_SET_CLIENT */;

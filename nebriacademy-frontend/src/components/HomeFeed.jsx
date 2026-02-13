@@ -17,13 +17,7 @@ function HomeFeed() {
   const tusCursosSliderRef = useRef(null);
   const popularesSliderRef = useRef(null);
 
-  const CATEGORIAS = [
-    "Programación",
-    "Diseño",
-    "Ciberseguridad",
-    "BDD",
-    "Marketing",
-  ];
+  const [categorias, setCategorias] = useState([]);
 
   const storeUser = useAuthStore(state => state.user)
   useEffect(() => {
@@ -41,6 +35,11 @@ function HomeFeed() {
       .then(([cursosData, cursosAlumnosData]) => {
         setCursos(cursosData.Cursos || []);
         setCursosAlumnos(cursosAlumnosData.CursosAlumnos || []);
+        // cargar categorias desde endpoint sencillo si existe
+        fetch('http://localhost:3000/cursos/categorias')
+          .then((r) => r.json())
+          .then((d) => setCategorias(Array.isArray(d.categorias) ? d.categorias : []))
+          .catch(() => setCategorias([]));
       })
       .catch((err) => {
         console.error("Error cargando datos:", err);
@@ -244,7 +243,7 @@ function HomeFeed() {
         <div className="HomeFeed-seccion-categorias">
           <h2>Categorías</h2>
           <div className="HomeFeed-categorias-buttons">
-            {CATEGORIAS.map((categoria) => (
+            {categorias.map((categoria) => (
               <button
                 key={categoria}
                 className="categoria-btn"

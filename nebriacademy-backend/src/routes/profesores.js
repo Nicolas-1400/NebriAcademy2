@@ -3,19 +3,27 @@ const router = express.Router();
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// Obtener todos los profesores
+// Obtener todos los profesores (incluye enum 'especializacion')
 router.get("/", (req, res) => {
   try {
     console.log("GET /profesores");
     Profesores.findAll().then((resultado) => {
-      res.json({
-        "Numero de profesores": resultado.length,
-        Profesores: resultado,
-      });
+      res.json({ "Numero de profesores": resultado.length, Profesores: resultado });
     });
   } catch (error) {
     console.error("Error al obtener profesores:", error);
     res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
+// Endpoint simple para devolver valores del enum 'especializacion' de Profesores
+router.get('/especializaciones', (req, res) => {
+  try {
+    const vals = (Profesores.rawAttributes && Profesores.rawAttributes.especializacion && Profesores.rawAttributes.especializacion.values) || [];
+    res.json({ especializaciones: vals });
+  } catch (e) {
+    console.error('Error devolviendo especializaciones Profesores:', e);
+    res.status(500).json({ especializaciones: [] });
   }
 });
 
