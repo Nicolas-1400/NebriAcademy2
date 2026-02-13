@@ -1,3 +1,6 @@
+.menu-hamburguesa-btn {
+  display: none;
+}
 @import "./general.css";
 
 /* NAV */
@@ -26,6 +29,14 @@
   color: white;
   font-size: 24px;
   text-decoration: none;
+}
+
+.contenedor-elementos-derecha {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 15px;
+  margin-left: auto;
 }
 
 .contenedor-botones-nav {
@@ -58,21 +69,66 @@
   box-shadow: none;
 }
 
+/* BARRA DE BUSQUEDA */
+
 .barra-busqueda-nav {
   padding: 8px;
   border-radius: 5px;
   border: 2px solid gray;
   font-size: 14px;
   height: 35px;
-  max-width: 300px;
+  width: 300px;
   min-width: 100px;
   order: 3;
 }
 .barra-busqueda-nav:focus {
   outline: none;
   border-width: 2px;
-  border-color: var(--color-hover-boton);
+  border-color: var(--color-secundario);
   box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
+}
+
+.sugerencias-busqueda-contenedor {
+  position: absolute;
+  right: 75px;
+  background-color: white;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  border: 2px solid var(--color-secundario);
+  border-radius: 5px;
+  margin-top: 5px;
+  padding: 3px;
+  width: 400px; 
+  max-height: 250px;
+  overflow-y: auto;
+  z-index: 1000;
+}
+.sugerencias-busqueda {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 8px;
+  border: 1px solid var(--color-secundario);
+  border-radius: 5px;
+  margin: 2px;
+  cursor: pointer;
+  font-size: 14px;
+  background-color: rgba(236, 236, 236, 0.676);
+}
+.sugerencias-busqueda:hover {
+  border-left: 5px solid var(--rojo-nebrija);
+  background-color: var(--color-hover-boton);
+  color: var(--rojo-nebrija);
+  font-weight: bold;
+}
+
+.nombre-sugerencia {
+  font-weight: bold;
+  color: var(--rojo-nebrija);
+}
+.tipo-sugerencia {
+  font-size: 12px;
+  color: #777;
+  margin-left: 10px;
 }
 
 .logo-nav {
@@ -171,6 +227,7 @@
     flex-wrap: wrap;
     padding: 10px;
     gap: 10px;
+    position: relative;
   }
 
   .contenedor-logo-titulo {
@@ -181,6 +238,53 @@
 
   .contenedor-logo-titulo h2 {
     font-size: 20px;
+  }
+
+  .menu-hamburguesa-btn {
+    display: block !important;
+    position: absolute;
+    right: 10px;
+    top: 10px;
+    z-index: 1200;
+    cursor: pointer;
+    background-color: transparent;
+    border: 2px solid white;
+    border-radius: 9px;
+    background-color: var(--color-secundario);
+  }
+
+  .menu-hamburguesa-btn:hover{
+    background-color: none;
+    border: 2px solid var(--color-secundario);
+    transition: all 0.3s ease;
+    transform: translateY(1px);
+  }
+
+  .contenedor-elementos-derecha {
+    display: none !important;
+  }
+
+  .menu-hamburguesa-desplegable {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    position: absolute;
+    top: 60px;
+    right: 10px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 8px 24px rgba(0,0,0,0.15);
+    z-index: 1100;
+    min-width: 270px;
+    padding: 18px 10px 10px 10px;
+  }
+
+
+  .contenedor-elementos-derecha-responsive {
+    display: flex;
+    flex-direction: column;
+    gap: 10px;
   }
 
   .barra-busqueda-nav {
