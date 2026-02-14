@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
+
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
 import Foto3 from "../assets/ImagenesCursos/Foto3.jpg";
@@ -11,12 +12,18 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
+
 import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 import Mas from "../assets/mas.png";
 import Editar from "../assets/lapiz.png";
-import MeGusta from "../assets/me-gusta.png";
+/* import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import CorregirEjercicio  from "../assets/editar-archivo1.png"; */
+import CorregirEjercicio2 from "../assets/editar-archivo1.png";
+import EjercicioSubido from "../assets/subir-archivo2.png";
+import SubirEjercicio from "../assets/subir-archivo.png";
+
 import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
 import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
@@ -572,7 +579,7 @@ function CursoGrid() {
           )}
           <h4>Ejercicios</h4>
           {ejercicios && ejercicios.length > 0 ? (
-              <div className="apuntes-list profesores-apuntes">
+              <div className="ejercicios-list">
                 {ejercicios.map((e) => (
                   <div key={e.id} className="ejercicio-row">
                     <div className="ejercicio-row-main">
@@ -584,18 +591,20 @@ function CursoGrid() {
                         handleDeleteContenido={handleDeleteContenido}
                       />
                     </div>
-                    <div className="ejercicio-row-actions">
+                    <div className="ejercicio-row-boton">
                       {tipo === "profesor" ? (
                         <button
                           onClick={() => navigate(`/Home/Cursos/${id}/CorregirEjercicios/${e.id}`)}
                           className="btn-corregir-ejercicio"
                         >
-                          Corregir ejercicio
+                          <img src={CorregirEjercicio2} alt="Editar ejercicio" />
                         </button>
                       ) : (
                         <div>
                           {uploadedEjercicios.includes(e.id) ? (
-                            <button disabled className="btn-ejercicio-subido">Ejercicio subido</button>
+                            <button disabled className="btn-ejercicio-subido">
+                              <img src={EjercicioSubido} alt="Ejercicio subido" />
+                            </button>
                           ) : (
                             <>
                               <input
@@ -631,7 +640,7 @@ function CursoGrid() {
                                 onClick={() => document.getElementById(`file-input-ej-${e.id}`).click()}
                                 className="btn-subir-ejercicio"
                               >
-                                Subir ejercicio
+                                <img src={SubirEjercicio} alt="Subir ejercicio" />
                               </button>
                             </>
                           )}

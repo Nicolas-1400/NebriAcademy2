@@ -134,7 +134,9 @@
 }
 
 .separador-sidebar {
-border: none; border-top: 1px solid #ddd; margin: 20px 0; 
+  border: none;
+  border-top: 1px solid #ddd;
+  margin: 20px 0;
 }
 
 .apuntes-contenedor {
@@ -154,11 +156,50 @@ border: none; border-top: 1px solid #ddd; margin: 20px 0;
   margin-bottom: 30px;
 }
 
-.apuntes-list-container{
+.apuntes-list-container {
   gap: 25px;
 }
 
+.apuntes-list {
+  list-style: none;
+}
 
+.editarApuntes {
+  position: fixed;
+  right: 100px;
+  bottom: 30px;
+  width: 56px;
+  height: 56px;
+  border-radius: 50%;
+  border: none;
+  background: linear-gradient(135deg, var(--rojo-nebrija), #ff517c);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.12);
+  cursor: pointer;
+}
+
+.editarApuntes img {
+  width: 26px;
+  filter: invert(1);
+}
+
+.apunte-edit-controls button {
+  padding: 10px 16px;
+  margin: 5px;
+  border: 2px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  background-color: white;
+  color: var(--rojo-nebrija);
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.apunte-edit-controls button:hover {
+  background-color: var(--rojo-nebrija);
+  color: white;
+}
 
 /* RESPONSIVE Todos Cursos Grid */
 @media (max-width: 1024px) {

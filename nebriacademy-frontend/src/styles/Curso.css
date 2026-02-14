@@ -436,6 +436,71 @@
   order: 1;
   width: 50%;
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+   10. SECCIÓN DE EJERCICIOS
+   ───────────────────────────────────────────────────────────────────────────── */
+.ejercicios-list {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+}
+.ejercicio-row {
+  display: flex;
+  flex-direction: row;
+  align-items: center;
+  gap: 20px;
+}
+.ejercicio-row-main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+  width: 90%;
+  gap: 8px;
+}
+.ejercicio-row-boton {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  width: 5%;
+}
+
+.btn-corregir-ejercicio,
+.btn-ejercicio-subido,
+.btn-subir-ejercicio {
+  padding: 2px;
+  width: 50px;
+  height: 50px;
+  border: none;
+  background: transparent;
+  cursor: pointer;
+  border: 3px solid black;
+  border-radius: 6px;
+  box-shadow: 2px 2px 1px rgba(0, 0, 0, 1);
+}
+
+.btn-corregir-ejercicio:hover,
+.btn-ejercicio-subido:hover,
+.btn-subir-ejercicio:hover {
+  background-color: var(--color-hover-boton);
+  border-color: var(--rojo-nebrija);
+  transition: all 0.3s ease;
+  translate: 2px 2px;
+  box-shadow: none;
+}
+.btn-corregir-ejercicio:active,
+.btn-ejercicio-subido:active,
+.btn-subir-ejercicio:active {
+  background-color: var(--color-secundario);
+}
+
+.btn-corregir-ejercicio img,
+.btn-ejercicio-subido img,
+.btn-subir-ejercicio img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
 
 /* ─────────────────────────────────────────────────────────────────────────────
    11. MENSAJE SIN CONTENIDO (vacío)

@@ -54,6 +54,10 @@
   scroll-behavior: smooth;
   flex: 1;
   width: 100%;
+  background-color: var(--rojo-nebrija);
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 4px 12px rgba(194, 0, 47, 0.2);
 }
 
 /* Contenedor del carousel con controles */
@@ -117,12 +121,14 @@
 } */
 
 .mensaje-vacio {
-  color: #999;
+  color: #000000;
   font-size: 14px;
   font-style: italic;
   padding: 20px;
   text-align: center;
   width: 100%;
+  background-color: rgba(209, 209, 209, 0.747);
+  border-radius: 10px;
 }
 
 /* Sección de Categorías */

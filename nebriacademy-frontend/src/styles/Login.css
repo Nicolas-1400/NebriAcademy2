@@ -157,12 +157,13 @@
 .boton-profesor:hover {
     border-color: var(--rojo-nebrija);
     box-shadow: 5px 5px 20px var(--rojo-nebrija);
-    transform: translateY(3px);
+    translate: 0 3px;
+    transition: all 0.3s ease;
 }
 
 .boton-profesor:hover {
     border-color: var(--rojo-nebrija);
-    transform: translateY(3px);
+    translate: 0 3px;
 }
 
 .boton-estudiante-si img,

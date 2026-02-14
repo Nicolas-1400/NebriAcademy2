@@ -1,6 +1,8 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
+import Lapiz from "../assets/lapiz.png";
+import SalirEdicion from "../assets/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from "../store/useAuthStore";
 
@@ -292,7 +294,7 @@ function ApuntesGrid() {
           onClick={() => setEditMode((s) => !s)}
           title={editMode ? "Salir de edición" : "Editar"}
         >
-          {editMode ? "Salir edición" : "Editar"}
+          {editMode ? <img src={SalirEdicion} alt="Salir de edición" /> : <img src={Lapiz} alt="Editar apuntes" />}
         </button>
         <button
           className="subirContenidoCurso"
