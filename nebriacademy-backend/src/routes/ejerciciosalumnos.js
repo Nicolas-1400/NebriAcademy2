@@ -5,6 +5,7 @@ const Ejercicios = require('../models/Ejercicios');
 const Alumnos = require('../models/Alumnos');
 const multer = require('multer');
 const path = require('path');
+const fs = require('fs');
 
 // Multer: guarda en la carpeta de assets del frontend (EjerciciosAlumnos)
 const storage = multer.diskStorage({
@@ -102,17 +103,30 @@ router.put('/:id', upload.single('archivo'), async (req, res) => {
 });
 
 // Eliminar por ID
-router.delete('/:id', (req, res) => {
+router.delete('/:id', async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    EjerciciosAlumnos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        registro.destroy().then(() => res.json({ mensaje: 'Registro eliminado' }));
-      } else {
-        res.status(404).json({ error: 'Registro no encontrado' });
+
+    const registro = await EjerciciosAlumnos.findByPk(id);
+    if (!registro) return res.status(404).json({ error: 'Registro no encontrado' });
+
+    await registro.destroy();
+
+    if (registro.archivo) {
+      try {
+        const filePath = path.join(__dirname, '..', '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'EjerciciosAlumnos', registro.archivo);
+        await fs.promises.unlink(filePath);
+        console.log(`Archivo borrado: ${filePath}`);
+      } catch (fsErr) {
+        if (fsErr && fsErr.code === 'ENOENT') {
+          console.warn('Archivo no encontrado al intentar borrar EjerciciosAlumnos:', registro.archivo);
+        } else {
+          console.error('Error borrando archivo local de EjerciciosAlumnos:', fsErr);
+        }
       }
-    });
+    }
+
+    return res.json({ mensaje: 'Registro eliminado' });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: 'Error interno del servidor' });

@@ -45,6 +45,7 @@ function CursoGrid() {
   const [ejercicios, setEjercicios] = useState([]);
   const [editingMode, setEditingMode] = useState(false);
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
+  const [profesoresList, setProfesoresList] = useState([]);
   const navigate = useNavigate();
 
   const storeUser = useAuthStore((state) => state.user);
@@ -434,15 +435,27 @@ function CursoGrid() {
   })();
 
   const isApunteDelProfesor = (a) => {
-    const autor =
-      a && (a.autor || a.usuarioId || a.autorId)
-        ? String(a.autor || a.usuarioId || a.autorId)
-        : "";
+    if (!a) return false;
+    const rawAutor = a.autor ?? a.usuarioId ?? a.autorId ?? null;
+    const autor = rawAutor != null ? String(rawAutor) : "";
     const cursoProf = curso && curso.profesor ? String(curso.profesor) : "";
-    const profId = profesor && profesor.id ? String(profesor.id) : "";
-    const profUsuarioId =
-      profesor && profesor.usuarioId ? String(profesor.usuarioId) : "";
-    return autor === cursoProf || autor === profId || autor === profUsuarioId;
+
+    // 1) Si coincide con el profesor asignado al curso
+    if (cursoProf && autor === cursoProf) return true;
+
+    // 2) Si coincide con el profesor cargado en estado `profesor`
+    if (profesor) {
+      if (profesor.usuarioId && String(profesor.usuarioId) === autor) return true;
+      if (profesor.id && String(profesor.id) === autor) return true;
+    }
+
+    // 3) Buscar en la lista de profesores cargada (por si el apunte guarda otro tipo de id)
+    if (profesoresList && profesoresList.length > 0) {
+      const found = profesoresList.find((p) => String(p.id) === autor || String(p.usuarioId) === autor);
+      if (found) return true;
+    }
+
+    return false;
   };
 
   const profesorApuntes = apuntes.filter((a) => isApunteDelProfesor(a));

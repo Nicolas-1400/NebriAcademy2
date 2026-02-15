@@ -45,7 +45,10 @@ function AddApunteIndividualGrid() {
       form.append('nombre', nombre)
       form.append('descripcion', descripcion)
       if (categoria) form.append('categoria', categoria)
-      if (usuario && usuario.id) form.append('autor', usuario.id)
+      if (usuario) {
+        form.append('autor', usuario.id)
+        if (usuario.usuarioId) form.append('usuarioId', usuario.usuarioId)
+      }
 
       const res = await fetch(`http://localhost:3000/${endpoint}`, {
         method: 'POST',

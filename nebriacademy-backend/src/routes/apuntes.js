@@ -3,6 +3,7 @@ const router = express.Router();
 const Apuntes = require("../models/Apuntes.js");
 const multer = require("multer");
 const path = require("path");
+const fs = require("fs");
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
@@ -65,16 +66,32 @@ router.get("/:id", (req, res) => {
 // Crear un apunte (subida de archivo)
 router.post("/", upload.single('archivo'), async (req, res) => {
   try {
-
-    let autorInput = req.body.autor ? parseInt(req.body.autor) : null;
     const curso = req.body.curso ? parseInt(req.body.curso) : null;
     const nombre = req.body.nombre || null;
+
+    // Resolver autor de forma segura: apuntes.autor referencia a usuarios.id
+    const autorInput = req.body.autor ? parseInt(req.body.autor) : null;
+    const usuarioIdInput = req.body.usuarioId ? parseInt(req.body.usuarioId) : null;
+
     let autor = null;
-    if (autorInput) {
+    // Priorizar `usuarioId` enviado por frontend cuando exista y sea válido
+    if (usuarioIdInput && !Number.isNaN(usuarioIdInput)) {
+      const uBy = await Usuarios.findByPk(usuarioIdInput);
+      if (uBy) autor = usuarioIdInput;
+    }
+
+    // Si no hemos resuelto, usar el flujo anterior con `autorInput`
+    if (!autor) {
+      if (!autorInput || Number.isNaN(autorInput)) {
+        return res.status(400).json({ error: "Campo 'autor' es requerido y debe ser un id numérico" });
+      }
+
+      // Si autorInput corresponde a un usuario ya (usuarios.id)
       const u = await Usuarios.findByPk(autorInput);
       if (u) {
         autor = autorInput;
       } else {
+        // Si es id de alumno o profesor, mapear a su usuarioId
         const a = await Alumnos.findByPk(autorInput);
         if (a && a.usuarioId) {
           autor = a.usuarioId;
@@ -86,6 +103,8 @@ router.post("/", upload.single('archivo'), async (req, res) => {
         }
       }
     }
+
+    if (!autor) return res.status(400).json({ error: "No se pudo resolver el campo 'autor'" });
     // Requerimos archivo; si no llega, devolvemos 400
     if (!req.file) {
       return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
@@ -113,7 +132,6 @@ router.post("/", upload.single('archivo'), async (req, res) => {
     }
 
     const nuevo = await Apuntes.create({ autor, curso, categoria, archivo, descripcion, valoracion: 0, nombre });
-
     return res.status(201).json({ id: nuevo.id, archivo });
   } catch (error) {
     console.error("Error al crear apunte:", error);
@@ -147,18 +165,31 @@ router.put("/:id", upload.single('archivo'), (req, res) => {
 });
 
 // Eliminar un apunte por ID
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
     console.log(`DELETE /apuntes/${id}`);
-    Apuntes.findAll().then((resultado) => {
-      const apunte = resultado.find((a) => a.id === id);
-      if (apunte) {
-        apunte.destroy().then(() => res.json({ mensaje: "Apunte eliminado" }));
-      } else {
-        res.status(404).json({ error: "Apunte no encontrado" });
+
+    const apunte = await Apuntes.findByPk(id);
+    if (!apunte) return res.status(404).json({ error: "Apunte no encontrado" });
+
+    await apunte.destroy();
+
+    if (apunte.archivo) {
+      try {
+        const filePath = path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Apuntes", apunte.archivo);
+        await fs.promises.unlink(filePath);
+        console.log(`Archivo borrado: ${filePath}`);
+      } catch (fsErr) {
+        if (fsErr && fsErr.code === 'ENOENT') {
+          console.warn('Archivo no encontrado al intentar borrar:', apunte.archivo);
+        } else {
+          console.error('Error borrando archivo local:', fsErr);
+        }
       }
-    });
+    }
+
+    return res.json({ mensaje: "Apunte eliminado" });
   } catch (error) {
     console.error("Error al eliminar apunte:", error);
     res.status(500).json({ error: "Error interno del servidor" });

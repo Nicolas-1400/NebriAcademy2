@@ -61,8 +61,14 @@ function AddContenidoCursoGrid() {
       form.append('nombre', nombre)
       if (tipo !== 'video') form.append('descripcion', descripcion)
       if (categoria) form.append('categoria', categoria)
-      // autor: enviamos el id del usuario autenticado
-      if (usuario && usuario.id) form.append('autor', usuario.id)
+      // autor: enviar usuario.usuarioId (usuarios.id). Si la sesión antigua no lo tiene, resolverlo.
+      // Enviar 'autor' según el tipo de recurso y lo que espera la API:
+      // - para 'apuntes' la tabla apunta a `usuarios.id` => enviar `usuario.usuarioId`
+      // - para 'videos' y 'ejercicios' la tabla apunta a `profesores.id` => enviar `usuario.id`
+      if (usuario) {
+        form.append('autor', usuario.id)
+        if (usuario.usuarioId) form.append('usuarioId', usuario.usuarioId)
+      }
 
       const res = await fetch(`http://localhost:3000/${endpoint}`, {
         method: 'POST',
