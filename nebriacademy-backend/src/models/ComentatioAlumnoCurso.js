@@ -1,12 +1,15 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../database/connection');
+const { DataTypes } = require("sequelize");
+const sequelize = require("../database/connection");
 
-
-
-const ComentarioAlumnoCurso = sequelize.define('comentarioalumnocurso', {
-  usuarioId: DataTypes.INTEGER,
-  cursoId: DataTypes.INTEGER,
-  comentario: DataTypes.TEXT
-}, { timestamps: false, tableName: 'comentarioalumnocurso' });
+// Modelo de ComentarioAlumnoCurso - Comentarios de alumnos en cursos
+const ComentarioAlumnoCurso = sequelize.define(
+  "comentarioalumnocurso",
+  {
+    usuarioId: DataTypes.INTEGER, // ID del usuario que hace el comentario
+    cursoId: DataTypes.INTEGER, // ID del curso comentado
+    comentario: DataTypes.TEXT, // Texto del comentario
+  },
+  { timestamps: false, tableName: "comentarioalumnocurso" },
+);
 
 module.exports = ComentarioAlumnoCurso;

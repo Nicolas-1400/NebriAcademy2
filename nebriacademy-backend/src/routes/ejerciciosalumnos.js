@@ -1,135 +1,105 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const EjerciciosAlumnos = require('../models/EjerciciosAlumnos');
-const Ejercicios = require('../models/Ejercicios');
-const Alumnos = require('../models/Alumnos');
-const multer = require('multer');
-const path = require('path');
-const fs = require('fs');
+const multer = require("multer");
+const path = require("path");
+const fs = require("fs");
 
-// Multer: guarda en la carpeta de assets del frontend (EjerciciosAlumnos)
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, '..', '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'EjerciciosAlumnos'),
-  filename: (req, file, cb) => {
-    // Guardar con el nombre original del archivo
-    cb(null, path.basename(file.originalname));
-  },
+const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
+const Ejercicios = require("../models/Ejercicios");
+const Alumnos = require("../models/Alumnos");
+
+// --- Config Upload ---
+const uploadDir = path.join(
+  __dirname,
+  "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
+);
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: uploadDir,
+    filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
+  }),
 });
 
-const upload = multer({ storage });
+// --- Rutas ---
 
-// Obtener todos
-router.get('/', (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    EjerciciosAlumnos.findAll().then((resultado) => {
-      const parsed = resultado.map(r => r.toJSON());
-      res.json({ "Numero de registros": parsed.length, registros: parsed });
-    });
+    const all = await EjerciciosAlumnos.findAll();
+    res.json({ "Numero de registros": all.length, registros: all });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID
-router.get('/:id', (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    EjerciciosAlumnos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        res.json(registro.toJSON());
-      } else {
-        res.status(404).json({ error: 'Registro no encontrado' });
-      }
-    });
+    const r = await EjerciciosAlumnos.findByPk(req.params.id);
+    r ? res.json(r) : res.status(404).json({ error: "No encontrado" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear (subida de un archivo)
-router.post('/', upload.single('archivo'), async (req, res) => {
+// POST / - Entregar ejercicio
+router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    const ejercicioId = req.body.ejercicioId ? parseInt(req.body.ejercicioId) : null;
-    const alumnoId = req.body.alumnoId ? parseInt(req.body.alumnoId) : null;
+    const { ejercicioId, alumnoId } = req.body;
 
-    if (!ejercicioId || !alumnoId) {
-      return res.status(400).json({ error: 'Campos ejercicioId y alumnoId son requeridos' });
+    // Validación de integridad referencial
+    const validEjercicio = await Ejercicios.findByPk(ejercicioId);
+    const validAlumno = await Alumnos.findByPk(alumnoId);
+
+    if (!validEjercicio || !validAlumno) {
+      return res.status(400).json({ error: "Ejercicio o Alumno inválido" });
     }
 
-    const ejercicio = await Ejercicios.findByPk(ejercicioId);
-    const alumno = await Alumnos.findByPk(alumnoId);
-    if (!ejercicio) return res.status(400).json({ error: 'ejercicioId no válido' });
-    if (!alumno) return res.status(400).json({ error: 'alumnoId no válido' });
-
-    const archivo = req.file ? req.file.filename : null;
-
-    const nuevo = await EjerciciosAlumnos.create({ ejercicioId, alumnoId, archivo });
-    return res.status(201).json({ id: nuevo.id, archivo });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
-  }
-});
-
-// Actualizar por ID (puede enviar nuevo archivo o campos en body)
-router.put('/:id', upload.single('archivo'), async (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    EjerciciosAlumnos.findAll().then(async (resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (!registro) return res.status(404).json({ error: 'Registro no encontrado' });
-
-      const updates = {};
-      if (req.body.ejercicioId) updates.ejercicioId = parseInt(req.body.ejercicioId);
-      if (req.body.alumnoId) updates.alumnoId = parseInt(req.body.alumnoId);
-
-      if (req.file) {
-        updates.archivo = req.file.filename;
-      } else if (req.body.archivo) {
-        updates.archivo = String(req.body.archivo);
-      }
-
-      registro.update(updates).then(updated => {
-        res.json(updated.toJSON());
-      });
+    const nuevo = await EjerciciosAlumnos.create({
+      ejercicioId,
+      alumnoId,
+      archivo: req.file ? req.file.filename : null,
     });
+
+    res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar por ID
-router.delete('/:id', async (req, res) => {
+// PUT /:id - Editar entrega
+router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
+    const r = await EjerciciosAlumnos.findByPk(req.params.id);
+    if (!r) return res.status(404).json({ error: "No encontrado" });
 
-    const registro = await EjerciciosAlumnos.findByPk(id);
-    if (!registro) return res.status(404).json({ error: 'Registro no encontrado' });
+    const updates = { ...req.body };
+    if (req.file) updates.archivo = req.file.filename;
 
-    await registro.destroy();
+    const updated = await r.update(updates);
+    res.json(updated);
+  } catch (error) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
 
-    if (registro.archivo) {
-      try {
-        const filePath = path.join(__dirname, '..', '..', '..', 'nebriacademy-frontend', 'src', 'assets', 'EjerciciosAlumnos', registro.archivo);
-        await fs.promises.unlink(filePath);
-        console.log(`Archivo borrado: ${filePath}`);
-      } catch (fsErr) {
-        if (fsErr && fsErr.code === 'ENOENT') {
-          console.warn('Archivo no encontrado al intentar borrar EjerciciosAlumnos:', registro.archivo);
-        } else {
-          console.error('Error borrando archivo local de EjerciciosAlumnos:', fsErr);
-        }
-      }
+// DELETE /:id - Borrar registro y archivo
+router.delete("/:id", async (req, res) => {
+  try {
+    const r = await EjerciciosAlumnos.findByPk(req.params.id);
+    if (!r) return res.status(404).json({ error: "No encontrado" });
+
+    // Eliminar archivo físico
+    if (r.archivo) {
+      const p = path.join(uploadDir, r.archivo);
+      fs.promises.unlink(p).catch(() => {});
     }
 
-    return res.json({ mensaje: 'Registro eliminado' });
+    await r.destroy();
+    res.json({ mensaje: "Eliminado" });
   } catch (error) {
-    console.error(error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.status(500).json({ error: "Server error" });
   }
 });
 

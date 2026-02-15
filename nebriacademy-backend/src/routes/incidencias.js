@@ -2,93 +2,59 @@ const express = require("express");
 const router = express.Router();
 const Incidencias = require("../models/Incidencias.js");
 
-// Obtener todas las incidencias
-router.get("/", (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /incidencias");
-    Incidencias.findAll().then((resultado) => {
-      res.json({
-        "Numero de incidencias": resultado.length,
-        Incidencias: resultado,
-      });
-    });
-  } catch (error) {
-    console.error("Error al obtener incidencias:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const all = await Incidencias.findAll();
+    res.json({ "Numero de incidencias": all.length, Incidencias: all });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID una incidencia
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /incidencias/${id}`);
-    Incidencias.findAll().then((resultado) => {
-      const incidencia = resultado.find((i) => i.id === id);
-      if (incidencia) {
-        res.json(incidencia);
-      } else {
-        res.status(404).json({ error: "Incidencia no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener incidencia:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const i = await Incidencias.findByPk(req.params.id);
+    i ? res.json(i) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear una incidencia
-router.post("/", (req, res) => {
+// POST / - Crear
+router.post("/", async (req, res) => {
   try {
-    console.log("POST /incidencias");
-    Incidencias.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear incidencia:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const created = await Incidencias.create(req.body);
+    res.status(201).json(created);
+  } catch (e) {
+    console.error(e);
+    res.status(500).json({ error: "Error creando" });
   }
 });
 
-// Actualizar una incidencia por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /incidencias/${id}`);
-    Incidencias.findAll().then((resultado) => {
-      const incidencia = resultado.find((i) => i.id === id);
-      if (incidencia) {
-        incidencia
-          .update(req.body)
-          .then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Incidencia no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar incidencia:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const i = await Incidencias.findByPk(req.params.id);
+    if (!i) return res.status(404).json({ error: "No encontrado" });
+
+    const updated = await i.update(req.body);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: "Error actualizando" });
   }
 });
 
-// Eliminar una incidencia por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id - Eliminar
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /incidencias/${id}`);
-    Incidencias.findAll().then((resultado) => {
-      const incidencia = resultado.find((i) => i.id === id);
-      if (incidencia) {
-        incidencia
-          .destroy()
-          .then(() => res.json({ mensaje: "Incidencia eliminada" }));
-      } else {
-        res.status(404).json({ error: "Incidencia no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar incidencia:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await Incidencias.destroy({ where: { id: req.params.id } });
+    r
+      ? res.json({ mensaje: "Eliminado" })
+      : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Error eliminando" });
   }
 });
 

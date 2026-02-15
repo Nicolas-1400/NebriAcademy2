@@ -1,14 +1,17 @@
 import { useEffect, useState } from "react";
-import useAuthStore from '../store/useAuthStore'
+import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
+/**
+ * Componente: PerfilProfesorGrid
+ * Permite a los profesores ver y editar su perfil.
+ */
 function PerfilProfesorGrid() {
-  const [usuario, setUsuario] = useState(null);
-  const storeUser = useAuthStore(state => state.user)
-  const tipo = useAuthStore(state => state.tipo)
-  const setUser = useAuthStore(state => state.setUser)
+  const navigate = useNavigate();
+  const { user, setUser, tipo } = useAuthStore();
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -20,142 +23,110 @@ function PerfilProfesorGrid() {
     localidad: "",
     especializacion: "",
   });
+
   const [mensajeExito, setMensajeExito] = useState("");
   const [mensajeError, setMensajeError] = useState("");
+  const [loading, setLoading] = useState(false);
 
   useEffect(() => {
-    if (!storeUser) return
-    if (tipo !== 'profesor') return
+    if (!user || tipo !== "profesor") return;
 
-    setUsuario(storeUser)
-
-    fetch(`http://localhost:3000/usuarios/${storeUser.id}?tipo=profesor`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Error al obtener datos del usuario')
-        return response.json()
-      })
-      .then((datosCompletos) => {
-        setUsuario(datosCompletos)
-        setUser(datosCompletos, 'profesor')
+    fetch(`http://localhost:3000/usuarios/${user.id}?tipo=profesor`)
+      .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
+      .then((datos) => {
+        const datosIniciales = datos || user;
+        if (datos) setUser(datos, "profesor");
 
         setFormData({
-          nombre: datosCompletos.nombre || "",
-          apellidos: datosCompletos.apellidos || "",
+          nombre: datosIniciales.nombre || "",
+          apellidos: datosIniciales.apellidos || "",
           contrasena: "",
-          numCuentaBancaria: datosCompletos.numCuentaBancaria || "",
-          numTelefono: datosCompletos.numTelefono || "",
-          redes: datosCompletos.redes || "",
-          pais: datosCompletos.pais || "",
-          localidad: datosCompletos.localidad || "",
-          especializacion: datosCompletos.especializacion || "",
-        })
+          numCuentaBancaria: datosIniciales.numCuentaBancaria || "",
+          numTelefono: datosIniciales.numTelefono || "",
+          redes: datosIniciales.redes || "",
+          pais: datosIniciales.pais || "",
+          localidad: datosIniciales.localidad || "",
+          especializacion: datosIniciales.especializacion || "",
+        });
       })
-      .catch(() => {
-        setFormData((prev) => ({
-          ...prev,
-          nombre: storeUser.nombre || "",
-          apellidos: storeUser.apellidos || "",
-          contrasena: "",
-          numCuentaBancaria: storeUser.numCuentaBancaria || "",
-          numTelefono: storeUser.numTelefono || "",
-          redes: storeUser.redes || "",
-          pais: storeUser.pais || "",
-          localidad: storeUser.localidad || "",
-          especializacion: storeUser.especializacion || "",
-        }))
-      })
-  }, [storeUser, tipo, setUser]);
+      .catch((error) =>
+        console.error("Error cargando perfil profesor:", error),
+      );
+  }, [user?.id, tipo, setUser]);
 
-  const handleInputChange = (e) => {
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");
+    setMensajeExito("");
+    setLoading(true);
 
     try {
-      const datosActualizar = {
-        ...formData,
-        tipo: "profesor",
-      };
+      const payload = { ...formData, tipo: "profesor" };
+      if (!payload.contrasena) delete payload.contrasena;
 
-      if (!formData.contrasena) {
-        delete datosActualizar.contrasena;
-      }
-
-      const response = await fetch(
-        `http://localhost:3000/usuarios/${usuario.id}`,
+      const respuesta = await fetch(
+        `http://localhost:3000/usuarios/${user.id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datosActualizar),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         },
       );
 
-      if (response.ok) {
-      const usuarioActualizado = await response.json();
-      setUser(usuarioActualizado, 'profesor')
-      setUsuario(usuarioActualizado);
+      if (respuesta.ok) {
+        const usuarioActualizado = await respuesta.json();
+        setUser(usuarioActualizado, "profesor");
+        setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
-        setFormData((prevState) => ({
-          ...prevState,
-          contrasena: "",
-        }));
         setTimeout(() => setMensajeExito(""), 3000);
       } else {
-        const error = await response.json();
-        setMensajeError(error.error || "Error al actualizar el perfil");
+        const datosError = await respuesta.json();
+        throw new Error(datosError.error || "Error al actualizar perfil");
       }
     } catch (error) {
-      setMensajeError("Error al conectar con el servidor");
+      setMensajeError(e.message || "Error de conexión");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const navigate = useNavigate();
+  if (!user) return <p>Cargando perfil...</p>;
 
   return (
     <div className="perfil">
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
-        <h2 className="nombrePerfil">
-          {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
-        </h2>
-        <p className="correoPerfil">
-          {usuario ? usuario.email : "correo@example.com"}
-        </p>
+        <h2 className="nombrePerfil">{`${user.nombre} ${user.apellidos}`}</h2>
+        <p className="correoPerfil">{user.email}</p>
         <p className="tipoPerfil">Profesor</p>
-        {usuario?.especializacion && (
-          <p className="especializacionPerfil">📚 {usuario.especializacion}</p>
+        {user.especializacion && (
+          <p className="especializacionPerfil">📚 {user.especializacion}</p>
         )}
-        {usuario?.numTelefono && (
-          <p className="telPerfil">📱 {usuario.numTelefono}</p>
-        )}
-        {usuario?.pais && <p className="paisPerfil">🌍 {usuario.pais}</p>}
-        {usuario?.localidad && (
-          <p className="localidadPerfil">🏙️ {usuario.localidad}</p>
+        {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
+        {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
+        {user.localidad && (
+          <p className="localidadPerfil">🏙️ {user.localidad}</p>
         )}
       </div>
+
       <div className="formularioEditarPerfil">
         <h3>Editar Perfil</h3>
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
+
         <form onSubmit={handleSubmit}>
           <div className="formulario-grupo">
             <label htmlFor="nombre">Nombre:</label>
             <input
-              type="text"
-              id="nombre"
               name="nombre"
               value={formData.nombre}
-              onChange={handleInputChange}
+              onChange={handleChange}
               placeholder="Tu nombre"
             />
           </div>
@@ -163,11 +134,9 @@ function PerfilProfesorGrid() {
           <div className="formulario-grupo">
             <label htmlFor="apellidos">Apellidos:</label>
             <input
-              type="text"
-              id="apellidos"
               name="apellidos"
               value={formData.apellidos}
-              onChange={handleInputChange}
+              onChange={handleChange}
               placeholder="Tus apellidos"
             />
           </div>
@@ -176,60 +145,47 @@ function PerfilProfesorGrid() {
             <label htmlFor="contrasena">Contraseña:</label>
             <input
               type="password"
-              id="contrasena"
               name="contrasena"
               value={formData.contrasena}
-              onChange={handleInputChange}
+              onChange={handleChange}
               placeholder="Dejar en blanco para no cambiar"
             />
           </div>
 
           <div className="formulario-grupo">
-            <label htmlFor="numCuentaBancaria">
-              Número de Cuenta Bancaria:
-            </label>
+            <label htmlFor="numCuentaBancaria">Cuenta Bancaria:</label>
             <input
-              type="text"
-              id="numCuentaBancaria"
               name="numCuentaBancaria"
               value={formData.numCuentaBancaria}
-              onChange={handleInputChange}
-              placeholder="Tu número de cuenta bancaria"
+              onChange={handleChange}
+              placeholder="Tu cuenta bancaria"
             />
           </div>
 
           <div className="formulario-grupo">
-            <label htmlFor="numTelefono">Número de Teléfono:</label>
+            <label htmlFor="numTelefono">Teléfono:</label>
             <input
               type="tel"
-              id="numTelefono"
               name="numTelefono"
               value={formData.numTelefono}
-              onChange={handleInputChange}
-              placeholder="Tu número de teléfono"
+              onChange={handleChange}
+              placeholder="Tu teléfono"
             />
           </div>
 
           <div className="formulario-grupo">
             <label htmlFor="redes">Redes Sociales:</label>
             <input
-              type="text"
-              id="redes"
               name="redes"
               value={formData.redes}
-              onChange={handleInputChange}
-              placeholder="Tus redes sociales (ej: @usuario)"
+              onChange={handleChange}
+              placeholder="@usuario"
             />
           </div>
 
           <div className="formulario-grupo">
             <label htmlFor="pais">País:</label>
-            <select
-              id="pais"
-              name="pais"
-              value={formData.pais}
-              onChange={handleInputChange}
-            >
+            <select name="pais" value={formData.pais} onChange={handleChange}>
               <option value="" disabled>
                 Seleccione un país
               </option>
@@ -250,10 +206,9 @@ function PerfilProfesorGrid() {
           <div className="formulario-grupo">
             <label htmlFor="localidad">Localidad:</label>
             <select
-              id="localidad"
               name="localidad"
               value={formData.localidad}
-              onChange={handleInputChange}
+              onChange={handleChange}
             >
               <option value="" disabled>
                 Seleccione una localidad
@@ -270,10 +225,9 @@ function PerfilProfesorGrid() {
           <div className="formulario-grupo">
             <label htmlFor="especializacion">Especialización:</label>
             <select
-              id="especializacion"
               name="especializacion"
               value={formData.especializacion}
-              onChange={handleInputChange}
+              onChange={handleChange}
             >
               <option value="" disabled>
                 Seleccione una especialización
@@ -286,10 +240,19 @@ function PerfilProfesorGrid() {
             </select>
           </div>
 
-          <button type="submit" className="boton-editar-perfil">
-            Guardar Cambios
+          <button
+            type="submit"
+            className="boton-editar-perfil"
+            disabled={loading}
+          >
+            {loading ? "Guardando..." : "Guardar Cambios"}
           </button>
-          <button className="boton-go-back" onClick={() => navigate(-1)}>
+
+          <button
+            type="button"
+            className="boton-go-back"
+            onClick={() => navigate(-1)}
+          >
             <img src={flecha} alt="Volver" />
             <p>Volver</p>
           </button>

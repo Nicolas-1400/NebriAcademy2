@@ -1,28 +1,41 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+/**
+ * Componente: RegisterAlumnoNebrijaGrid
+ * Formulario para completar registro de alumnos verificados (Nebrija).
+ */
 function RegisterAlumnoNebrijaGrid() {
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [dni, setDni] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [email, setEmail] = useState("");
-  const [pais, setPais] = useState("");
-  const [localidad, setLocalizacion] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
   const location = useLocation();
 
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellidos: "",
+    dni: "",
+    contrasena: "",
+    email: "",
+    pais: "",
+    localidad: "",
+  });
+
+  const [error, setError] = useState("");
+
   useEffect(() => {
-    const verifiedEmail = sessionStorage.getItem('verifiedEmail');
-    if (location.state?.email) {
-      setEmail(location.state.email);
-    } else if (verifiedEmail) {
-      setEmail(verifiedEmail);
+    const verifiedEmail = sessionStorage.getItem("verifiedEmail");
+    const emailToUse = location.state?.email || verifiedEmail;
+
+    if (emailToUse) {
+      setFormData((prev) => ({ ...prev, email: emailToUse }));
     } else {
-      navigate('/Register/VerificacionAlumnoNebrija');
+      navigate("/Register/VerificacionAlumnoNebrija");
     }
   }, [location.state, navigate]);
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -33,33 +46,22 @@ function RegisterAlumnoNebrijaGrid() {
         "http://localhost:3000/alumnos/verificacionnebrija/completar",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombre,
-            apellidos: apellidos,
-            dni: dni,
-            contrasena: contrasena,
-            email: email,
-            pais: pais,
-            localidad: localidad
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         },
       );
 
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        console.log("Registro exitoso:", datos);
-        sessionStorage.removeItem('verifiedEmail');
+        sessionStorage.removeItem("verifiedEmail");
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
       }
     } catch (err) {
-      setError("Error de conexión con el servidor");
       console.error(err);
+      setError("Error de conexión con el servidor");
     }
   };
 
@@ -69,48 +71,55 @@ function RegisterAlumnoNebrijaGrid() {
         <h2>Regístrate</h2>
         <form className="formulario-login" onSubmit={handleRegister}>
           <input
+            name="email"
             type="email"
             placeholder="Email"
-            value={email}
+            value={formData.email}
             disabled
             readOnly
           />
           <input
+            name="nombre"
             type="text"
             placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            value={formData.nombre}
+            onChange={handleChange}
             required
           />
           <input
+            name="apellidos"
             type="text"
             placeholder="Apellidos"
-            value={apellidos}
-            onChange={(e) => setApellidos(e.target.value)}
+            value={formData.apellidos}
+            onChange={handleChange}
             required
           />
           <input
+            name="dni"
             type="text"
             placeholder="DNI"
-            value={dni}
-            onChange={(e) => setDni(e.target.value)}
+            value={formData.dni}
+            onChange={handleChange}
             required
           />
           <input
+            name="contrasena"
             type="password"
             placeholder="Contraseña"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
+            value={formData.contrasena}
+            onChange={handleChange}
             required
           />
 
-          
           <select
-            value={pais}
-            onChange={(e) => setPais(e.target.value)}
+            name="pais"
+            value={formData.pais}
+            onChange={handleChange}
             required
           >
-            <option value="" disabled>Seleccione un país</option>
+            <option value="" disabled>
+              Seleccione un país
+            </option>
             <option value="España">España</option>
             <option value="México">México</option>
             <option value="Colombia">Colombia</option>
@@ -123,12 +132,16 @@ function RegisterAlumnoNebrijaGrid() {
             <option value="Francia">Francia</option>
             <option value="Otro">Otro</option>
           </select>
+
           <select
-            value={localidad}
-            onChange={(e) => setLocalizacion(e.target.value)}
+            name="localidad"
+            value={formData.localidad}
+            onChange={handleChange}
             required
           >
-            <option value="" disabled>Seleccione una localidad</option>
+            <option value="" disabled>
+              Seleccione una localidad
+            </option>
             <option value="Madrid">Madrid</option>
             <option value="Barcelona">Barcelona</option>
             <option value="Valencia">Valencia</option>
@@ -136,12 +149,16 @@ function RegisterAlumnoNebrijaGrid() {
             <option value="Bilbao">Bilbao</option>
             <option value="Otro">Otro</option>
           </select>
+
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
-        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+        <p>
+          ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>
+        </p>
       </div>
     </div>
   );
 }
+
 export default RegisterAlumnoNebrijaGrid;

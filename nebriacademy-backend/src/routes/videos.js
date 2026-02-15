@@ -1,145 +1,127 @@
 const express = require("express");
 const router = express.Router();
-const Videos = require("../models/Videos.js");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+
+const Videos = require("../models/Videos.js");
 const Profesores = require("../models/Profesores.js");
 
-// Multer storage: save into frontend assets/Videos (must exist)
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Videos"),
-  filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
+// --- Config Upload ---
+const uploadDir = path.join(
+  __dirname,
+  "../../../nebriacademy-frontend/src/assets/Videos",
+);
+// --- Config Upload (Multer) ---
+// Middleware 'multer' para gestionar la recepción de archivos multipart/form-data.
+// Los archivos se guardan en una carpeta local accesible por el frontend.
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: uploadDir,
+    filename: (req, file, cb) => cb(null, path.basename(file.originalname)), // Mantiene el nombre original del archivo
+  }),
 });
 
-const upload = multer({ storage });
-
-// Obtener todos los videos
-router.get("/", (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /videos");
-    Videos.findAll().then((resultado) => {
-      res.json({ "Numero de videos": resultado.length, Videos: resultado });
-    });
-  } catch (error) {
-    console.error("Error al obtener videos:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const all = await Videos.findAll();
+    res.json({ "Numero de videos": all.length, Videos: all });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID un video
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /videos/${id}`);
-    Videos.findAll().then((resultado) => {
-      const video = resultado.find((v) => v.id === id);
-      if (video) {
-        res.json(video);
-      } else {
-        res.status(404).json({ error: "Video no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener video:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const v = await Videos.findByPk(req.params.id);
+    v ? res.json(v) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear un video
-router.post("/", upload.single('archivo'), async (req, res) => {
+/**
+ * POST /
+ * Crea video, sube archivo y asigna profesor.
+ */
+router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    if (!req.file) return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
+    // 1. Validaciones
+    if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
+    const { nombre, curso, autor, usuarioId } = req.body;
+    if (!nombre || !curso)
+      return res.status(400).json({ error: "Datos incompletos" });
 
-    const autorInput = req.body.autor ? parseInt(req.body.autor) : null;
-    const usuarioIdInput = req.body.usuarioId ? parseInt(req.body.usuarioId) : null;
-
-    const curso = req.body.curso ? parseInt(req.body.curso) : null;
-    const archivo = req.file ? req.file.filename : null;
-    const nombre = req.body.nombre ? String(req.body.nombre) : null;
-
-    // Validación: nombre y archivo deben venir juntos (ambos presentes)
-    if ((nombre && !archivo) || (archivo && !nombre)) {
-      return res.status(400).json({ error: "El campo 'nombre' y el archivo deben proporcionarse juntos" });
-    }
-
-    if (!curso) return res.status(400).json({ error: "Campo 'curso' es requerido" });
-
-    // Resolver autor -> profesor.id
+    // 2. Resolver Profesor ID
     let profesorId = null;
-    if (usuarioIdInput && !Number.isNaN(usuarioIdInput)) {
-      const p = await Profesores.findOne({ where: { usuarioId: usuarioIdInput } });
+
+    if (usuarioId) {
+      const p = await Profesores.findOne({ where: { usuarioId } });
       if (p) profesorId = p.id;
     }
-    if (!profesorId && autorInput && !Number.isNaN(autorInput)) {
-      const pById = await Profesores.findByPk(autorInput);
-      if (pById) profesorId = pById.id;
+
+    // Lógica de fallback para compatibilidad con diferentes formatos de petición
+    if (!profesorId && autor) {
+      if (await Profesores.findByPk(autor)) profesorId = autor;
       else {
-        const pByUsuario = await Profesores.findOne({ where: { usuarioId: autorInput } });
-        if (pByUsuario) profesorId = pByUsuario.id;
+        const p = await Profesores.findOne({ where: { usuarioId: autor } });
+        if (p) profesorId = p.id;
       }
     }
-    if (!profesorId) return res.status(400).json({ error: "No se pudo mapear el 'autor' a un profesor válido" });
 
-    const nuevo = await Videos.create({ autor: profesorId, curso, nombre, archivo, valoracion: 0 });
-    return res.status(201).json({ id: nuevo.id, archivo, curso, autor: profesorId, nombre });
-  } catch (error) {
-    console.error("Error al crear video:", error);
-    return res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
+    if (!profesorId)
+      return res.status(400).json({ error: "Profesor no identificado" });
 
-// Actualizar un video por ID (acepta multipart si se envía archivo)
-router.put("/:id", upload.single('archivo'), (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /videos/${id}`);
-    Videos.findAll().then((resultado) => {
-      const video = resultado.find((v) => v.id === id);
-      if (video) {
-        if (req.file) {
-          req.body.archivo = req.file.filename;
-        }
-        video.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Video no encontrado" });
-      }
+    // 3. Crear
+    const nuevo = await Videos.create({
+      autor: profesorId,
+      curso,
+      nombre,
+      archivo: req.file.filename,
+      valoracion: 0,
     });
-  } catch (error) {
-    console.error("Error al actualizar video:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+
+    res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
+  } catch (e) {
+    console.error("Error creando video:", e);
+    res.status(500).json({ error: "Error creando video" });
   }
 });
 
-// Eliminar un video por ID
+// PUT /:id - Actualizar
+router.put("/:id", upload.single("archivo"), async (req, res) => {
+  try {
+    const v = await Videos.findByPk(req.params.id);
+    if (!v) return res.status(404).json({ error: "No encontrado" });
+
+    const updates = { ...req.body };
+    if (req.file) updates.archivo = req.file.filename;
+
+    const updated = await v.update(updates);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// DELETE /:id - Borrar
 router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /videos/${id}`);
+    const v = await Videos.findByPk(req.params.id);
+    if (!v) return res.status(404).json({ error: "No encontrado" });
 
-    const video = await Videos.findByPk(id);
-    if (!video) return res.status(404).json({ error: "Video no encontrado" });
-
-    await video.destroy();
-
-    if (video.archivo) {
-      try {
-        const filePath = path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Videos", video.archivo);
-        await fs.promises.unlink(filePath);
-        console.log(`Archivo borrado: ${filePath}`);
-      } catch (fsErr) {
-        if (fsErr && fsErr.code === 'ENOENT') {
-          console.warn('Archivo no encontrado al intentar borrar video:', video.archivo);
-        } else {
-          console.error('Error borrando archivo local de video:', fsErr);
-        }
-      }
+    // Borrar archivo físico
+    if (v.archivo) {
+      const p = path.join(uploadDir, v.archivo);
+      fs.promises.unlink(p).catch(() => {});
     }
 
-    return res.json({ mensaje: "Video eliminado" });
-  } catch (error) {
-    console.error("Error al eliminar video:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    await v.destroy();
+    res.json({ mensaje: "Eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

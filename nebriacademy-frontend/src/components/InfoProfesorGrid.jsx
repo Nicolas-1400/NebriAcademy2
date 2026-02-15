@@ -4,47 +4,55 @@ import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
+/**
+ * Componente: InfoProfesorGrid
+ * Muestra perfil público del profesor y sus cursos.
+ */
 function InfoProfesorGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
   const [profesor, setProfesor] = useState(null);
-  const [error, setError] = useState(null);
   const [cursos, setCursos] = useState([]);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     if (!id) return;
-    setError(null);
-    fetch(`http://localhost:3000/profesores/${id}`)
-      .then((r) => {
-        if (!r.ok) throw new Error("Error al obtener profesor");
-        return r.json();
-      })
-      .then((data) => setProfesor(data))
-      .catch((e) => {
-        console.error("Error cargando profesor:", e);
+
+    const fetchData = async () => {
+      try {
+        const [respuestaProfesor, respuestaCursos] = await Promise.all([
+          fetch(`http://localhost:3000/profesores/${id}`).then((respuesta) => {
+            if (!respuesta.ok) throw new Error("Error al obtener profesor");
+            return respuesta.json();
+          }),
+          fetch("http://localhost:3000/cursos").then((respuesta) =>
+            respuesta.json(),
+          ),
+        ]);
+
+        setProfesor(respuestaProfesor);
+        const listaCursos = Array.isArray(respuestaCursos.Cursos)
+          ? respuestaCursos.Cursos
+          : respuestaCursos || [];
+        setCursos(
+          listaCursos.filter((curso) => String(curso.profesor) === String(id)),
+        );
+      } catch (error) {
+        console.error("Error cargando datos del profesor:", error);
         setError("No se pudo cargar la información del profesor");
-      });
+      }
+    };
+
+    fetchData();
   }, [id]);
 
-  useEffect(() => {
-    if (!id) return;
-    fetch("http://localhost:3000/cursos")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Cursos) ? data.Cursos : data || [];
-        const filtered = list.filter((c) => String(c.profesor) === String(id));
-        setCursos(filtered);
-      })
-      .catch((e) => console.error("Error cargando cursos:", e));
-  }, [id]);
-
-  if (error) return <p>{error}</p>;
+  if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="perfil">
       <div className="formularioEditarPerfil">
         <h3>Cursos</h3>
-        {cursos && cursos.length > 0 ? (
+        {cursos.length > 0 ? (
           <div className="cursos-profesor">
             {cursos.map((c) => (
               <TarjetaCursoPequena
@@ -67,13 +75,16 @@ function InfoProfesorGrid() {
           </button>
         </div>
       </div>
+
       <div className="datosPerfil">
         <h1>Profesor</h1>
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
         <h2 className="nombrePerfil">
-          {profesor ? `${profesor.nombre} ${profesor.apellidos}` : "Profesor"}
+          {profesor
+            ? `${profesor.nombre} ${profesor.apellidos}`
+            : "Cargando..."}
         </h2>
-        <p className="correoPerfil">{profesor?.email || ""}</p>
+        <p className="correoPerfil">{profesor?.email}</p>
         {profesor?.especializacion && (
           <p className="especializacionPerfil">📚 {profesor.especializacion}</p>
         )}

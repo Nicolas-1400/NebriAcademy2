@@ -5,120 +5,87 @@ const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 const Administradores = require("../models/Administradores.js");
 
-// Obtener todos los usuarios
-router.get("/", (req, res) => {
+// Helpers
+// Función auxiliar para elegir en qué tabla buscar (Alumnos, Profesores o Administradores)
+// dependiendo del tipo de usuario que nos llegue.
+const getModelByType = (tipo) => {
+  switch (tipo) {
+    case "alumno":
+      return Alumnos;
+    case "profesor":
+      return Profesores;
+    case "administrador":
+      return Administradores;
+    default:
+      return null;
+  }
+};
+
+// GET / - Listar bases (Usuarios)
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /usuarios");
-    Usuarios.findAll().then((resultado) => {
-      res.json({ "Numero de usuarios": resultado.length, Usuarios: resultado });
-    });
-  } catch (error) {
-    console.error("Error al obtener usuarios:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const all = await Usuarios.findAll();
+    res.json({ "Numero de usuarios": all.length, Usuarios: all });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID un usuario
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+// Query param 'tipo' opcional para ir directo a la tabla específica
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
     const { tipo } = req.query;
+    if (!tipo) return res.status(400).json({ error: "Falta param tipo" });
 
-    if (!tipo) {
-      return res.status(400).json({ error: "Tipo de usuario es requerido" });
-    }
+    const Model = getModelByType(tipo);
+    if (!Model) return res.status(400).json({ error: "Tipo inválido" });
 
-    let modelo;
-    if (tipo === "alumno") {
-      modelo = Alumnos;
-    } else if (tipo === "profesor") {
-      modelo = Profesores;
-    } else if (tipo === "administrador") {
-      modelo = Administradores;
-    } else {
-      return res.status(400).json({ error: "Tipo de usuario no válido" });
-    }
-
-    modelo.findByPk(id).then((usuario) => {
-      if (usuario) {
-        res.json(usuario);
-      } else {
-        res.status(404).json({ error: "Usuario no encontrado" });
-      }
-    }).catch((error) => {
-      res.status(500).json({ error: "Error al obtener usuario: " + error.message });
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Error interno del servidor" });
+    const u = await Model.findByPk(req.params.id);
+    u ? res.json(u) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear un usuario
-router.post("/", (req, res) => {
+// POST / - Crear base
+router.post("/", async (req, res) => {
   try {
-    console.log("POST /usuarios");
-    Usuarios.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear usuario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const nuevo = await Usuarios.create(req.body);
+    res.status(201).json(nuevo);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Actualizar un usuario por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar (En tabla específica)
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
     const { tipo } = req.body;
+    const Model = getModelByType(tipo);
 
-    let modelo;
-    if (tipo === "alumno") {
-      modelo = Alumnos;
-    } else if (tipo === "profesor") {
-      modelo = Profesores;
-    } else if (tipo === "administrador") {
-      modelo = Administradores;
-    } else {
-      return res.status(400).json({ error: "Tipo de usuario no válido" });
-    }
+    if (!Model) return res.status(400).json({ error: "Tipo inválido" });
 
-    modelo.findByPk(id).then((usuario) => {
-      if (usuario) {
-        usuario.update(req.body).then((actualizado) => {
-          res.json(actualizado);
-        }).catch((error) => {
-          res.status(500).json({ error: "Error al actualizar usuario: " + error.message });
-        });
-      } else {
-        res.status(404).json({ error: "Usuario no encontrado" });
-      }
-    }).catch((error) => {
-      res.status(500).json({ error: "Error al buscar usuario: " + error.message });
-    });
-  } catch (error) {
-    res.status(500).json({ error: "Error interno del servidor: " + error.message });
+    const u = await Model.findByPk(req.params.id);
+    if (!u) return res.status(404).json({ error: "No encontrado" });
+
+    const updated = await u.update(req.body);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar un usuario por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id - Eliminar base
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /usuarios/${id}`);
-    Usuarios.findAll().then((resultado) => {
-      const usuario = resultado.find((u) => u.id === id);
-      if (usuario) {
-        usuario
-          .destroy()
-          .then(() => res.json({ mensaje: "Usuario eliminado" }));
-      } else {
-        res.status(404).json({ error: "Usuario no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar usuario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const u = await Usuarios.findByPk(req.params.id);
+    if (!u) return res.status(404).json({ error: "No encontrado" });
+
+    await u.destroy();
+    res.json({ mensaje: "Usuario eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

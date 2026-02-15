@@ -3,221 +3,201 @@ const router = express.Router();
 const Alumnos = require("../models/Alumnos.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// Obtener todos los alumnos
-router.get("/", (req, res) => {
+// --- CRUD Básico ---
+
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /alumnos");
-    Alumnos.findAll().then((resultado) => {
-      res.json({ "Numero de alumnos": resultado.length, Alumnos: resultado });
-    });
+    const todos = await Alumnos.findAll();
+    res.json({ "Numero de alumnos": todos.length, Alumnos: todos });
   } catch (error) {
-    console.error("Error al obtener alumnos:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error("Error listando alumnos:", error);
+    res.status(500).json({ error: "Error interno" });
   }
 });
 
-// Obtener por ID un alumno
-router.get("/:id", (req, res) => {
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /alumnos/${id}`);
-    Alumnos.findAll().then((resultado) => {
-      const alumno = resultado.find((a) => a.id === id);
-      if (alumno) {
-        res.json(alumno);
-      } else {
-        res.status(404).json({ error: "Alumno no encontrado" });
-      }
-    });
+    const alumno = await Alumnos.findByPk(req.params.id);
+    alumno
+      ? res.json(alumno)
+      : res.status(404).json({ error: "No encontrado" });
   } catch (error) {
-    console.error("Error al obtener alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Error interno" });
   }
 });
 
-// Actualizar un alumno por ID
-router.put("/:id", (req, res) => {
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /alumnos/${id}`);
-    Alumnos.findAll().then((resultado) => {
-      const alumno = resultado.find((a) => a.id === id);
-      if (alumno) {
-        alumno.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Alumno no encontrado" });
-      }
-    });
+    const alumno = await Alumnos.findByPk(req.params.id);
+    if (!alumno) return res.status(404).json({ error: "No encontrado" });
+
+    const actualizado = await alumno.update(req.body);
+    res.json(actualizado);
   } catch (error) {
-    console.error("Error al actualizar alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Error actualizando" });
   }
 });
 
-// Eliminar un alumno por ID
-router.delete("/:id", (req, res) => {
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /alumnos/${id}`);
-    Alumnos.findAll().then((resultado) => {
-      const alumno = resultado.find((a) => a.id === id);
-      if (alumno) {
-        alumno.destroy().then(() => res.json({ mensaje: "Alumno eliminado" }));
-      } else {
-        res.status(404).json({ error: "Alumno no encontrado" });
-      }
-    });
+    const filas = await Alumnos.destroy({ where: { id: req.params.id } });
+    filas
+      ? res.json({ mensaje: "Eliminado" })
+      : res.status(404).json({ error: "No encontrado" });
   } catch (error) {
-    console.error("Error al eliminar alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Error eliminando" });
+  }
+});
+
+// --- Auth y Registro de Alumnos ---
+
+/**
+ * Registro completo de alumno externo.
+ * Crea Usuario (tipo 'alumno') y ficha de Alumno con datos detallados.
+ */
+router.post("/registerAlumnoExterno/auth", async (req, res) => {
+  try {
+    const {
+      nombre,
+      apellidos,
+      dni,
+      email,
+      contrasena,
+      numeroTarjeta,
+      pais,
+      localidad,
+    } = req.body;
+
+    // 1. Validación básica
+    if (
+      !nombre ||
+      !apellidos ||
+      !dni ||
+      !email ||
+      !contrasena ||
+      !numeroTarjeta ||
+      !pais ||
+      !localidad
+    ) {
+      return res.status(400).json({ error: "Todos los campos obligatorios" });
+    }
+
+    // 2. Verificar duplicidad
+    const existente = await Alumnos.findOne({ where: { email } });
+    if (existente)
+      return res.status(400).json({ error: "Email ya registrado" });
+
+    // 3. Crear Usuario + Alumno en transacción implícita (secuencial)
+    const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
+
+    try {
+      const nuevoAlumno = await Alumnos.create({
+        usuarioId: nuevoUsuario.id,
+        nombre,
+        apellidos,
+        dni,
+        email,
+        contrasena,
+        numeroTarjeta,
+        pais,
+        localidad,
+      });
+
+      res.status(201).json({
+        mensaje: "Registro exitoso",
+        usuario: { id: nuevoAlumno.id, nombre, email },
+      });
+    } catch (createError) {
+      // Rollback manual si falla la creación del perfil
+      await nuevoUsuario.destroy();
+      throw createError;
+    }
+  } catch (error) {
+    console.error("Error registro externo:", error);
+    res.status(500).json({ error: "Error del servidor" });
+  }
+});
+
+/**
+ * Validar email @alumnos.nebrija.es para paso previo al registro.
+ * No crea registros, solo confirma disponibilidad.
+ */
+router.post("/verificacionnebrija/auth", async (req, res) => {
+  try {
+    const { email } = req.body;
+    if (!email) return res.status(400).json({ error: "Email requerido" });
+
+    if (!email.endsWith("@alumnos.nebrija.es")) {
+      return res
+        .status(400)
+        .json({ error: "Dominio no válido (debe ser Nebrija)" });
+    }
+
+    const existente = await Alumnos.findOne({ where: { email } });
+    if (existente)
+      return res.status(400).json({ error: "Email ya registrado" });
+
+    res.json({ mensaje: "Email válido", email });
+  } catch (error) {
+    console.error("Error validación Nebrija:", error);
+    res.status(500).json({ error: "Error interno" });
+  }
+});
+
+/**
+ * Completar registro de alumno Nebrija tras validación.
+ * Crea Usuario y Alumno (datos simplificados, sin tarjeta).
+ */
+router.post("/verificacionnebrija/completar", async (req, res) => {
+  try {
+    const { nombre, apellidos, dni, contrasena, email, pais, localidad } =
+      req.body;
+
+    if (
+      !nombre ||
+      !apellidos ||
+      !dni ||
+      !contrasena ||
+      !email ||
+      !pais ||
+      !localidad
+    ) {
+      return res.status(400).json({ error: "Campos incompletos" });
+    }
+
+    const existente = await Alumnos.findOne({ where: { email } });
+    if (existente)
+      return res.status(400).json({ error: "Email ya registrado" });
+
+    const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
+
+    try {
+      const nuevoAlumno = await Alumnos.create({
+        usuarioId: nuevoUsuario.id,
+        nombre,
+        apellidos,
+        dni,
+        email,
+        contrasena,
+        pais,
+        localidad,
+      });
+
+      res.status(201).json({
+        mensaje: "Registro Nebrija completado",
+        usuario: { id: nuevoAlumno.id, email: nuevoAlumno.email },
+      });
+    } catch (createError) {
+      await nuevoUsuario.destroy();
+      throw createError;
+    }
+  } catch (error) {
+    console.error("Error completar registro Nebrija:", error);
+    res.status(500).json({ error: "Error interno" });
   }
 });
 
 module.exports = router;
-
-// Registrar Alumno Externo
-router.post("/registerAlumnoExterno/auth", (req, res) => {
-  try {
-    const { nombre, apellidos, dni, email, contrasena, numeroTarjeta, pais, localidad } = req.body;
-    console.log(`POST /alumnos/registerAlumnoExterno/auth - Email: ${email}`);
-
-    if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroTarjeta || !pais || !localidad) {
-      return res.status(400).json({ error: "Todos los campos son requeridos" });
-    }
-
-    Alumnos.findAll().then((alumnos) => {
-      const usuarioExistente = alumnos.find((a) => a.email === email);
-      if (usuarioExistente) {
-        return res.status(400).json({ error: "El email ya está registrado" });
-      }
-
-      Usuarios.create({ tipo: "alumno" }).then((nuevoUsuario) => {
-        Alumnos.create({
-          usuarioId: nuevoUsuario.id,
-          nombre: nombre,
-          apellidos: apellidos,
-          dni: dni,
-          email: email,
-          contrasena: contrasena,
-          numeroTarjeta: numeroTarjeta,
-          pais: pais,
-          localidad: localidad
-        }).then((nuevoAlumno) => {
-          res.status(201).json({
-            mensaje: "Registro exitoso",
-            usuario: {
-              id: nuevoAlumno.id,
-              nombre: nuevoAlumno.nombre,
-              apellidos: nuevoAlumno.apellidos,
-              dni: nuevoAlumno.dni,
-              email: nuevoAlumno.email
-            }
-          });
-        }).catch((error) => {
-          console.error("Error al crear alumno:", error);
-          nuevoUsuario.destroy();
-          res.status(500).json({ error: "Error al crear el usuario" });
-        });
-      }).catch((error) => {
-        console.error("Error al crear usuario:", error);
-        res.status(500).json({ error: "Error al crear el usuario" });
-      });
-    }).catch((error) => {
-      console.error("Error al verificar email:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    });
-  } catch (error) {
-    console.error("Error en registro:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// Verificación Nebrija (solo valida; NO crea registros en BD)
-router.post("/verificacionnebrija/auth", (req, res) => {
-  try {
-    const { email } = req.body;
-    console.log(`POST /alumnos/verificacionnebrija/auth - Email: ${email}`);
-
-    if (!email) {
-      return res.status(400).json({ error: "El email es requerido" });
-    }
-
-    if (!email.endsWith("@alumnos.nebrija.es")) {
-      return res.status(400).json({ error: "Ese correo no pertenece a la familia Nebrija" });
-    }
-
-    Alumnos.findAll().then((alumnos) => {
-      const usuarioExistente = alumnos.find((a) => a.email === email);
-      if (usuarioExistente) {
-        return res.status(400).json({ error: "El email ya está registrado" });
-      }
-
-      // No crear usuario/alumno aún. Solo devolver verificación ok.
-      return res.status(200).json({ mensaje: "Verificación exitosa", email: email });
-    }).catch((error) => {
-      console.error("Error al verificar email:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    });
-  } catch (error) {
-    console.error("Error en verificación:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// Completar registro Nebrija (crea usuario y alumno usando el email verificado)
-router.post("/verificacionnebrija/completar", (req, res) => {
-  try {
-    const { nombre, apellidos, dni, contrasena, email, pais, localidad } = req.body;
-    console.log(`POST /alumnos/verificacionnebrija/completar - Email: ${email}`);
-
-    if (!nombre || !apellidos || !dni || !contrasena || !pais || !localidad || !email) {
-      return res.status(400).json({ error: "Todos los campos son requeridos" });
-    }
-
-    Alumnos.findAll().then((alumnos) => {
-      const usuarioExistente = alumnos.find((a) => a.email === email);
-      if (usuarioExistente) {
-        return res.status(400).json({ error: "El email ya está registrado" });
-      }
-
-      Usuarios.create({ tipo: "alumno" }).then((nuevoUsuario) => {
-        Alumnos.create({
-          usuarioId: nuevoUsuario.id,
-          nombre: nombre,
-          apellidos: apellidos,
-          dni: dni,
-          email: email,
-          contrasena: contrasena,
-          pais: pais,
-          localidad: localidad
-        }).then((nuevoAlumno) => {
-          res.status(201).json({
-            mensaje: "Registro completado exitosamente",
-            usuario: {
-              id: nuevoAlumno.id,
-              nombre: nuevoAlumno.nombre,
-              apellidos: nuevoAlumno.apellidos,
-              email: nuevoAlumno.email,
-              dni: nuevoAlumno.dni,
-              pais: nuevoAlumno.pais,
-              localidad: nuevoAlumno.localidad
-            }
-          });
-        }).catch((error) => {
-          console.error("Error al crear alumno:", error);
-          nuevoUsuario.destroy();
-          res.status(500).json({ error: "Error al crear el alumno" });
-        });
-      }).catch((error) => {
-        console.error("Error al crear usuario:", error);
-        res.status(500).json({ error: "Error al crear el usuario" });
-      });
-    }).catch((error) => {
-      console.error("Error al verificar email:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    });
-  } catch (error) {
-    console.error("Error en completar registro:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});

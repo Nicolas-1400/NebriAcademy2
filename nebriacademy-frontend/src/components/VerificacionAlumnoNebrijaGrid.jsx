@@ -1,6 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente: VerificacionAlumnoNebrijaGrid
+ * Valida que el email institucional (@alumnos.nebrija.es) sea correcto.
+ */
 function VerificacionAlumnoNebrijaGrid() {
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
@@ -15,27 +19,22 @@ function VerificacionAlumnoNebrijaGrid() {
         "http://localhost:3000/alumnos/verificacionnebrija/auth",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            email: email,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({ email }),
         },
       );
 
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        console.log("Verificación exitosa:", datos);
-        sessionStorage.setItem('verifiedEmail', email);
-        navigate("/RegisterAlumnoNebrija", { state: { email: email } });
+        sessionStorage.setItem("verifiedEmail", email);
+        navigate("/Register/RegisterAlumnoNebrija", { state: { email } });
       } else {
         setError(datos.error || "Error en la verificación");
       }
     } catch (err) {
-      setError("Error de conexión con el servidor");
       console.error(err);
+      setError("Error de conexión con el servidor");
     }
   };
 
@@ -53,7 +52,9 @@ function VerificacionAlumnoNebrijaGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Verificar Email</button>
         </form>
-        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+        <p>
+          ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>
+        </p>
       </div>
     </div>
   );

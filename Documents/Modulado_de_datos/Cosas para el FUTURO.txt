@@ -7,7 +7,6 @@ Fran:
 - Comentarios de profesores no funcionan
 - No funciona la edición de perfil
 
-
 Opcional:
 Trasladarlo a Vue.
 
@@ -23,7 +22,42 @@ NavBar:
 Zustand (distintos usuarios):
 Alumnos y Profesores
 
+Cosas que habría que mirar para el TFG (IMPORTANTE):
+1. Filtrado y Búsqueda de Datos (El problema de TodosCursosGrid)
+Actualmente, el Frontend descarga toda la base de datos para buscar algo.
 
+Cómo está ahora (Frontend): En 
+TodosCursosGrid.jsx
+, la aplicación descarga todos los cursos y todos los profesores de golpe. Luego, tu navegador usa 
+filter()
+ para buscar si escribes "Java".
+Problema: Si tienes 1,000 cursos, el usuario tiene que descargar una lista gigante solo para ver 3.
+Cómo debería ser (Backend): El Frontend debería enviar solo la búsqueda: GET /cursos?busqueda=Java&nivel=Intermedio. El Backend hace la consulta a la base de datos y devuelve solo los 3 resultados exactos.
+2. Agregación de Datos "Dashboard" (El caso de MiEspacioGrid y 
+CursoGrid
+)
+El Frontend está haciendo de "pegamento" de datos, haciendo muchas llamadas para montar una sola pantalla.
+
+Cómo está ahora (Frontend): Para mostrar 
+CursoGrid
+, el componente tiene que pedir:
+Datos del curso.
+Datos del profesor.
+Lista de videos (y luego filtrar los de este curso).
+Lista de apuntes (y filtrar).
+Lista de ejercicios (y filtrar).
+Cómo debería ser (Backend): Crear un endpoint "Detalle De Curso" en el Backend (GET /cursos/:id/completo).
+El Backend hace una sola consulta (o varias internas rápidas) y devuelve un solo objeto JSON con todo listo: { curso: {...}, profesor: {...}, contenidos: { videos: [...], apuntes: [...] } }.
+El Frontend pasaría de tener 5 
+fetch
+ y 50 líneas de lógica de filtrado a tener 1 
+fetch
+ y 0 lógica.
+3. Lógica de "Mis Cosas" (MiEspacioGrid)
+Cómo está ahora: Para saber qué cursos mostrarte en "Mi Espacio", el front descarga la lista de todas las inscripciones de todos los alumnos, y luego busca línea por línea cuáles son las tuyas.
+Riesgo: Esto es inseguro (técnicamente estás enviando datos de otros alumnos al navegador, aunque no los muestres) y muy ineficiente.
+Cómo debería ser: Un endpoint GET /alumnos/me/mis-cursos que use el ID del usuario logueado (desde el token o sesión) y devuelva directamente su lista limpia.
+Resumen: El Frontend ahora mismo tiene mucha "lógica de negocio" (filtrar, ordenar, cruzar datos). Si mueves eso al Backend, tus componentes de React quedarían limpísimos, solo se encargarían de pintar datos, que es su trabajo real.
 
 
 

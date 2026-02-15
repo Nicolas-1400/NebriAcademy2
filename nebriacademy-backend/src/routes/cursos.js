@@ -4,12 +4,21 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// Obtener todos los cursos (devuelve también los valores del enum 'categoria')
-router.get("/", (req, res) => {
+// ==================================================================
+// RUTA: Obtener todos los cursos
+// Método: GET /
+// ==================================================================
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /cursos");
-    Cursos.findAll().then((resultado) => {
-      res.json({ "Numero de cursos": resultado.length, Cursos: resultado });
+    console.log("Petición recibida: GET /cursos");
+
+    // Recuperar todos los cursos de BBDD
+    const resultado = await Cursos.findAll();
+
+    // Devolvemos un objeto con meta-información (cantidad) y la lista
+    res.json({
+      "Numero de cursos": resultado.length,
+      Cursos: resultado,
     });
   } catch (error) {
     console.error("Error al obtener cursos:", error);
@@ -17,102 +26,132 @@ router.get("/", (req, res) => {
   }
 });
 
-// Endpoint simple para devolver los valores del enum 'categoria' del modelo Cursos
-router.get('/categorias', (req, res) => {
+// ==================================================================
+// RUTA: Obtener categorías de cursos
+// Método: GET /categorias
+// ==================================================================
+router.get("/categorias", (req, res) => {
   try {
-    const vals = (Cursos.rawAttributes && Cursos.rawAttributes.categoria && Cursos.rawAttributes.categoria.values) || [];
+    // Extraer valores del ENUM 'categoria'
+    const vals =
+      (Cursos.rawAttributes &&
+        Cursos.rawAttributes.categoria &&
+        Cursos.rawAttributes.categoria.values) ||
+      [];
+
     res.json({ categorias: vals });
   } catch (e) {
-    console.error('Error devolviendo categorias Cursos:', e);
+    console.error("Error devolviendo categorias Cursos:", e);
     res.status(500).json({ categorias: [] });
   }
 });
 
-// Obtener por ID un curso
-router.get("/:id", (req, res) => {
+// ==================================================================
+// RUTA: Obtener curso por ID
+// Método: GET /:id
+// ==================================================================
+router.get("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`GET /cursos/${id}`);
-    Cursos.findAll().then((resultado) => {
-      const curso = resultado.find((c) => c.id === id);
-      if (curso) {
-        res.json(curso);
-      } else {
-        res.status(404).json({ error: "Curso no encontrado" });
-      }
-    });
+    console.log(`Petición recibida: GET /cursos/${id}`);
+
+    const curso = await Cursos.findByPk(id);
+
+    if (curso) {
+      res.json(curso);
+    } else {
+      res.status(404).json({ error: "Curso no encontrado" });
+    }
   } catch (error) {
     console.error("Error al obtener curso:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-
-// Crear un curso con asignación a profesor
+// ==================================================================
+// RUTA: Crear un nuevo curso
+// Método: POST /add
+// ==================================================================
 router.post("/add", async (req, res) => {
   try {
     const data = req.body || {};
     const profesorInput = data.profesor;
-
     let profesorDbId = null;
+
+    // Verificar si se proporcionó un profesor (por ID o usuarioId)
     if (profesorInput) {
       const porId = await Profesores.findByPk(profesorInput);
       if (porId) {
         profesorDbId = porId.id;
       } else {
-        const porUsuario = await Profesores.findOne({ where: { usuarioId: profesorInput } });
+        const porUsuario = await Profesores.findOne({
+          where: { usuarioId: profesorInput },
+        });
         if (porUsuario) profesorDbId = porUsuario.id;
       }
     }
 
+    // Crear el curso en la base de datos
     const cursoData = { ...data, profesor: profesorDbId };
-
     const nuevo = await Cursos.create(cursoData);
-    const cursoId = nuevo.id;
 
+    // Crear la relación (Profesores <-> Cursos) si corresponde
     if (profesorDbId) {
-      await ProfesoresCursos.create({ profesorId: profesorDbId, cursoId });
+      await ProfesoresCursos.create({
+        profesorId: profesorDbId,
+        cursoId: nuevo.id,
+      });
     }
 
     res.status(201).json(nuevo);
   } catch (err) {
-    console.error('Error en /cursos/add:', err);
-    res.status(500).json({ error: 'Error al crear curso', detail: err.message });
+    console.error("Error en /cursos/add:", err);
+    res
+      .status(500)
+      .json({ error: "Error al crear curso", detail: err.message });
   }
 });
 
-// Actualizar un curso por ID
-router.put("/:id", (req, res) => {
+// ==================================================================
+// RUTA: Actualizar un curso
+// Método: PUT /:id
+// ==================================================================
+router.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`PUT /cursos/${id}`);
-    Cursos.findAll().then((resultado) => {
-      const curso = resultado.find((c) => c.id === id);
-      if (curso) {
-        curso.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Curso no encontrado" });
-      }
-    });
+    console.log(`Petición recibida: PUT /cursos/${id}`);
+
+    const curso = await Cursos.findByPk(id);
+
+    if (curso) {
+      const actualizado = await curso.update(req.body);
+      res.json(actualizado);
+    } else {
+      res.status(404).json({ error: "Curso no encontrado" });
+    }
   } catch (error) {
     console.error("Error al actualizar curso:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
 
-// Eliminar un curso por ID
-router.delete("/:id", (req, res) => {
+// ==================================================================
+// RUTA: Eliminar un curso
+// Método: DELETE /:id
+// ==================================================================
+router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
-    console.log(`DELETE /cursos/${id}`);
-    Cursos.findAll().then((resultado) => {
-      const curso = resultado.find((c) => c.id === id);
-      if (curso) {
-        curso.destroy().then(() => res.json({ mensaje: "Curso eliminado" }));
-      } else {
-        res.status(404).json({ error: "Curso no encontrado" });
-      }
-    });
+    console.log(`Petición recibida: DELETE /cursos/${id}`);
+
+    const curso = await Cursos.findByPk(id);
+
+    if (curso) {
+      await curso.destroy();
+      res.json({ mensaje: "Curso eliminado correctamente" });
+    } else {
+      res.status(404).json({ error: "Curso no encontrado" });
+    }
   } catch (error) {
     console.error("Error al eliminar curso:", error);
     res.status(500).json({ error: "Error interno del servidor" });

@@ -3,144 +3,127 @@ const router = express.Router();
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// Obtener todos los profesores (incluye enum 'especializacion')
-router.get("/", (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /profesores");
-    Profesores.findAll().then((resultado) => {
-      res.json({ "Numero de profesores": resultado.length, Profesores: resultado });
-    });
-  } catch (error) {
-    console.error("Error al obtener profesores:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const data = await Profesores.findAll();
+    res.json({ "Numero de profesores": data.length, Profesores: data });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Endpoint simple para devolver valores del enum 'especializacion' de Profesores
-router.get('/especializaciones', (req, res) => {
+// GET /especializaciones - Obtener valores del ENUM para el frontend
+// Útil para poblar selects en formularios sin harcodear valores en el cliente
+router.get("/especializaciones", (req, res) => {
   try {
-    const vals = (Profesores.rawAttributes && Profesores.rawAttributes.especializacion && Profesores.rawAttributes.especializacion.values) || [];
+    const vals = Profesores.rawAttributes?.especializacion?.values || [];
     res.json({ especializaciones: vals });
   } catch (e) {
-    console.error('Error devolviendo especializaciones Profesores:', e);
     res.status(500).json({ especializaciones: [] });
   }
 });
 
-// Obtener por ID un profesor
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /profesores/${id}`);
-    Profesores.findAll().then((resultado) => {
-      const profesor = resultado.find((p) => p.id === id);
-      if (profesor) {
-        res.json(profesor);
-      } else {
-        res.status(404).json({ error: "Profesor no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener profesor:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const p = await Profesores.findByPk(req.params.id);
+    p ? res.json(p) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Actualizar un profesor por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /profesores/${id}`);
-    Profesores.findAll().then((resultado) => {
-      const profesor = resultado.find((p) => p.id === id);
-      if (profesor) {
-        profesor.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Profesor no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar profesor:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const p = await Profesores.findByPk(req.params.id);
+    if (!p) return res.status(404).json({ error: "No encontrado" });
+
+    await p.update(req.body);
+    res.json(p);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar un profesor por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id - Eliminar
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /profesores/${id}`);
-    Profesores.findAll().then((resultado) => {
-      const profesor = resultado.find((p) => p.id === id);
-      if (profesor) {
-        profesor
-          .destroy()
-          .then(() => res.json({ mensaje: "Profesor eliminado" }));
-      } else {
-        res.status(404).json({ error: "Profesor no encontrado" });
-      }
+    const p = await Profesores.findByPk(req.params.id);
+    if (!p) return res.status(404).json({ error: "No encontrado" });
+
+    await p.destroy();
+    res.json({ mensaje: "Eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// POST /registerProfesor/auth - Registro completo
+router.post("/registerProfesor/auth", async (req, res) => {
+  let nuevoUsuario = null;
+  try {
+    const {
+      nombre,
+      apellidos,
+      dni,
+      email,
+      contrasena,
+      numeroCuentaBancaria,
+      pais,
+      localidad,
+    } = req.body;
+
+    if (
+      !nombre ||
+      !apellidos ||
+      !dni ||
+      !email ||
+      !contrasena ||
+      !numeroCuentaBancaria ||
+      !pais ||
+      !localidad
+    ) {
+      return res.status(400).json({ error: "Faltan campos obligatorios" });
+    }
+
+    // Verificar email único en Profesores (debería ser en Usuarios idealmente, pero mantenemos lógica actual)
+    const existe = await Profesores.findOne({ where: { email } });
+    if (existe) return res.status(400).json({ error: "Email ya registrado" });
+
+    // 1. Crear Usuario
+    nuevoUsuario = await Usuarios.create({ tipo: "profesor" });
+
+    // 2. Crear Profesor linkeado
+    // Se crea el registro del profesor asociado a la cuenta de usuario recién creada.
+    // Esto separa los datos de autenticación (Usuario) de los datos del perfil profesional (Profesor).
+    const nuevoProfesor = await Profesores.create({
+      usuarioId: nuevoUsuario.id,
+      nombre,
+      apellidos,
+      dni,
+      email,
+      contrasena,
+      numCuentaBancaria: numeroCuentaBancaria,
+      pais,
+      localidad,
     });
-  } catch (error) {
-    console.error("Error al eliminar profesor:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+
+    res.status(201).json({
+      mensaje: "Registro exitoso",
+      usuario: {
+        id: nuevoProfesor.id,
+        nombre: nuevoProfesor.nombre,
+        email: nuevoProfesor.email,
+      },
+    });
+  } catch (e) {
+    console.error("Error registro profesor:", e);
+    // Rollback usuario si se creó
+    if (nuevoUsuario) await nuevoUsuario.destroy().catch(() => {});
+    res.status(500).json({ error: "Error en registro" });
   }
 });
 
 module.exports = router;
-
-// Registrar profesor
-router.post("/registerProfesor/auth", (req, res) => {
-  try {
-    const { nombre, apellidos, dni, email, contrasena, numeroCuentaBancaria, pais, localidad } = req.body;
-    console.log(`POST /profesores/registerProfesor/auth - Email: ${email}`);
-
-    if (!nombre || !apellidos || !dni || !email || !contrasena || !numeroCuentaBancaria || !pais || !localidad) {
-      return res.status(400).json({ error: "Todos los campos son requeridos" });
-    }
-
-    Profesores.findAll().then((profesores) => {
-      const usuarioExistente = profesores.find((a) => a.email === email);
-      if (usuarioExistente) {
-        return res.status(400).json({ error: "El email ya está registrado" });
-      }
-
-      Usuarios.create({ tipo: "profesor" }).then((nuevoUsuario) => {
-        Profesores.create({
-          usuarioId: nuevoUsuario.id,
-          nombre: nombre,
-          apellidos: apellidos,
-          dni: dni,
-          email: email,
-          contrasena: contrasena,
-          numCuentaBancaria: numeroCuentaBancaria,
-          pais: pais,
-          localidad: localidad
-        }).then((nuevoProfesor) => {
-          res.status(201).json({
-            mensaje: "Registro exitoso",
-            usuario: {
-              id: nuevoProfesor.id,
-              nombre: nuevoProfesor.nombre,
-              apellidos: nuevoProfesor.apellidos,
-              dni: nuevoProfesor.dni,
-              email: nuevoProfesor.email
-            }
-          });
-        }).catch((error) => {
-          console.error("Error al crear profesor:", error);
-          nuevoUsuario.destroy();
-          res.status(500).json({ error: "Error al crear el profesor" });
-        });
-      }).catch((error) => {
-        console.error("Error al crear usuario:", error);
-        res.status(500).json({ error: "Error al crear el usuario" });
-      });
-    }).catch((error) => {
-      console.error("Error al verificar email:", error);
-      res.status(500).json({ error: "Error interno del servidor" });
-    });
-  } catch (error) {
-    console.error("Error en registro:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});

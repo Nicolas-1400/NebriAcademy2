@@ -1,14 +1,17 @@
-import { useEffect, useState, useRef } from "react";
-import useAuthStore from '../store/useAuthStore'
+import { useEffect, useState } from "react";
+import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
+/**
+ * Componente: PerfilGrid
+ * Permite a los alumnos ver y editar su perfil.
+ */
 function PerfilGrid() {
-  const [usuario, setUsuario] = useState(null);
-  const storeUser = useAuthStore(state => state.user)
-  const tipo = useAuthStore(state => state.tipo)
-  const setUser = useAuthStore(state => state.setUser)
+  const navigate = useNavigate();
+  const { user, setUser, tipo } = useAuthStore();
+
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -19,147 +22,110 @@ function PerfilGrid() {
     pais: "",
     localidad: "",
   });
-  const [isEditing, setIsEditing] = useState(false);
-  const lastFetchedId = useRef(null);
+
   const [mensajeExito, setMensajeExito] = useState("");
   const [mensajeError, setMensajeError] = useState("");
+  const [loading, setLoading] = useState(false);
+
   useEffect(() => {
-    if (!storeUser) return
-    if (tipo !== 'alumno') return
-    if (isEditing) return
-    if (lastFetchedId.current === storeUser.id) return
+    if (!user || tipo !== "alumno") return;
 
-    setUsuario(storeUser)
-
-    fetch(`http://localhost:3000/usuarios/${storeUser.id}?tipo=alumno`)
-      .then((response) => {
-        if (!response.ok) throw new Error('Error al obtener datos del usuario')
-        return response.json()
-      })
-      .then((datosCompletos) => {
-        setUsuario(datosCompletos)
-        setUser(datosCompletos, 'alumno')
-
-        lastFetchedId.current = storeUser.id
+    // Cargar datos frescos del servidor
+    fetch(`http://localhost:3000/usuarios/${user.id}?tipo=alumno`)
+      .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
+      .then((datos) => {
+        const datosIniciales = datos || user;
+        if (datos) setUser(datos, "alumno"); // Actualizar store si hay datos frescos
 
         setFormData({
-          nombre: datosCompletos.nombre || "",
-          apellidos: datosCompletos.apellidos || "",
+          nombre: datosIniciales.nombre || "",
+          apellidos: datosIniciales.apellidos || "",
           contrasena: "",
-          numeroTarjeta: datosCompletos.numeroTarjeta || "",
-          numTelefono: datosCompletos.numTelefono || "",
-          redes: datosCompletos.redes || "",
-          pais: datosCompletos.pais || "",
-          localidad: datosCompletos.localidad || "",
-        })
+          numeroTarjeta: datosIniciales.numeroTarjeta || "",
+          numTelefono: datosIniciales.numTelefono || "",
+          redes: datosIniciales.redes || "",
+          pais: datosIniciales.pais || "",
+          localidad: datosIniciales.localidad || "",
+        });
       })
-      .catch(() => {
-        // solo inicializar con storeUser si no estamos ya editando
-        if (isEditing) return
+      .catch((error) => console.error("Error cargando perfil:", error));
+  }, [user?.id, tipo, setUser]);
+  // user?.id es estable. Evitamos 'user' completo en deps para no re-renderizar infinito si user cambia.
 
-        setFormData((prev) => ({
-          ...prev,
-          nombre: storeUser.nombre || "",
-          apellidos: storeUser.apellidos || "",
-          contrasena: "",
-          numeroTarjeta: storeUser.numeroTarjeta || "",
-          numTelefono: storeUser.numTelefono || "",
-          redes: storeUser.redes || "",
-          pais: storeUser.pais || "",
-          localidad: storeUser.localidad || "",
-        }))
-      })
-  }, [storeUser, tipo, setUser, isEditing]);
-
-  const handleInputChange = (e) => {
+  // Función que actualiza los datos del formulario mientras el usuario escribe.
+  const handleChange = (e) => {
     const { name, value } = e.target;
-    setFormData((prevState) => ({
-      ...prevState,
-      [name]: value,
-    }));
+    setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Manejador del envío del formulario.
+  // Envía los datos modificados al servidor para guardarlos.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");
+    setMensajeExito("");
+    setLoading(true);
 
     try {
-      const datosActualizar = {
-        ...formData,
-        tipo: "alumno",
-      };
+      const payload = { ...formData, tipo: "alumno" };
+      if (!payload.contrasena) delete payload.contrasena;
 
-      if (!formData.contrasena) {
-        delete datosActualizar.contrasena;
-      }
-
-      const response = await fetch(
-        `http://localhost:3000/usuarios/${usuario.id}`,
+      const respuesta = await fetch(
+        `http://localhost:3000/usuarios/${user.id}`,
         {
           method: "PUT",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify(datosActualizar),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(payload),
         },
       );
 
-      if (response.ok) {
-        const usuarioActualizado = await response.json();
-        setUser(usuarioActualizado, 'alumno')
-        setUsuario(usuarioActualizado);
+      if (respuesta.ok) {
+        const usuarioActualizado = await respuesta.json();
+        setUser(usuarioActualizado, "alumno");
+        setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
-        setFormData((prevState) => ({
-          ...prevState,
-          contrasena: "",
-        }));
         setTimeout(() => setMensajeExito(""), 3000);
       } else {
-        const error = await response.json();
-        setMensajeError(error.error || "Error al actualizar el perfil");
+        const errorDatos = await respuesta.json();
+        throw new Error(errorDatos.error || "Error al actualizar perfil");
       }
     } catch (error) {
-      setMensajeError("Error al conectar con el servidor");
+      setMensajeError(error.message || "Error de conexión");
+    } finally {
+      setLoading(false);
     }
   };
 
-  const navigate = useNavigate();
+  if (!user) return <p>Cargando perfil...</p>;
 
   return (
     <div className="perfil">
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
-        <h2 className="nombrePerfil">
-          {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
-        </h2>
-        <p className="correoPerfil">
-          {usuario ? usuario.email : "correo@example.com"}
-        </p>
+        <h2 className="nombrePerfil">{`${user.nombre} ${user.apellidos}`}</h2>
+        <p className="correoPerfil">{user.email}</p>
         <p className="tipoPerfil">Alumno</p>
-        {usuario?.numTelefono && (
-          <p className="telPerfil">📱 {usuario.numTelefono}</p>
-        )}
-        {usuario?.pais && <p className="paisPerfil">🌍 {usuario.pais}</p>}
-        {usuario?.localidad && (
-          <p className="localidadPerfil">🏙️ {usuario.localidad}</p>
+
+        {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
+        {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
+        {user.localidad && (
+          <p className="localidadPerfil">🏙️ {user.localidad}</p>
         )}
       </div>
+
       <div className="formularioEditarPerfil">
         <h3>Editar Perfil</h3>
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
+
         <form onSubmit={handleSubmit}>
           <div className="formulario-grupo">
             <label htmlFor="nombre">Nombre:</label>
             <input
-              type="text"
-              id="nombre"
               name="nombre"
               value={formData.nombre}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
+              onChange={handleChange}
               placeholder="Tu nombre"
             />
           </div>
@@ -167,13 +133,9 @@ function PerfilGrid() {
           <div className="formulario-grupo">
             <label htmlFor="apellidos">Apellidos:</label>
             <input
-              type="text"
-              id="apellidos"
               name="apellidos"
               value={formData.apellidos}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
+              onChange={handleChange}
               placeholder="Tus apellidos"
             />
           </div>
@@ -182,12 +144,9 @@ function PerfilGrid() {
             <label htmlFor="contrasena">Contraseña:</label>
             <input
               type="password"
-              id="contrasena"
               name="contrasena"
               value={formData.contrasena}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
+              onChange={handleChange}
               placeholder="Dejar en blanco para no cambiar"
             />
           </div>
@@ -195,48 +154,37 @@ function PerfilGrid() {
           <div className="formulario-grupo">
             <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
             <input
-              type="text"
-              id="numeroTarjeta"
               name="numeroTarjeta"
               value={formData.numeroTarjeta}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
+              onChange={handleChange}
               placeholder="Tu número de tarjeta"
             />
           </div>
 
           <div className="formulario-grupo">
-            <label htmlFor="numTelefono">Número de Teléfono:</label>
+            <label htmlFor="numTelefono">Teléfono:</label>
             <input
               type="tel"
-              id="numTelefono"
               name="numTelefono"
               value={formData.numTelefono}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
-              placeholder="Tu número de teléfono"
+              onChange={handleChange}
+              placeholder="Tu teléfono"
             />
           </div>
 
           <div className="formulario-grupo">
             <label htmlFor="redes">Redes Sociales:</label>
             <input
-              type="text"
-              id="redes"
               name="redes"
               value={formData.redes}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
-              placeholder="Tus redes sociales (ej: @usuario)"
+              onChange={handleChange}
+              placeholder="@usuario"
             />
           </div>
 
           <div className="formulario-grupo">
             <label htmlFor="pais">País:</label>
-            <select id="pais" name="pais" value={formData.pais} onChange={handleInputChange} onFocus={() => setIsEditing(true)} onBlur={() => setIsEditing(false)}>
+            <select name="pais" value={formData.pais} onChange={handleChange}>
               <option value="" disabled>
                 Seleccione un país
               </option>
@@ -257,12 +205,9 @@ function PerfilGrid() {
           <div className="formulario-grupo">
             <label htmlFor="localidad">Localidad:</label>
             <select
-              id="localidad"
               name="localidad"
               value={formData.localidad}
-              onChange={handleInputChange}
-              onFocus={() => setIsEditing(true)}
-              onBlur={() => setIsEditing(false)}
+              onChange={handleChange}
             >
               <option value="" disabled>
                 Seleccione una localidad
@@ -276,10 +221,19 @@ function PerfilGrid() {
             </select>
           </div>
 
-          <button type="submit" className="boton-editar-perfil">
-            Guardar Cambios
+          <button
+            type="submit"
+            className="boton-editar-perfil"
+            disabled={loading}
+          >
+            {loading ? "Guardando..." : "Guardar Cambios"}
           </button>
-          <button className="boton-go-back" onClick={() => navigate(-1)}>
+
+          <button
+            type="button"
+            className="boton-go-back"
+            onClick={() => navigate(-1)}
+          >
             <img src={flecha} alt="Volver" />
             <p>Volver</p>
           </button>

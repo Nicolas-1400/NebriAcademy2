@@ -1,200 +1,175 @@
 const express = require("express");
 const router = express.Router();
-const Apuntes = require("../models/Apuntes.js");
 const multer = require("multer");
 const path = require("path");
 const fs = require("fs");
+
+const Apuntes = require("../models/Apuntes.js");
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
-// Multer: guarda en la carpeta de assets del frontend
-const storage = multer.diskStorage({
-  destination: path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Apuntes"),
-  filename: (req, file, cb) => {
-    // Guardar con el nombre original del archivo
-    cb(null, path.basename(file.originalname));
-  },
+// --- Configuración de Uploads (Multer) ---
+// Se almacenan físicamente en el frontend para ser servidos como estáticos
+const uploadDir = path.join(
+  __dirname,
+  "../../../nebriacademy-frontend/src/assets/Apuntes",
+);
+const upload = multer({
+  storage: multer.diskStorage({
+    destination: uploadDir,
+    filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
+  }),
 });
 
-const upload = multer({ storage });
+// --- Rutas ---
 
-// Obtener todos los apuntes (incluye valores del enum 'categoria' de Apuntes)
-router.get("/", (req, res) => {
+// GET / - Listar todos
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /apuntes");
-    Apuntes.findAll().then((resultado) => {
-      res.json({ "Numero de apuntes": resultado.length, Apuntes: resultado });
-    });
+    const data = await Apuntes.findAll();
+    res.json({ "Numero de apuntes": data.length, Apuntes: data });
   } catch (error) {
-    console.error("Error al obtener apuntes:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Endpoint simple para devolver valores del enum 'categoria' de Apuntes
-router.get('/categorias', (req, res) => {
+// GET /categorias - Enums de categoría
+router.get("/categorias", (req, res) => {
   try {
-    const vals = (Apuntes.rawAttributes && Apuntes.rawAttributes.categoria && Apuntes.rawAttributes.categoria.values) || [];
+    const vals = Apuntes.rawAttributes?.categoria?.values || [];
     res.json({ categorias: vals });
   } catch (e) {
-    console.error('Error devolviendo categorias Apuntes:', e);
     res.status(500).json({ categorias: [] });
   }
 });
 
-// Obtener por ID un apunte
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /apuntes/${id}`);
-    Apuntes.findAll().then((resultado) => {
-      const apunte = resultado.find((a) => a.id === id);
-      if (apunte) {
-        res.json(apunte);
-      } else {
-        res.status(404).json({ error: "Apunte no encontrado" });
-      }
-    });
+    const apunte = await Apuntes.findByPk(req.params.id);
+    apunte
+      ? res.json(apunte)
+      : res.status(404).json({ error: "No encontrado" });
   } catch (error) {
-    console.error("Error al obtener apunte:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear un apunte (subida de archivo)
-router.post("/", upload.single('archivo'), async (req, res) => {
+/**
+ * POST /
+ * Crea un apunte y asigna autor.
+ * Resolución de autor: intenta usar usuarioId directo, o buscar en Alumnos/Profesores si llega un ID genérico.
+ */
+router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    const curso = req.body.curso ? parseInt(req.body.curso) : null;
-    const nombre = req.body.nombre || null;
+    if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
 
-    // Resolver autor de forma segura: apuntes.autor referencia a usuarios.id
-    const autorInput = req.body.autor ? parseInt(req.body.autor) : null;
-    const usuarioIdInput = req.body.usuarioId ? parseInt(req.body.usuarioId) : null;
-
-    let autor = null;
-    // Priorizar `usuarioId` enviado por frontend cuando exista y sea válido
-    if (usuarioIdInput && !Number.isNaN(usuarioIdInput)) {
-      const uBy = await Usuarios.findByPk(usuarioIdInput);
-      if (uBy) autor = usuarioIdInput;
-    }
-
-    // Si no hemos resuelto, usar el flujo anterior con `autorInput`
-    if (!autor) {
-      if (!autorInput || Number.isNaN(autorInput)) {
-        return res.status(400).json({ error: "Campo 'autor' es requerido y debe ser un id numérico" });
-      }
-
-      // Si autorInput corresponde a un usuario ya (usuarios.id)
-      const u = await Usuarios.findByPk(autorInput);
-      if (u) {
-        autor = autorInput;
-      } else {
-        // Si es id de alumno o profesor, mapear a su usuarioId
-        const a = await Alumnos.findByPk(autorInput);
-        if (a && a.usuarioId) {
-          autor = a.usuarioId;
-        } else {
-          const p = await Profesores.findByPk(autorInput);
-          if (p && p.usuarioId) {
-            autor = p.usuarioId;
-          }
-        }
-      }
-    }
-
-    if (!autor) return res.status(400).json({ error: "No se pudo resolver el campo 'autor'" });
-    // Requerimos archivo; si no llega, devolvemos 400
-    if (!req.file) {
-      return res.status(400).json({ error: "Campo 'archivo' es requerido (multipart/form-data)" });
-    }
-    const archivo = req.file.filename;
-    const descripcion = req.body.descripcion || null;
-    // categoria puede venir en body si se sube desde la página Apuntes
+    const {
+      nombre,
+      descripcion,
+      curso: cursoId,
+      usuarioId,
+      autor: autorInput,
+    } = req.body;
     let categoria = req.body.categoria || null;
 
-    if (!nombre || String(nombre).trim() === '') {
-      return res.status(400).json({ error: "Campo 'nombre' es requerido para apuntes" });
+    // 1. Resolver Autor (Usuario ID)
+    let autorFinal = null;
+
+    // Intento A: UsuarioId explícito
+    if (usuarioId && !isNaN(usuarioId)) {
+      if (await Usuarios.findByPk(usuarioId)) autorFinal = usuarioId;
     }
 
-    // Si viene curso, obtener la categoria del curso y sobreescribir
-    if (curso) {
-      const cursoDb = await Cursos.findByPk(curso);
-      if (cursoDb && cursoDb.categoria) {
-        categoria = cursoDb.categoria;
-      }
-    }
-
-    // Si no hay curso, requerimos que se indique categoria
-    if (!curso && !categoria) {
-      return res.status(400).json({ error: "Campo 'categoria' es requerido cuando no se sube desde un curso" });
-    }
-
-    const nuevo = await Apuntes.create({ autor, curso, categoria, archivo, descripcion, valoracion: 0, nombre });
-    return res.status(201).json({ id: nuevo.id, archivo });
-  } catch (error) {
-    console.error("Error al crear apunte:", error);
-      return res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// Actualizar un apunte por ID (acepta multipart si se envía archivo)
-router.put("/:id", upload.single('archivo'), (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /apuntes/${id}`);
-    Apuntes.findAll().then((resultado) => {
-      const apunte = resultado.find((a) => a.id === id);
-      if (apunte) {
-        if (req.file) {
-          req.body.archivo = req.file.filename;
-        }
-        if (req.body.nombre && String(req.body.nombre).trim() === '') {
-          return res.status(400).json({ error: "Campo 'nombre' no puede estar vacío" });
-        }
-        apunte.update(req.body).then((actualizado) => res.json(actualizado));
+    // Intento B: Si falla A, usar 'autor' (puede ser ID de profesor/alumno o usuario)
+    if (!autorFinal && autorInput) {
+      if (await Usuarios.findByPk(autorInput)) {
+        autorFinal = autorInput;
       } else {
-        res.status(404).json({ error: "Apunte no encontrado" });
+        // Buscar relacionalmente
+        const alumno = await Alumnos.findByPk(autorInput);
+        if (alumno?.usuarioId) autorFinal = alumno.usuarioId;
+        else {
+          const prof = await Profesores.findByPk(autorInput);
+          if (prof?.usuarioId) autorFinal = prof.usuarioId;
+        }
       }
+    }
+
+    if (!autorFinal)
+      return res.status(400).json({ error: "Autor no identificado" });
+
+    // 2. Resolver Categoría (Heredar del curso si existe)
+    if (cursoId) {
+      const c = await Cursos.findByPk(cursoId);
+      if (c?.categoria) categoria = c.categoria;
+    }
+
+    if (!cursoId && !categoria)
+      return res
+        .status(400)
+        .json({ error: "Categoría requerida si no hay curso" });
+
+    // 3. Crear Registro
+    const nuevo = await Apuntes.create({
+      autor: autorFinal,
+      curso: cursoId || null,
+      categoria,
+      archivo: req.file.filename,
+      descripcion,
+      valoracion: 0,
+      nombre: nombre || req.file.originalname,
     });
+
+    res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {
-    console.error("Error al actualizar apunte:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error("Error subida apunte:", error);
+    res.status(500).json({ error: "Error creando apunte" });
   }
 });
 
-// Eliminar un apunte por ID
+// PUT /:id - Actualizar (Metadata o Archivo)
+router.put("/:id", upload.single("archivo"), async (req, res) => {
+  try {
+    const apunte = await Apuntes.findByPk(req.params.id);
+    if (!apunte) return res.status(404).json({ error: "No encontrado" });
+
+    const updates = { ...req.body };
+    if (req.file) updates.archivo = req.file.filename;
+
+    const actualizado = await apunte.update(updates);
+    res.json(actualizado);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error actualizando" });
+  }
+});
+
+// DELETE /:id - Eliminar registro y archivo
 router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /apuntes/${id}`);
+    const apunte = await Apuntes.findByPk(req.params.id);
+    if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
-    const apunte = await Apuntes.findByPk(id);
-    if (!apunte) return res.status(404).json({ error: "Apunte no encontrado" });
-
-    await apunte.destroy();
-
+    // Eliminar archivo físico
     if (apunte.archivo) {
-      try {
-        const filePath = path.join(__dirname, "..", "..", "..", "nebriacademy-frontend", "src", "assets", "Apuntes", apunte.archivo);
-        await fs.promises.unlink(filePath);
-        console.log(`Archivo borrado: ${filePath}`);
-      } catch (fsErr) {
-        if (fsErr && fsErr.code === 'ENOENT') {
-          console.warn('Archivo no encontrado al intentar borrar:', apunte.archivo);
-        } else {
-          console.error('Error borrando archivo local:', fsErr);
-        }
-      }
+      const filePath = path.join(uploadDir, apunte.archivo);
+      fs.promises
+        .unlink(filePath)
+        .catch((e) =>
+          console.warn("No se pudo borrar archivo físico:", e.message),
+        );
     }
 
-    return res.json({ mensaje: "Apunte eliminado" });
+    await apunte.destroy();
+    res.json({ mensaje: "Eliminado correctamente" });
   } catch (error) {
-    console.error("Error al eliminar apunte:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Error eliminando" });
   }
 });
-
 
 module.exports = router;

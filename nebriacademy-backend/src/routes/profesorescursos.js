@@ -2,99 +2,62 @@ const express = require("express");
 const router = express.Router();
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// Obtener todos los profesores-cursos
-router.get("/", (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /profesorescursos");
-    ProfesoresCursos.findAll().then((resultado) => {
-      res.json({
-        "Numero de profesoresCursos": resultado.length,
-        ProfesoresCursos: resultado,
-      });
+    const all = await ProfesoresCursos.findAll();
+    res.json({
+      "Numero de profesoresCursos": all.length,
+      ProfesoresCursos: all,
     });
-  } catch (error) {
-    console.error("Error al obtener profesores-cursos:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID un profesor-curso
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /profesorescursos/${id}`);
-    ProfesoresCursos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        res.json(registro);
-      } else {
-        res
-          .status(404)
-          .json({ error: "Registro profesor-curso no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener registro profesor-curso:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await ProfesoresCursos.findByPk(req.params.id);
+    r ? res.json(r) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear un registro profesor-curso
-router.post("/", (req, res) => {
+// POST / - Crear
+router.post("/", async (req, res) => {
   try {
-    console.log("POST /profesorescursos");
-    ProfesoresCursos.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear registro profesor-curso:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const created = await ProfesoresCursos.create(req.body);
+    res.status(201).json(created);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Actualizar un registro profesor-curso por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /profesorescursos/${id}`);
-    ProfesoresCursos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        registro.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res
-          .status(404)
-          .json({ error: "Registro profesor-curso no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar registro profesor-curso:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await ProfesoresCursos.findByPk(req.params.id);
+    if (!r) return res.status(404).json({ error: "No encontrado" });
+
+    const updated = await r.update(req.body);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar un registro profesor-curso por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id - Eliminar
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /profesorescursos/${id}`);
-    ProfesoresCursos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        registro
-          .destroy()
-          .then(() =>
-            res.json({ mensaje: "Registro profesor-curso eliminado" })
-          );
-      } else {
-        res
-          .status(404)
-          .json({ error: "Registro profesor-curso no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar registro profesor-curso:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await ProfesoresCursos.findByPk(req.params.id);
+    if (!r) return res.status(404).json({ error: "No encontrado" });
+
+    await r.destroy();
+    res.json({ mensaje: "Eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

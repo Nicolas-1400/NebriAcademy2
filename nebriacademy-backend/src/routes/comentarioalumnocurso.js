@@ -4,132 +4,126 @@ const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
-// Obtener todos los comentarios (opcionalmente filtrar por cursoId)
-router.get("/", (req, res) => {
+// GET / - Listar comentarios (filtrando por cursoId opcional)
+// Mejora: Obtiene los nombres de los autores eficientemente
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /comentarioalumnocurso");
     const { cursoId } = req.query;
-    ComentarioAlumnoCurso.findAll().then(async (resultado) => {
-      let list = resultado;
-      if (cursoId) {
-        list = list.filter((c) => String(c.cursoId) === String(cursoId));
-      }
 
-      // Añadir nombre y apellidos si es posible
-      const enhanced = await Promise.all(
-        list.map(async (c) => {
-          let nombre = null;
-          let apellidos = null;
-            try {
-            const alumno = await Alumnos.findOne({ where: { id: c.usuarioId } });
-            if (alumno) {
-              nombre = alumno.nombre;
-              apellidos = alumno.apellidos;
-            } else {
-              const prof = await Profesores.findOne({ where: { id: c.usuarioId } });
-              if (prof) {
-                nombre = prof.nombre;
-                apellidos = prof.apellidos;
-              }
-            }
-          } catch (e) {
-            console.error('Error buscando nombre de usuario:', e);
-          }
-          return { id: c.id, usuarioId: c.usuarioId, cursoId: c.cursoId, comentario: c.comentario, nombre, apellidos };
-        })
-      );
+    // Obtener comentarios (filtrados si hay cursoId)
+    const filtro = cursoId ? { where: { cursoId } } : {};
+    const comentarios = await ComentarioAlumnoCurso.findAll(filtro);
 
-      res.json({ "Numero de comentarios": enhanced.length, Comentarios: enhanced });
+    // Enriquecer con nombre de autores
+    const enhanced = await Promise.all(
+      comentarios.map(async (c) => {
+        let nombre = "Usuario",
+          apellidos = "";
+
+        // Buscar en Alumnos
+        let autor = await Alumnos.findOne({
+          where: { usuarioId: c.usuarioId },
+        });
+
+        // Si no es alumno, buscar en Profesores
+        if (!autor) {
+          autor = await Profesores.findOne({
+            where: { usuarioId: c.usuarioId },
+          });
+        }
+
+        if (autor) {
+          nombre = autor.nombre;
+          apellidos = autor.apellidos;
+        }
+
+        return {
+          id: c.id,
+          usuarioId: c.usuarioId,
+          cursoId: c.cursoId,
+          comentario: c.comentario,
+          nombre,
+          apellidos,
+        };
+      }),
+    );
+
+    res.json({
+      "Numero de comentarios": enhanced.length,
+      Comentarios: enhanced,
     });
   } catch (error) {
-    console.error("Error al obtener comentarios:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    console.error(error);
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 
-// Obtener un comentario por ID
-router.get("/:id", (req, res) => {
+// GET /:id - Obtener uno
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /comentarioalumnocurso/${id}`);
-    ComentarioAlumnoCurso.findAll().then((resultado) => {
-      const comentario = resultado.find((c) => c.id === id);
-      if (comentario) {
-        res.json(comentario);
-      } else {
-        res.status(404).json({ error: "Comentario no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener comentario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
+    c ? res.json(c) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Error servidor" });
   }
 });
 
-// Crear un comentario
+// POST / - Crear
 router.post("/", async (req, res) => {
   try {
-    const usuarioId = req.body.usuarioId ? parseInt(req.body.usuarioId) : null;
-    const cursoId = req.body.cursoId ? parseInt(req.body.cursoId) : null;
-    const comentario = req.body.comentario || null;
+    const { usuarioId, cursoId, comentario } = req.body;
+    if (!usuarioId || !cursoId || !comentario)
+      return res.status(400).json({ error: "Faltan datos" });
 
-    if (!usuarioId || !cursoId || !comentario) {
-      return res.status(400).json({ error: "Campos 'usuarioId', 'cursoId' y 'comentario' son requeridos" });
+    const nuevo = await ComentarioAlumnoCurso.create({
+      usuarioId,
+      cursoId,
+      comentario,
+    });
+    res.status(201).json(nuevo);
+  } catch (e) {
+    console.error("Error creando comentario:", e);
+    res.status(500).json({ error: "Error servidor" });
+  }
+});
+
+// PUT /:id - Editar (solo autor)
+router.put("/:id", async (req, res) => {
+  try {
+    const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
+    if (!c) return res.status(404).json({ error: "No encontrado" });
+
+    // Validar autoría
+    const requester = req.body.usuarioId;
+    if (requester && parseInt(requester) !== c.usuarioId) {
+      return res.status(403).json({ error: "No autorizado" });
     }
 
-    const nuevo = await ComentarioAlumnoCurso.create({ usuarioId, cursoId, comentario });
-    return res.status(201).json({ id: nuevo.id, usuarioId, cursoId, comentario });
-  } catch (error) {
-    console.error("Error al crear comentario:", error);
-    return res.status(500).json({ error: "Error interno del servidor" });
+    const actualizado = await c.update({
+      comentario: req.body.comentario || c.comentario,
+    });
+    res.json(actualizado);
+  } catch (e) {
+    res.status(500).json({ error: "Error servidor" });
   }
 });
 
-// Actualizar un comentario por ID (solo autor)
-router.put("/:id", (req, res) => {
+// DELETE /:id - Borrar (solo autor)
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /comentarioalumnocurso/${id}`);
-    ComentarioAlumnoCurso.findAll().then((resultado) => {
-      const comentario = resultado.find((c) => c.id === id);
-      if (comentario) {
-        // autorización: solo el autor puede modificar
-        const requester = req.body.usuarioId ? parseInt(req.body.usuarioId) : null;
-        if (!requester || requester !== comentario.usuarioId) {
-          return res.status(403).json({ error: 'No autorizado para editar este comentario' });
-        }
-        const nuevoTexto = req.body.comentario || comentario.comentario;
-        comentario.update({ comentario: String(nuevoTexto).slice(0, 500) }).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Comentario no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar comentario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
+    const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
+    if (!c) return res.status(404).json({ error: "No encontrado" });
 
-// Eliminar un comentario por ID (solo autor). Pasar ?usuarioId=xxx
-router.delete("/:id", (req, res) => {
-  try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /comentarioalumnocurso/${id}`);
-    const requester = req.query.usuarioId ? parseInt(req.query.usuarioId) : null;
-    ComentarioAlumnoCurso.findAll().then((resultado) => {
-      const comentario = resultado.find((c) => c.id === id);
-      if (comentario) {
-        if (!requester || requester !== comentario.usuarioId) {
-          return res.status(403).json({ error: 'No autorizado para eliminar este comentario' });
-        }
-        comentario.destroy().then(() => res.json({ mensaje: "Comentario eliminado" }));
-      } else {
-        res.status(404).json({ error: "Comentario no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar comentario:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    // Validar autoría
+    const requester = req.query.usuarioId;
+    if (requester && parseInt(requester) !== c.usuarioId) {
+      return res.status(403).json({ error: "No autorizado" });
+    }
+
+    await c.destroy();
+    res.json({ mensaje: "Eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Error servidor" });
   }
 });
 

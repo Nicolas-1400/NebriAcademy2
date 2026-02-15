@@ -1,155 +1,191 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 
+/**
+ * Componente: TodosCursosGrid
+ * Catalogo de cursos con búsqueda y filtros por categoría y nivel.
+ */
 function TodosCursosGrid() {
-    const location = useLocation();
-    const [cursos, setCursos] = useState([]);
-    const [profesores, setProfesores] = useState([]);
-    const [error, setError] = useState(null);
-    const [selectedCategory, setSelectedCategory] = useState(location.state?.selectedCategory || "");
-    const [selectedNivel, setSelectedNivel] = useState("");
-    const [searchTerm, setSearchTerm] = useState("");
+  const { state } = useLocation();
+  const [data, setData] = useState({
+    cursos: [],
+    profesores: [],
+    categorias: [],
+  });
+  const [error, setError] = useState(null);
 
-    
-    const [categorias, setCategorias] = useState([]);
-    const NIVELES = ["Básico", "Intermedio", "Avanzado"];
+  // Filtros
+  const [filters, setFilters] = useState({
+    category: state?.selectedCategory || "",
+    level: "",
+    searchTerm: "",
+  });
 
-    // las categorias se obtienen junto con /cursos en el siguiente useEffect
+  const NIVELES = ["Básico", "Intermedio", "Avanzado"];
 
-    useEffect(() => {
-        setError(null);
-        fetch("http://localhost:3000/cursos")
-            .then((r) => r.json())
-            .then((cData) => {
-                setCursos(cData.Cursos);
-                                // cargar categorias desde endpoint sencillo
-                                fetch('http://localhost:3000/cursos/categorias')
-                                    .then((r) => r.json())
-                                    .then((d) => setCategorias(Array.isArray(d.categorias) ? d.categorias : []))
-                                    .catch(() => setCategorias([]));
-                return fetch("http://localhost:3000/profesores");
-            })
-            .then((r) => r.json())
-            .then((pData) => {
-                setProfesores(pData.Profesores);
-            })
-            
-            .catch((err) => {
-                console.error("Error cargando datos:", err);
-                setError("Error al cargar datos");
-            })
-    }, []);
+  // --- Carga de Datos ---
+  // Se ejecuta una sola vez al montar el componente
+  useEffect(() => {
+    const cargarDatos = async () => {
+      try {
+        // Solicitamos cursos, profesores y categorías en paralelo para optimizar la carga
+        const [respuestaCursos, respuestaProfesores, respuestaCategorias] =
+          await Promise.all([
+            fetch("http://localhost:3000/cursos").then((respuesta) =>
+              respuesta.json(),
+            ),
+            fetch("http://localhost:3000/profesores").then((respuesta) =>
+              respuesta.json(),
+            ),
+            fetch("http://localhost:3000/cursos/categorias").then((respuesta) =>
+              respuesta.json().catch(() => ({ categorias: [] })),
+            ),
+          ]);
 
-    const handleSearch = (e) => {
-        e.preventDefault();
+        // Guardamos todo en el estado local 'data'
+        setData({
+          cursos: respuestaCursos.Cursos || [],
+          profesores: respuestaProfesores.Profesores || [],
+          categorias: respuestaCategorias.categorias || [],
+        });
+      } catch (error) {
+        console.error(error);
+        setError("Error al cargar los cursos");
+      }
     };
+    cargarDatos();
+  }, []);
 
-    const filteredCursos = cursos.filter((curso) => {
-        if (selectedCategory && curso.categoria !== selectedCategory) return false;
-        if (selectedNivel) {
-            const cursoNivel = (curso.nivel || "").toString().toLowerCase();
-            const selNivel = selectedNivel.toString().toLowerCase();
-            if (cursoNivel !== selNivel) return false;
-        }
+  // --- Helpers ---
+  const getProfesorName = (pid) => {
+    const p = data.profesores.find((prof) => prof.id === pid);
+    return p ? `Profesor: ${p.nombre} ${p.apellidos}` : "Profesor: Desconocido";
+  };
 
-        const term = searchTerm.trim().toLowerCase();
-        if (term === "") return true;
+  const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
 
-        const nombre = (curso.nombreCurso || "").toString().toLowerCase();
-        return nombre.includes(term);
+  // --- Filtros (Memoized) ---
+  // Filtramos la lista de cursos en memoria. Usamos useMemo para que este cálculo
+  // solo se repita si cambian los datos o los filtros, evitando lentitud al escribir.
+  const filteredCursos = useMemo(() => {
+    return data.cursos.filter((c) => {
+      // 1. Filtro por Categoría
+      if (filters.category && c.categoria !== filters.category) return false;
+
+      // 2. Filtro por Nivel (insensible a mayúsculas/minúsculas)
+      if (
+        filters.level &&
+        (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()
+      )
+        return false;
+
+      // 3. Búsqueda por Nombre (tipo 'LIKE' simple)
+      if (
+        filters.searchTerm &&
+        !(c.nombreCurso || "")
+          .toLowerCase()
+          .includes(filters.searchTerm.toLowerCase())
+      )
+        return false;
+
+      return true; // Pasa todos los filtros
     });
-    
-    const obtenerNombreProfesor = (curso) => {
-        const profId = curso.profesor;
-        if (!profId) return "Profesor: Desconocido";
-        const prof = profesores.find((p) => p.id === profId);
-        if (!prof) return "Profesor: Desconocido";
-        return `Profesor: ${prof.nombre} ${prof.apellidos}`;
-    };
-    if (error) return <p>{error}</p>;
+  }, [data, filters]);
 
-    return (
-        <div className="todos-cursos-grid">
-            <aside className="buscador-sidebar">
-                <form role="search" className="formulario-busqueda" onSubmit={handleSearch}>
-                    <input
-                        type="search"
-                        value={searchTerm}
-                        onChange={(e) => setSearchTerm(e.target.value)}
-                        placeholder="Buscar cursos..."
-                        aria-label="Buscar cursos"
-                    />
-                </form>
-                <div className="categorias-sidebar">
-                    <h3>Categorías</h3>
-                    <ul>
-                        <li>
-                            <button
-                                onClick={() => setSelectedCategory("")}
-                                className={selectedCategory === "" ? "activo" : ""}
-                            >
-                                Todas
-                            </button>
-                        </li>
-                        {categorias.map((cat) => (
-                            <li key={cat}>
-                                <button
-                                    onClick={() => setSelectedCategory(cat)}
-                                    className={selectedCategory === cat ? "activo" : ""}
-                                >
-                                    {cat}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+  if (error) return <p>{error}</p>;
 
-                    <h3 className="subtitulo-nivel">Nivel</h3>
-                    <ul>
-                        <li>
-                            <button
-                                onClick={() => setSelectedNivel("")}
-                                className={selectedNivel === "" ? "activo" : ""}
-                            >
-                                Todos
-                            </button>
-                        </li>
-                        {NIVELES.map((n) => (
-                            <li key={n}>
-                                <button
-                                    onClick={() => setSelectedNivel(n)}
-                                    className={selectedNivel === n ? "activo" : ""}
-                                >
-                                    {n}
-                                </button>
-                            </li>
-                        ))}
-                    </ul>
+  return (
+    <div className="todos-cursos-grid">
+      <aside className="buscador-sidebar">
+        <form
+          className="formulario-busqueda"
+          onSubmit={(e) => e.preventDefault()}
+        >
+          <input
+            type="search"
+            placeholder="Buscar cursos..."
+            value={filters.searchTerm}
+            onChange={(e) => updateFilter("searchTerm", e.target.value)}
+          />
+        </form>
 
-                    <div className="limpiar-filtros">
-                        <button onClick={() => { setSelectedCategory(""); setSelectedNivel(""); }}>Limpiar filtros</button>
-                    </div>
-                </div>
-            </aside>
-            <main className="cursos-contenedor">
-                <h2>Cursos</h2>
-                <div className="cursos-grid">
-                    {filteredCursos.map((curso) => (
-                        <TarjetaCursos
-                            key={curso.id}
-                            name={curso.nombreCurso}
-                            cursoId={curso.id}
-                            categoria={curso.categoria}
-                            nivel={curso.nivel}
-                            descripcion={curso.descripcion}
-                            profesor={obtenerNombreProfesor(curso)}
-                            valoracion={curso.valoracion}
-                        />
-                    ))}
-                </div>
-            </main>
+        <div className="categorias-sidebar">
+          <h3>Categorías</h3>
+          <ul>
+            <li>
+              <button
+                onClick={() => updateFilter("category", "")}
+                className={!filters.category ? "activo" : ""}
+              >
+                Todas
+              </button>
+            </li>
+            {data.categorias.map((cat) => (
+              <li key={cat}>
+                <button
+                  onClick={() => updateFilter("category", cat)}
+                  className={filters.category === cat ? "activo" : ""}
+                >
+                  {cat}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <h3 className="subtitulo-nivel">Nivel</h3>
+          <ul>
+            <li>
+              <button
+                onClick={() => updateFilter("level", "")}
+                className={!filters.level ? "activo" : ""}
+              >
+                Todos
+              </button>
+            </li>
+            {NIVELES.map((n) => (
+              <li key={n}>
+                <button
+                  onClick={() => updateFilter("level", n)}
+                  className={filters.level === n ? "activo" : ""}
+                >
+                  {n}
+                </button>
+              </li>
+            ))}
+          </ul>
+
+          <div className="limpiar-filtros">
+            <button
+              onClick={() =>
+                setFilters({ category: "", level: "", searchTerm: "" })
+              }
+            >
+              Limpiar filtros
+            </button>
+          </div>
         </div>
-    );
+      </aside>
+
+      <main className="cursos-contenedor">
+        <h2>Cursos</h2>
+        <div className="cursos-grid">
+          {filteredCursos.map((c) => (
+            <TarjetaCursos
+              key={c.id}
+              name={c.nombreCurso}
+              cursoId={c.id}
+              categoria={c.categoria}
+              nivel={c.nivel}
+              descripcion={c.descripcion}
+              profesor={getProfesorName(c.profesor)}
+              valoracion={c.valoracion}
+            />
+          ))}
+        </div>
+      </main>
+    </div>
+  );
 }
 
 export default TodosCursosGrid;

@@ -2,93 +2,62 @@ const express = require("express");
 const router = express.Router();
 const PuntuacionesEjercicios = require("../models/PuntuacionesEjercicios.js");
 
-// Obtener todas las puntuaciones de ejercicios
-router.get("/", (req, res) => {
+// GET / - Listar
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /puntuacionesejercicios");
-    PuntuacionesEjercicios.findAll().then((resultado) => {
-      res.json({
-        "Numero de puntuacionesEjercicios": resultado.length,
-        PuntuacionesEjercicios: resultado,
-      });
+    const all = await PuntuacionesEjercicios.findAll();
+    res.json({
+      "Numero de puntuacionesEjercicios": all.length,
+      PuntuacionesEjercicios: all,
     });
-  } catch (error) {
-    console.error("Error al obtener puntuaciones de ejercicios:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID una puntuación de ejercicio
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /puntuacionesejercicios/${id}`);
-    PuntuacionesEjercicios.findAll().then((resultado) => {
-      const puntuacion = resultado.find((p) => p.id === id);
-      if (puntuacion) {
-        res.json(puntuacion);
-      } else {
-        res.status(404).json({ error: "Puntuación no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener puntuación de ejercicio:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const p = await PuntuacionesEjercicios.findByPk(req.params.id);
+    p ? res.json(p) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear una puntuación de ejercicio
-router.post("/", (req, res) => {
+// POST / - Crear
+router.post("/", async (req, res) => {
   try {
-    console.log("POST /puntuacionesejercicios");
-    PuntuacionesEjercicios.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear puntuación de ejercicio:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const created = await PuntuacionesEjercicios.create(req.body);
+    res.status(201).json(created);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Actualizar una puntuación por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /puntuacionesejercicios/${id}`);
-    PuntuacionesEjercicios.findAll().then((resultado) => {
-      const puntuacion = resultado.find((p) => p.id === id);
-      if (puntuacion) {
-        puntuacion
-          .update(req.body)
-          .then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Puntuación no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar puntuación de ejercicio:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const p = await PuntuacionesEjercicios.findByPk(req.params.id);
+    if (!p) return res.status(404).json({ error: "No encontrado" });
+
+    const updated = await p.update(req.body);
+    res.json(updated);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar una puntuación por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id - Eliminar
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /puntuacionesejercicios/${id}`);
-    PuntuacionesEjercicios.findAll().then((resultado) => {
-      const puntuacion = resultado.find((p) => p.id === id);
-      if (puntuacion) {
-        puntuacion
-          .destroy()
-          .then(() => res.json({ mensaje: "Puntuación eliminada" }));
-      } else {
-        res.status(404).json({ error: "Puntuación no encontrada" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar puntuación de ejercicio:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const p = await PuntuacionesEjercicios.findByPk(req.params.id);
+    if (!p) return res.status(404).json({ error: "No encontrado" });
+
+    await p.destroy();
+    res.json({ mensaje: "Eliminado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

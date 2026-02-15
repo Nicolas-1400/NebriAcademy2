@@ -17,9 +17,6 @@ import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 import Mas from "../assets/mas.png";
 import Editar from "../assets/lapiz.png";
-/* import MeGusta from "../assets/me-gusta.png";
-import MeGustaMarcado from "../assets/me-gusta-marcado.png";
-import CorregirEjercicio  from "../assets/editar-archivo1.png"; */
 import CorregirEjercicio2 from "../assets/editar-archivo1.png";
 import EjercicioSubido from "../assets/subir-archivo2.png";
 import SubirEjercicio from "../assets/subir-archivo.png";
@@ -28,655 +25,544 @@ import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
 import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
 
+/**
+ * Componente: CursoGrid
+ * Pagina de detalle del curso. Muestra videos, apuntes, ejercicios y chat/comentarios.
+ * Gestiona vistas para profesor (editor) y alumno.
+ */
 function CursoGrid() {
+  const { id } = useParams();
+  const navigate = useNavigate();
+  const { user, tipo } = useAuthStore();
+
+  // Datos del Curso
   const [curso, setCurso] = useState(null);
   const [profesor, setProfesor] = useState(null);
-  const [apuntes, setApuntes] = useState([]);
-  const [error, setError] = useState(null);
-  const [registroCA, setRegistroCA] = useState(null);
-  const [comentario, setComentario] = useState("");
-  const { id } = useParams();
-  const [usuario, setUsuario] = useState(null);
-  const [videos, setVideos] = useState([]);
-  const [likedIds, setLikedIds] = useState([]);
-  const [comentariosList, setComentariosList] = useState([]);
-  const [editingId, setEditingId] = useState(null);
-  const [editingText, setEditingText] = useState("");
-  const [ejercicios, setEjercicios] = useState([]);
-  const [editingMode, setEditingMode] = useState(false);
+  const [contenidos, setContenidos] = useState({
+    videos: [],
+    apuntes: [],
+    ejercicios: [],
+  });
+  const [comentarios, setComentarios] = useState([]);
+
+  // Estado Usuario-Curso
+  const [registroUser, setRegistroUser] = useState(null); // { apuntado, favorito, valoracion, comentario }
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
-  const [profesoresList, setProfesoresList] = useState([]);
-  const navigate = useNavigate();
+  const [likedApuntes, setLikedApuntes] = useState([]);
 
-  const storeUser = useAuthStore((state) => state.user);
-  const tipo = useAuthStore((state) => state.tipo);
+  // UI States
+  const [error, setError] = useState(null);
+  const [editingMode, setEditingMode] = useState(false);
+  const [showAddMenu, setShowAddMenu] = useState(false);
+  const [commentText, setCommentText] = useState("");
+  const [editingComment, setEditingComment] = useState({ id: null, text: "" });
+
+  const fotos = [
+    Foto10,
+    Foto1,
+    Foto2,
+    Foto3,
+    Foto4,
+    Foto5,
+    Foto6,
+    Foto7,
+    Foto8,
+    Foto9,
+  ];
+  const bgImage = fotos[(curso?.id || id) % 10] || Foto1;
+
+  // --- Carga Inicial ---
   useEffect(() => {
-    if (storeUser) setUsuario(storeUser);
-  }, [storeUser]);
-  const alumnoId = usuario ? usuario.id : null;
+    if (!id) return;
 
-  useEffect(() => {
-    if (!usuario || !usuario.id) return;
-    // cargar los likes del alumno para apuntes
-    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`)
-      .then((r) => r.json())
-      .then((d) => {
-        setLikedIds(Array.isArray(d.apunteIds) ? d.apunteIds : []);
-      })
-      .catch(() => {});
-  }, [usuario]);
+    const fetchAll = async () => {
+      try {
+        // 1. Cargar Curso
+        const respuestaCurso = await fetch(
+          `http://localhost:3000/cursos/${id}`,
+        ).then((respuesta) => (respuesta.ok ? respuesta.json() : null));
+        if (!respuestaCurso) throw new Error("Curso no encontrado");
+        setCurso(respuestaCurso);
 
-  const handleToggleApunteLike = async (apunte) => {
-    if (!usuario || !usuario.id) return;
-    try {
-      const r = await fetch(`http://localhost:3000/apuntesalumnos/vote`, {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          apunteId: apunte.id,
-          alumnoId: usuario.id,
-          vote: true,
-        }),
-      });
-      const d = await r.json();
-      if (!r.ok) throw new Error(d.error || "Error like");
-      if (d.registro) {
-        const likedNow = d.registro.valoracion === true;
-        setLikedIds((prev) =>
-          likedNow
-            ? [...new Set([...prev, apunte.id])]
-            : prev.filter((x) => x !== apunte.id),
-        );
-      }
-      if (d.apunte) {
-        setApuntes((prev) =>
-          prev.map((a) =>
-            a.id === apunte.id ? { ...a, valoracion: d.apunte.valoracion } : a,
-          ),
-        );
-      }
-    } catch (e) {
-      console.error("Error toggling apunte like", e);
-    }
-  };
-
-  useEffect(() => {
-    setError(null);
-    fetch(`http://localhost:3000/cursos/${id}`)
-      .then((r) => {
-        if (!r.ok) throw new Error("Error en la respuesta");
-        return r.json();
-      })
-      .then((data) => {
-        setCurso(data);
-        const profId = data && data.profesor;
-        if (profId) {
-          fetch(`http://localhost:3000/profesores/${profId}`)
-            .then((r) => {
-              if (!r.ok) throw new Error("Error al obtener profesor");
-              return r.json();
-            })
-            .then((pData) => setProfesor(pData))
-            .catch((err) => {
-              console.error("Error cargando profesor:", err);
-            });
+        // 2. Cargar Profesor
+        if (respuestaCurso.profesor) {
+          fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)
+            .then((respuesta) => respuesta.json())
+            .then(setProfesor)
+            .catch(console.warn);
         }
 
-        // la carga del registro se hace en un useEffect separado
-      })
-      .catch((err) => {
-        console.error("Error cargando curso:", err);
-        setError("No se pudo cargar el curso");
-      });
+        // 3. Cargar Contenidos (paralelo)
+        // Obtenemos todos los videos, apuntes y ejercicios de la base de datos
+        // Posteriormente filtraremos en el cliente aquellos que pertenecen a este curso específico
+        const [datosVideos, datosApuntes, datosEjercicios] = await Promise.all([
+          fetch("http://localhost:3000/videos").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/apuntes").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/ejercicios").then((respuesta) =>
+            respuesta.json(),
+          ),
+        ]);
+
+        // Función helper para filtrar solo los contenidos que pertenecen a este curso
+        const filterById = (list) =>
+          (list || []).filter((i) => String(i.curso) === String(id));
+
+        setContenidos({
+          videos: filterById(datosVideos.Videos),
+          apuntes: filterById(datosApuntes.Apuntes),
+          ejercicios: filterById(datosEjercicios.Ejercicios),
+        });
+
+        // 4. Cargar Comentarios
+        fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
+          .then((respuesta) => respuesta.json())
+          .then((datos) => setComentarios(datos.Comentarios || []));
+      } catch (e) {
+        console.error(e);
+        setError("Error cargando el curso");
+      }
+    };
+
+    fetchAll();
   }, [id]);
 
+  // --- Carga Datos Usuario (si es alumno) ---
   useEffect(() => {
-    if (!id) return;
-    // cargar comentarios para este curso
-    fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Comentarios)
-          ? data.Comentarios
-          : data || [];
-        setComentariosList(list);
-      })
-      .catch((e) => console.error("Error cargando comentarios:", e));
-    fetch("http://localhost:3000/apuntes")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Apuntes) ? data.Apuntes : data || [];
-        const filtered = list.filter((a) => String(a.curso) === String(id));
-        setApuntes(filtered);
-      })
-      .catch((e) => console.error("Error cargando apuntes:", e));
-  }, [id]);
+    if (!user || tipo !== "alumno") return;
 
-  useEffect(() => {
-    if (!id) return;
-    fetch("http://localhost:3000/videos")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Videos) ? data.Videos : data || [];
-        const filtered = list.filter((v) => String(v.curso) === String(id));
-        setVideos(filtered);
-      })
-      .catch((e) => console.error("Error cargando videos:", e));
-    fetch("http://localhost:3000/ejercicios")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Ejercicios)
-          ? data.Ejercicios
-          : data || [];
-        const filtered = list.filter((v) => String(v.curso) === String(id));
-        setEjercicios(filtered);
-      })
-      .catch((e) => console.error("Error cargando ejercicios:", e));
-  }, [id]);
-
-  useEffect(() => {
-    // cargar lista de profesores para mostrar nombres en tarjetas (solo profesores suben ejercicios)
-    fetch("http://localhost:3000/profesores")
-      .then((r) => r.json())
-      .then((pRes) => {
-        const profs = Array.isArray(pRes.Profesores)
-          ? pRes.Profesores
-          : pRes || [];
-        setProfesoresList(profs);
-      })
-      .catch(() => {});
-  }, []);
-
-  useEffect(() => {
-    if (!alumnoId) return;
-    // cargar ejercicios subidos por este alumno
-    fetch(`http://localhost:3000/ejerciciosalumnos`)
-      .then((r) => r.json())
-      .then((data) => {
-        const registros = Array.isArray(data.registros) ? data.registros : data || [];
-        const ids = registros
-          .filter((rec) => parseInt(rec.alumnoId) === parseInt(alumnoId))
-          .map((rec) => parseInt(rec.ejercicioId));
-        setUploadedEjercicios(ids);
-      })
-      .catch(() => {});
-  }, [alumnoId]);
-
-  // cargar registro cursos-alumnos cuando alumnoId o id estén disponibles
-  useEffect(() => {
-    const toBool = (v) => v === true || v === 1 || v === "1";
-    if (!alumnoId) return;
-    fetch(
-      `http://localhost:3000/cursosalumnos/registro?cursoId=${parseInt(id)}&alumnoId=${alumnoId}`,
-    )
-      .then(async (r) => {
-        return r.json();
-      })
-      .then((registro) => {
-        const normalized = {
-          ...registro,
-          favorito: toBool(registro.favorito),
-          apuntado: toBool(registro.apuntado),
+    const fetchUserData = async () => {
+      try {
+        // Estado Matricula
+        const respuestaRegistro = await fetch(
+          `http://localhost:3000/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
+        ).then((respuesta) => respuesta.json());
+        // Normalizar bools
+        const toBool = (v) => v === true || v === 1 || v === "1";
+        setRegistroUser({
+          ...respuestaRegistro,
+          favorito: toBool(respuestaRegistro.favorito),
+          apuntado: toBool(respuestaRegistro.apuntado),
           valoracion:
-            registro.valoracion === null || registro.valoracion === undefined
+            respuestaRegistro.valoracion == null
               ? null
-              : toBool(registro.valoracion),
-          comentario: registro.comentario || "",
-        };
-        setRegistroCA(normalized);
-        setComentario(normalized.comentario || "");
-      })
-      .catch((e) => console.error("Error cargando cursosAlumnos", e));
-  }, [alumnoId, id]);
+              : toBool(respuestaRegistro.valoracion),
+        });
+        if (respuestaRegistro.comentario)
+          setCommentText(respuestaRegistro.comentario);
 
-  // acciones: votar, toggle favorito/apuntado, comentar
-  const handleVote = async (voteBool) => {
+        // Likes de Apuntes
+        fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
+          .then((respuesta) => respuesta.json())
+          .then((datos) => setLikedApuntes(datos.apunteIds || []));
+
+        // Ejercicios Subidos
+        fetch(`http://localhost:3000/ejerciciosalumnos`)
+          .then((respuesta) => respuesta.json())
+          .then((datos) => {
+            const misEntregas = (datos.registros || [])
+              .filter(
+                (registro) => String(registro.alumnoId) === String(user.id),
+              )
+              .map((registro) => registro.ejercicioId);
+            setUploadedEjercicios(misEntregas);
+          });
+      } catch (e) {
+        console.error("Error cargando datos usuario", e);
+      }
+    };
+
+    fetchUserData();
+  }, [id, user, tipo]);
+
+  // --- Handlers Profesor ---
+  const handleDeleteItem = async (type, itemId) => {
+    if (!window.confirm("¿Eliminar este elemento?")) return;
     try {
-      const res = await fetch("http://localhost:3000/cursosalumnos/vote", {
+      const endpoint =
+        type === "video"
+          ? "videos"
+          : type === "apunte"
+            ? "apuntes"
+            : "ejercicios";
+      await fetch(`http://localhost:3000/${endpoint}/${itemId}`, {
+        method: "DELETE",
+      });
+
+      setContenidos((prev) => ({
+        ...prev,
+        [type + "s"]: prev[type + "s"].filter((i) => i.id !== itemId), // videos, apuntes, ejercicios
+      }));
+    } catch (e) {
+      alert("Error eliminando");
+    }
+  };
+
+  const isProfesorApunte = (apunte) => {
+    // Si coincide con ID profesor curso o el profesor cargado
+    const auth = String(apunte?.autor || apunte?.usuarioId || "");
+    if (curso?.profesor && auth === String(curso.profesor)) return true;
+    if (
+      profesor &&
+      (auth === String(profesor.id) || auth === String(profesor.usuarioId))
+    )
+      return true;
+    return false; // Simplificado
+  };
+
+  // Manejo de la lógica de "Me gusta" o "Apuntarse"
+  // Action puede ser: 'favorito', 'apuntado', 'valoracion'
+  // value se usa para 'valoracion' (true/false)
+  const handleLike = async (action, value) => {
+    if (!user) return alert("Inicia sesión para interactuar");
+
+    try {
+      let url;
+      let body = { cursoId: id, alumnoId: user.id };
+
+      // Determinamos el endpoint y el cuerpo de la solicitud según la acción
+      if (action === "valoracion") {
+        url = "http://localhost:3000/cursosalumnos/vote";
+        body.vote = value; // value será true para upvote, false para downvote
+      } else if (action === "favorito") {
+        url = "http://localhost:3000/cursosalumnos/toggle-fav";
+      } else if (action === "apuntado") {
+        url = "http://localhost:3000/cursosalumnos/toggle-apuntado";
+      } else {
+        console.error("Acción no reconocida:", action);
+        return;
+      }
+
+      const respuesta = await fetch(url, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cursoId: parseInt(id),
-          alumnoId,
-          vote: voteBool,
-        }),
+        body: JSON.stringify(body),
       });
-      const data = await res.json();
-      if (res.ok) {
-        if (data.registro) setRegistroCA(data.registro);
-        if (data.curso && curso)
-          setCurso({ ...curso, valoracion: data.curso.valoracion });
-      } else console.error(data);
-    } catch (e) {
-      console.error("vote error", e);
-    }
-  };
 
-  const handleToggleFav = async () => {
-    try {
-      const res = await fetch(
-        "http://localhost:3000/cursosalumnos/toggle-fav",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cursoId: parseInt(id), alumnoId }),
-        },
-      );
-      const data = await res.json();
-      if (res.ok) setRegistroCA(data);
-    } catch (e) {
-      console.error("fav error", e);
-    }
-  };
+      if (respuesta.ok) {
+        const datos = await respuesta.json();
+        const reg = datos.registro || datos; // backend devuelve registro o {registro...}
+        // update local state
+        const toBool = (v) => v === true || v === 1 || v === "1";
+        setRegistroUser((prev) => ({
+          ...prev,
+          ...reg,
+          favorito:
+            reg.favorito !== undefined ? toBool(reg.favorito) : prev?.favorito,
+          apuntado:
+            reg.apuntado !== undefined ? toBool(reg.apuntado) : prev?.apuntado,
+          valoracion:
+            reg.valoracion !== undefined
+              ? reg.valoracion == null
+                ? null
+                : toBool(reg.valoracion)
+              : prev?.valoracion,
+        }));
 
-  const handleToggleApuntado = async () => {
-    try {
-      const res = await fetch(
-        "http://localhost:3000/cursosalumnos/toggle-apuntado",
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({ cursoId: parseInt(id), alumnoId }),
-        },
-      );
-      const data = await res.json();
-      if (res.ok) setRegistroCA(data);
-    } catch (e) {
-      console.error("apuntado error", e);
-    }
-  };
-
-  const handleSubmitComment = async () => {
-    try {
-      const res = await fetch("http://localhost:3000/comentarioalumnocurso", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({
-          cursoId: parseInt(id),
-          usuarioId: alumnoId,
-          comentario,
-        }),
-      });
-      const data = await res.json();
-      if (res.ok) {
-        // recargar lista de comentarios
-        const r2 = await fetch(
-          `http://localhost:3000/comentarioalumnocurso?cursoId=${id}`,
-        );
-        const d2 = await r2.json();
-        const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
-        setComentariosList(list);
-        setComentario("");
+        if (typeof action === "boolean" && datos.curso) {
+          setCurso((c) => ({ ...c, valoracion: datos.curso.valoracion }));
+        }
       }
     } catch (e) {
-      console.error("comment error", e);
+      console.error(e);
     }
   };
 
-  const handleStartEdit = (c) => {
-    setEditingId(c.id);
-    setEditingText(c.comentario || "");
-  };
-
-  const handleCancelEdit = () => {
-    setEditingId(null);
-    setEditingText("");
-  };
-
-  const handleSaveEdit = async (idToEdit) => {
+  const uploadEjercicio = async (file, ejercicioId) => {
     try {
-      const res = await fetch(
-        `http://localhost:3000/comentarioalumnocurso/${idToEdit}`,
+      const form = new FormData();
+      form.append("archivo", file);
+      form.append("ejercicioId", ejercicioId);
+      form.append("alumnoId", user.id);
+
+      const respuesta = await fetch("http://localhost:3000/ejerciciosalumnos", {
+        method: "POST",
+        body: form,
+      });
+      if (respuesta.ok) {
+        setUploadedEjercicios((prev) => [...prev, ejercicioId]);
+        alert("Ejercicio subido correctamente");
+      } else {
+        alert("Error al subir");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de red");
+    }
+  };
+
+  const handleCommentSubmit = async () => {
+    if (!commentText.trim()) return;
+    try {
+      const respuesta = await fetch(
+        "http://localhost:3000/comentarioalumnocurso",
         {
-          method: "PUT",
+          method: "POST",
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
-            usuarioId: alumnoId,
-            comentario: editingText,
+            cursoId: id,
+            usuarioId: user.id,
+            comentario: commentText,
           }),
         },
       );
-      if (res.ok) {
-        const r2 = await fetch(
-          `http://localhost:3000/comentarioalumnocurso?cursoId=${id}`,
-        );
-        const d2 = await r2.json();
-        const list = Array.isArray(d2.Comentarios) ? d2.Comentarios : d2 || [];
-        setComentariosList(list);
-        handleCancelEdit();
-      } else {
-        console.error("Error editando comentario");
+      if (respuesta.ok) {
+        setCommentText("");
+        // Reload comments
+        fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
+          .then((respuesta) => respuesta.json())
+          .then((datos) => setComentarios(datos.Comentarios || []));
       }
     } catch (e) {
-      console.error("edit error", e);
+      alert("Error enviando comentario");
     }
   };
 
-  const handleDelete = async (idToDelete) => {
+  const deleteComment = async (cid) => {
+    if (!window.confirm("Borrar comentario?")) return;
     try {
-      const res = await fetch(
-        `http://localhost:3000/comentarioalumnocurso/${idToDelete}?usuarioId=${alumnoId}`,
+      await fetch(
+        `http://localhost:3000/comentarioalumnocurso/${cid}?usuarioId=${user.id}`,
         { method: "DELETE" },
       );
-      if (res.ok) {
-        setComentariosList((prev) => prev.filter((c) => c.id !== idToDelete));
-      } else {
-        console.error("Error borrando comentario");
-      }
+      setComentarios((prev) => prev.filter((c) => c.id !== cid));
     } catch (e) {
-      console.error("delete error", e);
-    }
-  };
-  const [showAddMenu, setShowAddMenu] = useState(false);
-
-  const handleNavigateAddContenidoTipo = (tipoSeleccion) => {
-    // cerrar menú si estaba abierto
-    setShowAddMenu(false);
-    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
-      state: { tipo: tipoSeleccion, cursoId: id },
-    });
-  };
-
-  const handleToggleAddMenu = () => {
-    setShowAddMenu((s) => !s);
-  };
-
-  const handleToggleEditingMode = () => {
-    setEditingMode((s) => !s);
-  };
-
-  const handleEditNavigate = (tipo, item) => {
-    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
-      state: { tipo, item, cursoId: id },
-    });
-  };
-
-  const handleDeleteContenido = async (tipo, itemId) => {
-    if (!window.confirm("¿Seguro que quieres eliminar este elemento?")) return;
-    try {
-      const endpoint =
-        tipo === "video"
-          ? "videos"
-          : tipo === "apunte"
-            ? "apuntes"
-            : "ejercicios";
-      const res = await fetch(`http://localhost:3000/${endpoint}/${itemId}`, {
-        method: "DELETE",
-      });
-      if (!res.ok) throw new Error("Error borrando");
-      // actualizar estado local según tipo
-      if (tipo === "video")
-        setVideos((prev) => prev.filter((v) => v.id !== itemId));
-      if (tipo === "apunte")
-        setApuntes((prev) => prev.filter((a) => a.id !== itemId));
-      if (tipo === "ejercicio")
-        setEjercicios((prev) => prev.filter((e) => e.id !== itemId));
-    } catch (e) {
-      console.error("delete content error", e);
-      alert("No se pudo borrar el elemento");
+      console.error(e);
     }
   };
 
-  if (error) return <p>{error}</p>;
-  if (!curso) return;
+  if (!curso) return <p>Cargando curso...</p>;
+  if (error) return <p className="error">{error}</p>;
 
-  const FotoSelector = (() => {
-    const Foto = (curso.id || id) % 10;
-    if (Foto === 1) return Foto1;
-    if (Foto === 2) return Foto2;
-    if (Foto === 3) return Foto3;
-    if (Foto === 4) return Foto4;
-    if (Foto === 5) return Foto5;
-    if (Foto === 6) return Foto6;
-    if (Foto === 7) return Foto7;
-    if (Foto === 8) return Foto8;
-    if (Foto === 9) return Foto9;
-    return Foto10;
-  })();
-
-  const isApunteDelProfesor = (a) => {
-    if (!a) return false;
-    const rawAutor = a.autor ?? a.usuarioId ?? a.autorId ?? null;
-    const autor = rawAutor != null ? String(rawAutor) : "";
-    const cursoProf = curso && curso.profesor ? String(curso.profesor) : "";
-
-    // 1) Si coincide con el profesor asignado al curso
-    if (cursoProf && autor === cursoProf) return true;
-
-    // 2) Si coincide con el profesor cargado en estado `profesor`
-    if (profesor) {
-      if (profesor.usuarioId && String(profesor.usuarioId) === autor) return true;
-      if (profesor.id && String(profesor.id) === autor) return true;
-    }
-
-    // 3) Buscar en la lista de profesores cargada (por si el apunte guarda otro tipo de id)
-    if (profesoresList && profesoresList.length > 0) {
-      const found = profesoresList.find((p) => String(p.id) === autor || String(p.usuarioId) === autor);
-      if (found) return true;
-    }
-
-    return false;
-  };
-
-  const profesorApuntes = apuntes.filter((a) => isApunteDelProfesor(a));
-  const alumnosApuntes = apuntes.filter((a) => !isApunteDelProfesor(a));
+  // Filtered Apuntes
+  const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
+  const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
 
   return (
     <div className="curso-grid">
-      {/* HEADER CON IMAGEN DE FONDO Y BOTONES */}
+      {/* HEADER */}
       <div className="curso-header">
-        <img className="curso-header-bg" src={FotoSelector} alt="" />
+        <img className="curso-header-bg" src={bgImage} alt="" />
         <div className="curso-header-info">
           <h2>{curso.nombreCurso}</h2>
           <p>{curso.categoria}</p>
           <p>Nivel: {curso.nivel}</p>
         </div>
-        {tipo === "alumno" ? (
+
+        {tipo === "alumno" && (
           <div className="curso-header-botones">
             <p>
               <strong>Valoración: </strong>
-              <button className="vote-up" onClick={() => handleVote(true)}>
+              <button
+                className="vote-up"
+                onClick={() => toggleCursoAction(true)}
+              >
                 <img
                   src={
-                    registroCA && registroCA.valoracion === true
-                      ? FlechaMarcada
-                      : Flecha
+                    registroUser?.valoracion === true ? FlechaMarcada : Flecha
                   }
-                  alt="up"
+                  alt="Up"
                 />
               </button>
-              <strong> {curso.valoracion} </strong>
-              <button className="vote-down" onClick={() => handleVote(false)}>
+              <strong> {curso.valoracion || 0} </strong>
+              <button
+                className="vote-down"
+                onClick={() => toggleCursoAction(false)}
+              >
                 <img
                   src={
-                    registroCA && registroCA.valoracion === false
-                      ? FlechaMarcada
-                      : Flecha
+                    registroUser?.valoracion === false ? FlechaMarcada : Flecha
                   }
-                  alt="down"
+                  alt="Down"
                 />
               </button>
             </p>
             <p>
-              <button className="btn-favorito" onClick={handleToggleFav}>
-                {registroCA && registroCA.favorito
-                  ? "★ Favorito"
-                  : "☆ Favorito"}
+              <button
+                className="btn-favorito"
+                onClick={() => toggleCursoAction("fav")}
+              >
+                {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
               </button>
-              <button className="btn-apuntarme" onClick={handleToggleApuntado}>
-                {registroCA && registroCA.apuntado ? "✔ Apuntado" : "Apuntarme"}
+              <button
+                className="btn-apuntarme"
+                onClick={() => toggleCursoAction("apuntado")}
+              >
+                {registroUser?.apuntado ? "✔ Apuntado" : "Apuntarme"}
               </button>
             </p>
           </div>
-        ) : (
+        )}
+        {tipo === "profesor" && (
           <div className="curso-header-botones">
             <p>
-              <strong>Valoración: {curso.valoracion}</strong>
+              <strong>Valoración: {curso.valoracion || 0}</strong>
             </p>
           </div>
         )}
       </div>
 
-      {/* CONTENIDO PRINCIPAL: 75% + DETALLES: 25% */}
+      {/* BODY */}
       <div className="curso-contenedor-principal">
-        {/* CONTENIDO DEL CURSO - 75% */}
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
+
+          {/* VIDEOS */}
           <h4>Vídeos</h4>
-          {videos && videos.length > 0 ? (
+          {contenidos.videos.length > 0 ? (
             <div className="videos-list">
-              {videos.map((v) => (
+              {contenidos.videos.map((v) => (
                 <TarjetaVideoCurso
                   key={v.id}
                   video={v}
                   tipo={tipo}
                   editingMode={editingMode}
-                  handleEditNavigate={handleEditNavigate}
-                  handleDeleteContenido={handleDeleteContenido}
+                  handleEditNavigate={(t, i) =>
+                    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                      state: { tipo: t, item: i, cursoId: id },
+                    })
+                  }
+                  handleDeleteContenido={handleDeleteItem}
                 />
               ))}
             </div>
           ) : (
-            <p>No hay vídeos para este curso.</p>
+            <p>No hay vídeos.</p>
           )}
+
+          {/* APUNTES */}
           <h4>Apuntes</h4>
-          {apuntes && apuntes.length > 0 ? (
-            <div className="apuntes-columns-wrapper">
-              <div className="profesor-apuntes">
-                <h5>Apuntes del profesor</h5>
-                {profesorApuntes && profesorApuntes.length > 0 ? (
-                  <ul className="apuntes-list">
-                    {profesorApuntes.map((a) => (
-                      <TarjetaApunteCurso
-                        key={a.id}
-                        apunte={a}
-                        usuario={usuario}
-                        likedIds={likedIds}
-                        onToggleLike={() => handleToggleApunteLike(a)}
-                        tipo={tipo}
-                        editingMode={editingMode}
-                        handleEditNavigate={handleEditNavigate}
-                        handleDeleteContenido={handleDeleteContenido}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No hay apuntes del profesor.</p>
-                )}
-              </div>
-              <div className="alumnos-apuntes">
-                <h5>Apuntes de los estudiantes</h5>
-                {alumnosApuntes && alumnosApuntes.length > 0 ? (
-                  <ul className="apuntes-list">
-                    {alumnosApuntes.map((a) => (
-                      <TarjetaApunteCurso
-                        key={a.id}
-                        apunte={a}
-                        usuario={usuario}
-                        likedIds={likedIds}
-                        onToggleLike={() => handleToggleApunteLike(a)}
-                        tipo={tipo}
-                        editingMode={editingMode}
-                        handleEditNavigate={handleEditNavigate}
-                        handleDeleteContenido={handleDeleteContenido}
-                      />
-                    ))}
-                  </ul>
-                ) : (
-                  <p>No hay apuntes de alumnos.</p>
-                )}
-              </div>
+          <div className="apuntes-columns-wrapper">
+            <div className="profesor-apuntes">
+              <h5>Apuntes profesor</h5>
+              {profApuntes.length > 0 ? (
+                <ul className="apuntes-list">
+                  {profApuntes.map((a) => (
+                    <TarjetaApunteCurso
+                      key={a.id}
+                      apunte={a}
+                      usuario={user}
+                      likedIds={likedApuntes}
+                      tipo={tipo}
+                      editingMode={editingMode}
+                      handleEditNavigate={(t, i) =>
+                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                          state: { tipo: t, item: i, cursoId: id },
+                        })
+                      }
+                      handleDeleteContenido={handleDeleteItem}
+                      onToggleLike={() => {
+                        /* Like logic inside or passed */
+                      }}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p>Sin apuntes.</p>
+              )}
+            </div>
+            <div className="alumnos-apuntes">
+              <h5>Apuntes comunidad</h5>
+              {alumnApuntes.length > 0 ? (
+                <ul className="apuntes-list">
+                  {alumnApuntes.map((a) => (
+                    <TarjetaApunteCurso
+                      key={a.id}
+                      apunte={a}
+                      usuario={user}
+                      likedIds={likedApuntes}
+                      tipo={tipo}
+                      editingMode={editingMode}
+                      handleEditNavigate={(t, i) =>
+                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                          state: { tipo: t, item: i, cursoId: id },
+                        })
+                      }
+                      handleDeleteContenido={handleDeleteItem}
+                    />
+                  ))}
+                </ul>
+              ) : (
+                <p>Sin apuntes.</p>
+              )}
+            </div>
+          </div>
+
+          {/* EJERCICIOS */}
+          <h4>Ejercicios</h4>
+          {contenidos.ejercicios.length > 0 ? (
+            <div className="ejercicios-list">
+              {contenidos.ejercicios.map((e) => (
+                <div key={e.id} className="ejercicio-row">
+                  <div className="ejercicio-row-main">
+                    <TarjetaEjercicioCurso
+                      ejercicio={e}
+                      tipo={tipo}
+                      editingMode={editingMode}
+                      handleEditNavigate={(t, i) =>
+                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                          state: { tipo: t, item: i, cursoId: id },
+                        })
+                      }
+                      handleDeleteContenido={handleDeleteItem}
+                    />
+                  </div>
+                  <div className="ejercicio-row-boton">
+                    {tipo === "profesor" ? (
+                      <button
+                        className="btn-corregir-ejercicio"
+                        onClick={() =>
+                          navigate(
+                            `/Home/Cursos/${id}/CorregirEjercicios/${e.id}`,
+                          )
+                        }
+                      >
+                        <img src={CorregirEjercicio2} alt="Corregir" />
+                      </button>
+                    ) : (
+                      <div>
+                        {uploadedEjercicios.includes(e.id) ? (
+                          <button disabled className="btn-ejercicio-subido">
+                            <img src={EjercicioSubido} alt="Ok" />
+                          </button>
+                        ) : (
+                          <label className="btn-subir-ejercicio">
+                            <input
+                              type="file"
+                              style={{ display: "none" }}
+                              onChange={(ev) =>
+                                ev.target.files?.[0] &&
+                                uploadEjercicio(ev.target.files[0], e.id)
+                              }
+                            />
+                            <img
+                              src={SubirEjercicio}
+                              alt="Subir"
+                              style={{ cursor: "pointer" }}
+                            />
+                          </label>
+                        )}
+                      </div>
+                    )}
+                  </div>
+                </div>
+              ))}
             </div>
           ) : (
-            <p>No hay apuntes para este curso.</p>
-          )}
-          <h4>Ejercicios</h4>
-          {ejercicios && ejercicios.length > 0 ? (
-              <div className="ejercicios-list">
-                {ejercicios.map((e) => (
-                  <div key={e.id} className="ejercicio-row">
-                    <div className="ejercicio-row-main">
-                      <TarjetaEjercicioCurso
-                        ejercicio={e}
-                        tipo={tipo}
-                        editingMode={editingMode}
-                        handleEditNavigate={handleEditNavigate}
-                        handleDeleteContenido={handleDeleteContenido}
-                      />
-                    </div>
-                    <div className="ejercicio-row-boton">
-                      {tipo === "profesor" ? (
-                        <button
-                          onClick={() => navigate(`/Home/Cursos/${id}/CorregirEjercicios/${e.id}`)}
-                          className="btn-corregir-ejercicio"
-                        >
-                          <img src={CorregirEjercicio2} alt="Editar ejercicio" />
-                        </button>
-                      ) : (
-                        <div>
-                          {uploadedEjercicios.includes(e.id) ? (
-                            <button disabled className="btn-ejercicio-subido">
-                              <img src={EjercicioSubido} alt="Ejercicio subido" />
-                            </button>
-                          ) : (
-                            <>
-                              <input
-                                type="file"
-                                id={`file-input-ej-${e.id}`}
-                                style={{ display: 'none' }}
-                                onChange={async (ev) => {
-                                  const file = ev.target.files && ev.target.files[0];
-                                  if (!file) return;
-                                  const form = new FormData();
-                                  form.append('archivo', file);
-                                  form.append('ejercicioId', e.id);
-                                  form.append('alumnoId', alumnoId);
-                                  try {
-                                    const res = await fetch('http://localhost:3000/ejerciciosalumnos', {
-                                      method: 'POST',
-                                      body: form,
-                                    });
-                                    const d = await res.json();
-                                    if (res.ok) {
-                                      setUploadedEjercicios((prev) => [...new Set([...prev, e.id])]);
-                                    } else {
-                                      alert(d.error || 'Error subiendo archivo');
-                                    }
-                                  } catch (err) {
-                                    console.error('upload error', err);
-                                    alert('Error subiendo archivo');
-                                  }
-                                }}
-                                accept="*"
-                              />
-                              <button
-                                onClick={() => document.getElementById(`file-input-ej-${e.id}`).click()}
-                                className="btn-subir-ejercicio"
-                              >
-                                <img src={SubirEjercicio} alt="Subir ejercicio" />
-                              </button>
-                            </>
-                          )}
-                        </div>
-                      )}
-                    </div>
-                  </div>
-                ))}
-              </div>
-          ) : (
-            <p>No hay ejercicios para este curso.</p>
+            <p>No hay ejercicios.</p>
           )}
         </div>
 
-        {/* DETALLES - 25% */}
+        {/* SIDEBAR */}
         <div className="curso-detalles">
           <div className="detalles-profesor">
             <p>Profesor</p>
             {profesor
               ? `${profesor.nombre} ${profesor.apellidos}`
-              : curso.profesor
-                ? `Profesor ID: ${curso.profesor}`
-                : "Desconocido"}
+              : "Desconocido"}
           </div>
           <div className="detalles-descripcion">
             <p>Descripción</p>
@@ -685,110 +571,82 @@ function CursoGrid() {
           <div className="detalles-comentarios">
             <p>Comentarios</p>
             <div className="comentarios-existentes">
-              {comentariosList && comentariosList.length > 0 ? (
-                comentariosList.map((c) => (
-                  <div key={c.id} className="comentario-item">
-                    <div className="comentario-autor">
-                      {c.nombre} {c.apellidos}
-                    </div>
-                    <div>
-                      {editingId === c.id ? (
-                        <div>
-                          <textarea
-                            value={editingText}
-                            onChange={(e) => setEditingText(e.target.value)}
-                            maxLength={500}
-                          />
-                          <button onClick={() => handleSaveEdit(c.id)}>
-                            Guardar
-                          </button>
-                          <button onClick={handleCancelEdit}>Cancelar</button>
-                        </div>
-                      ) : (
-                        <p>{c.comentario}</p>
-                      )}
-                    </div>
-                    {alumnoId && c.usuarioId === alumnoId ? (
-                      <div>
-                        {editingId !== c.id ? (
-                          <>
-                            <button onClick={() => handleStartEdit(c)}>
-                              Editar
-                            </button>
-                            <button onClick={() => handleDelete(c.id)}>
-                              Borrar
-                            </button>
-                          </>
-                        ) : null}
-                      </div>
-                    ) : null}
+              {comentarios.map((c) => (
+                <div key={c.id} className="comentario-item">
+                  <div className="comentario-autor">
+                    {c.nombre} {c.apellidos}
                   </div>
-                ))
-              ) : (
-                <p>No hay comentarios para este curso.</p>
-              )}
+                  <p>{c.comentario}</p>
+                  {user && c.usuarioId === user.id && (
+                    <button onClick={() => deleteComment(c.id)}>Borrar</button>
+                  )}
+                </div>
+              ))}
             </div>
-          {tipo === "alumno" ? (
-            usuario ? (
+            {tipo === "alumno" && (
               <div className="escribir-comentario">
                 <textarea
+                  placeholder="Comenta..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
                   maxLength={500}
-                  placeholder="Escribe un comentario (max 500)"
-                  value={comentario}
-                  onChange={(e) => setComentario(e.target.value)}
                 />
-                <button onClick={handleSubmitComment}>Enviar comentario</button>
+                <button onClick={handleCommentSubmit}>Enviar</button>
               </div>
-            ) : null
-          ) : null}
+            )}
           </div>
         </div>
       </div>
-      {tipo === "profesor" ? (
+
+      {/* PROFESOR ACTIONS */}
+      {tipo === "profesor" && (
         <div className="fixed-action-group">
           <button
             className="editarCurso"
-            onClick={handleToggleEditingMode}
-            title={editingMode ? "Salir de edición" : "Editar contenido"}
+            onClick={() => setEditingMode(!editingMode)}
+            title="Editar modo"
           >
-            <img src={Editar} alt="Editar contenido" />
+            <img src={Editar} alt="Edit" />
           </button>
           <div className="relative-container">
             <button
               className="subirContenidoCurso"
-              onClick={handleToggleAddMenu}
-              title="Añadir contenido"
+              onClick={() => setShowAddMenu(!showAddMenu)}
             >
-              <img src={Mas} alt="Subir contenido" />
+              <img src={Mas} alt="Add" />
             </button>
-            {showAddMenu ? (
+            {showAddMenu && (
               <div className="add-menu">
                 <button
-                  onClick={() => handleNavigateAddContenidoTipo("apunte")}
+                  onClick={() =>
+                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      state: { tipo: "apunte", cursoId: id },
+                    })
+                  }
                 >
-                  Subir apunte
-                </button>
-                <button onClick={() => handleNavigateAddContenidoTipo("video")}>
-                  Subir vídeo
+                  Apunte
                 </button>
                 <button
-                  onClick={() => handleNavigateAddContenidoTipo("ejercicio")}
+                  onClick={() =>
+                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      state: { tipo: "video", cursoId: id },
+                    })
+                  }
                 >
-                  Subir ejercicio
+                  Video
+                </button>
+                <button
+                  onClick={() =>
+                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      state: { tipo: "ejercicio", cursoId: id },
+                    })
+                  }
+                >
+                  Ejercicio
                 </button>
               </div>
-            ) : null}
+            )}
           </div>
-        </div>
-      ) : (
-        <div className="fixed-action-group">
-          <button
-            className="subirContenidoCurso"
-            onClick={() => handleNavigateAddContenidoTipo("apunte")}
-            title="Subir apunte"
-          >
-            <img src={Mas} alt="Subir contenido" />
-          </button>
         </div>
       )}
     </div>

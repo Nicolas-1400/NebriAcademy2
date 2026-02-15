@@ -1,4 +1,4 @@
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState, useRef, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 import TarjetaApunte from "./TarjetaApunte";
@@ -6,405 +6,288 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+/**
+ * Componente: MiEspacioGrid
+ * Dashboard personal del alumno. Muestra sus cursos (matriculados/favoritos) y apuntes (creados/guardados) en carruseles.
+ */
 function MiEspacioGrid() {
-  const [usuario, setUsuario] = useState(null);
-  const [cursos, setCursos] = useState([]);
-  const [cursosAlumnos, setCursosAlumnos] = useState([]);
-  const [alumnos, setAlumnos] = useState([]);
-  const [profesores, setProfesores] = useState([]);
-  const [apuntes, setApuntes] = useState([]);
-  const [likedIds, setLikedIds] = useState([]);
-  const [error, setError] = useState(null);
+  const { user } = useAuthStore();
+  const [data, setData] = useState({
+    cursos: [],
+    cursosAlumnos: [],
+    apuntes: [],
+    alumnos: [],
+    profesores: [],
+  });
+  const [likedApuntes, setLikedApuntes] = useState([]);
   const [loading, setLoading] = useState(true);
-  const cursosEnProcesoSliderRef = useRef(null);
-  const cursosFavoritosSliderRef = useRef(null);
-  const tusApuntesSliderRef = useRef(null);
-  const apuntesGuardadosSliderRef = useRef(null);
+  const [error, setError] = useState(null);
 
-  const storeUser = useAuthStore((state) => state.user);
+  // Referencias Sliders
+  const sliders = {
+    proceso: useRef(null),
+    favCursos: useRef(null),
+    misApuntes: useRef(null),
+    favApuntes: useRef(null),
+  };
 
+  // --- Carga de Datos ---
+  // Cargamos todos los datos necesarios al mismo tiempo (Cursos, Alumnos, Apuntes...)
+  // Usamos Promise.all para que sea más rápido que ir uno por uno.
   useEffect(() => {
-    if (storeUser) setUsuario(storeUser);
-  }, [storeUser]);
+    const cargarDatos = async () => {
+      setLoading(true);
+      try {
+        const [
+          respuestaCursos,
+          respuestaCursosAlumnos,
+          respuestaApuntes,
+          respuestaAlumnos,
+          respuestaProfesores,
+        ] = await Promise.all([
+          fetch("http://localhost:3000/cursos").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/cursosalumnos").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/apuntes").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/alumnos").then((respuesta) =>
+            respuesta.json(),
+          ),
+          fetch("http://localhost:3000/profesores").then((respuesta) =>
+            respuesta.json(),
+          ),
+        ]);
 
-  useEffect(() => {
-    setLoading(true);
-    setError(null);
-
-    Promise.all([
-      fetch("http://localhost:3000/cursos").then((r) => r.json()),
-      fetch("http://localhost:3000/cursosalumnos").then((r) => r.json()),
-      fetch("http://localhost:3000/apuntes").then((r) => r.json()),
-      fetch("http://localhost:3000/alumnos").then((r) => r.json()),
-      fetch("http://localhost:3000/profesores").then((r) => r.json()),
-    ])
-      .then(([cursosData, cursosAlumnosData, apuntesData, alumnosData, profesoresData]) => {
-        setCursos(cursosData.Cursos || []);
-        setCursosAlumnos(cursosAlumnosData.CursosAlumnos || []);
-        setApuntes(apuntesData.Apuntes || []);
-        setAlumnos(alumnosData.Alumnos || []);
-        setProfesores(profesoresData.Profesores || []);
-      })
-      .catch((err) => {
-        console.error("Error cargando datos:", err);
-        setError("Error al cargar datos");
-      })
-      .finally(() => setLoading(false));
+        setData({
+          cursos: respuestaCursos.Cursos || [],
+          cursosAlumnos: respuestaCursosAlumnos.CursosAlumnos || [],
+          apuntes: respuestaApuntes.Apuntes || [],
+          alumnos: respuestaAlumnos.Alumnos || [],
+          profesores: respuestaProfesores.Profesores || [],
+        });
+      } catch (error) {
+        console.error(error);
+        setError("Error cargando datos.");
+      } finally {
+        setLoading(false);
+      }
+    };
+    cargarDatos();
   }, []);
 
-  // Traer los ids de apuntes que el usuario ha marcado con me gusta
+  // Cargar Likes Usuario
   useEffect(() => {
-    if (!usuario) return;
-    const controller = new AbortController();
-    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`, { signal: controller.signal })
-      .then((r) => r.json())
-      .then((data) => {
-        setLikedIds(data.apunteIds || []);
-      })
-      .catch((err) => {
-        if (err.name !== 'AbortError') console.error('Error cargando likes:', err);
-      });
-    return () => controller.abort();
-  }, [usuario]);
+    if (!user) return;
+    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
+      .then((respuesta) => respuesta.json())
+      .then((datos) => setLikedApuntes(datos.apunteIds || []))
+      .catch(console.error);
+  }, [user]);
 
-  // Sección 1: Cursos en proceso (cursos en los que está apuntado)
-  const cursosEnProceso = () => {
-    if (!usuario) return [];
-    const cursosApuntados = cursosAlumnos
-      .filter((ca) => ca.alumnoId === usuario.id && ca.apuntado)
-      .map((ca) => cursos.find((c) => c.id === ca.cursoId))
-      .filter((c) => c);
-    return cursosApuntados
-      .slice()
+  // --- Filtros ---
+  // Filtramos los cursos en los que el alumno está apuntado.
+  // Usamos useMemo para recordar el resultado y no tener que recalcularlo si los datos no cambian.
+  const cursosEnProceso = useMemo(() => {
+    if (!user) return [];
+    // Cruzamos los datos: Buscamos qué cursos corresponden a las inscripciones del alumno
+    return data.cursosAlumnos
+      .filter((ca) => ca.alumnoId === user.id && ca.apuntado)
+      .map((ca) => data.cursos.find((c) => c.id === ca.cursoId))
+      .filter(Boolean) // Quitamos vacíos si no se encuentra el curso
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
-  };
+  }, [data, user]);
 
-  // Sección 2: Cursos favoritos (cursos marcados como favoritos)
-  const cursosFavoritos = () => {
-    if (!usuario) return [];
-    const favoritos = cursosAlumnos
-      .filter((ca) => ca.alumnoId === usuario.id && ca.favorito)
-      .map((ca) => cursos.find((c) => c.id === ca.cursoId))
-      .filter((c) => c);
-    return favoritos
-      .slice()
+  const cursosFavoritos = useMemo(() => {
+    if (!user) return [];
+    return data.cursosAlumnos
+      .filter((ca) => ca.alumnoId === user.id && ca.favorito)
+      .map((ca) => data.cursos.find((c) => c.id === ca.cursoId))
+      .filter(Boolean)
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
-  };
+  }, [data, user]);
 
-  // Sección 3: Tus apuntes (apuntes creados por el usuario)
-  const tusApuntes = () => {
-    if (!usuario) return [];
-    // El backend guarda el autor en la propiedad 'autor' (comparamos como Number)
-    return apuntes.filter((a) => Number(a.autor) === Number(usuario.id));
-  };
+  const misApuntes = useMemo(() => {
+    if (!user) return [];
+    return data.apuntes.filter((a) => Number(a.autor) === Number(user.id));
+  }, [data, user]);
 
-  // Sección 4: Apuntes guardados (apuntes favoritos del usuario)
-  const apuntesGuardados = () => {
-    if (!usuario) return [];
-    // Mostrar los apuntes a los que el usuario ha dado 'me gusta'
-    return apuntes.filter((a) => likedIds.includes(a.id));
-  };
+  const apuntesFavoritos = useMemo(() => {
+    if (!user) return [];
+    return data.apuntes.filter((a) => likedApuntes.includes(a.id));
+  }, [data, user, likedApuntes]);
 
-  const resolveAutorNombre = (autorId) => {
-    if (!autorId) return '';
+  // --- Helpers ---
+  const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
-    // Primero intentar por usuarioId (cuando autor guarda usuarioId)
-    const alumnoByUsuario = alumnos.find((al) => Number(al.usuarioId) === aid);
-    if (alumnoByUsuario) return `${alumnoByUsuario.nombre} ${alumnoByUsuario.apellidos}`;
-    const profByUsuario = profesores.find((p) => Number(p.usuarioId) === aid);
-    if (profByUsuario) return `${profByUsuario.nombre} ${profByUsuario.apellidos}`;
-    // Si no, intentar por id del alumno/profesor (cuando autor guarda la PK de alumnos/profesores)
-    const alumnoById = alumnos.find((al) => Number(al.id) === aid);
-    if (alumnoById) return `${alumnoById.nombre} ${alumnoById.apellidos}`;
-    const profById = profesores.find((p) => Number(p.id) === aid);
-    if (profById) return `${profById.nombre} ${profById.apellidos}`;
-    return String(autorId);
+    if (!aid) return "";
+    const alum = data.alumnos.find(
+      (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
+    );
+    if (alum) return `${alum.nombre} ${alum.apellidos}`;
+    const prof = data.profesores.find(
+      (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
+    );
+    if (prof) return `${prof.nombre} ${prof.apellidos}`;
+    return "Anónimo";
   };
 
-  const handleToggleLike = (apunte) => {
-    if (!usuario || !usuario.id) return;
-    // POST /apuntesalumnos/vote body: { apunteId, alumnoId, vote: true }
-    fetch('http://localhost:3000/apuntesalumnos/vote', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ apunteId: apunte.id, alumnoId: usuario.id, vote: true }),
-    })
-      .then((r) => r.json())
-      .then((data) => {
-        // actualizar likedIds y la valoración localmente
-        const registro = data.registro || {};
-        const apunteRes = data.apunte || {};
-        setLikedIds((prev) => {
-          const has = prev.includes(apunte.id);
-          if (registro && registro.valoracion === true && !has) return [...prev, apunte.id];
-          if (!registro || registro.valoracion !== true) return prev.filter((id) => id !== apunte.id);
-          return prev;
-        });
-        setApuntes((prev) => prev.map((a) => (a.id === apunte.id ? { ...a, valoracion: apunteRes.valoracion ?? a.valoracion } : a)));
-      })
-      .catch((err) => console.error('Error votando apunte:', err));
-  };
-
-  const handleSliderArrow = (sliderRef, direction) => {
-    if (sliderRef.current) {
-      if (direction === "left") {
-        sliderRef.current.slickPrev();
-      } else {
-        sliderRef.current.slickNext();
+  const handleToggleLike = async (apunte) => {
+    if (!user) return;
+    try {
+      const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apunteId: apunte.id,
+          alumnoId: user.id,
+          vote: true,
+        }),
+      });
+      const d = await res.json();
+      if (res.ok) {
+        const isLike = d.registro?.valoracion === true;
+        setLikedApuntes((prev) =>
+          isLike ? [...prev, apunte.id] : prev.filter((id) => id !== apunte.id),
+        );
+        // Update local apunte valoracion
+        const newVal = d.apunte?.valoracion;
+        setData((D) => ({
+          ...D,
+          apuntes: D.apuntes.map((a) =>
+            a.id === apunte.id ? { ...a, valoracion: newVal } : a,
+          ),
+        }));
       }
+    } catch (e) {
+      console.error(e);
     }
   };
 
+  const slide = (ref, dir) => {
+    if (ref.current)
+      dir === "left" ? ref.current.slickPrev() : ref.current.slickNext();
+  };
+
+  // Resize fix for slick
   useEffect(() => {
     if (!loading) {
-      const t = setTimeout(() => {
-        [
-          cursosEnProcesoSliderRef,
-          cursosFavoritosSliderRef,
-          tusApuntesSliderRef,
-          apuntesGuardadosSliderRef,
-        ].forEach((ref) => {
-          if (ref?.current?.innerSlider?.onWindowResized) {
-            ref.current.innerSlider.onWindowResized();
-          }
-          if (ref?.current?.slickGoTo) {
-            try {
-              ref.current.slickGoTo(0);
-            } catch (e) {}
-          }
-        });
-      }, 120);
-      return () => clearTimeout(t);
+      setTimeout(
+        () => Object.values(sliders).forEach((r) => r.current?.slickGoTo(0)),
+        100,
+      );
     }
-  }, [loading, cursos]);
+  }, [loading, data]);
 
-  if (loading) {
+  if (loading)
     return (
       <div className="MiEspacio">
-        <p>Cargando contenido...</p>
+        <p>Cargando espacio personal...</p>
       </div>
     );
-  }
-
-  if (error) {
+  if (error)
     return (
       <div className="MiEspacio">
         <p>{error}</p>
       </div>
     );
-  }
 
-  /* Slider */
-  const settingsSlider = {
+  const sliderSettings = {
     dots: true,
     infinite: false,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    style: { width: "2484px !important" },
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          style: { width: "2484px !important" },
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          style: { width: "1660px !important" },
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
     ],
   };
 
+  const renderSection = (title, items, sliderRef, type) => (
+    <div className={`MiEspacio-seccion-${type}`}>
+      <h2>{title}</h2>
+      <div className="MiEspacio-carousel-container">
+        <button
+          className="carousel-btn carousel-btn-left"
+          onClick={() => slide(sliderRef, "left")}
+        >
+          ‹
+        </button>
+        <Slider
+          ref={sliderRef}
+          {...sliderSettings}
+          className={`MiEspacio-${type}-carousel`}
+        >
+          {items.length > 0 ? (
+            items.map((item) =>
+              type.includes("cursos") ? (
+                <TarjetaCursoPequena
+                  key={item.id}
+                  name={item.nombreCurso}
+                  cursoId={item.id}
+                  nivel={item.nivel}
+                  valoracion={item.valoracion || 0}
+                />
+              ) : (
+                <div key={item.id} className="apuntes-slide apuntes-list">
+                  <ul>
+                    <TarjetaApunte
+                      apunte={item}
+                      usuario={user}
+                      likedIds={likedApuntes}
+                      onToggleLike={handleToggleLike}
+                      autorNombre={resolveAutorName(item.autor)}
+                    />
+                  </ul>
+                </div>
+              ),
+            )
+          ) : (
+            <p className="mensaje-vacio">No hay elementos.</p>
+          )}
+        </Slider>
+        <button
+          className="carousel-btn carousel-btn-right"
+          onClick={() => slide(sliderRef, "right")}
+        >
+          ›
+        </button>
+      </div>
+    </div>
+  );
+
   return (
     <div className="MiEspacio">
-      <h1>
-        Tu espacio{" "}
-        {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
-      </h1>
+      <h1>Tu espacio {user ? `${user.nombre} ${user.apellidos}` : ""}</h1>
       <div className="MiEspacio-secciones">
-        <div className="MiEspacio-seccion-cursos-proceso">
-          <h2>Cursos en proceso</h2>
-          <div className="MiEspacio-carousel-container">
-            <button
-              className="carousel-btn carousel-btn-left"
-              onClick={() =>
-                handleSliderArrow(cursosEnProcesoSliderRef, "left")
-              }
-              aria-label="Anterior"
-            >
-              ‹
-            </button>
-            <Slider
-              ref={cursosEnProcesoSliderRef}
-              {...settingsSlider}
-              className="MiEspacio-cursos-proceso-carousel"
-            >
-              {cursosEnProceso().length > 0 ? (
-                cursosEnProceso().map((curso) => (
-                  <TarjetaCursoPequena
-                    key={curso.id}
-                    name={curso.nombreCurso}
-                    cursoId={curso.id}
-                    nivel={curso.nivel}
-                    valoracion={curso.valoracion || 0}
-                  />
-                ))
-              ) : (
-                <p className="mensaje-vacio">No tienes cursos en proceso</p>
-              )}
-            </Slider>
-            <button
-              className="carousel-btn carousel-btn-right"
-              onClick={() =>
-                handleSliderArrow(cursosEnProcesoSliderRef, "right")
-              }
-              aria-label="Siguiente"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="MiEspacio-seccion-cursos-favoritos">
-          <h2>Cursos favoritos</h2>
-          <div className="MiEspacio-carousel-container">
-            <button
-              className="carousel-btn carousel-btn-left"
-              onClick={() =>
-                handleSliderArrow(cursosFavoritosSliderRef, "left")
-              }
-              aria-label="Anterior"
-            >
-              ‹
-            </button>
-            <Slider
-              ref={cursosFavoritosSliderRef}
-              {...settingsSlider}
-              className="MiEspacio-cursos-favoritos-carousel"
-            >
-              {cursosFavoritos().length > 0 ? (
-                cursosFavoritos().map((curso) => (
-                  <TarjetaCursoPequena
-                    key={curso.id}
-                    name={curso.nombreCurso}
-                    cursoId={curso.id}
-                    nivel={curso.nivel}
-                    valoracion={curso.valoracion || 0}
-                  />
-                ))
-              ) : (
-                <p className="mensaje-vacio">No tienes cursos favoritos aún</p>
-              )}
-            </Slider>
-            <button
-              className="carousel-btn carousel-btn-right"
-              onClick={() =>
-                handleSliderArrow(cursosFavoritosSliderRef, "right")
-              }
-              aria-label="Siguiente"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="MiEspacio-seccion-tus-apuntes">
-          <h2>Tus apuntes</h2>
-          <div className="MiEspacio-carousel-container">
-            <button
-              className="carousel-btn carousel-btn-left"
-              onClick={() => handleSliderArrow(tusApuntesSliderRef, "left")}
-              aria-label="Anterior"
-            >
-              ‹
-            </button>
-            <Slider
-              ref={tusApuntesSliderRef}
-              {...settingsSlider}
-              className="MiEspacio-tus-apuntes-carousel"
-            >
-              {tusApuntes().length > 0 ? (
-                tusApuntes().map((apunte) => (
-                  <div key={apunte.id} className="apuntes-slide apuntes-list">
-                      <ul>
-                        <TarjetaApunte
-                          apunte={apunte}
-                          usuario={usuario}
-                          likedIds={likedIds}
-                          onToggleLike={handleToggleLike}
-                          autorNombre={(() => {
-                            return resolveAutorNombre(apunte.autor)
-                          })()}
-                        />
-                      </ul>
-                    </div>
-                ))
-              ) : (
-                <p className="mensaje-vacio">No tienes apuntes creados aún</p>
-              )}
-            </Slider>
-            <button
-              className="carousel-btn carousel-btn-right"
-              onClick={() => handleSliderArrow(tusApuntesSliderRef, "right")}
-              aria-label="Siguiente"
-            >
-              ›
-            </button>
-          </div>
-        </div>
-        <div className="MiEspacio-seccion-apuntes-guardados">
-          <h2>Apuntes favoritos</h2>
-          <div className="MiEspacio-carousel-container">
-            <button
-              className="carousel-btn carousel-btn-left"
-              onClick={() =>
-                handleSliderArrow(apuntesGuardadosSliderRef, "left")
-              }
-              aria-label="Anterior"
-            >
-              ‹
-            </button>
-            <Slider
-              ref={apuntesGuardadosSliderRef}
-              {...settingsSlider}
-              className="MiEspacio-apuntes-guardados-carousel"
-            >
-              {apuntesGuardados().length > 0 ? (
-                apuntesGuardados().map((apunte) => (
-                  <div key={apunte.id} className="apuntes-slide apuntes-list">
-                    <ul>
-                      <TarjetaApunte
-                        apunte={apunte}
-                        usuario={usuario}
-                        likedIds={likedIds}
-                        onToggleLike={handleToggleLike}
-                        autorNombre={(() => {
-                          return resolveAutorNombre(apunte.autor)
-                        })()}
-                      />
-                    </ul>
-                  </div>
-                ))
-              ) : (
-                <p className="mensaje-vacio">No tienes apuntes guardados aún</p>
-              )}
-            </Slider>
-            <button
-              className="carousel-btn carousel-btn-right"
-              onClick={() =>
-                handleSliderArrow(apuntesGuardadosSliderRef, "right")
-              }
-              aria-label="Siguiente"
-            >
-              ›
-            </button>
-          </div>
-        </div>
+        {renderSection(
+          "Cursos en proceso",
+          cursosEnProceso,
+          sliders.proceso,
+          "cursos-proceso",
+        )}
+        {renderSection(
+          "Cursos favoritos",
+          cursosFavoritos,
+          sliders.favCursos,
+          "cursos-favoritos",
+        )}
+        {renderSection(
+          "Tus apuntes",
+          misApuntes,
+          sliders.misApuntes,
+          "tus-apuntes",
+        )}
+        {renderSection(
+          "Apuntes favoritos",
+          apuntesFavoritos,
+          sliders.favApuntes,
+          "apuntes-guardados",
+        )}
       </div>
     </div>
   );

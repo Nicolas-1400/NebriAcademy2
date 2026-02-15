@@ -1,104 +1,133 @@
 import { useEffect, useState, useRef } from "react";
-import useAuthStore from '../store/useAuthStore'
+import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+/**
+ * Componente de feed principal para alumnos
+ * Muestra secciones de: Tus Cursos, Novedades, Cursos Populares y filtros por categoría
+ * Incluye carruseles interactivos para navegar entre cursos
+ */
+/**
+ * Componente: HomeFeed
+ * Página principal del alumno. Muestra novedades, cursos populares y tus cursos.
+ */
 function HomeFeed() {
+  // --- Estados ---
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
+  const [categorias, setCategorias] = useState([]);
+
+  // UI States
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
+
+  // Hooks y Refs
   const navigate = useNavigate();
   const novedadesSliderRef = useRef(null);
   const tusCursosSliderRef = useRef(null);
   const popularesSliderRef = useRef(null);
 
-  const [categorias, setCategorias] = useState([]);
+  const storeUser = useAuthStore((state) => state.user);
 
-  const storeUser = useAuthStore(state => state.user)
+  // --- Efectos de Carga ---
+
+  // 1. Sincronizar el estado local con el usuario del store global
   useEffect(() => {
-    if (storeUser) setUsuario(storeUser)
+    if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
 
+  // 2. Carga inicial de datos concurrentemente
+  // Usamos Promise.all para iniciar todas las peticiones a la vez y reducir el tiempo de espera
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     Promise.all([
-      fetch("http://localhost:3000/cursos").then((r) => r.json()),
-      fetch("http://localhost:3000/cursosalumnos").then((r) => r.json()),
+      // Obtener todos los cursos disponibles
+      fetch("http://localhost:3000/cursos").then((respuesta) =>
+        respuesta.json(),
+      ),
+      // Obtener relaciones alumno-curso (para saber en cuáles está inscrito)
+      fetch("http://localhost:3000/cursosalumnos").then((respuesta) =>
+        respuesta.json(),
+      ),
+      // Obtener listado de categorías para los filtros
+      fetch("http://localhost:3000/cursos/categorias")
+        .then((respuesta) => respuesta.json())
+        .catch(() => ({ categorias: [] })), // Si falla categorías, no romper toda la página
     ])
-      .then(([cursosData, cursosAlumnosData]) => {
-        setCursos(cursosData.Cursos || []);
-        setCursosAlumnos(cursosAlumnosData.CursosAlumnos || []);
-        // cargar categorias desde endpoint sencillo si existe
-        fetch('http://localhost:3000/cursos/categorias')
-          .then((r) => r.json())
-          .then((d) => setCategorias(Array.isArray(d.categorias) ? d.categorias : []))
-          .catch(() => setCategorias([]));
+      .then(([datosCursos, datosCursosAlumnos, datosCategorias]) => {
+        setCursos(datosCursos.Cursos || []);
+        setCursosAlumnos(datosCursosAlumnos.CursosAlumnos || []);
+        setCategorias(
+          Array.isArray(datosCategorias.categorias)
+            ? datosCategorias.categorias
+            : [],
+        );
       })
-      .catch((err) => {
-        console.error("Error cargando datos:", err);
-        setError("Error al cargar datos");
+      .catch((error) => {
+        console.error("Error cargando datos:", error);
+        setError("Error al cargar el contenido");
       })
       .finally(() => setLoading(false));
   }, []);
 
-  // Sección 1: Tus Cursos (cursos en los que está apuntado)
+  // --- Lógica de Negocio (Filtros) ---
+
+  // Filtra los cursos donde el usuario actual está matriculado (apuntado = true)
+  // Devuelve los objetos de curso completos, ordenados por valoración
   const tusCursos = () => {
     if (!usuario) return [];
-    const cursosApuntados = cursosAlumnos
+    return cursosAlumnos
       .filter((ca) => ca.alumnoId === usuario.id && ca.apuntado)
       .map((ca) => cursos.find((c) => c.id === ca.cursoId))
-      .filter((c) => c);
-    return cursosApuntados
-      .slice()
+      .filter((c) => c) // Eliminar posibles nulos si no se encuentra el curso
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
-  // Sección 2: Novedades (cursos más recientes, ordenados por ID descendente)
+  // Obtiene los cursos más recientes (asumiendo que ID mayor = más nuevo)
+  // Creamos una copia con slice() para no mutar el array original al ordenar
   const novedades = () => {
     return cursos.slice().sort((a, b) => b.id - a.id);
   };
 
-  // Sección 3: Cursos Populares (ordenados por valoración descendente)
+  // Obtiene los cursos con mayor valoración
   const cursosPopulares = () => {
     return cursos
       .slice()
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
+  // --- Handlers ---
+
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };
 
   const handleSliderArrow = (sliderRef, direction) => {
-    if (sliderRef.current) {
-      if (direction === "left") {
-        sliderRef.current.slickPrev();
-      } else {
-        sliderRef.current.slickNext();
-      }
-    }
+    if (!sliderRef.current) return;
+    direction === "left"
+      ? sliderRef.current.slickPrev()
+      : sliderRef.current.slickNext();
   };
 
+  // Resize fix para Sliders
   useEffect(() => {
     if (!loading) {
       const t = setTimeout(() => {
-        [novedadesSliderRef, tusCursosSliderRef, popularesSliderRef].forEach((ref) => {
-          if (ref?.current?.innerSlider?.onWindowResized) {
-            ref.current.innerSlider.onWindowResized();
-          }
-          if (ref?.current?.slickGoTo) {
+        [novedadesSliderRef, tusCursosSliderRef, popularesSliderRef].forEach(
+          (ref) => {
+            ref?.current?.innerSlider?.onWindowResized?.();
             try {
-              ref.current.slickGoTo(0);
+              ref?.current?.slickGoTo(0);
             } catch (e) {}
-          }
-        });
+          },
+        );
       }, 120);
       return () => clearTimeout(t);
     }
@@ -134,8 +163,7 @@ function HomeFeed() {
         settings: {
           slidesToShow: 3,
           slidesToScroll: 1,
-          style: { width: "2484px !important"}
-
+          style: { width: "2484px !important" },
         },
       },
       {
@@ -143,12 +171,11 @@ function HomeFeed() {
         settings: {
           slidesToShow: 2,
           slidesToScroll: 1,
-          style: { width: "1660px !important"}
+          style: { width: "1660px !important" },
         },
       },
     ],
   };
- 
 
   return (
     <div className="HomeFeed">

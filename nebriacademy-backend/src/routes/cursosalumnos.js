@@ -3,195 +3,186 @@ const router = express.Router();
 const CursosAlumnos = require("../models/CursosAlumnos.js");
 const Cursos = require("../models/Cursos.js");
 
-// Obtener todos los cursos-alumnos
-router.get("/", (req, res) => {
+// GET / - Listar todos
+router.get("/", async (req, res) => {
   try {
-    console.log("GET /cursosalumnos");
-    CursosAlumnos.findAll().then((resultado) => {
-      res.json({
-        "Numero de cursosAlumnos": resultado.length,
-        CursosAlumnos: resultado,
-      });
-    });
-  } catch (error) {
-    console.error("Error al obtener cursos-alumnos:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const data = await CursosAlumnos.findAll();
+    res.json({ "Numero de cursosAlumnos": data.length, CursosAlumnos: data });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener registro por cursoId y alumnoId vía query
-router.get('/registro', async (req, res) => {
+// GET /registro - Buscar por cursoId y alumnoId
+router.get("/registro", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.query;
-    const registro = await CursosAlumnos.findOne({ where: { cursoId: parseInt(cursoId), alumnoId: parseInt(alumnoId) } });
+    const registro = await CursosAlumnos.findOne({
+      where: { cursoId, alumnoId },
+    });
     res.json(registro);
-  } catch (error) {
-    console.error('Error en /cursosalumnos/registro:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Obtener por ID un registro curso-alumno
-router.get("/:id", (req, res) => {
+// GET /:id - Detalle
+router.get("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`GET /cursosalumnos/${id}`);
-    CursosAlumnos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        res.json(registro);
-      } else {
-        res.status(404).json({ error: "Registro curso-alumno no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al obtener registro curso-alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await CursosAlumnos.findByPk(req.params.id);
+    r ? res.json(r) : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Crear un registro curso-alumno
-router.post("/", (req, res) => {
-  try {
-    console.log("POST /cursosalumnos");
-    CursosAlumnos.create(req.body).then((nuevo) => {
-      res.status(201).json(nuevo);
-    });
-  } catch (error) {
-    console.error("Error al crear registro curso-alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// Votar (upvote/downvote). body: { cursoId, alumnoId, vote } where vote = true (up) o false (down)
-router.post('/vote', async (req, res) => {
+// POST /vote - Votar curso (Toggle Upvote/Downvote logic)
+router.post("/vote", async (req, res) => {
   try {
     const { cursoId, alumnoId, vote } = req.body;
-    if (!cursoId || !alumnoId || typeof vote !== 'boolean') return res.status(400).json({ error: 'Parámetros invalidos' });
-
-    // buscar o crear registro cursosAlumnos
-    let registro = await CursosAlumnos.findOne({ where: { cursoId, alumnoId } });
-    if (!registro) {
-      registro = await CursosAlumnos.create({ cursoId, alumnoId, favorito: false, apuntado: false, valoracion: null, comentario: null });
+    if (!cursoId || !alumnoId || typeof vote !== "boolean") {
+      return res.status(400).json({ error: "Datos inválidos" });
     }
 
-    const curso = await Cursos.findByPk(cursoId);
-    if (!curso) return res.status(404).json({ error: 'Curso no encontrado' });
+    // 1. Obtener registro
+    const [registro] = await CursosAlumnos.findOrCreate({
+      where: { cursoId, alumnoId },
+      defaults: {
+        favorito: false,
+        apuntado: false,
+        valoracion: null,
+        comentario: null,
+      },
+    });
 
-    const actual = registro.valoracion === null || registro.valoracion === undefined ? null : registro.valoracion;
-    const voteNum = vote ? 1 : -1;
-    let votacion = 0;
-    let nuevoValor = vote;
+    // 2. Lógica de votación ("Toggle")
+    // Permite al usuario votar positivo (true) o negativo (false).
+    // Si vota lo mismo que ya tenía, se elimina el voto (estado null).
+    // Si cambia de opinión, actualiza el valor.
+    const actual = registro.valoracion;
+    const intVote = vote ? 1 : -1;
+    let delta = 0;
+    let nuevoEstado = vote;
 
     if (actual === vote) {
-      // deshacer voto
-      nuevoValor = null;
-      votacion = -voteNum;
-    } else if (actual === null) {
-      // nuevo voto
-      votacion = voteNum;
+      // Quitar voto (toggle off)
+      nuevoEstado = null;
+      delta = -intVote;
+    } else if (actual === null || actual === undefined) {
+      // Nuevo voto
+      delta = intVote;
     } else {
-      // cambiar de up a down o viceversa
-      votacion = voteNum * 2;
+      // Cambiar sentido (up->down o down->up)
+      delta = intVote * 2;
     }
 
-    // actualizar curso.valoracion (numérico)
-    const nuevaValoracionCurso = (curso.valoracion || 0) + votacion;
-    await curso.update({ valoracion: nuevaValoracionCurso });
+    // 3. Actualizar Curso
+    const curso = await Cursos.findByPk(cursoId);
+    if (!curso) return res.status(404).json({ error: "Curso no encontrado" });
 
-    // actualizar registro (booleano o null)
-    await registro.update({ valoracion: nuevoValor });
+    await curso.increment("valoracion", { by: delta });
 
-    res.json({ registro, curso: { id: curso.id, valoracion: curso.valoracion } });
+    // 4. Actualizar Registro
+    await registro.update({ valoracion: nuevoEstado });
+
+    res.json({
+      registro: { ...registro.toJSON(), valoracion: nuevoEstado },
+      curso: { id: curso.id, valoracion: (curso.valoracion || 0) + delta },
+    });
   } catch (error) {
-    console.error('Error en /cursosalumnos/vote:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error("Error voto curso:", error);
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Toggle favorito. body: { cursoId, alumnoId }
-router.post('/toggle-fav', async (req, res) => {
+// POST /toggle-fav
+router.post("/toggle-fav", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
-    if (!cursoId || !alumnoId) return res.status(400).json({ error: 'Parámetros invalidos' });
-    let registro = await CursosAlumnos.findOne({ where: { cursoId, alumnoId } });
-    if (!registro) registro = await CursosAlumnos.create({ cursoId, alumnoId, favorito: true });
-    else await registro.update({ favorito: !registro.favorito });
+    if (!cursoId || !alumnoId)
+      return res.status(400).json({ error: "Faltan datos" });
+
+    const [registro] = await CursosAlumnos.findOrCreate({
+      where: { cursoId, alumnoId },
+      defaults: { favorito: true },
+    });
+
+    // Si ya existía, invertir
+    if (!registro.isNewRecord)
+      await registro.update({ favorito: !registro.favorito });
+
     res.json(registro);
-  } catch (error) {
-    console.error('Error en /cursosalumnos/toggle-fav:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Toggle apuntado. body: { cursoId, alumnoId }
-router.post('/toggle-apuntado', async (req, res) => {
+// POST /toggle-apuntado
+router.post("/toggle-apuntado", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
-    if (!cursoId || !alumnoId) return res.status(400).json({ error: 'Parámetros invalidos' });
-    let registro = await CursosAlumnos.findOne({ where: { cursoId, alumnoId } });
-    if (!registro) registro = await CursosAlumnos.create({ cursoId, alumnoId, apuntado: true });
-    else await registro.update({ apuntado: !registro.apuntado });
+    if (!cursoId || !alumnoId)
+      return res.status(400).json({ error: "Faltan datos" });
+
+    const [registro] = await CursosAlumnos.findOrCreate({
+      where: { cursoId, alumnoId },
+      defaults: { apuntado: true },
+    });
+
+    if (!registro.isNewRecord)
+      await registro.update({ apuntado: !registro.apuntado });
+
     res.json(registro);
-  } catch (error) {
-    console.error('Error en /cursosalumnos/toggle-apuntado:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Añadir/actualizar comentario (max 500). body: { cursoId, alumnoId, comentario }
-router.post('/comment', async (req, res) => {
+// POST /comment
+router.post("/comment", async (req, res) => {
   try {
     const { cursoId, alumnoId, comentario } = req.body;
-    if (!cursoId || !alumnoId) return res.status(400).json({ error: 'Parámetros invalidos' });
-    const text = comentario ? String(comentario).slice(0, 500) : null;
-    let registro = await CursosAlumnos.findOne({ where: { cursoId, alumnoId } });
-    if (!registro) registro = await CursosAlumnos.create({ cursoId, alumnoId, comentario: text });
-    else await registro.update({ comentario: text });
+    if (!cursoId || !alumnoId)
+      return res.status(400).json({ error: "Faltan datos" });
+
+    const [registro] = await CursosAlumnos.findOrCreate({
+      where: { cursoId, alumnoId },
+      defaults: { comentario: comentario || null },
+    });
+
+    if (!registro.isNewRecord) {
+      await registro.update({
+        comentario: comentario ? String(comentario).slice(0, 500) : null,
+      });
+    }
     res.json(registro);
-  } catch (error) {
-    console.error('Error en /cursosalumnos/comment:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Actualizar un registro curso-alumno por ID
-router.put("/:id", (req, res) => {
+// PUT /:id - Actualizar admin
+router.put("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`PUT /cursosalumnos/${id}`);
-    CursosAlumnos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        registro.update(req.body).then((actualizado) => res.json(actualizado));
-      } else {
-        res.status(404).json({ error: "Registro curso-alumno no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al actualizar registro curso-alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const registro = await CursosAlumnos.findByPk(req.params.id);
+    if (!registro) return res.status(404).json({ error: "No encontrado" });
+
+    await registro.update(req.body);
+    res.json(registro);
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 
-// Eliminar un registro curso-alumno por ID
-router.delete("/:id", (req, res) => {
+// DELETE /:id
+router.delete("/:id", async (req, res) => {
   try {
-    const id = parseInt(req.params.id);
-    console.log(`DELETE /cursosalumnos/${id}`);
-    CursosAlumnos.findAll().then((resultado) => {
-      const registro = resultado.find((r) => r.id === id);
-      if (registro) {
-        registro
-          .destroy()
-          .then(() => res.json({ mensaje: "Registro curso-alumno eliminado" }));
-      } else {
-        res.status(404).json({ error: "Registro curso-alumno no encontrado" });
-      }
-    });
-  } catch (error) {
-    console.error("Error al eliminar registro curso-alumno:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
+    const r = await CursosAlumnos.destroy({ where: { id: req.params.id } });
+    r
+      ? res.json({ mensaje: "Eliminado" })
+      : res.status(404).json({ error: "No encontrado" });
+  } catch (e) {
+    res.status(500).json({ error: "Server error" });
   }
 });
 

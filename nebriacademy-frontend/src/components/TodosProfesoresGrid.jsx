@@ -1,31 +1,31 @@
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
+/**
+ * Componente: TodosProfesoresGrid
+ * Listado de todos los profesores registrados.
+ */
 function TodosProfesoresGrid() {
   const [profesores, setProfesores] = useState([]);
   const [error, setError] = useState(null);
 
   useEffect(() => {
-    setError(null);
     fetch("http://localhost:3000/profesores")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.Profesores)
-          ? data.Profesores
-          : data || [];
-        setProfesores(list);
+      .then((respuesta) => respuesta.json())
+      .then((datos) => {
+        setProfesores(Array.isArray(datos.Profesores) ? datos.Profesores : []);
       })
-      .catch((e) => {
-        console.error("Error cargando profesores:", e);
-        setError("No se pudieron cargar los profesores");
+      .catch((error) => {
+        console.error("Error:", error);
+        setError("Error cargando profesores");
       });
   }, []);
 
-  if (error) return <p>{error}</p>;
+  if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="TodosProfesoresGrid">
-      {profesores && profesores.length > 0 ? (
+      {profesores.length > 0 ? (
         <div className="profesores-grid">
           <h2>Profesores</h2>
           <div className="profesores-contenedor">

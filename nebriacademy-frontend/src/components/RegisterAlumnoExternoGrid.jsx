@@ -1,18 +1,30 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-
+/**
+ * Componente: RegisterAlumnoExternoGrid
+ * Formulario de registro para alumnos externos (con pago).
+ */
 function RegisterAlumnoExternoGrid() {
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [dni, setDni] = useState("");
-  const [email, setEmail] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [numeroTarjeta, setTarjeta] = useState("");
-  const [pais, setPais] = useState("");
-  const [localidad, setLocalizacion] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellidos: "",
+    dni: "",
+    email: "",
+    contrasena: "",
+    numeroTarjeta: "",
+    pais: "",
+    localidad: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -23,19 +35,8 @@ function RegisterAlumnoExternoGrid() {
         "http://localhost:3000/alumnos/registerAlumnoExterno/auth",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombre,
-            apellidos: apellidos,
-            dni: dni,
-            email: email,
-            contrasena: contrasena,
-            numeroTarjeta: numeroTarjeta,
-            pais: pais,
-            localidad: localidad,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         },
       );
 
@@ -48,8 +49,8 @@ function RegisterAlumnoExternoGrid() {
         setError(datos.error || "Error en el registro");
       }
     } catch (err) {
-      setError("Error de conexión con el servidor");
       console.error(err);
+      setError("Error de conexión con el servidor");
     }
   };
 
@@ -59,53 +60,63 @@ function RegisterAlumnoExternoGrid() {
         <h2>Registrate</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
+            name="nombre"
             type="text"
             placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            value={formData.nombre}
+            onChange={handleChange}
             required
           />
           <input
+            name="apellidos"
             type="text"
             placeholder="Apellidos"
-            value={apellidos}
-            onChange={(e) => setApellidos(e.target.value)}
+            value={formData.apellidos}
+            onChange={handleChange}
             required
           />
           <input
+            name="dni"
             type="text"
             placeholder="DNI"
-            value={dni}
-            onChange={(e) => setDni(e.target.value)}
+            value={formData.dni}
+            onChange={handleChange}
             required
           />
           <input
+            name="email"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             required
           />
           <input
+            name="contrasena"
             type="password"
             placeholder="Contraseña"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
+            value={formData.contrasena}
+            onChange={handleChange}
             required
           />
           <input
+            name="numeroTarjeta"
             type="text"
             placeholder="Tarjeta"
-            value={numeroTarjeta}
-            onChange={(e) => setTarjeta(e.target.value)}
+            value={formData.numeroTarjeta}
+            onChange={handleChange}
             required
           />
+
           <select
-            value={pais}
-            onChange={(e) => setPais(e.target.value)}
+            name="pais"
+            value={formData.pais}
+            onChange={handleChange}
             required
           >
-            <option value="" disabled>Seleccione un país</option>
+            <option value="" disabled>
+              Seleccione un país
+            </option>
             <option value="España">España</option>
             <option value="México">México</option>
             <option value="Colombia">Colombia</option>
@@ -118,12 +129,16 @@ function RegisterAlumnoExternoGrid() {
             <option value="Francia">Francia</option>
             <option value="Otro">Otro</option>
           </select>
+
           <select
-            value={localidad}
-            onChange={(e) => setLocalizacion(e.target.value)}
+            name="localidad"
+            value={formData.localidad}
+            onChange={handleChange}
             required
           >
-            <option value="" disabled>Seleccione una localidad</option>
+            <option value="" disabled>
+              Seleccione una localidad
+            </option>
             <option value="Madrid">Madrid</option>
             <option value="Barcelona">Barcelona</option>
             <option value="Valencia">Valencia</option>
@@ -131,15 +146,20 @@ function RegisterAlumnoExternoGrid() {
             <option value="Bilbao">Bilbao</option>
             <option value="Otro">Otro</option>
           </select>
+
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
-        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+
+        <p>
+          ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>
+        </p>
       </div>
+
       <div className="register-precios">
         <h2>Precio</h2>
         <div className="precios-contenido">
-          <div className="precio">Por solo 5.99€/mes.</div> 
+          <div className="precio">Por solo 5.99€/mes.</div>
           <div className="descripcion-precio">
             <p>Acceso completo a nuestra plataforma educativa:</p>
             <ul>
@@ -152,7 +172,7 @@ function RegisterAlumnoExternoGrid() {
               <li>💬 Soporte y comunicación con profesores</li>
               <li>🎓 Certificados de finalización de cursos</li>
             </ul>
-          </div>     
+          </div>
         </div>
       </div>
     </div>

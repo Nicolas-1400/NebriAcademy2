@@ -1,85 +1,92 @@
-const express = require('express');
+const express = require("express");
 const router = express.Router();
-const ApuntesAlumnos = require('../models/ApuntesAlumnos.js');
-const Apuntes = require('../models/Apuntes.js');
+const ApuntesAlumnos = require("../models/ApuntesAlumnos.js");
+const Apuntes = require("../models/Apuntes.js");
 
-// Listar todos los registros
-router.get('/', async (req, res) => {
+// GET / - Listar todos
+router.get("/", async (req, res) => {
   try {
     const all = await ApuntesAlumnos.findAll();
-    res.json({ 'Numero de registros': all.length, ApuntesAlumnos: all });
-  } catch (error) {
-    console.error('Error en /apuntesalumnos:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    res.json({ "Numero de registros": all.length, ApuntesAlumnos: all });
+  } catch (e) {
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 
-// Obtener registro por apunteId y alumnoId vía query
-router.get('/registro', async (req, res) => {
+// GET /registro - Buscar por apunteId y alumnoId
+router.get("/registro", async (req, res) => {
   try {
     const { apunteId, alumnoId } = req.query;
-    if (!apunteId || !alumnoId) return res.status(400).json({ error: 'Parametros invalidos' });
-    const registro = await ApuntesAlumnos.findOne({ where: { apunteId: parseInt(apunteId), alumnoId: parseInt(alumnoId) } });
+    if (!apunteId || !alumnoId)
+      return res.status(400).json({ error: "Faltan parámetros" });
+
+    const registro = await ApuntesAlumnos.findOne({
+      where: { apunteId, alumnoId },
+    });
     res.json(registro || {});
-  } catch (error) {
-    console.error('Error en /apuntesalumnos/registro:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+  } catch (e) {
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 
-// Votar (megusta/unmegusta). body: { apunteId, alumnoId, vote } where vote = true (megusta)
-router.post('/vote', async (req, res) => {
+/**
+ * POST /vote
+ * Alterna "me gusta" en un apunte.
+ * Actualiza el registro ApuntesAlumnos y el contador en Apuntes.
+ */
+router.post("/vote", async (req, res) => {
   try {
     const { apunteId, alumnoId, vote } = req.body;
-    if (!apunteId || !alumnoId || typeof vote !== 'boolean' || vote !== true) return res.status(400).json({ error: 'Parámetros invalidos: solo vote=true permitido' });
-
-    let registro = await ApuntesAlumnos.findOne({ where: { apunteId, alumnoId } });
-    if (!registro) {
-      registro = await ApuntesAlumnos.create({ apunteId, alumnoId, megusta: null });
+    if (!apunteId || !alumnoId || vote !== true) {
+      return res.status(400).json({ error: "Datos inválidos" });
     }
 
-    const actual = registro.megusta === true ? true : null;
-    let votacion = 0;
-    let nuevoValor = null;
+    // 1. Obtener/Crear registro de interacción
+    const [registro] = await ApuntesAlumnos.findOrCreate({
+      where: { apunteId, alumnoId },
+      defaults: { megusta: null },
+    });
 
-    if (actual === true) {
-      // quitar megusta
-      nuevoValor = null;
-      votacion = -1;
-    } else {
-      // poner megusta
-      nuevoValor = true;
-      votacion = 1;
-    }
+    // 2. Calcular nuevo valor (Toggle)
+    // Si ya tiene like (megusta=true), lo quitamos (null). Si no, lo ponemos (true).
+    const isLike = registro.megusta === true;
+    const nuevoValor = isLike ? null : true;
+    const cambioValoracion = isLike ? -1 : 1;
 
-    // actualizar apunte.valoracion (numérico)
+    // 3. Actualizar Apunte (Contador global)
     const apunte = await Apuntes.findByPk(apunteId);
-    if (!apunte) return res.status(404).json({ error: 'Apunte no encontrado' });
-    const nuevaValoracion = (apunte.valoracion || 0) + votacion;
-    await apunte.update({ valoracion: nuevaValoracion });
+    if (!apunte) return res.status(404).json({ error: "Apunte no encontrado" });
 
-    // actualizar/guardar registro
+    const nuevaNota = (apunte.valoracion || 0) + cambioValoracion;
+    await apunte.update({ valoracion: nuevaNota });
+
+    // 4. Actualizar Registro usuario
     await registro.update({ megusta: nuevoValor });
 
-    const respuestaRegistro = { apunteId: registro.apunteId, alumnoId: registro.alumnoId, valoracion: registro.megusta };
-    res.json({ registro: respuestaRegistro, apunte: { id: apunte.id, valoracion: apunte.valoracion } });
+    res.json({
+      registro: { apunteId, alumnoId, valoracion: nuevoValor },
+      apunte: { id: apunte.id, valoracion: nuevaNota },
+    });
   } catch (error) {
-    console.error('Error en /apuntesalumnos/vote:', error);
-    res.status(500).json({ error: 'Error interno del servidor' });
+    console.error("Error votando apunte:", error);
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 
-// Obtener ids de apuntes con megusta por alumno: /apuntesalumnos/likes?alumnoId=NN
-router.get('/likes', async (req, res) => {
+// GET /likes - IDs de apuntes que gustan al alumno
+router.get("/likes", async (req, res) => {
   try {
-    const alumnoId = req.query.alumnoId ? parseInt(req.query.alumnoId) : null;
-    if (!alumnoId) return res.status(400).json({ error: "Parametro 'alumnoId' es requerido" });
-    const items = await ApuntesAlumnos.findAll({ where: { alumnoId, megusta: true } });
-    const apunteIds = items.map((it) => it.apunteId);
-    return res.json({ apunteIds });
-  } catch (error) {
-    console.error('Error en /apuntesalumnos/likes:', error);
-    return res.status(500).json({ error: 'Error interno del servidor' });
+    const { alumnoId } = req.query;
+    if (!alumnoId) return res.status(400).json({ error: "Falta alumnoId" });
+
+    const likes = await ApuntesAlumnos.findAll({
+      where: { alumnoId, megusta: true },
+      attributes: ["apunteId"],
+    });
+
+    res.json({ apunteIds: likes.map((l) => l.apunteId) });
+  } catch (e) {
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 

@@ -1,128 +1,156 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
 
+/**
+ * Componente: CorregirEjerciciosSubidosGrid
+ * Permite al profesor ver ejercicios y asignar puntuaciones.
+ */
 function CorregirEjerciciosSubidosGrid() {
-  const { id } = useParams(); // id del ejercicio (según la ruta usada)
+  const { id } = useParams();
   const [registros, setRegistros] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [puntuaciones, setPuntuaciones] = useState([]);
-  const [scores, setScores] = useState({});
+  const [inputScores, setInputScores] = useState({});
 
   useEffect(() => {
-    // cargar registros de ejercicios subidos
-    fetch("http://localhost:3000/ejerciciosalumnos")
-      .then((r) => r.json())
-      .then((data) => {
-        const list = Array.isArray(data.registros) ? data.registros : data || [];
-        const filtered = id ? list.filter((r) => String(r.ejercicioId) === String(id)) : list;
-        setRegistros(filtered);
-      })
-      .catch(() => setRegistros([]));
+    Promise.all([
+      fetch("http://localhost:3000/ejerciciosalumnos").then((respuesta) =>
+        respuesta.json(),
+      ),
+      fetch("http://localhost:3000/alumnos").then((respuesta) =>
+        respuesta.json(),
+      ),
+      fetch("http://localhost:3000/puntuacionesejercicios").then((respuesta) =>
+        respuesta.json(),
+      ),
+    ])
+      .then(([datosRegistros, datosAlumnos, datosPuntuaciones]) => {
+        const allRegs = Array.isArray(datosRegistros.registros)
+          ? datosRegistros.registros
+          : datosRegistros || [];
+        setRegistros(
+          id
+            ? allRegs.filter(
+                (registro) => String(registro.ejercicioId) === String(id),
+              )
+            : allRegs,
+        );
 
-    // cargar lista de alumnos para mostrar nombres
-    fetch("http://localhost:3000/alumnos")
-      .then((r) => r.json())
-      .then((d) => {
-        const arr = Array.isArray(d.Alumnos) ? d.Alumnos : d || [];
-        setAlumnos(arr);
-      })
-      .catch(() => setAlumnos([]));
+        setAlumnos(
+          Array.isArray(datosAlumnos.Alumnos)
+            ? datosAlumnos.Alumnos
+            : datosAlumnos || [],
+        );
 
-    // cargar puntuaciones existentes
-    fetch("http://localhost:3000/puntuacionesejercicios")
-      .then((r) => r.json())
-      .then((d) => {
-        const arr = Array.isArray(d.PuntuacionesEjercicios) ? d.PuntuacionesEjercicios : d || [];
-        setPuntuaciones(arr);
+        setPuntuaciones(
+          Array.isArray(datosPuntuaciones.PuntuacionesEjercicios)
+            ? datosPuntuaciones.PuntuacionesEjercicios
+            : datosPuntuaciones || [],
+        );
       })
-      .catch(() => setPuntuaciones([]));
+      .catch((error) =>
+        console.error("Error cargando datos corrección:", error),
+      );
   }, [id]);
 
-  const ejerciciosSubidos = registros.map((r) => {
-    const al = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));
-    return { ...r, alumnoNombre: al ? `${al.nombre} ${al.apellidos}` : null };
-  });
+  const ejerciciosConNombre = useMemo(() => {
+    return registros.map((r) => {
+      const alumno = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));
+      return {
+        ...r,
+        alumnoNombre: alumno
+          ? `${alumno.nombre} ${alumno.apellidos}`
+          : "Desconocido",
+      };
+    });
+  }, [registros, alumnos]);
 
-  const findExisting = (ejercicioId, alumnoId) => {
-    return puntuaciones.find((p) => Number(p.ejercicioId) === Number(ejercicioId) && Number(p.alumnoId) === Number(alumnoId));
+  const getExistingScore = (ejercicioId, alumnoId) => {
+    return puntuaciones.find(
+      (p) =>
+        Number(p.ejercicioId) === Number(ejercicioId) &&
+        Number(p.alumnoId) === Number(alumnoId),
+    );
   };
 
-  const handleScoreChange = (regId, value) => {
-    setScores((s) => ({ ...s, [regId]: value }));
+  const handeScoreInput = (regId, val) => {
+    setInputScores((prev) => ({ ...prev, [regId]: val }));
   };
 
   const handleSubmitScore = async (reg) => {
-    const raw = scores[reg.id];
-    const v = raw === undefined || raw === null || raw === '' ? '' : Number(raw);
-    if (v === '' || Number.isNaN(v)) {
-      alert('Introduce una nota válida (1-10)');
-      return;
-    }
-    if (v < 1 || v > 10) {
-      alert('La nota debe estar entre 1 y 10');
-      return;
+    const val = Number(inputScores[reg.id]);
+    if (isNaN(val) || val < 0 || val > 10 || inputScores[reg.id] === "") {
+      return alert("Introduce una nota válida (0-10)");
     }
 
-    const existing = findExisting(reg.id, reg.alumnoId);
+    const existing = getExistingScore(reg.id, reg.alumnoId);
+    const url = existing
+      ? `http://localhost:3000/puntuacionesejercicios/${existing.id}`
+      : "http://localhost:3000/puntuacionesejercicios";
+
+    const method = existing ? "PUT" : "POST";
+    const body = existing
+      ? { puntuacion: val }
+      : { ejercicioId: reg.id, alumnoId: reg.alumnoId, puntuacion: val };
+
     try {
-      if (existing) {
-        const res = await fetch(`http://localhost:3000/puntuacionesejercicios/${existing.id}`, {
-          method: 'PUT',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ puntuacion: v }),
-        });
-        const d = await res.json();
-        if (!res.ok) throw new Error(d.error || 'Error actualizando');
-        // actualizar en estado
-        setPuntuaciones((prev) => prev.map((p) => (p.id === d.id ? d : p)));
-        alert('Puntuación actualizada');
-      } else {
-        const res = await fetch('http://localhost:3000/puntuacionesejercicios', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          body: JSON.stringify({ ejercicioId: reg.id, alumnoId: reg.alumnoId, puntuacion: v }),
-        });
-        const d = await res.json();
-        if (!res.ok) throw new Error(d.error || 'Error creando');
-        setPuntuaciones((prev) => [...prev, d]);
-        alert('Puntuación guardada');
-      }
-    } catch (e) {
-      console.error('Error guardando puntuación', e);
-      alert('Error guardando puntuación');
+      const respuesta = await fetch(url, {
+        method,
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const datos = await respuesta.json();
+      if (!respuesta.ok) throw new Error(datos.error || "Error guardando nota");
+
+      setPuntuaciones((prev) =>
+        existing
+          ? prev.map((p) => (p.id === datos.id ? datos : p))
+          : [...prev, datos],
+      );
+      alert("Puntuación guardada");
+    } catch (error) {
+      console.error(error);
+      alert("Error al guardar la puntuación");
     }
   };
 
   return (
     <div>
       <h3>Ejercicios subidos</h3>
-      {ejerciciosSubidos && ejerciciosSubidos.length > 0 ? (
+      {ejerciciosConNombre.length > 0 ? (
         <ul>
-          {ejerciciosSubidos.map((reg) => {
-            const existing = findExisting(reg.id, reg.alumnoId);
-            const val = scores[reg.id] !== undefined ? scores[reg.id] : (existing ? existing.puntuacion : '');
+          {ejerciciosConNombre.map((reg) => {
+            const existing = getExistingScore(reg.id, reg.alumnoId);
+            const currentVal =
+              inputScores[reg.id] !== undefined
+                ? inputScores[reg.id]
+                : (existing?.puntuacion ?? "");
+
             return (
               <li key={reg.id}>
                 <TarjetaEjercicioAlumno registro={reg} />
-                <div>
+                <div className="calificar-container">
                   <input
                     type="number"
-                    min="1"
+                    min="0"
                     max="10"
                     className="input-nota"
-                    value={val}
-                    onChange={(e) => handleScoreChange(reg.id, e.target.value)}
-                    placeholder={existing ? String(existing.puntuacion) : '1-10'}
+                    value={currentVal}
+                    onChange={(e) => handeScoreInput(reg.id, e.target.value)}
+                    placeholder="0-10"
                   />
-                  <button onClick={() => handleSubmitScore(reg)}>Guardar nota</button>
+                  <button onClick={() => handleSubmitScore(reg)}>
+                    Guardar nota
+                  </button>
                 </div>
               </li>
             );
           })}
         </ul>
       ) : (
-        <p>No hay ejercicios subidos para este ejercicio.</p>
+        <p>No hay entregas para este ejercicio.</p>
       )}
     </div>
   );

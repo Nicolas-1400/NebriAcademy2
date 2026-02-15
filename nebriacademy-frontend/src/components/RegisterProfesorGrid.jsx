@@ -1,18 +1,31 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+/**
+ * Componente: RegisterProfesorGrid
+ * Formulario de registro para profesores.
+ */
 function RegisterProfesorGrid() {
-  const [nombre, setNombre] = useState("");
-  const [apellidos, setApellidos] = useState("");
-  const [dni, setDni] = useState("");
-  const [email, setEmail] = useState("");
-  const [contrasena, setContrasena] = useState("");
-  const [numeroCuentaBancaria, setCuentaBancaria] = useState("");
-  const [pais, setPais] = useState("");
-  const [localidad, setLocalizacion] = useState("");
-  const [especializacion, setEspecializacion] = useState("");
-  const [error, setError] = useState("");
   const navigate = useNavigate();
+
+  const [formData, setFormData] = useState({
+    nombre: "",
+    apellidos: "",
+    dni: "",
+    email: "",
+    contrasena: "",
+    numeroCuentaBancaria: "",
+    pais: "",
+    localidad: "",
+    especializacion: "",
+  });
+
+  const [error, setError] = useState("");
+
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData((prev) => ({ ...prev, [name]: value }));
+  };
 
   const handleRegister = async (e) => {
     e.preventDefault();
@@ -23,34 +36,21 @@ function RegisterProfesorGrid() {
         "http://localhost:3000/profesores/registerProfesor/auth",
         {
           method: "POST",
-          headers: {
-            "Content-Type": "application/json",
-          },
-          body: JSON.stringify({
-            nombre: nombre,
-            apellidos: apellidos,
-            dni: dni,
-            email: email,
-            contrasena: contrasena,
-            numeroCuentaBancaria: numeroCuentaBancaria,
-            pais: pais,
-            localidad: localidad,
-            especializacion: especializacion,
-          }),
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(formData),
         },
       );
 
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        console.log("Registro exitoso:", datos);
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
       }
     } catch (err) {
-      setError("Error de conexión con el servidor");
       console.error(err);
+      setError("Error de conexión con el servidor");
     }
   };
 
@@ -60,50 +60,58 @@ function RegisterProfesorGrid() {
         <h2>Registrate</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
+            name="nombre"
             type="text"
             placeholder="Nombre"
-            value={nombre}
-            onChange={(e) => setNombre(e.target.value)}
+            value={formData.nombre}
+            onChange={handleChange}
             required
           />
           <input
+            name="apellidos"
             type="text"
             placeholder="Apellidos"
-            value={apellidos}
-            onChange={(e) => setApellidos(e.target.value)}
+            value={formData.apellidos}
+            onChange={handleChange}
             required
           />
           <input
+            name="dni"
             type="text"
             placeholder="DNI"
-            value={dni}
-            onChange={(e) => setDni(e.target.value)}
+            value={formData.dni}
+            onChange={handleChange}
             required
           />
           <input
+            name="email"
             type="email"
             placeholder="Email"
-            value={email}
-            onChange={(e) => setEmail(e.target.value)}
+            value={formData.email}
+            onChange={handleChange}
             required
           />
           <input
+            name="contrasena"
             type="password"
             placeholder="Contraseña"
-            value={contrasena}
-            onChange={(e) => setContrasena(e.target.value)}
+            value={formData.contrasena}
+            onChange={handleChange}
             required
           />
           <input
+            name="numeroCuentaBancaria"
             type="text"
             placeholder="Cuenta Bancaria"
-            value={numeroCuentaBancaria}
-            onChange={(e) => setCuentaBancaria(e.target.value)}
+            value={formData.numeroCuentaBancaria}
+            onChange={handleChange}
             required
           />
+
           <select
-            value={pais}
-            onChange={(e) => setPais(e.target.value)}
+            name="pais"
+            value={formData.pais}
+            onChange={handleChange}
             required
           >
             <option value="" disabled>
@@ -121,9 +129,11 @@ function RegisterProfesorGrid() {
             <option value="Francia">Francia</option>
             <option value="Otro">Otro</option>
           </select>
+
           <select
-            value={localidad}
-            onChange={(e) => setLocalizacion(e.target.value)}
+            name="localidad"
+            value={formData.localidad}
+            onChange={handleChange}
             required
           >
             <option value="" disabled>
@@ -136,9 +146,11 @@ function RegisterProfesorGrid() {
             <option value="Bilbao">Bilbao</option>
             <option value="Otro">Otro</option>
           </select>
+
           <select
-            value={especializacion}
-            onChange={(e) => setEspecializacion(e.target.value)}
+            name="especializacion"
+            value={formData.especializacion}
+            onChange={handleChange}
             required
           >
             <option value="" disabled>
@@ -154,7 +166,9 @@ function RegisterProfesorGrid() {
           {error && <p className="error-login">{error}</p>}
           <button type="submit">Registrarse</button>
         </form>
-        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
+        <p>
+          ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>
+        </p>
       </div>
     </div>
   );

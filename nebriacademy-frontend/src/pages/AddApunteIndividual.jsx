@@ -1,15 +1,19 @@
-import Nav from "../components/Nav"
-import AddApunteIndividualGrid from "../components/AddApunteIndividualGrid"
-import Footer from "../components/Footer"
+import Nav from "../components/Nav";
+import AddApunteIndividualGrid from "../components/AddApunteIndividualGrid";
+import Footer from "../components/Footer";
 
+/**
+ * Página para añadir un apunte individual
+ * Permite a usuarios crear y subir nuevos apuntes
+ */
 function AddApunteIndividual() {
   return (
     <div>
-        <Nav />
-        <AddApunteIndividualGrid />
-        <Footer />
+      <Nav />
+      <AddApunteIndividualGrid />
+      <Footer />
     </div>
-  )
+  );
 }
 
-export default AddApunteIndividual
+export default AddApunteIndividual;
