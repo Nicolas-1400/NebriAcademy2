@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-02-2026 a las 11:47:35
+-- Tiempo de generación: 15-02-2026 a las 12:38:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -81,7 +81,8 @@ INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`,
 (5, 10, 'David', 'Hernández Martín', '10101010J', 'david.hernandez@alumnos.nebrija.es', 'alumno111', '4555555555555555', '601010101', '@david_alum', 'España', 'Granada'),
 (6, 11, 'Lucía', 'Pérez García', '11111112K', 'lucia.perez@outlook.com', 'alumno222', '4666666666666666', '601111112', '@lucia_alum', 'España', 'Valencia'),
 (7, 12, 'Pablo', 'González Sánchez', '12121212L', 'pablo.gonzalez@yahoo.com', 'alumno333', '4777777777777777', '601212121', '@pablo_alum', 'España', 'Barcelona'),
-(8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga');
+(8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga'),
+(9, 16, 'Nico', 'Samp', '13672984F', 'nico@example.com', 'pass123', '4888888488888448', NULL, NULL, 'Francia', 'Barcelona');
 
 -- --------------------------------------------------------
 
@@ -100,6 +101,14 @@ CREATE TABLE `apuntes` (
   `valoracion` float DEFAULT 0
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `apuntes`
+--
+
+INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `categoria`, `valoracion`) VALUES
+(1, 6, 21, 'Fundamentos de las BDD', 'Fundamentos de Bases de Datos.pdf', 'Intruducción a las BDD, \r\nAutor: © Santiago Faci', 'BDD', 2),
+(2, 9, 21, 'Prueba alumno', 'Fundamentos de Bases de Datos.pdf', NULL, 'BDD', 0);
+
 -- --------------------------------------------------------
 
 --
@@ -112,6 +121,14 @@ CREATE TABLE `apuntesalumnos` (
   `apunteId` int(11) NOT NULL,
   `megusta` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `apuntesalumnos`
+--
+
+INSERT INTO `apuntesalumnos` (`id`, `alumnoId`, `apunteId`, `megusta`) VALUES
+(1, 9, 1, 1),
+(2, 6, 1, 1);
 
 -- --------------------------------------------------------
 
@@ -138,7 +155,8 @@ INSERT INTO `comentarioalumnocurso` (`id`, `usuarioId`, `cursoId`, `comentario`)
 (5, 10, 12, 'Muy útil para mi negocio.'),
 (6, 11, 15, 'JavaScript explicado de forma clara.'),
 (7, 12, 16, 'Perfecto para empezar con React.'),
-(8, 13, 20, 'Diseño responsive muy práctico.');
+(8, 13, 20, 'Diseño responsive muy práctico.'),
+(9, 9, 21, 'El vídeo se nota que es IA, no cuela. 😡');
 
 -- --------------------------------------------------------
 
@@ -180,7 +198,8 @@ INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `va
 (17, 'Análisis de Datos con SQL', 'BDD', 2, 'Avanzado', 0, 'Técnicas avanzadas de análisis y visualización de datos con SQL.'),
 (18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.'),
 (19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.'),
-(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.');
+(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.'),
+(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ');
 
 -- --------------------------------------------------------
 
@@ -227,7 +246,9 @@ INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`
 (23, 20, 8, 1, 1, NULL),
 (24, 3, 6, 1, 1, NULL),
 (25, 12, 8, 0, 1, NULL),
-(26, 20, 1, 0, 0, 1);
+(26, 20, 1, 0, 0, 1),
+(27, 21, 9, 0, 1, 1),
+(28, 20, 9, NULL, 1, NULL);
 
 -- --------------------------------------------------------
 
@@ -243,6 +264,13 @@ CREATE TABLE `ejercicios` (
   `archivo` varchar(1000) NOT NULL,
   `descripcion` text DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `ejercicios`
+--
+
+INSERT INTO `ejercicios` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`) VALUES
+(1, 6, 21, 'Ejercicio_0', 'Actividad_0_a.pdf', 'Ejercicio para que useis lo aprendido en el curso');
 
 -- --------------------------------------------------------
 
@@ -302,7 +330,8 @@ INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `emai
 (2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD'),
 (3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad'),
 (4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño'),
-(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing');
+(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing'),
+(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', NULL, NULL, 'España', 'Madrid', 'Programación');
 
 -- --------------------------------------------------------
 
@@ -340,7 +369,8 @@ INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
 (17, 4, 20),
 (18, 5, 12),
 (19, 5, 13),
-(20, 5, 19);
+(20, 5, 19),
+(21, 6, 21);
 
 -- --------------------------------------------------------
 
@@ -384,7 +414,9 @@ INSERT INTO `usuarios` (`id`, `tipo`) VALUES
 (11, 'alumno'),
 (12, 'alumno'),
 (13, 'alumno'),
-(14, 'administrador');
+(14, 'administrador'),
+(15, 'profesor'),
+(16, 'alumno');
 
 -- --------------------------------------------------------
 
@@ -399,6 +431,13 @@ CREATE TABLE `videos` (
   `nombre` varchar(1000) NOT NULL,
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `videos`
+--
+
+INSERT INTO `videos` (`id`, `autor`, `curso`, `nombre`, `archivo`) VALUES
+(1, 6, 21, 'Presentación del curso', 'PixVerse_V5.6_Image_Text_720P_Un_profesor_dand.mp4');
 
 --
 -- Índices para tablas volcadas
@@ -539,43 +578,43 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
 --
 ALTER TABLE `apuntesalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=27;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
@@ -593,13 +632,13 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
 
 --
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=21;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
@@ -611,13 +650,13 @@ ALTER TABLE `puntuacionesejercicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=15;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- Restricciones para tablas volcadas
