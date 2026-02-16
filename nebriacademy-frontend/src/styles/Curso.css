@@ -513,6 +513,18 @@
   cursor: pointer;
 }
 
+.puntuacion-ejercicio {
+  margin-top: 10px;
+  width: 70px;
+  font-weight: bold;
+  background-color: var(--color-hover-boton);
+  border: 1px solid var(--color-secundario);
+  border-radius: 5px;
+  padding: 4px 8px;
+  font-size: 13px;
+  color: var(--color-secundario);
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    11. MENSAJE SIN CONTENIDO (vacío)
    ───────────────────────────────────────────────────────────────────────────── */

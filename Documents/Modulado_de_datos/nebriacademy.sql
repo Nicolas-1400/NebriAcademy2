@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-02-2026 a las 09:53:21
+-- Tiempo de generación: 16-02-2026 a las 13:44:32
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -286,6 +286,13 @@ CREATE TABLE `ejerciciosalumnos` (
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `ejerciciosalumnos`
+--
+
+INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VALUES
+(1, 1, 9, 'PÃ¡ginas.png');
+
 -- --------------------------------------------------------
 
 --
@@ -385,6 +392,13 @@ CREATE TABLE `puntuacionesejercicios` (
   `alumnoId` int(11) NOT NULL,
   `puntuacion` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `puntuacionesejercicios`
+--
+
+INSERT INTO `puntuacionesejercicios` (`id`, `ejercicioId`, `alumnoId`, `puntuacion`) VALUES
+(1, 1, 9, 10);
 
 -- --------------------------------------------------------
 
@@ -597,7 +611,7 @@ ALTER TABLE `apuntesalumnos`
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
@@ -621,7 +635,7 @@ ALTER TABLE `ejercicios`
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
 --
 ALTER TABLE `ejerciciosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `incidencias`
@@ -645,7 +659,7 @@ ALTER TABLE `profesorescursos`
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

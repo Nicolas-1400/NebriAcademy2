@@ -689,7 +689,7 @@ function CursoGrid() {
                                 </label>
                               )}
                               {puntuacion && (
-                                <div>
+                                <div className="puntuacion-ejercicio">
                                   <p>Nota: {puntuacion.puntuacion}</p>
                                 </div>
                               )}
