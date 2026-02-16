@@ -122,15 +122,17 @@ function ApuntesGrid() {
     });
 
     // 3. Ordenamiento según lo que quiera ver el usuario
-    if (filters.viewMode === "misApuntes" && usuario?.id) {
-      list = list.filter((a) => Number(a.autor) === Number(usuario.id));
+    if (filters.viewMode === "misApuntes" && usuario?.usuarioId) {
+      list = list.filter((a) => Number(a.autor) === Number(usuario.usuarioId));
+    } else if (filters.viewMode === "favoritos") {
+      list = list.filter((a) => likedIds.includes(a.id));
     } else if (filters.viewMode === "popular") {
       list.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
     } else if (filters.viewMode === "novedades") {
       list.sort((a, b) => b.id - a.id); // Ordenamos del más nuevo al más antiguo
     }
     return list;
-  }, [data, filters, usuario]);
+  }, [data, filters, usuario, likedIds]);
 
   // --- Handlers ---
   const handleToggleLike = async (apunte) => {
@@ -243,6 +245,16 @@ function ApuntesGrid() {
                 Novedades
               </button>
             </li>
+            {tipo === "alumno" && (
+              <li>
+                <button
+                  onClick={() => updateFilter("viewMode", "favoritos")}
+                  className={filters.viewMode === "favoritos" ? "activo" : ""}
+                >
+                  Favoritos
+                </button>
+              </li>
+            )}
           </ul>
           <hr className="separador-sidebar" />
           <div className="limpiar-filtros">

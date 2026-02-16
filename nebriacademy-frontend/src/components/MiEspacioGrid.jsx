@@ -112,7 +112,9 @@ function MiEspacioGrid() {
 
   const misApuntes = useMemo(() => {
     if (!user) return [];
-    return data.apuntes.filter((a) => Number(a.autor) === Number(user.id));
+    return data.apuntes.filter(
+      (a) => Number(a.autor) === Number(user.usuarioId),
+    );
   }, [data, user]);
 
   const apuntesFavoritos = useMemo(() => {

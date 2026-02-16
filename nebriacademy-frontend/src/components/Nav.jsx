@@ -318,7 +318,7 @@ function Nav() {
         <img
           src={ImagenMenuHamburguesa}
           alt="Menu"
-          style={{ width: 38, height: 38 }}
+          className="menu-hamburguesa-icon"
         />
       </button>
 

@@ -505,6 +505,14 @@
   object-fit: contain;
 }
 
+.file-input-hidden {
+  display: none;
+}
+
+.img-subir-ejercicio {
+  cursor: pointer;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    11. MENSAJE SIN CONTENIDO (vacío)
    ───────────────────────────────────────────────────────────────────────────── */

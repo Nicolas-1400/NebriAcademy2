@@ -49,6 +49,7 @@ function CursoGrid() {
   const [registroUser, setRegistroUser] = useState(null); // { apuntado, favorito, valoracion, comentario }
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
   const [likedApuntes, setLikedApuntes] = useState([]);
+  const [puntuacionesEjercicios, setPuntuacionesEjercicios] = useState([]);
 
   // UI States
   const [error, setError] = useState(null);
@@ -180,22 +181,37 @@ function CursoGrid() {
         if (respuestaRegistro.comentario)
           setCommentText(respuestaRegistro.comentario);
 
-        // Likes de Apuntes
-        fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
-          .then((respuesta) => respuesta.json())
-          .then((datos) => setLikedApuntes(datos.apunteIds || []));
+        // Likes de Apuntes - Cargar en paralelo
+        const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
+          [
+            fetch(
+              `http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`,
+            )
+              .then((r) => r.json())
+              .catch(() => ({ apunteIds: [] })),
+            fetch(`http://localhost:3000/ejerciciosalumnos`)
+              .then((r) => r.json())
+              .catch(() => ({ registros: [] })),
+            fetch(`http://localhost:3000/puntuacionesejercicios`)
+              .then((r) => r.json())
+              .catch(() => ({ PuntuacionesEjercicios: [] })),
+          ],
+        );
 
-        // Ejercicios Subidos
-        fetch(`http://localhost:3000/ejerciciosalumnos`)
-          .then((respuesta) => respuesta.json())
-          .then((datos) => {
-            const misEntregas = (datos.registros || [])
-              .filter(
-                (registro) => String(registro.alumnoId) === String(user.id),
-              )
-              .map((registro) => registro.ejercicioId);
-            setUploadedEjercicios(misEntregas);
-          });
+        // Actualizar likes
+        setLikedApuntes(likesData.apunteIds || []);
+
+        // Actualizar ejercicios subidos - Guardar datos completos para acceder al archivo
+        const misEntregas = (ejerciciosData.registros || []).filter(
+          (registro) => String(registro.alumnoId) === String(user.id),
+        );
+        setUploadedEjercicios(misEntregas);
+
+        // Actualizar puntuaciones de ejercicios
+        const misPuntuaciones = (
+          puntuacionesData.PuntuacionesEjercicios || []
+        ).filter((p) => String(p.alumnoId) === String(user.id));
+        setPuntuacionesEjercicios(misPuntuaciones);
       } catch (e) {
         console.error("Error cargando datos usuario", e);
       }
@@ -286,7 +302,8 @@ function CursoGrid() {
               : prev?.valoracion,
         }));
 
-        if (typeof action === "boolean" && datos.curso) {
+        // Actualizar el contador de valoración del curso si la acción fue votar
+        if (action === "valoracion" && datos.curso) {
           setCurso((c) => ({ ...c, valoracion: datos.curso.valoracion }));
         }
       }
@@ -338,7 +355,15 @@ function CursoGrid() {
         body: form,
       });
       if (respuesta.ok) {
-        setUploadedEjercicios((prev) => [...prev, ejercicioId]);
+        const datos = await respuesta.json();
+        // Agregar el registro completo al estado para tener acceso al archivo
+        const nuevoRegistro = {
+          id: datos.id,
+          ejercicioId: ejercicioId,
+          alumnoId: user.id,
+          archivo: datos.archivo,
+        };
+        setUploadedEjercicios((prev) => [...prev, nuevoRegistro]);
         alert("Ejercicio subido correctamente");
       } else {
         alert("Error al subir");
@@ -460,7 +485,7 @@ function CursoGrid() {
               <strong>Valoración: </strong>
               <button
                 className="vote-up"
-                onClick={() => toggleCursoAction(true)}
+                onClick={() => handleLike("valoracion", true)}
               >
                 <img
                   src={
@@ -472,7 +497,7 @@ function CursoGrid() {
               <strong> {curso.valoracion || 0} </strong>
               <button
                 className="vote-down"
-                onClick={() => toggleCursoAction(false)}
+                onClick={() => handleLike("valoracion", false)}
               >
                 <img
                   src={
@@ -485,13 +510,13 @@ function CursoGrid() {
             <p>
               <button
                 className="btn-favorito"
-                onClick={() => toggleCursoAction("fav")}
+                onClick={() => handleLike("favorito")}
               >
                 {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
               </button>
               <button
                 className="btn-apuntarme"
-                onClick={() => toggleCursoAction("apuntado")}
+                onClick={() => handleLike("apuntado")}
               >
                 {registroUser?.apuntado ? "✔ Apuntado" : "Apuntarme"}
               </button>
@@ -625,27 +650,52 @@ function CursoGrid() {
                       </button>
                     ) : (
                       <div>
-                        {uploadedEjercicios.includes(e.id) ? (
-                          <button disabled className="btn-ejercicio-subido">
-                            <img src={EjercicioSubido} alt="Ok" />
-                          </button>
-                        ) : (
-                          <label className="btn-subir-ejercicio">
-                            <input
-                              type="file"
-                              style={{ display: "none" }}
-                              onChange={(ev) =>
-                                ev.target.files?.[0] &&
-                                uploadEjercicio(ev.target.files[0], e.id)
-                              }
-                            />
-                            <img
-                              src={SubirEjercicio}
-                              alt="Subir"
-                              style={{ cursor: "pointer" }}
-                            />
-                          </label>
-                        )}
+                        {(() => {
+                          const entrega = uploadedEjercicios.find(
+                            (ej) => ej.ejercicioId === e.id,
+                          );
+                          const puntuacion = puntuacionesEjercicios.find(
+                            (p) => p.ejercicioId === e.id,
+                          );
+                          return (
+                            <>
+                              {entrega ? (
+                                <a
+                                  href={`http://localhost:3000/ejerciciosalumnos/files/${entrega.archivo}`}
+                                  target="_blank"
+                                  rel="noreferrer"
+                                  className="btn-ejercicio-subido"
+                                >
+                                  <img
+                                    src={EjercicioSubido}
+                                    alt="Ver ejercicio"
+                                  />
+                                </a>
+                              ) : (
+                                <label className="btn-subir-ejercicio">
+                                  <input
+                                    type="file"
+                                    className="file-input-hidden"
+                                    onChange={(ev) =>
+                                      ev.target.files?.[0] &&
+                                      uploadEjercicio(ev.target.files[0], e.id)
+                                    }
+                                  />
+                                  <img
+                                    src={SubirEjercicio}
+                                    alt="Subir"
+                                    className="img-subir-ejercicio"
+                                  />
+                                </label>
+                              )}
+                              {puntuacion && (
+                                <div>
+                                  <p>Nota: {puntuacion.puntuacion}</p>
+                                </div>
+                              )}
+                            </>
+                          );
+                        })()}
                       </div>
                     )}
                   </div>

@@ -79,6 +79,14 @@ function RegisterAlumnoNebrijaGrid() {
             readOnly
           />
           <input
+            name="contrasena"
+            type="password"
+            placeholder="Contraseña"
+            value={formData.contrasena}
+            onChange={handleChange}
+            required
+          />
+          <input
             name="nombre"
             type="text"
             placeholder="Nombre"
@@ -99,14 +107,6 @@ function RegisterAlumnoNebrijaGrid() {
             type="text"
             placeholder="DNI"
             value={formData.dni}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="contrasena"
-            type="password"
-            placeholder="Contraseña"
-            value={formData.contrasena}
             onChange={handleChange}
             required
           />

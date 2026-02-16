@@ -106,7 +106,7 @@ function EditarApunteIndividualGrid() {
             type="file"
             onChange={(e) => setNewFile(e.target.files?.[0] || null)}
           />
-          <small style={{ color: "#666" }}>
+          <small className="file-help-text">
             Si subes un nuevo archivo, reemplazará al actual.
           </small>
         </div>

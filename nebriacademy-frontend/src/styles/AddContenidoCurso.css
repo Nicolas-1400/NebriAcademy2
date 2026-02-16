@@ -60,6 +60,10 @@
   border-color: var(--rojo-nebrija);
 }
 
+.file-help-text {
+  color: #666;
+}
+
 .error {
   color: #b00020;
 }
