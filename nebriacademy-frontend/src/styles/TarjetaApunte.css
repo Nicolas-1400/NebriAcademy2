@@ -8,13 +8,14 @@
   border-left: 5px solid var(--rojo-nebrija);
   border-radius: 6px;
   transition: all 0.3s ease;
-  /* max-width: 250px; */
+  height: 150px;
+  box-shadow: 9px 9px 12px rgba(194, 0, 47, 0.1);
 }
 
 .item-row:hover {
   background-color: #efefef;
   box-shadow: 0 4px 12px rgba(194, 0, 47, 0.1);
-  translate: 5px 0;
+  translate: 3px 0;
 }
 
 .item-main {
