@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
 import { useParams } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
+import "../styles/CorregirEjerciciosSubidosGrid.css";
 
 /**
  * Componente: CorregirEjerciciosSubidosGrid
@@ -117,10 +118,10 @@ function CorregirEjerciciosSubidosGrid() {
   };
 
   return (
-    <div>
+    <div className="corregir-ejercicios-grid">
       <h3>Ejercicios subidos</h3>
       {ejerciciosConNombre.length > 0 ? (
-        <ul>
+        <ul className="ejercicios-lista">
           {ejerciciosConNombre.map((reg) => {
             const existing = getExistingScore(reg.id, reg.alumnoId);
             const currentVal =
@@ -129,7 +130,7 @@ function CorregirEjerciciosSubidosGrid() {
                 : (existing?.puntuacion ?? "");
 
             return (
-              <li key={reg.id}>
+              <li className="ejercicio-contenedor" key={reg.id}>
                 <TarjetaEjercicioAlumno registro={reg} />
                 <div className="calificar-container">
                   <input
@@ -141,9 +142,12 @@ function CorregirEjerciciosSubidosGrid() {
                     onChange={(e) => handeScoreInput(reg.id, e.target.value)}
                     placeholder="0-10"
                   />
-                  <button onClick={() => handleSubmitScore(reg)}>
+                  <button className="btn-guardar-nota" onClick={() => handleSubmitScore(reg)}>
                     Guardar nota
                   </button>
+                  {/* <button className="btn-borrar-ejercicio" onClick={() => alert("Funcionalidad de borrado no implementada")}>
+                    Borrar ejercicio
+                  </button> */}
                 </div>
               </li>
             );
