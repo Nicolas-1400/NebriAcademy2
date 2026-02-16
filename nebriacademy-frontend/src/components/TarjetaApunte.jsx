@@ -15,7 +15,7 @@ function TarjetaApunte({
   const isLiked = likedIds.includes(apunte.id);
 
   return (
-    <li key={apunte.id} className="item-row">
+    <div key={apunte.id} className="item-row">
       <div className="item-main">
         <a
           href={`http://localhost:3000/apuntes/files/${apunte.archivo}`}
@@ -48,7 +48,7 @@ function TarjetaApunte({
           )}
         </div>
       </div>
-    </li>
+    </div>
   );
 }
 

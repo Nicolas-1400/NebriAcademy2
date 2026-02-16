@@ -71,9 +71,26 @@ router.get("/:id", async (req, res) => {
 // POST / - Crear
 router.post("/", async (req, res) => {
   try {
-    const { usuarioId, cursoId, comentario } = req.body;
-    if (!usuarioId || !cursoId || !comentario)
+    const { profileId, tipo, cursoId, comentario } = req.body;
+    if (!profileId || !tipo || !cursoId || !comentario)
       return res.status(400).json({ error: "Faltan datos" });
+
+    // Lookup valid usuarioId based on profileId and tipo
+    let usuarioId = null;
+    if (tipo === "alumno") {
+      const u = await Alumnos.findByPk(profileId);
+      if (u) usuarioId = u.usuarioId;
+    } else if (tipo === "profesor") {
+      const u = await Profesores.findByPk(profileId);
+      if (u) usuarioId = u.usuarioId;
+    } else if (tipo === "administrador") {
+      // Admin table also has usuarioId
+      const u = await require("../models/Administradores").findByPk(profileId);
+      if (u) usuarioId = u.usuarioId;
+    }
+
+    if (!usuarioId)
+      return res.status(404).json({ error: "Usuario no encontrado" });
 
     const nuevo = await ComentarioAlumnoCurso.create({
       usuarioId,
@@ -93,17 +110,28 @@ router.put("/:id", async (req, res) => {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
     if (!c) return res.status(404).json({ error: "No encontrado" });
 
-    // Validar autoría
-    const requester = req.body.usuarioId;
-    if (requester && parseInt(requester) !== c.usuarioId) {
+    const { profileId, tipo, comentario } = req.body;
+
+    // Lookup requester usuarioId
+    let requesterUsuarioId = null;
+    if (tipo === "alumno") {
+      const u = await Alumnos.findByPk(profileId);
+      if (u) requesterUsuarioId = u.usuarioId;
+    } else if (tipo === "profesor") {
+      const u = await Profesores.findByPk(profileId);
+      if (u) requesterUsuarioId = u.usuarioId;
+    }
+
+    if (!requesterUsuarioId || requesterUsuarioId !== c.usuarioId) {
       return res.status(403).json({ error: "No autorizado" });
     }
 
     const actualizado = await c.update({
-      comentario: req.body.comentario || c.comentario,
+      comentario: comentario || c.comentario,
     });
     res.json(actualizado);
   } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Error servidor" });
   }
 });
@@ -114,15 +142,26 @@ router.delete("/:id", async (req, res) => {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
     if (!c) return res.status(404).json({ error: "No encontrado" });
 
-    // Validar autoría
-    const requester = req.query.usuarioId;
-    if (requester && parseInt(requester) !== c.usuarioId) {
+    const { profileId, tipo } = req.query; // Send via query params
+
+    // Lookup requester usuarioId
+    let requesterUsuarioId = null;
+    if (tipo === "alumno") {
+      const u = await Alumnos.findByPk(profileId);
+      if (u) requesterUsuarioId = u.usuarioId;
+    } else if (tipo === "profesor") {
+      const u = await Profesores.findByPk(profileId);
+      if (u) requesterUsuarioId = u.usuarioId;
+    }
+
+    if (!requesterUsuarioId || requesterUsuarioId !== c.usuarioId) {
       return res.status(403).json({ error: "No autorizado" });
     }
 
     await c.destroy();
     res.json({ mensaje: "Eliminado" });
   } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Error servidor" });
   }
 });

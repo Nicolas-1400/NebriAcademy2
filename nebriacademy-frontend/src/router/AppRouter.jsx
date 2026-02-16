@@ -47,6 +47,10 @@ function AppRouter() {
           element={<VerificacionAlumnoNebrija />}
         />
         <Route
+          path="/Register/RegisterAlumnoNebrija"
+          element={<RegisterAlumnoNebrija />}
+        />
+        <Route
           path="/Register/RegisterAlumnoExterno"
           element={<RegisterAlumnoExterno />}
         />

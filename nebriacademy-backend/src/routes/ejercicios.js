@@ -44,36 +44,40 @@ router.get("/:id", async (req, res) => {
 /**
  * POST /
  * Crea ejercicio, sube archivo y asigna profesor (autor).
+ * Resolución de autor: Recibe profileId y tipo, busca el profesor correspondiente.
  */
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     // 1. Validaciones básicas
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
-    const { nombre, descripcion, curso, autor, usuarioId } = req.body;
+    const { nombre, descripcion, curso, profileId, tipo } = req.body;
     if (!nombre) return res.status(400).json({ error: "Nombre requerido" });
+    if (!profileId || !tipo)
+      return res.status(400).json({ error: "Faltan datos de autor" });
 
     // 2. Resolver Profesor ID
-    // Intentamos mapear desde usuarioId (frontend) o autor param (fallback)
+    // La tabla Ejercicios usa 'autor' como ID de Profesor (no User ID)
     let profesorId = null;
 
-    if (usuarioId) {
-      const prof = await Profesores.findOne({ where: { usuarioId } });
+    if (tipo === "profesor") {
+      const prof = await Profesores.findByPk(profileId);
       if (prof) profesorId = prof.id;
-    }
-
-    // Fallback: Verificar si el ID provisto es directamente un profesorId o un usuarioId
-    if (!profesorId && autor) {
-      // ¿Es ID Directo de profesor?
-      if (await Profesores.findByPk(autor)) profesorId = autor;
-      else {
-        // ¿Es ID de Usuario? Buscamos su perfil de profesor
-        const prof = await Profesores.findOne({ where: { usuarioId: autor } });
-        if (prof) profesorId = prof.id;
+    } else if (tipo === "administrador") {
+      const admin = await require("../models/Administradores").findByPk(
+        profileId,
+      );
+      if (admin && admin.usuarioId) {
+        const p = await Profesores.findOne({
+          where: { usuarioId: admin.usuarioId },
+        });
+        if (p) profesorId = p.id;
       }
     }
 
     if (!profesorId)
-      return res.status(400).json({ error: "Profesor no identificado" });
+      return res
+        .status(400)
+        .json({ error: "Profesor no identificado o no autorizado" });
 
     // 3. Crear Registro
     const nuevo = await Ejercicios.create({

@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 15-02-2026 a las 12:38:26
+-- Tiempo de generación: 16-02-2026 a las 09:53:21
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -106,7 +106,7 @@ CREATE TABLE `apuntes` (
 --
 
 INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `categoria`, `valoracion`) VALUES
-(1, 6, 21, 'Fundamentos de las BDD', 'Fundamentos de Bases de Datos.pdf', 'Intruducción a las BDD, \r\nAutor: © Santiago Faci', 'BDD', 2),
+(1, 15, 21, 'Fundamentos de las BDD', 'Fundamentos de Bases de Datos.pdf', 'Intruducción a las BDD, \r\nAutor: © Santiago Faci', 'BDD', 1),
 (2, 9, 21, 'Prueba alumno', 'Fundamentos de Bases de Datos.pdf', NULL, 'BDD', 0);
 
 -- --------------------------------------------------------
@@ -128,7 +128,8 @@ CREATE TABLE `apuntesalumnos` (
 
 INSERT INTO `apuntesalumnos` (`id`, `alumnoId`, `apunteId`, `megusta`) VALUES
 (1, 9, 1, 1),
-(2, 6, 1, 1);
+(2, 6, 1, NULL),
+(3, 6, 2, NULL);
 
 -- --------------------------------------------------------
 
@@ -590,7 +591,7 @@ ALTER TABLE `apuntes`
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
 --
 ALTER TABLE `apuntesalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`

@@ -45,11 +45,14 @@ router.get("/:id", async (req, res) => {
 // POST / - Entregar ejercicio
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    const { ejercicioId, alumnoId } = req.body;
+    const { ejercicioId, profileId } = req.body;
 
     // Validación de integridad referencial
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
-    const validAlumno = await Alumnos.findByPk(alumnoId);
+
+    // Aquí 'profileId' debe corresponder al ID de la tabla Alumnos
+    // ya que la tabla relacionar 'EjerciciosAlumnos' usa 'alumnoId' que FK a Alumnos.
+    const validAlumno = await Alumnos.findByPk(profileId);
 
     if (!validEjercicio || !validAlumno) {
       return res.status(400).json({ error: "Ejercicio o Alumno inválido" });
@@ -57,14 +60,14 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 
     const nuevo = await EjerciciosAlumnos.create({
       ejercicioId,
-      alumnoId,
+      alumnoId: profileId, // Usamos el profileId comprobado
       archivo: req.file ? req.file.filename : null,
     });
 
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {
     console.error(error);
-    res.status(500).json({ error: "Server error" });
+    res.status(500).json({ error: "Error del servidor" });
   }
 });
 

@@ -45,34 +45,46 @@ router.get("/:id", async (req, res) => {
 /**
  * POST /
  * Crea video, sube archivo y asigna profesor.
+ * Resolución de autor: Recibe profileId y tipo, busca el profesor correspondiente.
  */
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     // 1. Validaciones
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
-    const { nombre, curso, autor, usuarioId } = req.body;
-    if (!nombre || !curso)
+    const { nombre, curso, profileId, tipo } = req.body;
+
+    if (!nombre || !curso || !profileId || !tipo)
       return res.status(400).json({ error: "Datos incompletos" });
 
     // 2. Resolver Profesor ID
     let profesorId = null;
 
-    if (usuarioId) {
-      const p = await Profesores.findOne({ where: { usuarioId } });
+    if (tipo === "profesor") {
+      // En la tabla Videos, 'autor' suele ser el ID del profesor (profileId),
+      // NO el usuarioId. Verificamos que exista.
+      const p = await Profesores.findByPk(profileId);
       if (p) profesorId = p.id;
-    }
-
-    // Lógica de fallback para compatibilidad con diferentes formatos de petición
-    if (!profesorId && autor) {
-      if (await Profesores.findByPk(autor)) profesorId = autor;
-      else {
-        const p = await Profesores.findOne({ where: { usuarioId: autor } });
+    } else if (tipo === "administrador") {
+      // Los admins pueden subir videos, pero la tabla Videos espera un ID de profesor en 'autor'?
+      // Si el esquema lo requiere, esto podría fallar si no hay un "profesor comodín".
+      // Asumiremos por ahora que solo profesores suben videos a sus cursos,
+      // o que el admin actúa como tal.
+      // Si el admin tiene perfil de profesor, lo usamos.
+      const admin = await require("../models/Administradores").findByPk(
+        profileId,
+      );
+      if (admin && admin.usuarioId) {
+        const p = await Profesores.findOne({
+          where: { usuarioId: admin.usuarioId },
+        });
         if (p) profesorId = p.id;
       }
     }
 
     if (!profesorId)
-      return res.status(400).json({ error: "Profesor no identificado" });
+      return res
+        .status(400)
+        .json({ error: "Profesor no identificado o no autorizado" });
 
     // 3. Crear
     const nuevo = await Videos.create({

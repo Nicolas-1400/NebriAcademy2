@@ -8,7 +8,7 @@ import useAuthStore from "../store/useAuthStore";
  */
 function AddApunteIndividualGrid() {
   const navigate = useNavigate();
-  const usuario = useAuthStore((s) => s.user);
+  const { user: usuario, tipo } = useAuthStore();
 
   const [formData, setFormData] = useState({
     nombre: "",
@@ -46,8 +46,9 @@ function AddApunteIndividualGrid() {
       if (formData.categoria) form.append("categoria", formData.categoria);
 
       if (usuario) {
-        form.append("autor", usuario.id);
-        if (usuario.usuarioId) form.append("usuarioId", usuario.usuarioId);
+        // Enviar profileId y tipo para que el backend resuelva el usuarioId
+        form.append("profileId", usuario.id);
+        form.append("tipo", tipo);
       }
 
       const respuesta = await fetch("http://localhost:3000/apuntes", {

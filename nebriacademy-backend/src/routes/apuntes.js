@@ -61,7 +61,7 @@ router.get("/:id", async (req, res) => {
 /**
  * POST /
  * Crea un apunte y asigna autor.
- * Resolución de autor: intenta usar usuarioId directo, o buscar en Alumnos/Profesores si llega un ID genérico.
+ * Resolución de autor: Recibe profileId y tipo, y busca el usuarioId correspondiente en la base de datos.
  */
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
@@ -71,36 +71,30 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       nombre,
       descripcion,
       curso: cursoId,
-      usuarioId,
-      autor: autorInput,
+      profileId,
+      tipo,
+      categoria: categoriaInput,
     } = req.body;
-    let categoria = req.body.categoria || null;
+    let categoria = categoriaInput || null;
 
     // 1. Resolver Autor (Usuario ID)
     let autorFinal = null;
 
-    // Intento A: UsuarioId explícito
-    if (usuarioId && !isNaN(usuarioId)) {
-      if (await Usuarios.findByPk(usuarioId)) autorFinal = usuarioId;
-    }
-
-    // Intento B: Si falla A, usar 'autor' (puede ser ID de profesor/alumno o usuario)
-    if (!autorFinal && autorInput) {
-      if (await Usuarios.findByPk(autorInput)) {
-        autorFinal = autorInput;
-      } else {
-        // Buscar relacionalmente
-        const alumno = await Alumnos.findByPk(autorInput);
-        if (alumno?.usuarioId) autorFinal = alumno.usuarioId;
-        else {
-          const prof = await Profesores.findByPk(autorInput);
-          if (prof?.usuarioId) autorFinal = prof.usuarioId;
-        }
-      }
+    if (tipo === "alumno") {
+      const u = await Alumnos.findByPk(profileId);
+      if (u) autorFinal = u.usuarioId;
+    } else if (tipo === "profesor") {
+      const u = await Profesores.findByPk(profileId);
+      if (u) autorFinal = u.usuarioId;
+    } else if (tipo === "administrador") {
+      const u = await require("../models/Administradores").findByPk(profileId);
+      if (u) autorFinal = u.usuarioId;
     }
 
     if (!autorFinal)
-      return res.status(400).json({ error: "Autor no identificado" });
+      return res
+        .status(400)
+        .json({ error: "Autor no identificado o no encontrado" });
 
     // 2. Resolver Categoría (Heredar del curso si existe)
     if (cursoId) {

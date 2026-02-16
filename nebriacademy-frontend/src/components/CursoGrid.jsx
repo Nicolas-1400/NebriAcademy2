@@ -92,10 +92,14 @@ function CursoGrid() {
             .catch(console.warn);
         }
 
-        // 3. Cargar Contenidos (paralelo)
-        // Obtenemos todos los videos, apuntes y ejercicios de la base de datos
-        // Posteriormente filtraremos en el cliente aquellos que pertenecen a este curso específico
-        const [datosVideos, datosApuntes, datosEjercicios] = await Promise.all([
+        // 3. Cargar Contenidos y Usuarios (paralelo)
+        const [
+          datosVideos,
+          datosApuntes,
+          datosEjercicios,
+          datosProfes,
+          datosAlumnos,
+        ] = await Promise.all([
           fetch("http://localhost:3000/videos").then((respuesta) =>
             respuesta.json(),
           ),
@@ -105,15 +109,37 @@ function CursoGrid() {
           fetch("http://localhost:3000/ejercicios").then((respuesta) =>
             respuesta.json(),
           ),
+          fetch("http://localhost:3000/profesores").then((r) => r.json()),
+          fetch("http://localhost:3000/alumnos").then((r) => r.json()),
         ]);
 
-        // Función helper para filtrar solo los contenidos que pertenecen a este curso
+        // Helper para resolver nombres de autor
+        const resolveName = (id) => {
+          const aid = Number(id);
+          const alum = (datosAlumnos.Alumnos || []).find(
+            (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
+          );
+          if (alum) return `${alum.nombre} ${alum.apellidos}`;
+          const prof = (datosProfes.Profesores || []).find(
+            (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
+          );
+          if (prof) return `${prof.nombre} ${prof.apellidos}`;
+          return "Desconocido";
+        };
+
+        // Helper para filtrar solo los contenidos que pertenecen a este curso
         const filterById = (list) =>
           (list || []).filter((i) => String(i.curso) === String(id));
 
+        // Cambiar el id por el nombre del autor
+        const apuntesFiltrados = filterById(datosApuntes.Apuntes).map((a) => ({
+          ...a,
+          nombreAutor: resolveName(a.autor),
+        }));
+
         setContenidos({
           videos: filterById(datosVideos.Videos),
-          apuntes: filterById(datosApuntes.Apuntes),
+          apuntes: apuntesFiltrados,
           ejercicios: filterById(datosEjercicios.Ejercicios),
         });
 
@@ -217,8 +243,6 @@ function CursoGrid() {
   // Action puede ser: 'favorito', 'apuntado', 'valoracion'
   // value se usa para 'valoracion' (true/false)
   const handleLike = async (action, value) => {
-    if (!user) return alert("Inicia sesión para interactuar");
-
     try {
       let url;
       let body = { cursoId: id, alumnoId: user.id };
@@ -271,12 +295,43 @@ function CursoGrid() {
     }
   };
 
+  const handleToggleApunteLike = async (apunte) => {
+    if (!user?.id || tipo !== "alumno") return;
+    try {
+      const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          apunteId: apunte.id,
+          alumnoId: user.id,
+          vote: true,
+        }),
+      });
+      const d = await res.json();
+      if (res.ok) {
+        const isLike = d.registro?.valoracion === true;
+        setLikedApuntes((prev) =>
+          isLike ? [...prev, apunte.id] : prev.filter((x) => x !== apunte.id),
+        );
+        setContenidos((prev) => ({
+          ...prev,
+          apuntes: prev.apuntes.map((a) =>
+            a.id === apunte.id ? { ...a, valoracion: d.apunte?.valoracion } : a,
+          ),
+        }));
+      }
+    } catch (e) {
+      console.error(e);
+    }
+  };
+
   const uploadEjercicio = async (file, ejercicioId) => {
     try {
       const form = new FormData();
       form.append("archivo", file);
       form.append("ejercicioId", ejercicioId);
-      form.append("alumnoId", user.id);
+      // Backend espera profileId para validar contra la tabla Alumnos
+      form.append("profileId", user.id);
 
       const respuesta = await fetch("http://localhost:3000/ejerciciosalumnos", {
         method: "POST",
@@ -304,7 +359,8 @@ function CursoGrid() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             cursoId: id,
-            usuarioId: user.id,
+            profileId: user.id, // Send profile ID
+            tipo: tipo, // Send user type
             comentario: commentText,
           }),
         },
@@ -315,6 +371,8 @@ function CursoGrid() {
         fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
+      } else {
+        alert("Error al enviar comentario");
       }
     } catch (e) {
       alert("Error enviando comentario");
@@ -324,13 +382,57 @@ function CursoGrid() {
   const deleteComment = async (cid) => {
     if (!window.confirm("Borrar comentario?")) return;
     try {
-      await fetch(
-        `http://localhost:3000/comentarioalumnocurso/${cid}?usuarioId=${user.id}`,
-        { method: "DELETE" },
-      );
-      setComentarios((prev) => prev.filter((c) => c.id !== cid));
+      const url = `http://localhost:3000/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}`;
+      const res = await fetch(url, { method: "DELETE" });
+      if (res.ok) {
+        setComentarios((prev) => prev.filter((c) => c.id !== cid));
+      } else {
+        alert("No se pudo borrar el comentario");
+      }
     } catch (e) {
       console.error(e);
+    }
+  };
+
+  const startEditComment = (c) => {
+    setEditingComment({ id: c.id, text: c.comentario });
+  };
+
+  const cancelEditComment = () => {
+    setEditingComment({ id: null, text: "" });
+  };
+
+  const saveEditComment = async () => {
+    if (!editingComment.text.trim()) return;
+    try {
+      const res = await fetch(
+        `http://localhost:3000/comentarioalumnocurso/${editingComment.id}`,
+        {
+          method: "PUT",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify({
+            profileId: user.id,
+            tipo: tipo,
+            comentario: editingComment.text,
+          }),
+        },
+      );
+      if (res.ok) {
+        // Update local state
+        setComentarios((prev) =>
+          prev.map((c) =>
+            c.id === editingComment.id
+              ? { ...c, comentario: editingComment.text }
+              : c,
+          ),
+        );
+        cancelEditComment();
+      } else {
+        alert("Error al editar comentario");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de red");
     }
   };
 
@@ -454,9 +556,7 @@ function CursoGrid() {
                         })
                       }
                       handleDeleteContenido={handleDeleteItem}
-                      onToggleLike={() => {
-                        /* Like logic inside or passed */
-                      }}
+                      onToggleLike={handleToggleApunteLike}
                     />
                   ))}
                 </ul>
@@ -465,7 +565,7 @@ function CursoGrid() {
               )}
             </div>
             <div className="alumnos-apuntes">
-              <h5>Apuntes comunidad</h5>
+              <h5>Apuntes alumnos</h5>
               {alumnApuntes.length > 0 ? (
                 <ul className="apuntes-list">
                   {alumnApuntes.map((a) => (
@@ -482,6 +582,7 @@ function CursoGrid() {
                         })
                       }
                       handleDeleteContenido={handleDeleteItem}
+                      onToggleLike={handleToggleApunteLike}
                     />
                   ))}
                 </ul>
@@ -576,9 +677,36 @@ function CursoGrid() {
                   <div className="comentario-autor">
                     {c.nombre} {c.apellidos}
                   </div>
-                  <p>{c.comentario}</p>
-                  {user && c.usuarioId === user.id && (
-                    <button onClick={() => deleteComment(c.id)}>Borrar</button>
+                  {editingComment.id === c.id ? (
+                    <div className="edit-comment-box">
+                      <textarea
+                        value={editingComment.text}
+                        onChange={(e) =>
+                          setEditingComment({
+                            ...editingComment,
+                            text: e.target.value,
+                          })
+                        }
+                      />
+                      <button onClick={saveEditComment}>Guardar</button>
+                      <button onClick={cancelEditComment}>Cancelar</button>
+                    </div>
+                  ) : (
+                    <>
+                      <p>{c.comentario}</p>
+                      {user &&
+                        Number(c.usuarioId) ===
+                          Number(user.usuarioId || user.id) && (
+                          <div className="comentario-acciones">
+                            <button onClick={() => startEditComment(c)}>
+                              Editar
+                            </button>
+                            <button onClick={() => deleteComment(c.id)}>
+                              Borrar
+                            </button>
+                          </div>
+                        )}
+                    </>
                   )}
                 </div>
               ))}
@@ -598,24 +726,35 @@ function CursoGrid() {
         </div>
       </div>
 
-      {/* PROFESOR ACTIONS */}
-      {tipo === "profesor" && (
+      {/* Acciones (Profesor: Todo | Alumno: Subir Apunte) */}
+      {(tipo === "profesor" || tipo === "alumno") && (
         <div className="fixed-action-group">
-          <button
-            className="editarCurso"
-            onClick={() => setEditingMode(!editingMode)}
-            title="Editar modo"
-          >
-            <img src={Editar} alt="Edit" />
-          </button>
+          {tipo === "profesor" && (
+            <button
+              className="editarCurso"
+              onClick={() => setEditingMode(!editingMode)}
+              title="Editar modo"
+            >
+              <img src={Editar} alt="Edit" />
+            </button>
+          )}
           <div className="relative-container">
             <button
               className="subirContenidoCurso"
-              onClick={() => setShowAddMenu(!showAddMenu)}
+              onClick={() => {
+                if (tipo === "alumno") {
+                  navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                    state: { tipo: "apunte", cursoId: id },
+                  });
+                } else {
+                  setShowAddMenu(!showAddMenu);
+                }
+              }}
+              title="Añadir contenido"
             >
               <img src={Mas} alt="Add" />
             </button>
-            {showAddMenu && (
+            {showAddMenu && tipo === "profesor" && (
               <div className="add-menu">
                 <button
                   onClick={() =>

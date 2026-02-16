@@ -13,7 +13,7 @@ import useAuthStore from "../store/useAuthStore";
 function ApuntesGrid() {
   const { id } = useParams(); // id curso opcional
   const navigate = useNavigate();
-  const usuario = useAuthStore((s) => s.user);
+  const { user: usuario, tipo } = useAuthStore();
 
   // Datos
   const [data, setData] = useState({
@@ -96,6 +96,12 @@ function ApuntesGrid() {
     return "Desconocido";
   };
 
+  const canEdit = (apunte) => {
+    if (!usuario) return false;
+    const currentUserId = usuario.usuarioId || usuario.id;
+    return Number(currentUserId) === Number(apunte.autor);
+  };
+
   // Filtrado de apuntes.
   // Aplica los filtros seleccionados por el usuario (Categoría, Texto) y el modo de vista (Mis apuntes, Populares...).
   const processedApuntes = useMemo(() => {
@@ -128,7 +134,7 @@ function ApuntesGrid() {
 
   // --- Handlers ---
   const handleToggleLike = async (apunte) => {
-    if (!usuario?.id) return;
+    if (!usuario?.id || tipo !== "alumno") return;
     try {
       const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
         method: "POST",
@@ -267,24 +273,22 @@ function ApuntesGrid() {
                     autorNombre={resolveAutorNombre(ap.autor)}
                     isEditMode={editMode}
                   />
-                  {editMode &&
-                    usuario &&
-                    Number(usuario.id) === Number(ap.autor) && (
-                      <div className="apunte-edit-controls">
-                        <button
-                          onClick={() =>
-                            navigate("/Home/Apuntes/EditApunte", {
-                              state: { apunte: ap },
-                            })
-                          }
-                        >
-                          Editar
-                        </button>
-                        <button onClick={() => handleDelete(ap.id)}>
-                          Borrar
-                        </button>
-                      </div>
-                    )}
+                  {editMode && canEdit(ap) && (
+                    <div className="apunte-edit-controls">
+                      <button
+                        onClick={() =>
+                          navigate(`/Home/Apuntes/EditarApunte/${ap.id}`, {
+                            state: { apunte: ap },
+                          })
+                        }
+                      >
+                        Editar
+                      </button>
+                      <button onClick={() => handleDelete(ap.id)}>
+                        Borrar
+                      </button>
+                    </div>
+                  )}
                 </li>
               ))}
             </ul>

@@ -21,7 +21,7 @@ function TarjetaApunteCurso({
   const isProfesorEdit = tipo === "profesor" && editingMode;
 
   return (
-    <li key={apunte.id} className="item-row">
+    <div key={apunte.id} className="item-row">
       <div className="item-main">
         <a
           href={`http://localhost:3000/apuntes/files/${apunte.archivo}`}
@@ -31,6 +31,7 @@ function TarjetaApunteCurso({
           {apunte.nombre || apunte.archivo}
         </a>
         {apunte.descripcion && <p>{apunte.descripcion}</p>}
+        <p className="apunte-autor">{apunte.nombreAutor || apunte.autor}</p>
       </div>
 
       {/* Controles de Profesor */}
@@ -65,7 +66,7 @@ function TarjetaApunteCurso({
           </>
         )}
       </div>
-    </li>
+    </div>
   );
 }
 

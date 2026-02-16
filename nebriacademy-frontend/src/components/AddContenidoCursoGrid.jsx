@@ -78,13 +78,10 @@ function AddContenidoCursoGrid() {
       if (tipo !== "video") form.append("descripcion", descripcion);
 
       // Autor: Dependiendo del endpoint, se espera 'autor' o 'usuarioId'
-      // Vincular al profesor logueado
+      // Ahora estandarizado: Enviamos profileId y tipo para que el backend resuelva
       if (usuario) {
-        form.append("autor", usuario.id);
-        // Si es un ejercicio, necesitamos asociarlo explícitamente al ID del profesor (usuarioId en la tabla ejercicios)
-        if (tipo === "ejercicio" && usuario.usuarioId) {
-          form.append("usuarioId", usuario.usuarioId);
-        }
+        form.append("profileId", usuario.id);
+        form.append("tipo", tipoUsuario);
       }
 
       const respuesta = await fetch(`http://localhost:3000/${endpoint}`, {
