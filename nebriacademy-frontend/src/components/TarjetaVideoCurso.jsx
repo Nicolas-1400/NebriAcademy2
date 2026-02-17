@@ -1,4 +1,5 @@
 import Editar from "../assets/lapiz.png";
+import Eliminar from "../assets/Eliminar.png";
 
 /**
  * Componente: TarjetaVideoCurso
@@ -22,15 +23,15 @@ function TarjetaVideoCurso({
           <div className="edit-controls">
             <button
               onClick={() => handleEditNavigate("video", video)}
-              title="Editar video"
+              title="Editar vídeo"
             >
               <img src={Editar} alt="Editar" />
             </button>
             <button
               onClick={() => handleDeleteContenido("video", video.id)}
-              title="Borrar video"
+              title="Borrar vídeo"
             >
-              ✖
+              <img src={Eliminar} alt="Borrar vídeo" />
             </button>
           </div>
         )}

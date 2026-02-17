@@ -16,7 +16,8 @@ import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import Flecha from "../assets/flecha-correcta.png";
 import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
 import Mas from "../assets/mas.png";
-import Editar from "../assets/lapiz.png";
+import Lapiz from "../assets/lapiz.png";
+import SalirEdicion from "../assets/lapiz-cancelar3.png";
 import CorregirEjercicio2 from "../assets/editar-archivo1.png";
 import EjercicioSubido from "../assets/subir-archivo2.png";
 import SubirEjercicio from "../assets/subir-archivo.png";
@@ -37,6 +38,8 @@ function CursoGrid() {
 
   // Datos del Curso
   const [curso, setCurso] = useState(null);
+  // Estado para rotar el botón de subir contenido
+  const [rotado, setRotado] = useState(false);
   const [profesor, setProfesor] = useState(null);
   const [contenidos, setContenidos] = useState({
     videos: [],
@@ -783,15 +786,16 @@ function CursoGrid() {
             <button
               className="editarCurso"
               onClick={() => setEditingMode(!editingMode)}
-              title="Editar modo"
+              title={editingMode ? "Salir edición" : "Editar"}
             >
-              <img src={Editar} alt="Edit" />
+              <img src={editingMode ? SalirEdicion : Lapiz} alt="Edit" />
             </button>
           )}
           <div className="relative-container">
             <button
-              className="subirContenidoCurso"
+              className={`subirContenidoCurso${rotado ? " rotated" : ""}`}
               onClick={() => {
+                setRotado((prev) => !prev);
                 if (tipo === "alumno") {
                   navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
                     state: { tipo: "apunte", cursoId: id },
@@ -802,7 +806,7 @@ function CursoGrid() {
               }}
               title="Añadir contenido"
             >
-              <img src={Mas} alt="Add" />
+              <img src={Mas} alt="Añadir contenido" />
             </button>
             {showAddMenu && tipo === "profesor" && (
               <div className="add-menu">

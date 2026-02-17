@@ -44,6 +44,10 @@
   word-break: break-word;
 }
 
+.item-main p:last-child {
+  color: var(--color-secundario);
+}
+
 .apunte-meta {
   display: flex;
   flex-direction: column;
@@ -76,7 +80,7 @@
   font-weight: bold;
   color: #666;
 }
-.apunte-like img {
+.like-icon {
   cursor: pointer;
   width: 25px;
 }

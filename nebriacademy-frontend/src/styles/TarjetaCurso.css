@@ -71,6 +71,9 @@
     color: var(--rojo-nebrija);
     font-weight: bold;
     font-size: 13px;
+    display: flex;
+    flex-direction: row;
+    justify-content: flex-end;
 }
 
 /* RESPONSIVE 1024px */

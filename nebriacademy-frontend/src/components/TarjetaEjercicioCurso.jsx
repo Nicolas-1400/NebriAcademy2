@@ -1,4 +1,5 @@
 import Editar from "../assets/lapiz.png";
+import Eliminar from "../assets/Eliminar.png";
 
 /**
  * Componente: TarjetaEjercicioCurso
@@ -39,7 +40,7 @@ function TarjetaEjercicioCurso({
             onClick={() => handleDeleteContenido("ejercicio", ejercicio.id)}
             title="Borrar ejercicio"
           >
-            ✖
+            <img src={Eliminar} alt="Borrar ejercicio" />
           </button>
         </div>
       )}

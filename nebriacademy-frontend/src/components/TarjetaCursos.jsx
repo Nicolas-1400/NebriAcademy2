@@ -9,6 +9,7 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
+import Like from "../assets/me-gusta-marcado.png";
 
 const IMAGES = [
   Foto10,
@@ -51,7 +52,7 @@ function TarjetaCursos({
       <p className="p-nivel">Nivel: {nivel}</p>
       <p className="p-descripcion">{descripcion}</p>
       <p className="p-profesor">{profesor}</p>
-      <p className="p-valoracion">Valoración: {valoracion}</p>
+      <p className="p-valoracion"><img src={Like} alt="Valoración" /> {valoracion}</p>
     </div>
   );
 }

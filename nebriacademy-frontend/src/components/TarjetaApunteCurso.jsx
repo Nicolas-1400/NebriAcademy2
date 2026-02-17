@@ -1,6 +1,7 @@
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 import Editar from "../assets/lapiz.png";
+import Eliminar from "../assets/Eliminar.png";
 
 /**
  * Componente: TarjetaApunteCurso
@@ -47,7 +48,7 @@ function TarjetaApunteCurso({
             onClick={() => handleDeleteContenido("apunte", apunte.id)}
             title="Borrar apunte"
           >
-            ✖
+            <img src={Eliminar} alt="Borrar apunte" />
           </button>
         </div>
       )}
