@@ -17,6 +17,7 @@ const Cursos = sequelize.define(
     nivel: DataTypes.STRING, // Nivel de dificultad (Básico, Intermedio, Avanzado)
     valoracion: DataTypes.FLOAT, // Promedio de valoraciones de los alumnos
     descripcion: DataTypes.TEXT, // Explicación detallada del contenido y objetivos del curso
+    imagen: DataTypes.STRING, // Nombre de la imagen de fondo seleccionada
   },
   { timestamps: false },
 );

@@ -42,7 +42,7 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-profesor"
-          onClick={() => navigate("/Register/RegisterProfesor")}
+          onClick={() => navigate("/Register/VerificacionProfesor")}
         >
           <img src={profesor} alt="Profesor" />
           <p>Soy profesor</p>

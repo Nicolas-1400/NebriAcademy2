@@ -19,11 +19,14 @@ import AddApunteIndividual from "../pages/AddApunteIndividual.jsx";
 import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
 import PreRegister from "../pages/PreRegister.jsx";
 import VerificacionAlumnoNebrija from "../pages/VerificacionAlumnoNebrija.jsx";
+import VerificacionProfesor from "../pages/VerificacionProfesor.jsx";
 import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
 import RegisterProfesor from "../pages/RegisterProfesor.jsx";
 import Perfil from "../pages/Perfil.jsx";
 import ProtectedRoute from "./ProtectedRoute";
+import ProtectedVerificationRoute from "./ProtectedVerificationRoute.jsx";
+import ProtectedVerificationProfesorRoute from "./ProtectedVerificationProfesorRoute.jsx";
 import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
 import NotaLegal from "../pages/NotaLegal.jsx";
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
@@ -37,28 +40,45 @@ function AppRouter() {
     <BrowserRouter>
       <Routes>
         {/* =======================================================
-            RUTAS PÚBLICAS
+            RUTAS PÚBLICAS Y DE REGISTRO
             Cualquiera puede entrar aquí (Login, Registro...).
            ======================================================= */}
+        {/* --- Login y Selección de Registro --- */}
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
+
+        {/* --- Registro Alumno Externo --- */}
+        <Route
+          path="/Register/RegisterAlumnoExterno"
+          element={<RegisterAlumnoExterno />}
+        />
+
+        {/* --- Registro Alumno Nebrija (Flujo Verificación) --- */}
         <Route
           path="/Register/VerificacionAlumnoNebrija"
           element={<VerificacionAlumnoNebrija />}
         />
         <Route
           path="/Register/RegisterAlumnoNebrija"
-          element={<RegisterAlumnoNebrija />}
+          element={
+            <ProtectedVerificationRoute>
+              <RegisterAlumnoNebrija />
+            </ProtectedVerificationRoute>
+          }
         />
+        {/* --- Registro Profesor (Flujo Verificación) --- */}
         <Route
-          path="/Register/RegisterAlumnoExterno"
-          element={<RegisterAlumnoExterno />}
+          path="/Register/VerificacionProfesor"
+          element={<VerificacionProfesor />}
         />
         <Route
           path="/Register/RegisterProfesor"
-          element={<RegisterProfesor />}
+          element={
+            <ProtectedVerificationProfesorRoute>
+              <RegisterProfesor />
+            </ProtectedVerificationProfesorRoute>
+          }
         />
-
         {/* Ruta para cuando no se encuentra la página (Error 404) */}
         <Route path="*" element={<NotFound />} />
 
@@ -214,16 +234,6 @@ function AppRouter() {
           element={
             <ProtectedRoute requiredTipo="profesor">
               <CorregirEjerciciosSubidos />
-            </ProtectedRoute>
-          }
-        />
-
-        {/* Rutas de registro específicas que requieren auth previa (ej: completar registro tras verificación) */}
-        <Route
-          path="/RegisterAlumnoNebrija"
-          element={
-            <ProtectedRoute>
-              <RegisterAlumnoNebrija />
             </ProtectedRoute>
           }
         />

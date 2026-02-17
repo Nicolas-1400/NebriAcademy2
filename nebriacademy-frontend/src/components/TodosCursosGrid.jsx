@@ -180,6 +180,7 @@ function TodosCursosGrid() {
               descripcion={c.descripcion}
               profesor={getProfesorName(c.profesor)}
               valoracion={c.valoracion}
+              imagen={c.imagen}
             />
           ))}
         </div>

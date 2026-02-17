@@ -9,6 +9,9 @@ function TodosProfesoresGrid() {
   const [profesores, setProfesores] = useState([]);
   const [error, setError] = useState(null);
 
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedSpecialization, setSelectedSpecialization] = useState("");
+
   useEffect(() => {
     fetch("http://localhost:3000/profesores")
       .then((respuesta) => respuesta.json())
@@ -21,28 +24,103 @@ function TodosProfesoresGrid() {
       });
   }, []);
 
+  // Obtener especializaciones únicas
+  const specializations = [
+    ...new Set(
+      profesores.map((p) => p.especializacion).filter((e) => e), // Filtrar nulos/vacíos
+    ),
+  ];
+
+  // Filtrar profesores
+  const filteredProfesores = profesores.filter((p) => {
+    // 1. Filtro por especialización
+    if (
+      selectedSpecialization &&
+      p.especializacion !== selectedSpecialization
+    ) {
+      return false;
+    }
+    // 2. Filtro por búsqueda (Nombre o Apellidos)
+    if (searchTerm) {
+      const term = searchTerm.toLowerCase();
+      const fullName = `${p.nombre} ${p.apellidos}`.toLowerCase();
+      return fullName.includes(term);
+    }
+    return true;
+  });
+
   if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="TodosProfesoresGrid">
-      {profesores.length > 0 ? (
-        <div className="profesores-grid">
-          <h2>Profesores</h2>
-          <div className="profesores-contenedor">
-            {profesores.map((p) => (
-              <TarjetaProfesores
-                key={p.id}
-                nombre={p.nombre}
-                apellidos={p.apellidos}
-                especializacion={p.especializacion}
-                profesorId={p.id}
-              />
+      {/* SIDEBAR */}
+      <aside className="buscador-sidebar-profesores">
+        <div className="formulario-busqueda">
+          <input
+            type="search"
+            placeholder="Buscar por nombre..."
+            value={searchTerm}
+            onChange={(e) => setSearchTerm(e.target.value)}
+          />
+        </div>
+
+        <div className="categorias-sidebar">
+          <h3>Especialización</h3>
+          <ul>
+            <li>
+              <button
+                onClick={() => setSelectedSpecialization("")}
+                className={!selectedSpecialization ? "activo" : ""}
+              >
+                Todas
+              </button>
+            </li>
+            {specializations.map((spec) => (
+              <li key={spec}>
+                <button
+                  onClick={() => setSelectedSpecialization(spec)}
+                  className={selectedSpecialization === spec ? "activo" : ""}
+                >
+                  {spec}
+                </button>
+              </li>
             ))}
+          </ul>
+          <hr className="separador-sidebar" />
+          <div className="limpiar-filtros">
+            <button
+              onClick={() => {
+                setSearchTerm("");
+                setSelectedSpecialization("");
+              }}
+            >
+              Limpiar filtros
+            </button>
           </div>
         </div>
-      ) : (
-        <p>No hay profesores disponibles.</p>
-      )}
+      </aside>
+
+      {/* GRID */}
+      <div className="profesores-grid-container">
+        {filteredProfesores.length > 0 ? (
+          <div className="profesores-grid">
+            <h2>Profesores</h2>
+            <div className="profesores-contenedor">
+              {filteredProfesores.map((p) => (
+                <TarjetaProfesores
+                  key={p.id}
+                  nombre={p.nombre}
+                  apellidos={p.apellidos}
+                  especializacion={p.especializacion}
+                  profesorId={p.id}
+                />
+              ))}
+            </div>
+          </div>
+        ) : (
+          <p className="mensaje-vacio">No se encontraron profesores.</p>
+        )}
+      </div>
     </div>
   );
 }

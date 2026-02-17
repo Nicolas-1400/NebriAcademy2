@@ -36,9 +36,30 @@ function TarjetaCursos({
   descripcion,
   profesor,
   valoracion,
+  imagen,
 }) {
   const navigate = useNavigate();
-  const imageSrc = IMAGES[cursoId % 10]; // Selección de imagen determinista
+
+  // Mapeo local de imágenes (Duplicado intencionalmente para evitar utility externa)
+  const IMAGES_MAP = {
+    Foto1,
+    Foto2,
+    Foto3,
+    Foto4,
+    Foto5,
+    Foto6,
+    Foto7,
+    Foto8,
+    Foto9,
+    Foto10,
+  };
+
+  const getCourseImage = () => {
+    if (imagen && IMAGES_MAP[imagen]) return IMAGES_MAP[imagen];
+    return IMAGES[cursoId % 10]; // Fallback original
+  };
+
+  const imageSrc = getCourseImage();
 
   return (
     <div

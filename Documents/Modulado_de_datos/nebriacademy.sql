@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-02-2026 a las 13:44:32
+-- Tiempo de generación: 17-02-2026 a las 14:19:28
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,7 +61,7 @@ CREATE TABLE `alumnos` (
   `apellidos` varchar(100) DEFAULT NULL,
   `dni` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `contrasena` varchar(255) DEFAULT NULL,
+  `contrasena` varchar(255) NOT NULL,
   `numeroTarjeta` varchar(20) DEFAULT NULL,
   `numTelefono` varchar(30) DEFAULT NULL,
   `redes` text DEFAULT NULL,
@@ -167,40 +167,41 @@ INSERT INTO `comentarioalumnocurso` (`id`, `usuarioId`, `cursoId`, `comentario`)
 
 CREATE TABLE `cursos` (
   `id` int(11) NOT NULL,
-  `nombreCurso` varchar(100) NOT NULL,
-  `categoria` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL,
-  `profesor` int(11) NOT NULL,
-  `nivel` varchar(50) DEFAULT NULL,
-  `valoracion` float DEFAULT 0,
-  `descripcion` text DEFAULT NULL
+  `nombreCurso` varchar(255) DEFAULT NULL,
+  `categoria` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') DEFAULT NULL,
+  `profesor` int(11) DEFAULT NULL,
+  `nivel` varchar(255) DEFAULT NULL,
+  `valoracion` float DEFAULT NULL,
+  `descripcion` text DEFAULT NULL,
+  `imagen` varchar(255) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cursos`
 --
 
-INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `descripcion`) VALUES
-(1, 'Python desde Cero', 'Programación', 1, 'Principiante', 0, 'Aprende Python desde cero. Curso ideal para iniciarse en la programación.'),
-(2, 'Python Avanzado', 'Programación', 1, 'Avanzado', 0, 'Programación avanzada con Python: decoradores, generadores y patrones de diseño.'),
-(3, 'Diseño Web con HTML/CSS', 'Diseño', 4, 'Intermedio', 0, 'Crea sitios web modernos con HTML5 y CSS3.'),
-(4, 'SQL y Bases de Datos', 'BDD', 2, 'Intermedio', 0, 'Domina SQL y gestiona bases de datos relacionales con MySQL y PostgreSQL.'),
-(5, 'Diseño de Bases de Datos', 'BDD', 2, 'Avanzado', 0, 'Modelado de datos, normalización y optimización de bases de datos.'),
-(6, 'Fundamentos de Ciberseguridad', 'Ciberseguridad', 3, 'Principiante', 0, 'Introducción a los conceptos básicos de seguridad informática.'),
-(7, 'Seguridad en Redes', 'Ciberseguridad', 3, 'Intermedio', 0, 'Protección de redes, firewalls y análisis de vulnerabilidades.'),
-(8, 'Machine Learning con Python', 'Programación', 1, 'Avanzado', 0, 'Aprende machine learning usando librerías como scikit-learn y TensorFlow.'),
-(9, 'NoSQL y MongoDB', 'BDD', 2, 'Intermedio', 0, 'Bases de datos NoSQL y MongoDB para aplicaciones modernas.'),
-(10, 'Ethical Hacking', 'Ciberseguridad', 3, 'Avanzado', 0, 'Técnicas de hacking ético para auditorías de seguridad.'),
-(11, 'Diseño Gráfico con Figma', 'Diseño', 4, 'Intermedio', 0, 'Aprende a crear interfaces y diseños profesionales con Figma.'),
-(12, 'Marketing Digital', 'Marketing', 5, 'Principiante', 0, 'Estrategias de marketing digital para redes sociales y SEO.'),
-(13, 'SEO Avanzado', 'Marketing', 5, 'Avanzado', 0, 'Optimización de motores de búsqueda para posicionar tu sitio web.'),
-(14, 'Diseño UI/UX', 'Diseño', 4, 'Avanzado', 0, 'Principios de experiencia de usuario y diseño de interfaces.'),
-(15, 'JavaScript Moderno', 'Programación', 1, 'Intermedio', 0, 'Aprende ES6+ y las últimas características de JavaScript.'),
-(16, 'React para Principiantes', 'Diseño', 4, 'Principiante', 0, 'Introducción al desarrollo de interfaces con React.js.'),
-(17, 'Análisis de Datos con SQL', 'BDD', 2, 'Avanzado', 0, 'Técnicas avanzadas de análisis y visualización de datos con SQL.'),
-(18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.'),
-(19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.'),
-(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.'),
-(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ');
+INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `valoracion`, `descripcion`, `imagen`) VALUES
+(1, 'Python desde Cero', 'Programación', 1, 'Principiante', 0, 'Aprende Python desde cero. Curso ideal para iniciarse en la programación.', 'Foto1'),
+(2, 'Python Avanzado', 'Programación', 1, 'Avanzado', 0, 'Programación avanzada con Python: decoradores, generadores y patrones de diseño.', 'Foto2'),
+(3, 'Diseño Web con HTML/CSS', 'Diseño', 4, 'Intermedio', 0, 'Crea sitios web modernos con HTML5 y CSS3.', 'Foto3'),
+(4, 'SQL y Bases de Datos', 'BDD', 2, 'Intermedio', 0, 'Domina SQL y gestiona bases de datos relacionales con MySQL y PostgreSQL.', 'Foto4'),
+(5, 'Diseño de Bases de Datos', 'BDD', 2, 'Avanzado', 0, 'Modelado de datos, normalización y optimización de bases de datos.', 'Foto5'),
+(6, 'Fundamentos de Ciberseguridad', 'Ciberseguridad', 3, 'Principiante', 0, 'Introducción a los conceptos básicos de seguridad informática.', 'Foto6'),
+(7, 'Seguridad en Redes', 'Ciberseguridad', 3, 'Intermedio', 0, 'Protección de redes, firewalls y análisis de vulnerabilidades.', 'Foto7'),
+(8, 'Machine Learning con Python', 'Programación', 1, 'Avanzado', 0, 'Aprende machine learning usando librerías como scikit-learn y TensorFlow.', 'Foto8'),
+(9, 'NoSQL y MongoDB', 'BDD', 2, 'Intermedio', 0, 'Bases de datos NoSQL y MongoDB para aplicaciones modernas.', 'Foto9'),
+(10, 'Ethical Hacking', 'Ciberseguridad', 3, 'Avanzado', 0, 'Técnicas de hacking ético para auditorías de seguridad.', 'Foto10'),
+(11, 'Diseño Gráfico con Figma', 'Diseño', 4, 'Intermedio', 0, 'Aprende a crear interfaces y diseños profesionales con Figma.', 'Foto1'),
+(12, 'Marketing Digital', 'Marketing', 5, 'Principiante', 0, 'Estrategias de marketing digital para redes sociales y SEO.', 'Foto2'),
+(13, 'SEO Avanzado', 'Marketing', 5, 'Avanzado', 0, 'Optimización de motores de búsqueda para posicionar tu sitio web.', 'Foto3'),
+(14, 'Diseño UI/UX', 'Diseño', 4, 'Avanzado', 0, 'Principios de experiencia de usuario y diseño de interfaces.', 'Foto4'),
+(15, 'JavaScript Moderno', 'Programación', 1, 'Intermedio', 0, 'Aprende ES6+ y las últimas características de JavaScript.', 'Foto5'),
+(16, 'React para Principiantes', 'Diseño', 4, 'Principiante', 0, 'Introducción al desarrollo de interfaces con React.js.', 'Foto6'),
+(17, 'Análisis de Datos con SQL', 'BDD', 2, 'Avanzado', 0, 'Técnicas avanzadas de análisis y visualización de datos con SQL.', 'Foto7'),
+(18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.', 'Foto8'),
+(19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.', 'Foto9'),
+(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.', 'Foto10'),
+(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ', 'Foto1');
 
 -- --------------------------------------------------------
 
@@ -286,13 +287,6 @@ CREATE TABLE `ejerciciosalumnos` (
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
---
--- Volcado de datos para la tabla `ejerciciosalumnos`
---
-
-INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VALUES
-(1, 1, 9, 'PÃ¡ginas.png');
-
 -- --------------------------------------------------------
 
 --
@@ -320,7 +314,7 @@ CREATE TABLE `profesores` (
   `apellidos` varchar(100) DEFAULT NULL,
   `dni` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
-  `contrasena` varchar(255) DEFAULT NULL,
+  `contrasena` varchar(255) NOT NULL,
   `numCuentaBancaria` varchar(50) DEFAULT NULL,
   `numTelefono` varchar(30) DEFAULT NULL,
   `redes` text DEFAULT NULL,
@@ -392,13 +386,6 @@ CREATE TABLE `puntuacionesejercicios` (
   `alumnoId` int(11) NOT NULL,
   `puntuacion` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
---
--- Volcado de datos para la tabla `puntuacionesejercicios`
---
-
-INSERT INTO `puntuacionesejercicios` (`id`, `ejercicioId`, `alumnoId`, `puntuacion`) VALUES
-(1, 1, 9, 10);
 
 -- --------------------------------------------------------
 
@@ -593,7 +580,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
@@ -611,13 +598,13 @@ ALTER TABLE `apuntesalumnos`
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
@@ -635,7 +622,7 @@ ALTER TABLE `ejercicios`
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
 --
 ALTER TABLE `ejerciciosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `incidencias`
@@ -647,25 +634,25 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=7;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
 
 --
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=17;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`

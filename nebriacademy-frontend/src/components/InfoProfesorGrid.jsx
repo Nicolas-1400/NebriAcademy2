@@ -61,6 +61,7 @@ function InfoProfesorGrid() {
                 cursoId={c.id}
                 nivel={c.nivel}
                 valoracion={c.valoracion}
+                imagen={c.imagen}
               />
             ))}
           </div>

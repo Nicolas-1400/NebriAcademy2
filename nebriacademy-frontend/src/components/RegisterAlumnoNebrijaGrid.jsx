@@ -22,7 +22,7 @@ function RegisterAlumnoNebrijaGrid() {
   const [error, setError] = useState("");
 
   useEffect(() => {
-    const verifiedEmail = sessionStorage.getItem("verifiedEmail");
+    const verifiedEmail = sessionStorage.getItem("verifiedStudentEmail");
     const emailToUse = location.state?.email || verifiedEmail;
 
     if (emailToUse) {
@@ -54,7 +54,7 @@ function RegisterAlumnoNebrijaGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        sessionStorage.removeItem("verifiedEmail");
+        sessionStorage.removeItem("verifiedStudentEmail");
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
@@ -81,7 +81,7 @@ function RegisterAlumnoNebrijaGrid() {
           <input
             name="contrasena"
             type="password"
-            placeholder="Contraseña"
+            placeholder="Nueva contraseña"
             value={formData.contrasena}
             onChange={handleChange}
             required

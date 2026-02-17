@@ -121,35 +121,49 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
   }
 });
 
+// --- Auth y Registro de Alumnos (FLOW: RECLAMAR CUENTA) ---
+
 /**
- * Validar email @alumnos.nebrija.es para paso previo al registro.
- * No crea registros, solo confirma disponibilidad.
+ * Validar email + código para reclamar cuenta pre-generada.
+ * Verifica que:
+ * 1. El email exista en la BD.
+ * 2. El código (contrasena actual) coincida.
+ * 3. La cuenta no esté ya reclamada (nombre/apellidos vacíos).
  */
 router.post("/verificacionnebrija/auth", async (req, res) => {
-  try {
-    const { email } = req.body;
-    if (!email) return res.status(400).json({ error: "Email requerido" });
+  const { email, contrasena } = req.body;
 
-    if (!email.endsWith("@alumnos.nebrija.es")) {
-      return res
-        .status(400)
-        .json({ error: "Dominio no válido (debe ser Nebrija)" });
+  try {
+    const alumno = await Alumnos.findOne({ where: { email } });
+
+    if (!alumno) {
+      return res.status(404).json({ error: "Email no encontrado" });
     }
 
-    const existente = await Alumnos.findOne({ where: { email } });
-    if (existente)
-      return res.status(400).json({ error: "Email ya registrado" });
+    // Verificar si la cuenta ya ha sido reclamada (tiene nombre/apellidos)
+    if (alumno.nombre || alumno.apellidos) {
+      return res
+        .status(400)
+        .json({ error: "Esta cuenta ya ha sido registrada" });
+    }
 
-    res.json({ mensaje: "Email válido", email });
+    // Verificar código (que en DB es la contraseña temporal)
+    if (alumno.contrasena !== contrasena) {
+      return res
+        .status(401)
+        .json({ error: "Código de verificación incorrecto" });
+    }
+
+    res.json({ message: "Verificación exitosa" });
   } catch (error) {
-    console.error("Error validación Nebrija:", error);
-    res.status(500).json({ error: "Error interno" });
+    console.error(error);
+    res.status(500).json({ error: "Error en el servidor" });
   }
 });
 
 /**
  * Completar registro de alumno Nebrija tras validación.
- * Crea Usuario y Alumno (datos simplificados, sin tarjeta).
+ * ACTUALIZA el registro existente con los datos reales del alumno.
  */
 router.post("/verificacionnebrija/completar", async (req, res) => {
   try {
@@ -168,32 +182,32 @@ router.post("/verificacionnebrija/completar", async (req, res) => {
       return res.status(400).json({ error: "Campos incompletos" });
     }
 
-    const existente = await Alumnos.findOne({ where: { email } });
-    if (existente)
-      return res.status(400).json({ error: "Email ya registrado" });
+    // Buscar la cuenta a actualizar
+    const alumno = await Alumnos.findOne({ where: { email } });
 
-    const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
-
-    try {
-      const nuevoAlumno = await Alumnos.create({
-        usuarioId: nuevoUsuario.id,
-        nombre,
-        apellidos,
-        dni,
-        email,
-        contrasena,
-        pais,
-        localidad,
-      });
-
-      res.status(201).json({
-        mensaje: "Registro Nebrija completado",
-        usuario: { id: nuevoAlumno.id, email: nuevoAlumno.email },
-      });
-    } catch (createError) {
-      await nuevoUsuario.destroy();
-      throw createError;
+    if (!alumno) {
+      return res.status(404).json({ error: "Cuenta no encontrada" });
     }
+
+    // Doble check de seguridad: asegurar que sigue sin reclamar
+    if (alumno.nombre || alumno.apellidos) {
+      return res.status(400).json({ error: "Cuenta ya registrada" });
+    }
+
+    // Actualizar datos del alumno
+    await alumno.update({
+      nombre,
+      apellidos,
+      dni,
+      contrasena, // Aquí se guarda la nueva contraseña elegida por el usuario
+      pais,
+      localidad,
+    });
+
+    res.status(200).json({
+      mensaje: "Registro Nebrija completado exitosamente",
+      usuario: { id: alumno.id, email: alumno.email },
+    });
   } catch (error) {
     console.error("Error completar registro Nebrija:", error);
     res.status(500).json({ error: "Error interno" });

@@ -95,7 +95,7 @@ function EditarApunteIndividualGrid() {
           <label>Descripción</label>
           <textarea
             value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
+            onChange={(e) => setDescripcion(e.target.value)}  
           />
         </div>
 

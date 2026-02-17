@@ -1,18 +1,20 @@
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useState, useEffect } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 
 /**
  * Componente: RegisterProfesorGrid
- * Formulario de registro para profesores.
+ * Formulario para completar registro de profesor verificado.
+ * (Flow: Reclamar cuenta pre-existente)
  */
 function RegisterProfesorGrid() {
   const navigate = useNavigate();
+  const location = useLocation();
 
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
     dni: "",
-    email: "",
+    email: "", // Se rellena automáticamente
     contrasena: "",
     numeroCuentaBancaria: "",
     pais: "",
@@ -21,6 +23,18 @@ function RegisterProfesorGrid() {
   });
 
   const [error, setError] = useState("");
+
+  useEffect(() => {
+    const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
+    const emailToUse = location.state?.email || verifiedEmail;
+
+    if (emailToUse) {
+      setFormData((prev) => ({ ...prev, email: emailToUse }));
+    } else {
+      // Si no hay email verificado, volver a verificación
+      navigate("/Register/VerificacionProfesor");
+    }
+  }, [location.state, navigate]);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -33,7 +47,7 @@ function RegisterProfesorGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/profesores/registerProfesor/auth",
+        "http://localhost:3000/profesores/verificacionprofesor/completar",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -44,6 +58,7 @@ function RegisterProfesorGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
+        sessionStorage.removeItem("verifiedProfessorEmail");
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
@@ -57,8 +72,24 @@ function RegisterProfesorGrid() {
   return (
     <div className="register-grid-externo">
       <div className="formulario-register-contenedor">
-        <h2>Registrate</h2>
+        <h2>Regístrate (Profesor)</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
+          <input
+            name="email"
+            type="email"
+            placeholder="Email"
+            value={formData.email}
+            disabled
+            readOnly
+          />
+          <input
+            name="contrasena"
+            type="password"
+            placeholder="Nueva Contraseña"
+            value={formData.contrasena}
+            onChange={handleChange}
+            required
+          />
           <input
             name="nombre"
             type="text"
@@ -84,25 +115,9 @@ function RegisterProfesorGrid() {
             required
           />
           <input
-            name="email"
-            type="email"
-            placeholder="Email"
-            value={formData.email}
-            onChange={handleChange}
-            required
-          />
-          <input
-            name="contrasena"
-            type="password"
-            placeholder="Contraseña"
-            value={formData.contrasena}
-            onChange={handleChange}
-            required
-          />
-          <input
             name="numeroCuentaBancaria"
             type="text"
-            placeholder="Cuenta Bancaria"
+            placeholder="Cuenta Bancaria (IBAN)"
             value={formData.numeroCuentaBancaria}
             onChange={handleChange}
             required
@@ -147,6 +162,14 @@ function RegisterProfesorGrid() {
             <option value="Otro">Otro</option>
           </select>
 
+          {/* Nota: La especialización no estaba en el endpoint de actualizar,
+              así que la quito o habría que añadirla al backend si fuese requerida.
+              El SQL original de Profesores la tiene como ENUM?
+              Voy a asumir que se mantiene o se añade si es necesaria.
+              Revisando backend/profesores.js -> .update(req.body) 
+              Si el body la trae y el modelo la permite, se actualizará.
+              La dejo por si acaso.
+           */}
           <select
             name="especializacion"
             value={formData.especializacion}
@@ -164,7 +187,7 @@ function RegisterProfesorGrid() {
           </select>
 
           {error && <p className="error-login">{error}</p>}
-          <button type="submit">Registrarse</button>
+          <button type="submit">Completar Registro</button>
         </form>
         <p>
           ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>

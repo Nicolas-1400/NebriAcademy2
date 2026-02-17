@@ -208,6 +208,7 @@ function HomeFeed() {
                     cursoId={curso.id}
                     nivel={curso.nivel}
                     valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
                   />
                 ))
               ) : (
@@ -248,6 +249,7 @@ function HomeFeed() {
                     cursoId={curso.id}
                     nivel={curso.nivel}
                     valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
                   />
                 ))
               ) : (
@@ -306,6 +308,7 @@ function HomeFeed() {
                     cursoId={curso.id}
                     nivel={curso.nivel}
                     valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
                   />
                 ))
               ) : (
