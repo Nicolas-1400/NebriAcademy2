@@ -2,6 +2,7 @@ import { useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
+import TarjetaFondos from "./TarjetaFondos";
 
 /**
  * Componente: AddCursoGrid
@@ -13,6 +14,7 @@ function AddCursoGrid() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
+  const [imagen, setImagen] = useState("Foto1"); // Default image
 
   // --- Estados de Contenidos Opcionales ---
   const [fileApunte, setFileApunte] = useState(null);
@@ -93,6 +95,7 @@ function AddCursoGrid() {
           descripcion,
           nivel,
           profesor: profesorId,
+          imagen,
         }),
       });
 
@@ -158,6 +161,7 @@ function AddCursoGrid() {
         setCategoria("");
         setDescripcion("");
         setNivel("");
+        setImagen("Foto1");
         setFileApunte(null);
         setNombreApunte("");
         setDescripcionApunte("");
@@ -237,6 +241,8 @@ function AddCursoGrid() {
                 required
               />
             </div>
+            {/* --- Selección de Imagen de Fondo --- */}
+            <TarjetaFondos selectedImage={imagen} onSelect={setImagen} />
           </div>
 
           {/* --- Apunte Opcional --- */}

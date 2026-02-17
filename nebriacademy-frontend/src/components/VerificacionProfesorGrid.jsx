@@ -2,10 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 /**
- * Componente: VerificacionAlumnoNebrijaGrid
- * Valida que el email institucional y el código de verificación sean correctos.
+ * Componente: VerificacionProfesorGrid
+ * Valida que el email del profesor y el código de verificación sean correctos.
+ * Permite "reclamar" una cuenta pre-creada por administración.
  */
-function VerificacionAlumnoNebrijaGrid() {
+function VerificacionProfesorGrid() {
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -17,7 +18,7 @@ function VerificacionAlumnoNebrijaGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/alumnos/verificacionnebrija/auth",
+        "http://localhost:3000/profesores/verificacionprofesor/auth",
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -28,8 +29,10 @@ function VerificacionAlumnoNebrijaGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        sessionStorage.setItem("verifiedStudentEmail", email);
-        navigate("/Register/RegisterAlumnoNebrija", { state: { email } });
+        // Guardamos email verificado en sesión para proteger el registro
+        sessionStorage.setItem("verifiedProfessorEmail", email);
+        // Navegamos al registro de profesor
+        navigate("/Register/RegisterProfesor", { state: { email } });
       } else {
         setError(datos.error || "Error en la verificación");
       }
@@ -45,7 +48,7 @@ function VerificacionAlumnoNebrijaGrid() {
         <form className="formulario-login" onSubmit={handleVerification}>
           <input
             type="email"
-            placeholder="Email de la familia Nebrija"
+            placeholder="Email corporativo"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required
@@ -68,4 +71,4 @@ function VerificacionAlumnoNebrijaGrid() {
   );
 }
 
-export default VerificacionAlumnoNebrijaGrid;
+export default VerificacionProfesorGrid;

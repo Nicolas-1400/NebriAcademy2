@@ -28,9 +28,28 @@ const IMAGES = [
  * Componente: TarjetaCursoPequena
  * Tarjeta compacta para carruseles de cursos.
  */
-function TarjetaCursoPequena({ name, cursoId, nivel, valoracion }) {
+function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
   const navigate = useNavigate();
-  const imageSrc = IMAGES[cursoId % 10]; // Mapeo directo por último dígito
+
+  const IMAGES_MAP = {
+    Foto1,
+    Foto2,
+    Foto3,
+    Foto4,
+    Foto5,
+    Foto6,
+    Foto7,
+    Foto8,
+    Foto9,
+    Foto10,
+  };
+
+  const getCourseImage = () => {
+    if (imagen && IMAGES_MAP[imagen]) return IMAGES_MAP[imagen];
+    return IMAGES[cursoId % 10];
+  };
+
+  const imageSrc = getCourseImage();
 
   return (
     <div

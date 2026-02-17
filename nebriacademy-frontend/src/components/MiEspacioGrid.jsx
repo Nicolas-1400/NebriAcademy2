@@ -233,6 +233,7 @@ function MiEspacioGrid() {
                   cursoId={item.id}
                   nivel={item.nivel}
                   valoracion={item.valoracion || 0}
+                  imagen={item.imagen}
                 />
               ) : (
                 <div key={item.id} className="apuntes-slide apuntes-list">

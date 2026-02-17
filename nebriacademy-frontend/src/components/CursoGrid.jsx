@@ -72,8 +72,30 @@ function CursoGrid() {
     Foto7,
     Foto8,
     Foto9,
+    Foto10,
   ];
-  const bgImage = fotos[(curso?.id || id) % 10] || Foto1;
+
+  const IMAGES_MAP = {
+    Foto1,
+    Foto2,
+    Foto3,
+    Foto4,
+    Foto5,
+    Foto6,
+    Foto7,
+    Foto8,
+    Foto9,
+    Foto10,
+  };
+
+  const getHeaderImage = () => {
+    if (curso?.imagen && IMAGES_MAP[curso.imagen])
+      return IMAGES_MAP[curso.imagen];
+    const cid = curso?.id || id;
+    return fotos[cid % 10] || Foto1;
+  };
+
+  const bgImage = getHeaderImage();
 
   // --- Carga Inicial ---
   useEffect(() => {

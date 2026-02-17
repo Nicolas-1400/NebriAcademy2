@@ -15,6 +15,39 @@ router.get("/", async (req, res) => {
     // Recuperar todos los cursos de BBDD
     const resultado = await Cursos.findAll();
 
+    // Mapping para backfill (misma lógica que frontend legacy)
+    const map = [
+      "Foto10",
+      "Foto1",
+      "Foto2",
+      "Foto3",
+      "Foto4",
+      "Foto5",
+      "Foto6",
+      "Foto7",
+      "Foto8",
+      "Foto9",
+    ];
+
+    // Verificar y actualizar imágenes vacías
+    for (const curso of resultado) {
+      if (!curso.imagen || curso.imagen.trim() === "") {
+        const index = curso.id % 10;
+        const imageName = map[index];
+        try {
+          // Force update specifically
+          await Cursos.update(
+            { imagen: imageName },
+            { where: { id: curso.id } },
+          );
+          // Update local instance for response
+          curso.imagen = imageName;
+        } catch (e) {
+          console.error(`Backfill error for curso ${curso.id}: ${e.message}`);
+        }
+      }
+    }
+
     // Devolvemos un objeto con meta-información (cantidad) y la lista
     res.json({
       "Numero de cursos": resultado.length,
@@ -33,11 +66,7 @@ router.get("/", async (req, res) => {
 router.get("/categorias", (req, res) => {
   try {
     // Extraer valores del ENUM 'categoria'
-    const vals =
-      (Cursos.rawAttributes &&
-        Cursos.rawAttributes.categoria &&
-        Cursos.rawAttributes.categoria.values) ||
-      [];
+    const vals = (Cursos && Cursos.categoria && Cursos.categoria.values) || [];
 
     res.json({ categorias: vals });
   } catch (e) {
@@ -92,7 +121,7 @@ router.post("/add", async (req, res) => {
     }
 
     // Crear el curso en la base de datos
-    const cursoData = { ...data, profesor: profesorDbId };
+    const cursoData = { valoracion: 0, ...data, profesor: profesorDbId };
     const nuevo = await Cursos.create(cursoData);
 
     // Crear la relación (Profesores <-> Cursos) si corresponde

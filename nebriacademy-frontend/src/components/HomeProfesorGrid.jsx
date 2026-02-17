@@ -61,6 +61,7 @@ function HomeProfesorGrid() {
               descripcion={c.descripcion}
               profesor={usuario ? `${usuario.nombre} ${usuario.apellidos}` : ""}
               valoracion={c.valoracion}
+              imagen={c.imagen}
             />
           ))
         )}

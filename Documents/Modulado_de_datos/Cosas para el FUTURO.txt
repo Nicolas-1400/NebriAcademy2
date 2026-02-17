@@ -26,9 +26,7 @@ Cosas que habría que mirar para el TFG (IMPORTANTE):
 1. Filtrado y Búsqueda de Datos (El problema de TodosCursosGrid)
 Actualmente, el Frontend descarga toda la base de datos para buscar algo.
 
-Cómo está ahora (Frontend): En 
-TodosCursosGrid.jsx
-, la aplicación descarga todos los cursos y todos los profesores de golpe. Luego, tu navegador usa 
+Cómo está ahora (Frontend): En TodosCursosGrid.jsx, la aplicación descarga todos los cursos y todos los profesores de golpe. Luego, tu navegador usa 
 filter()
  para buscar si escribes "Java".
 Problema: Si tienes 1,000 cursos, el usuario tiene que descargar una lista gigante solo para ver 3.

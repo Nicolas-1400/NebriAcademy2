@@ -61,67 +61,108 @@ router.delete("/:id", async (req, res) => {
 });
 
 // POST /registerProfesor/auth - Registro completo
-router.post("/registerProfesor/auth", async (req, res) => {
-  let nuevoUsuario = null;
+// --- Auth y Registro de Profesores (FLOW: RECLAMAR CUENTA) ---
+
+/**
+ * Validar email + código para reclamar cuenta de PROFESOR pre-generada.
+ */
+// Ruta para verificar email y código (ahora contrasena)
+router.post("/verificacionprofesor/auth", async (req, res) => {
+  const { email, contrasena } = req.body;
+
+  try {
+    const profesor = await Profesores.findOne({ where: { email } });
+
+    if (!profesor) {
+      return res.status(404).json({ error: "Email no encontrado" });
+    }
+
+    // Verificar si la cuenta ya ha sido reclamada
+    if (profesor.nombre || profesor.apellidos) {
+      return res
+        .status(400)
+        .json({ error: "Esta cuenta ya ha sido registrada" });
+    }
+
+    // Verificar código
+    if (profesor.contrasena !== contrasena) {
+      return res
+        .status(401)
+        .json({ error: "Código de verificación incorrecto" });
+    }
+
+    res.json({ message: "Verificación exitosa" });
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error en el servidor" });
+  }
+});
+
+/**
+ * Completar registro de PROFESOR tras validación.
+ * ACTUALIZA el registro existente.
+ */
+router.post("/verificacionprofesor/completar", async (req, res) => {
   try {
     const {
       nombre,
       apellidos,
       dni,
-      email,
       contrasena,
+      email,
       numeroCuentaBancaria,
       pais,
       localidad,
+      especializacion,
     } = req.body;
 
     if (
       !nombre ||
       !apellidos ||
       !dni ||
-      !email ||
       !contrasena ||
+      !email ||
       !numeroCuentaBancaria ||
       !pais ||
-      !localidad
+      !localidad ||
+      !especializacion
     ) {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    // Verificar email único en Profesores (debería ser en Usuarios idealmente, pero mantenemos lógica actual)
-    const existe = await Profesores.findOne({ where: { email } });
-    if (existe) return res.status(400).json({ error: "Email ya registrado" });
+    // Buscar cuenta
+    const profesor = await Profesores.findOne({ where: { email } });
 
-    // 1. Crear Usuario
-    nuevoUsuario = await Usuarios.create({ tipo: "profesor" });
+    if (!profesor) {
+      return res.status(404).json({ error: "Cuenta no encontrada" });
+    }
 
-    // 2. Crear Profesor linkeado
-    // Se crea el registro del profesor asociado a la cuenta de usuario recién creada.
-    // Esto separa los datos de autenticación (Usuario) de los datos del perfil profesional (Profesor).
-    const nuevoProfesor = await Profesores.create({
-      usuarioId: nuevoUsuario.id,
+    if (profesor.nombre || profesor.apellidos) {
+      return res.status(400).json({ error: "Cuenta ya registrada" });
+    }
+
+    // Actualizar
+    await profesor.update({
       nombre,
       apellidos,
       dni,
-      email,
       contrasena,
       numCuentaBancaria: numeroCuentaBancaria,
       pais,
       localidad,
+      especializacion,
     });
 
-    res.status(201).json({
-      mensaje: "Registro exitoso",
+    res.status(200).json({
+      mensaje: "Registro Profesor completado exitosamente",
       usuario: {
-        id: nuevoProfesor.id,
-        nombre: nuevoProfesor.nombre,
-        email: nuevoProfesor.email,
+        id: profesor.id,
+        nombre: profesor.nombre,
+        email: profesor.email,
       },
     });
   } catch (e) {
     console.error("Error registro profesor:", e);
-    // Rollback usuario si se creó
-    if (nuevoUsuario) await nuevoUsuario.destroy().catch(() => {});
     res.status(500).json({ error: "Error en registro" });
   }
 });
