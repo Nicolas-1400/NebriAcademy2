@@ -36,7 +36,6 @@ function TarjetaCursos({
 }) {
   const navigate = useNavigate();
 
-  // Mapeo local de imágenes (Duplicado intencionalmente para evitar utility externa)
   const IMAGES_MAP = {
     Foto1,
     Foto2,
@@ -52,7 +51,7 @@ function TarjetaCursos({
 
   const getCourseImage = () => {
     if (imagen && IMAGES_MAP[imagen]) return IMAGES_MAP[imagen];
-    return IMAGES[cursoId % 10]; // Fallback original
+    return IMAGES[cursoId % 10];
   };
 
   const imageSrc = getCourseImage();

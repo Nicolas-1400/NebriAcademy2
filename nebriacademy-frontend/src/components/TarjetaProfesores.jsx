@@ -26,7 +26,7 @@ const IMAGES = [
 function TarjetaProfesores({ nombre, apellidos, especializacion, profesorId }) {
   const navigate = useNavigate();
   // Helpers
-  const imageSrc = IMAGES[profesorId % 10]; // Selección de imagen determinista
+  const imageSrc = IMAGES[profesorId % 10];
 
   return (
     <div

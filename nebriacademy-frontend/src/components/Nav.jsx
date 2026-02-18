@@ -199,7 +199,7 @@ function Nav() {
     }
   };
 
-  // Render Helpers
+  // Helpers
 
   // Botones de Navegación
   const renderNavButtons = () => {

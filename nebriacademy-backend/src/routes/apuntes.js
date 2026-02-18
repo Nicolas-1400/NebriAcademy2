@@ -35,7 +35,7 @@ router.get("/", async (req, res) => {
 
 router.get("/categorias", (req, res) => {
   try {
-    const categ = Apuntes.rawAttributes?.categoria?.values || [];
+    const categ = Apuntes.getAttributes()?.categoria?.values || [];
     res.json({ categorias: categ });
   } catch (e) {
     res.status(500).json({ categorias: [] });

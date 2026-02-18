@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
 
 router.get("/especializaciones", (req, res) => {
   try {
-    const categ = Profesores.rawAttributes?.especializacion?.values || [];
+    const categ = Profesores.getAttributes().especializacion?.values || [];
     res.json({ especializaciones: categ });
   } catch (e) {
     res.status(500).json({ especializaciones: [] });

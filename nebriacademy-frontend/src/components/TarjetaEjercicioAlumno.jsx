@@ -1,6 +1,5 @@
 function TarjetaEjercicioAlumno({ registro }) {
   // Lógica
-  // Resolución de datos con fallbacks
   const archivo = registro.archivo || registro.file || registro.archivoNombre;
   const nombre = registro.nombre || registro.archivoNombre || archivo;
   const descripcion = registro.descripcion || registro.descripcionAlumno;

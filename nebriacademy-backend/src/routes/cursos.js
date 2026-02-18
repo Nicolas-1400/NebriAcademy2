@@ -52,7 +52,7 @@ router.get("/", async (req, res) => {
 
 router.get("/categorias", (req, res) => {
   try {
-    const categ = Cursos.rawAttributes.categoria.values;
+    const categ = Cursos.getAttributes().categoria.values;
     res.json({ categorias: categ });
   } catch (e) {
     console.error("Error devolviendo categorias Cursos:", e);

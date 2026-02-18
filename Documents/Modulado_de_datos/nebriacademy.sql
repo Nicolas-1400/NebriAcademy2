@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 17-02-2026 a las 14:19:28
+-- Tiempo de generación: 18-02-2026 a las 12:11:00
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -201,7 +201,8 @@ INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `va
 (18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.', 'Foto8'),
 (19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.', 'Foto9'),
 (20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.', 'Foto10'),
-(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ', 'Foto1');
+(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ', 'Foto1'),
+(24, 'Prueba', 'Ciberseguridad', 6, 'Intermedio', 0, 'Hola', 'Foto6');
 
 -- --------------------------------------------------------
 
@@ -372,7 +373,8 @@ INSERT INTO `profesorescursos` (`id`, `profesorId`, `cursoId`) VALUES
 (18, 5, 12),
 (19, 5, 13),
 (20, 5, 19),
-(21, 6, 21);
+(21, 6, 21),
+(24, 6, 24);
 
 -- --------------------------------------------------------
 
@@ -586,7 +588,7 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
@@ -604,7 +606,7 @@ ALTER TABLE `comentarioalumnocurso`
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
@@ -616,7 +618,7 @@ ALTER TABLE `cursosalumnos`
 -- AUTO_INCREMENT de la tabla `ejercicios`
 --
 ALTER TABLE `ejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
@@ -640,7 +642,7 @@ ALTER TABLE `profesores`
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=24;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
@@ -658,7 +660,7 @@ ALTER TABLE `usuarios`
 -- AUTO_INCREMENT de la tabla `videos`
 --
 ALTER TABLE `videos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
 
 --
 -- Restricciones para tablas volcadas

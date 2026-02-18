@@ -26,9 +26,7 @@ function VerificacionProfesorGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // Guardamos email verificado en sesión para proteger el registro
         sessionStorage.setItem("verifiedProfessorEmail", email);
-        // Navegamos al registro de profesor
         navigate("/Register/RegisterProfesor", { state: { email } });
       } else {
         setError(datos.error || "Error en la verificación");
@@ -45,7 +43,7 @@ function VerificacionProfesorGrid() {
         <form className="formulario-login" onSubmit={handleVerification}>
           <input
             type="email"
-            placeholder="Email corporativo"
+            placeholder="Email"
             value={email}
             onChange={(e) => setEmail(e.target.value)}
             required

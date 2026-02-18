@@ -168,7 +168,7 @@ function ApuntesGrid() {
     }
   };
 
-  // Render Helpers
+  // Helpers
   const updateFilter = (field, val) =>
     setFilters((prev) => ({ ...prev, [field]: val }));
 
