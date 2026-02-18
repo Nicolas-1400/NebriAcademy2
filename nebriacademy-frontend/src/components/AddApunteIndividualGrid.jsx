@@ -70,7 +70,7 @@ function AddApunteIndividualGrid() {
 
   return (
     <div className="addcontenidocursogrid">
-      <h2>Añadir apunte</h2>
+      <h2>Añadir apuntes</h2>
       <form onSubmit={handleSubmit} className="add-contenido-form">
         <div className="form-group">
           <label>Nombre</label>

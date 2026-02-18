@@ -85,7 +85,14 @@
     .tarjeta-curso-pequena .p-nivel {
         font-size: 10px;
     }
+
+    .p-valoracion img {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
+    }
 }
+
 
 /* RESPONSIVE 768px */
 
@@ -106,5 +113,10 @@
 
     .tarjeta-curso-pequena p {
         font-size: 11px;
+    }
+    .p-valoracion img {
+        width: 14px;
+        height: 14px;
+        margin-right: 4px;
     }
 }

@@ -199,8 +199,6 @@ function Nav() {
     }
   };
 
-  // Helpers
-
   // Botones de Navegación
   const renderNavButtons = () => {
     if (tipo === "profesor") {
@@ -251,32 +249,33 @@ function Nav() {
   };
 
   // Buscador
-  const renderSearch = () => (
-    <div ref={searchRef} className="search-wrapper">
-      <input
-        type="search"
-        className="barra-busqueda-nav"
-        placeholder="Buscar..."
-        value={query}
-        onChange={handleQueryChange}
-        onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
-      />
-      {isSearchOpen && suggestions.length > 0 && (
-        <ul className="sugerencias-busqueda-contenedor">
-          {suggestions.map((s) => (
-            <li
-              key={`${s.type}-${s.id}`}
-              className="sugerencias-busqueda"
-              onClick={() => handleSuggestionClick(s)}
-            >
-              <span className="nombre-sugerencia">{s.name}</span>
-              <span className="tipo-sugerencia">{s.type}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-    </div>
-  );
+  const renderSearch = () =>
+    tipo === "alumno" ? (
+      <div ref={searchRef} className="search-wrapper">
+        <input
+          type="search"
+          className="barra-busqueda-nav"
+          placeholder="Buscar..."
+          value={query}
+          onChange={handleQueryChange}
+          onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
+        />
+        {isSearchOpen && suggestions.length > 0 && (
+          <ul className="sugerencias-busqueda-contenedor">
+            {suggestions.map((s) => (
+              <li
+                key={`${s.type}-${s.id}`}
+                className="sugerencias-busqueda"
+                onClick={() => handleSuggestionClick(s)}
+              >
+                <span className="nombre-sugerencia">{s.name}</span>
+                <span className="tipo-sugerencia">{s.type}</span>
+              </li>
+            ))}
+          </ul>
+        )}
+      </div>
+    ) : null;
 
   return (
     <div className="nav">
@@ -344,23 +343,35 @@ function Nav() {
         <div className="menu-hamburguesa-desplegable" ref={menuRef}>
           <div className="contenedor-elementos-derecha-responsive">
             {/* Perfil en Móvil */}
-            <div className="perfil-mobile-section">
-              <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
-              <div>
-                <p>
-                  <strong>{usuario?.nombre}</strong>
-                </p>
-                <button
-                  onClick={() => {
-                    navigate("/Home/Perfil");
-                    setIsMenuOpen(false);
-                  }}
-                >
-                  Mi Perfil
-                </button>
-                <button onClick={handleLogout}>Salir</button>
-              </div>
+            <div className="perfil-desplegable-container" ref={desplegableRef}>
+          <button
+            className="perfil-button"
+            onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
+          >
+            <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
+          </button>
+
+          {isdesplegableOpen && (
+            <div className="desplegable-menu">
+              <h3>
+                {usuario?.nombre} {usuario?.apellidos}
+              </h3>
+              <p>{usuario?.email}</p>
+              <button
+                className="desplegable-item"
+                onClick={() => {
+                  navigate("/Home/Perfil");
+                  setIsdesplegableOpen(false);
+                }}
+              >
+                Mi Perfil
+              </button>
+              <button className="desplegable-item" onClick={handleLogout}>
+                Cerrar Sesión
+              </button>
             </div>
+          )}
+        </div>
 
             {renderNavButtons()}
             {renderSearch()}

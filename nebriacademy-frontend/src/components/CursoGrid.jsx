@@ -56,7 +56,6 @@ function CursoGrid() {
   const [editingComment, setEditingComment] = useState({ id: null, text: "" });
 
   const fotos = [
-    Foto10,
     Foto1,
     Foto2,
     Foto3,

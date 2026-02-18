@@ -8,7 +8,7 @@ const ComentarioAlumnoCurso = sequelize.define(
     cursoId: DataTypes.INTEGER,
     comentario: DataTypes.TEXT,
   },
-  { timestamps: false, tableName: "comentarioalumnocurso" },
+  { timestamps: false, tableName: "comentarioalumnocurso" }, // No se toca que si no se rompe
 );
 
 module.exports = ComentarioAlumnoCurso;
