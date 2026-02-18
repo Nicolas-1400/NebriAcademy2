@@ -4,14 +4,11 @@ import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
-/**
- * Componente: PerfilProfesorGrid
- * Permite a los profesores ver y editar su perfil.
- */
 function PerfilProfesorGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -28,6 +25,7 @@ function PerfilProfesorGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Efectos
   useEffect(() => {
     if (!user || tipo !== "profesor") return;
 
@@ -54,6 +52,7 @@ function PerfilProfesorGrid() {
       );
   }, [user?.id, tipo, setUser]);
 
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

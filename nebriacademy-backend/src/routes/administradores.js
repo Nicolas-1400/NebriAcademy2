@@ -2,9 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Administradores = require("../models/Administradores.js");
 
-// --- Rutas de Gestión de Administradores ---
-
-// GET / - Listar todos
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const todos = await Administradores.findAll();
@@ -18,7 +16,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const admin = await Administradores.findByPk(req.params.id);
@@ -29,7 +26,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Crear nuevo
+// Rutas de Creación
 router.post("/", async (req, res) => {
   try {
     const nuevo = await Administradores.create(req.body);
@@ -40,7 +37,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const admin = await Administradores.findByPk(req.params.id);
@@ -54,7 +51,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const filas = await Administradores.destroy({

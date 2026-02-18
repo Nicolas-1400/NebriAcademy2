@@ -4,10 +4,6 @@ import PerfilGrid from "../components/PerfilGrid";
 import PerfilProfesorGrid from "../components/PerfilProfesorGrid";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Página de perfil de usuario
- * Muestra diferentes vistas según el tipo de usuario (profesor o alumno)
- */
 function Perfil() {
   return (
     <div>

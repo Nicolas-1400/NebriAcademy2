@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const Incidencias = require("../models/Incidencias.js");
 
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await Incidencias.findAll();
@@ -12,7 +12,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const i = await Incidencias.findByPk(req.params.id);
@@ -22,7 +21,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Crear
+// Rutas de Creación
 router.post("/", async (req, res) => {
   try {
     const created = await Incidencias.create(req.body);
@@ -33,7 +32,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const i = await Incidencias.findByPk(req.params.id);
@@ -46,7 +45,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const r = await Incidencias.destroy({ where: { id: req.params.id } });

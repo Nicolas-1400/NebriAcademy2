@@ -3,7 +3,7 @@ const router = express.Router();
 const ApuntesAlumnos = require("../models/ApuntesAlumnos.js");
 const Apuntes = require("../models/Apuntes.js");
 
-// GET / - Listar todos
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await ApuntesAlumnos.findAll();
@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /registro - Buscar por apunteId y alumnoId
 router.get("/registro", async (req, res) => {
   try {
     const { apunteId, alumnoId } = req.query;
@@ -29,11 +28,7 @@ router.get("/registro", async (req, res) => {
   }
 });
 
-/**
- * POST /vote
- * Alterna "me gusta" en un apunte.
- * Actualiza el registro ApuntesAlumnos y el contador en Apuntes.
- */
+// Rutas de Votación
 router.post("/vote", async (req, res) => {
   try {
     const { apunteId, alumnoId, vote } = req.body;
@@ -41,26 +36,21 @@ router.post("/vote", async (req, res) => {
       return res.status(400).json({ error: "Datos inválidos" });
     }
 
-    // 1. Obtener/Crear registro de interacción
     const [registro] = await ApuntesAlumnos.findOrCreate({
       where: { apunteId, alumnoId },
       defaults: { megusta: null },
     });
 
-    // 2. Calcular nuevo valor (Toggle)
-    // Si ya tiene like (megusta=true), lo quitamos (null). Si no, lo ponemos (true).
     const isLike = registro.megusta === true;
     const nuevoValor = isLike ? null : true;
     const cambioValoracion = isLike ? -1 : 1;
 
-    // 3. Actualizar Apunte (Contador global)
     const apunte = await Apuntes.findByPk(apunteId);
     if (!apunte) return res.status(404).json({ error: "Apunte no encontrado" });
 
     const nuevaNota = (apunte.valoracion || 0) + cambioValoracion;
     await apunte.update({ valoracion: nuevaNota });
 
-    // 4. Actualizar Registro usuario
     await registro.update({ megusta: nuevoValor });
 
     res.json({
@@ -73,7 +63,7 @@ router.post("/vote", async (req, res) => {
   }
 });
 
-// GET /likes - IDs de apuntes que gustan al alumno
+// Rutas de Likes
 router.get("/likes", async (req, res) => {
   try {
     const { alumnoId } = req.query;

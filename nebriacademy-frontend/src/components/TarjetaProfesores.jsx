@@ -23,12 +23,9 @@ const IMAGES = [
   Foto9,
 ];
 
-/**
- * Componente: TarjetaProfesores
- * Tarjeta de presentación de un profesor.
- */
 function TarjetaProfesores({ nombre, apellidos, especializacion, profesorId }) {
   const navigate = useNavigate();
+  // Helpers
   const imageSrc = IMAGES[profesorId % 10]; // Selección de imagen determinista
 
   return (

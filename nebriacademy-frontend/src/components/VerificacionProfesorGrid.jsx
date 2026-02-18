@@ -1,17 +1,14 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/**
- * Componente: VerificacionProfesorGrid
- * Valida que el email del profesor y el código de verificación sean correctos.
- * Permite "reclamar" una cuenta pre-creada por administración.
- */
 function VerificacionProfesorGrid() {
+  // Estados
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // Handlers
   const handleVerification = async (e) => {
     e.preventDefault();
     setError("");

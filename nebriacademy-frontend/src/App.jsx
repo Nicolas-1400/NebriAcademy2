@@ -1,33 +1,33 @@
-import AppRouter from './router/AppRouter.jsx';
-import './styles/general.css';
-import './styles/Header.css';
-import './styles/Nav.css';
-import './styles/NavProfesor.css';
-import './styles/AddCurso.css';
-import './styles/Footer.css';
-import './styles/Login.css';
-import './styles/RegisterExterno.css';
-import './styles/Perfil.css';
-import './styles/TodosCursos.css';
-import './styles/Politicas.css';
-import './styles/Curso.css';
-import './styles/AddContenidoCurso.css';
-import './styles/HomeFeed.css';
-import './styles/Apuntes.css'
-import './styles/TarjetaCursoPequena.css'
-import './styles/TarjetaProfesor.css'
-import './styles/TodosProfesores.css'
-import './styles/TodosProfesores.css';
-import './styles/MiEspacio.css';
-import './styles/HomeProfesor.css';
-import './styles/NotFound.css';
-import './styles/TarjetaApunte.css';
+// Importaciones de Rutas
+import AppRouter from "./router/AppRouter.jsx";
 
+// Importaciones de Estilos
+import "./styles/general.css";
+import "./styles/Header.css";
+import "./styles/Nav.css";
+import "./styles/NavProfesor.css";
+import "./styles/AddCurso.css";
+import "./styles/Footer.css";
+import "./styles/Login.css";
+import "./styles/RegisterExterno.css";
+import "./styles/Perfil.css";
+import "./styles/TodosCursos.css";
+import "./styles/Politicas.css";
+import "./styles/Curso.css";
+import "./styles/AddContenidoCurso.css";
+import "./styles/HomeFeed.css";
+import "./styles/Apuntes.css";
+import "./styles/TarjetaCursoPequena.css";
+import "./styles/TarjetaProfesor.css";
+import "./styles/TodosProfesores.css";
+import "./styles/MiEspacio.css";
+import "./styles/HomeProfesor.css";
+import "./styles/NotFound.css";
+import "./styles/TarjetaApunte.css";
+
+// Componente Principal
 function App() {
-
-  return (
-    <AppRouter />
-  )
+  return <AppRouter />;
 }
 
-export default App
+export default App;

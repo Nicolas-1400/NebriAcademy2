@@ -3,7 +3,7 @@ const router = express.Router();
 const CursosAlumnos = require("../models/CursosAlumnos.js");
 const Cursos = require("../models/Cursos.js");
 
-// GET / - Listar todos
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const data = await CursosAlumnos.findAll();
@@ -13,7 +13,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /registro - Buscar por cursoId y alumnoId
 router.get("/registro", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.query;
@@ -26,7 +25,6 @@ router.get("/registro", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const r = await CursosAlumnos.findByPk(req.params.id);
@@ -36,7 +34,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST /vote - Votar curso (Toggle Upvote/Downvote logic)
+// Rutas de Votación
 router.post("/vote", async (req, res) => {
   try {
     const { cursoId, alumnoId, vote } = req.body;
@@ -44,7 +42,6 @@ router.post("/vote", async (req, res) => {
       return res.status(400).json({ error: "Datos inválidos" });
     }
 
-    // 1. Obtener registro
     const [registro] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: {
@@ -55,34 +52,25 @@ router.post("/vote", async (req, res) => {
       },
     });
 
-    // 2. Lógica de votación ("Toggle")
-    // Permite al usuario votar positivo (true) o negativo (false).
-    // Si vota lo mismo que ya tenía, se elimina el voto (estado null).
-    // Si cambia de opinión, actualiza el valor.
     const actual = registro.valoracion;
     const intVote = vote ? 1 : -1;
     let delta = 0;
     let nuevoEstado = vote;
 
     if (actual === vote) {
-      // Quitar voto (toggle off)
       nuevoEstado = null;
       delta = -intVote;
     } else if (actual === null || actual === undefined) {
-      // Nuevo voto
       delta = intVote;
     } else {
-      // Cambiar sentido (up->down o down->up)
       delta = intVote * 2;
     }
 
-    // 3. Actualizar Curso
     const curso = await Cursos.findByPk(cursoId);
     if (!curso) return res.status(404).json({ error: "Curso no encontrado" });
 
     await curso.increment("valoracion", { by: delta });
 
-    // 4. Actualizar Registro
     await registro.update({ valoracion: nuevoEstado });
 
     res.json({
@@ -95,7 +83,7 @@ router.post("/vote", async (req, res) => {
   }
 });
 
-// POST /toggle-fav
+// Rutas de Favoritos
 router.post("/toggle-fav", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
@@ -107,7 +95,6 @@ router.post("/toggle-fav", async (req, res) => {
       defaults: { favorito: true },
     });
 
-    // Si ya existía, invertir
     if (!registro.isNewRecord)
       await registro.update({ favorito: !registro.favorito });
 
@@ -117,7 +104,7 @@ router.post("/toggle-fav", async (req, res) => {
   }
 });
 
-// POST /toggle-apuntado
+// Rutas de Inscripción
 router.post("/toggle-apuntado", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
@@ -138,7 +125,7 @@ router.post("/toggle-apuntado", async (req, res) => {
   }
 });
 
-// POST /comment
+// Rutas de Comentarios
 router.post("/comment", async (req, res) => {
   try {
     const { cursoId, alumnoId, comentario } = req.body;
@@ -161,7 +148,7 @@ router.post("/comment", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar admin
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const registro = await CursosAlumnos.findByPk(req.params.id);
@@ -174,7 +161,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const r = await CursosAlumnos.destroy({ where: { id: req.params.id } });

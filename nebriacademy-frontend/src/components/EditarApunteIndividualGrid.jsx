@@ -1,11 +1,8 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-/**
- * Componente: EditarApunteIndividualGrid
- * Permite editar un apunte individual (fuera del contexto de un curso concreto).
- */
 function EditarApunteIndividualGrid() {
+  // Estados
   const { state } = useLocation();
   const navigate = useNavigate();
   const { apunte } = state || {};
@@ -16,12 +13,14 @@ function EditarApunteIndividualGrid() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Efectos
   useEffect(() => {
     if (!apunte) {
       navigate("/Home/Apuntes");
     }
   }, [apunte, navigate]);
 
+  // Handlers
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -95,7 +94,7 @@ function EditarApunteIndividualGrid() {
           <label>Descripción</label>
           <textarea
             value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}  
+            onChange={(e) => setDescripcion(e.target.value)}
           />
         </div>
 

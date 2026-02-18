@@ -1,7 +1,3 @@
-/**
- * Componente: NotaLegalGrid
- * Muestra información legal sobre la plataforma y términos de uso.
- */
 function NotaLegalGrid() {
   return (
     <div className="NotaLegalGrid">

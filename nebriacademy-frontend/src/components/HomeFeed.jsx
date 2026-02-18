@@ -11,12 +11,8 @@ import "slick-carousel/slick/slick-theme.css";
  * Muestra secciones de: Tus Cursos, Novedades, Cursos Populares y filtros por categoría
  * Incluye carruseles interactivos para navegar entre cursos
  */
-/**
- * Componente: HomeFeed
- * Página principal del alumno. Muestra novedades, cursos populares y tus cursos.
- */
 function HomeFeed() {
-  // --- Estados ---
+  // Estados
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
@@ -26,7 +22,6 @@ function HomeFeed() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
-  // Hooks y Refs
   const navigate = useNavigate();
   const novedadesSliderRef = useRef(null);
   const tusCursosSliderRef = useRef(null);
@@ -34,32 +29,25 @@ function HomeFeed() {
 
   const storeUser = useAuthStore((state) => state.user);
 
-  // --- Efectos de Carga ---
-
-  // 1. Sincronizar el estado local con el usuario del store global
+  // Efectos
   useEffect(() => {
     if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
 
-  // 2. Carga inicial de datos concurrentemente
-  // Usamos Promise.all para iniciar todas las peticiones a la vez y reducir el tiempo de espera
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     Promise.all([
-      // Obtener todos los cursos disponibles
       fetch("http://localhost:3000/cursos").then((respuesta) =>
         respuesta.json(),
       ),
-      // Obtener relaciones alumno-curso (para saber en cuáles está inscrito)
       fetch("http://localhost:3000/cursosalumnos").then((respuesta) =>
         respuesta.json(),
       ),
-      // Obtener listado de categorías para los filtros
       fetch("http://localhost:3000/cursos/categorias")
         .then((respuesta) => respuesta.json())
-        .catch(() => ({ categorias: [] })), // Si falla categorías, no romper toda la página
+        .catch(() => ({ categorias: [] })),
     ])
       .then(([datosCursos, datosCursosAlumnos, datosCategorias]) => {
         setCursos(datosCursos.Cursos || []);
@@ -77,34 +65,27 @@ function HomeFeed() {
       .finally(() => setLoading(false));
   }, []);
 
-  // --- Lógica de Negocio (Filtros) ---
-
-  // Filtra los cursos donde el usuario actual está matriculado (apuntado = true)
-  // Devuelve los objetos de curso completos, ordenados por valoración
+  // Lógica
   const tusCursos = () => {
     if (!usuario) return [];
     return cursosAlumnos
       .filter((ca) => ca.alumnoId === usuario.id && ca.apuntado)
       .map((ca) => cursos.find((c) => c.id === ca.cursoId))
-      .filter((c) => c) // Eliminar posibles nulos si no se encuentra el curso
+      .filter((c) => c)
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
-  // Obtiene los cursos más recientes (asumiendo que ID mayor = más nuevo)
-  // Creamos una copia con slice() para no mutar el array original al ordenar
   const novedades = () => {
     return cursos.slice().sort((a, b) => b.id - a.id);
   };
 
-  // Obtiene los cursos con mayor valoración
   const cursosPopulares = () => {
     return cursos
       .slice()
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
-  // --- Handlers ---
-
+  // Handlers
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };

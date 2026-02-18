@@ -1,7 +1,7 @@
-// Importar dependencias de React Router
+// Importaciones de React Router
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Importar componentes de páginas
+// Importaciones de Páginas
 import Login from "../pages/Login.jsx";
 import NotFound from "../pages/NotFound";
 import Home from "../pages/Home.jsx";
@@ -31,29 +31,21 @@ import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
 import NotaLegal from "../pages/NotaLegal.jsx";
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
 
-/**
- * Componente: AppRouter
- * Gestor central de navegación. Define las rutas públicas y protegidas.
- */
+// Componente Principal de Enrutamiento
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* =======================================================
-            RUTAS PÚBLICAS Y DE REGISTRO
-            Cualquiera puede entrar aquí (Login, Registro...).
-           ======================================================= */}
-        {/* --- Login y Selección de Registro --- */}
+        {/* Rutas Públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
 
-        {/* --- Registro Alumno Externo --- */}
+        {/* Rutas de Registro de Alumnos */}
         <Route
           path="/Register/RegisterAlumnoExterno"
           element={<RegisterAlumnoExterno />}
         />
 
-        {/* --- Registro Alumno Nebrija (Flujo Verificación) --- */}
         <Route
           path="/Register/VerificacionAlumnoNebrija"
           element={<VerificacionAlumnoNebrija />}
@@ -66,7 +58,8 @@ function AppRouter() {
             </ProtectedVerificationRoute>
           }
         />
-        {/* --- Registro Profesor (Flujo Verificación) --- */}
+
+        {/* Rutas de Registro de Profesores */}
         <Route
           path="/Register/VerificacionProfesor"
           element={<VerificacionProfesor />}
@@ -79,16 +72,13 @@ function AppRouter() {
             </ProtectedVerificationProfesorRoute>
           }
         />
-        {/* Ruta para cuando no se encuentra la página (Error 404) */}
+
+        {/* Ruta 404 */}
         <Route path="*" element={<NotFound />} />
 
-        {/* =======================================================
-            RUTAS PROTEGIDAS
-            Necesitas haber iniciado sesión para ver estas páginas.
-            Usamos 'ProtectedRoute' para bloquear el acceso si no hay usuario.
-           ======================================================= */}
+        {/* Rutas Protegidas */}
 
-        {/* --- Home y Perfil --- */}
+        {/* Home y Perfil */}
         <Route
           path="/Home"
           element={
@@ -114,7 +104,7 @@ function AppRouter() {
           }
         />
 
-        {/* --- Cursos --- */}
+        {/* Cursos */}
         <Route
           path="/Home/Cursos"
           element={
@@ -140,7 +130,7 @@ function AppRouter() {
           }
         />
 
-        {/* --- Profesores --- */}
+        {/* Profesores */}
         <Route
           path="/Home/Profesores"
           element={
@@ -158,7 +148,7 @@ function AppRouter() {
           }
         />
 
-        {/* --- Apuntes --- */}
+        {/* Apuntes */}
         <Route
           path="/Home/Apuntes"
           element={
@@ -184,7 +174,7 @@ function AppRouter() {
           }
         />
 
-        {/* --- Páginas Legales --- */}
+        {/* Páginas Legales */}
         <Route
           path="/Home/PoliticaDePrivacidad"
           element={
@@ -210,9 +200,7 @@ function AppRouter() {
           }
         />
 
-        {/* =======================================================
-            RUTAS EXCLUSIVAS DE PROFESORES
-           ======================================================= */}
+        {/* Rutas Exclusivas de Profesores */}
         <Route
           path="/Home/AddCurso"
           element={

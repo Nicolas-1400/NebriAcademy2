@@ -2,7 +2,7 @@ const express = require("express");
 const router = express.Router();
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await ProfesoresCursos.findAll();
@@ -15,7 +15,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
@@ -25,7 +24,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Crear
+// Rutas de Creación
 router.post("/", async (req, res) => {
   try {
     const created = await ProfesoresCursos.create(req.body);
@@ -35,7 +34,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
@@ -48,7 +47,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);

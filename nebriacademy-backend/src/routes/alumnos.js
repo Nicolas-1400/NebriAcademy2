@@ -3,8 +3,7 @@ const router = express.Router();
 const Alumnos = require("../models/Alumnos.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// --- CRUD Básico ---
-
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const todos = await Alumnos.findAll();
@@ -27,6 +26,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
@@ -40,6 +40,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const filas = await Alumnos.destroy({ where: { id: req.params.id } });
@@ -52,12 +53,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// --- Auth y Registro de Alumnos ---
-
-/**
- * Registro completo de alumno externo.
- * Crea Usuario (tipo 'alumno') y ficha de Alumno con datos detallados.
- */
+// Rutas de Registro y Autenticación
 router.post("/registerAlumnoExterno/auth", async (req, res) => {
   try {
     const {
@@ -71,7 +67,6 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
       localidad,
     } = req.body;
 
-    // 1. Validación básica
     if (
       !nombre ||
       !apellidos ||
@@ -85,12 +80,10 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
       return res.status(400).json({ error: "Todos los campos obligatorios" });
     }
 
-    // 2. Verificar duplicidad
     const existente = await Alumnos.findOne({ where: { email } });
     if (existente)
       return res.status(400).json({ error: "Email ya registrado" });
 
-    // 3. Crear Usuario + Alumno en transacción implícita (secuencial)
     const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
 
     try {
@@ -111,7 +104,6 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
         usuario: { id: nuevoAlumno.id, nombre, email },
       });
     } catch (createError) {
-      // Rollback manual si falla la creación del perfil
       await nuevoUsuario.destroy();
       throw createError;
     }
@@ -121,15 +113,6 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
   }
 });
 
-// --- Auth y Registro de Alumnos (FLOW: RECLAMAR CUENTA) ---
-
-/**
- * Validar email + código para reclamar cuenta pre-generada.
- * Verifica que:
- * 1. El email exista en la BD.
- * 2. El código (contrasena actual) coincida.
- * 3. La cuenta no esté ya reclamada (nombre/apellidos vacíos).
- */
 router.post("/verificacionnebrija/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 
@@ -140,14 +123,12 @@ router.post("/verificacionnebrija/auth", async (req, res) => {
       return res.status(404).json({ error: "Email no encontrado" });
     }
 
-    // Verificar si la cuenta ya ha sido reclamada (tiene nombre/apellidos)
     if (alumno.nombre || alumno.apellidos) {
       return res
         .status(400)
         .json({ error: "Esta cuenta ya ha sido registrada" });
     }
 
-    // Verificar código (que en DB es la contraseña temporal)
     if (alumno.contrasena !== contrasena) {
       return res
         .status(401)
@@ -161,10 +142,6 @@ router.post("/verificacionnebrija/auth", async (req, res) => {
   }
 });
 
-/**
- * Completar registro de alumno Nebrija tras validación.
- * ACTUALIZA el registro existente con los datos reales del alumno.
- */
 router.post("/verificacionnebrija/completar", async (req, res) => {
   try {
     const { nombre, apellidos, dni, contrasena, email, pais, localidad } =
@@ -182,24 +159,21 @@ router.post("/verificacionnebrija/completar", async (req, res) => {
       return res.status(400).json({ error: "Campos incompletos" });
     }
 
-    // Buscar la cuenta a actualizar
     const alumno = await Alumnos.findOne({ where: { email } });
 
     if (!alumno) {
       return res.status(404).json({ error: "Cuenta no encontrada" });
     }
 
-    // Doble check de seguridad: asegurar que sigue sin reclamar
     if (alumno.nombre || alumno.apellidos) {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
-    // Actualizar datos del alumno
     await alumno.update({
       nombre,
       apellidos,
       dni,
-      contrasena, // Aquí se guarda la nueva contraseña elegida por el usuario
+      contrasena,
       pais,
       localidad,
     });

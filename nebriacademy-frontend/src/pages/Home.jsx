@@ -4,10 +4,6 @@ import HomeFeed from "../components/HomeFeed";
 import HomeProfesorGrid from "../components/HomeProfesorGrid";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Página principal de la aplicación
- * Muestra diferentes contenidos según el tipo de usuario (profesor o alumno)
- */
 function Home() {
   return (
     <div>

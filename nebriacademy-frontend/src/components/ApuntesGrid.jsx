@@ -6,16 +6,12 @@ import SalirEdicion from "../assets/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Componente: ApuntesGrid
- * Catálogo de apuntes con búsquedas, filtros por categoría y vistas (populares, novedades, mis apuntes).
- */
 function ApuntesGrid() {
-  const { id } = useParams(); // id curso opcional
+  const { id } = useParams();
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
-  // Datos
+  // Estados
   const [data, setData] = useState({
     apuntes: [],
     profesores: [],
@@ -25,7 +21,6 @@ function ApuntesGrid() {
   const [likedIds, setLikedIds] = useState([]);
   const [error, setError] = useState(null);
 
-  // Filtros UI
   const [filters, setFilters] = useState({
     category: "",
     searchTerm: "",
@@ -33,7 +28,7 @@ function ApuntesGrid() {
   });
   const [editMode, setEditMode] = useState(false);
 
-  // --- Carga de Datos ---
+  // Efectos
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -71,7 +66,6 @@ function ApuntesGrid() {
     cargarDatos();
   }, []);
 
-  // Carga Likes
   useEffect(() => {
     if (!usuario?.id) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`)
@@ -80,9 +74,7 @@ function ApuntesGrid() {
       .catch(console.error);
   }, [usuario]);
 
-  // --- Lógica de Procesamiento y Filtrado ---
-
-  // Función para averiguar el nombre del autor, buscando tanto en la lista de alumnos como en la de profesores.
+  // Lógica
   const resolveAutorNombre = (autorId) => {
     const aid = Number(autorId);
     const alum = data.alumnos.find(
@@ -102,14 +94,12 @@ function ApuntesGrid() {
     return Number(currentUserId) === Number(apunte.autor);
   };
 
-  // Filtrado de apuntes.
-  // Aplica los filtros seleccionados por el usuario (Categoría, Texto) y el modo de vista (Mis apuntes, Populares...).
   const processedApuntes = useMemo(() => {
     let list = data.apuntes.filter((a) => {
-      // 1. Filtro por Categoría
+      // Filtro por Categoría
       if (filters.category && a.categoria !== filters.category) return false;
 
-      // 2. Filtro de Texto (Busca en el nombre del apunte y en el nombre del autor)
+      // Filtro de Texto
       const term = filters.searchTerm.toLowerCase();
       if (term) {
         const matchName = (a.nombre || "").toLowerCase().includes(term);
@@ -121,7 +111,7 @@ function ApuntesGrid() {
       return true;
     });
 
-    // 3. Ordenamiento según lo que quiera ver el usuario
+    // Ordenamiento
     if (filters.viewMode === "misApuntes" && usuario?.usuarioId) {
       list = list.filter((a) => Number(a.autor) === Number(usuario.usuarioId));
     } else if (filters.viewMode === "favoritos") {
@@ -129,12 +119,12 @@ function ApuntesGrid() {
     } else if (filters.viewMode === "popular") {
       list.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
     } else if (filters.viewMode === "novedades") {
-      list.sort((a, b) => b.id - a.id); // Ordenamos del más nuevo al más antiguo
+      list.sort((a, b) => b.id - a.id);
     }
     return list;
   }, [data, filters, usuario, likedIds]);
 
-  // --- Handlers ---
+  // Handlers
   const handleToggleLike = async (apunte) => {
     if (!usuario?.id || tipo !== "alumno") return;
     try {
@@ -178,7 +168,7 @@ function ApuntesGrid() {
     }
   };
 
-  // --- Render Helpers ---
+  // Render Helpers
   const updateFilter = (field, val) =>
     setFilters((prev) => ({ ...prev, [field]: val }));
 
@@ -186,7 +176,7 @@ function ApuntesGrid() {
 
   return (
     <div className="apuntes-grid">
-      {/* SIDEBAR FILTROS */}
+      {/* Sidebar Filtros */}
       <aside className="buscador-sidebar-apuntes">
         <div className="formulario-busqueda">
           <input
@@ -269,7 +259,7 @@ function ApuntesGrid() {
         </div>
       </aside>
 
-      {/* LISTA PRINCIPAL */}
+      {/* Lista Principal */}
       <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
@@ -310,7 +300,7 @@ function ApuntesGrid() {
         </div>
       </main>
 
-      {/* ACTIVE BUTTONS */}
+      {/* Botones de Acción */}
       <div className="fixed-action-group">
         <button
           className="editarApuntes"

@@ -1,10 +1,6 @@
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 
-/**
- * Componente: TarjetaApunte
- * Muestra un apunte individual con opciones de descarga y "me gusta".
- */
 function TarjetaApunte({
   apunte,
   usuario,

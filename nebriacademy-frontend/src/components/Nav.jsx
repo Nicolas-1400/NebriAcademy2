@@ -6,26 +6,21 @@ import ImagenBotonMas from "../assets/botonMas.png";
 import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Componente: Nav
- * Barra de navegación principal responsive.
- * Maneja búsqueda global, perfil de usuario y menú móvil.
- */
 function Nav() {
   const navigate = useNavigate();
   const { user: usuario, tipo, logout: logoutStore } = useAuthStore();
 
-  // Estados de UI
-  const [isdesplegableOpen, setIsdesplegableOpen] = useState(false); // Perfil
-  const [isMenuOpen, setIsMenuOpen] = useState(false); // Hamburguesa (Móvil)
-  const [isSearchOpen, setIsSearchOpen] = useState(false); // Buscador
+  // Estados UI
+  const [isdesplegableOpen, setIsdesplegableOpen] = useState(false);
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Referencias para click outside
+  // Referencias
   const desplegableRef = useRef(null);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Estados de Datos (Búsqueda)
+  // Estados Datos
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [dataCache, setDataCache] = useState({
@@ -36,9 +31,7 @@ function Nav() {
     profesores: [],
   });
 
-  // --- Efectos: Carga de Datos y Cierre de Menús ---
-
-  // 1. Cargar datos para búsqueda global (una sola vez)
+  // Efectos
   useEffect(() => {
     const endpoints = [
       { key: "cursos", url: "http://localhost:3000/cursos", listKey: "Cursos" },
@@ -65,7 +58,6 @@ function Nav() {
         fetch(ep.url).then((respuesta) => respuesta.json()),
       ),
     ).then((resultados) => {
-      // Organizamos los resultados. Si falló algo, simplemente dejamos esa lista vacía.
       const newData = {};
       resultados.forEach((resultado, index) => {
         const key = endpoints[index].key;
@@ -79,21 +71,17 @@ function Nav() {
     });
   }, []);
 
-  // 2. Manejador global de clicks fuera de menús
   useEffect(() => {
     const handleClickOutside = (event) => {
-      // Perfil
       if (
         desplegableRef.current &&
         !desplegableRef.current.contains(event.target)
       ) {
         setIsdesplegableOpen(false);
       }
-      // Buscador
       if (searchRef.current && !searchRef.current.contains(event.target)) {
         setIsSearchOpen(false);
       }
-      // Hamburguesa (solo si click fuera del botón y del menú)
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target) &&
@@ -103,15 +91,11 @@ function Nav() {
       }
     };
 
-    // Escuchamos cualquier clic en la página
     document.addEventListener("mousedown", handleClickOutside);
-
-    // Al salir, limpiamos el evento
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
-  // --- Handlers ---
-
+  // Handlers
   const handleLogout = () => {
     logoutStore();
     navigate("/");
@@ -148,7 +132,6 @@ function Nav() {
     const qLower = q.toLowerCase();
     const results = [];
 
-    // Helper para buscar y agregar
     const searchIn = (list, typeStr) => {
       list.forEach((item) => {
         const name = getDisplayName(item, typeStr.toLowerCase());
@@ -157,7 +140,7 @@ function Nav() {
             id: item.id,
             name,
             type: typeStr,
-            archivo: item.archivo, // Para videos/apuntes/ejercicios
+            archivo: item.archivo,
           });
         }
       });
@@ -169,7 +152,6 @@ function Nav() {
     searchIn(dataCache.ejercicios, "Ejercicio");
     searchIn(dataCache.profesores, "Profesor");
 
-    // Deduplicar y limitar a 8
     const unique = [];
     const seen = new Set();
     for (const r of results) {
@@ -189,14 +171,12 @@ function Nav() {
     setQuery("");
     setSuggestions([]);
     setIsSearchOpen(false);
-    setIsMenuOpen(false); // Cerrar móvil si está abierto
+    setIsMenuOpen(false);
 
-    // Rutas
     const baseUrl = "http://localhost:3000";
     if (s.type === "Curso") navigate(`/Home/Cursos/${s.id}`);
     else if (s.type === "Profesor") navigate(`/Home/Profesores/${s.id}`);
     else {
-      // Archivos estáticos (Video, Apunte, Ejercicio)
       const folderMap = {
         Video: "videos",
         Apunte: "apuntes",
@@ -219,9 +199,9 @@ function Nav() {
     }
   };
 
-  // --- Render Helpers ---
+  // Render Helpers
 
-  // Botones de Navegación (Reutilizables para desktop/mobile)
+  // Botones de Navegación
   const renderNavButtons = () => {
     if (tipo === "profesor") {
       return (
@@ -270,7 +250,7 @@ function Nav() {
     );
   };
 
-  // Buscador (Reutilizable)
+  // Buscador
   const renderSearch = () => (
     <div ref={searchRef} className="search-wrapper">
       <input
@@ -300,7 +280,7 @@ function Nav() {
 
   return (
     <div className="nav">
-      {/* 1. Logo */}
+      {/* Logo */}
       <div
         role="button"
         className="contenedor-logo-titulo"
@@ -310,7 +290,7 @@ function Nav() {
         <h2>NebriAcademy</h2>
       </div>
 
-      {/* 2. Botón Hamburguesa (Mobile) */}
+      {/* Botón Hamburguesa */}
       <button
         className="menu-hamburguesa-btn"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -322,7 +302,7 @@ function Nav() {
         />
       </button>
 
-      {/* 3. Contenido Desktop */}
+      {/* Contenido Desktop */}
       <div className="contenedor-elementos-derecha">
         {renderNavButtons()}
         {renderSearch()}
@@ -359,7 +339,7 @@ function Nav() {
         </div>
       </div>
 
-      {/* 4. Menú Móvil Desplegable */}
+      {/* Menú Móvil Desplegable */}
       {isMenuOpen && (
         <div className="menu-hamburguesa-desplegable" ref={menuRef}>
           <div className="contenedor-elementos-derecha-responsive">

@@ -1,10 +1,6 @@
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 
-/**
- * Componente: NotFoundGrid
- * Muestra error 404 y botón para regresar.
- */
 function NotFoundGrid() {
   const navigate = useNavigate();
   return (

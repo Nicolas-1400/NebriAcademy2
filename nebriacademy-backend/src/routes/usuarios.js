@@ -6,8 +6,6 @@ const Profesores = require("../models/Profesores.js");
 const Administradores = require("../models/Administradores.js");
 
 // Helpers
-// Función auxiliar para elegir en qué tabla buscar (Alumnos, Profesores o Administradores)
-// dependiendo del tipo de usuario que nos llegue.
 const getModelByType = (tipo) => {
   switch (tipo) {
     case "alumno":
@@ -21,7 +19,7 @@ const getModelByType = (tipo) => {
   }
 };
 
-// GET / - Listar bases (Usuarios)
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await Usuarios.findAll();
@@ -31,8 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
-// Query param 'tipo' opcional para ir directo a la tabla específica
 router.get("/:id", async (req, res) => {
   try {
     const { tipo } = req.query;
@@ -48,7 +44,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Crear base
+// Rutas de Creación
 router.post("/", async (req, res) => {
   try {
     const nuevo = await Usuarios.create(req.body);
@@ -58,7 +54,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar (En tabla específica)
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const { tipo } = req.body;
@@ -76,7 +72,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar base
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const u = await Usuarios.findByPk(req.params.id);

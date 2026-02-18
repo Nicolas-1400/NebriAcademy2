@@ -26,11 +26,6 @@ import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
 import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
 
-/**
- * Componente: CursoGrid
- * Pagina de detalle del curso. Muestra videos, apuntes, ejercicios y chat/comentarios.
- * Gestiona vistas para profesor (editor) y alumno.
- */
 function CursoGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -38,7 +33,6 @@ function CursoGrid() {
 
   // Datos del Curso
   const [curso, setCurso] = useState(null);
-  // Estado para rotar el botón de subir contenido
   const [rotado, setRotado] = useState(false);
   const [profesor, setProfesor] = useState(null);
   const [contenidos, setContenidos] = useState({
@@ -49,12 +43,12 @@ function CursoGrid() {
   const [comentarios, setComentarios] = useState([]);
 
   // Estado Usuario-Curso
-  const [registroUser, setRegistroUser] = useState(null); // { apuntado, favorito, valoracion, comentario }
+  const [registroUser, setRegistroUser] = useState(null);
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [puntuacionesEjercicios, setPuntuacionesEjercicios] = useState([]);
 
-  // UI States
+  // Estados interfaz usuario
   const [error, setError] = useState(null);
   const [editingMode, setEditingMode] = useState(false);
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -97,20 +91,20 @@ function CursoGrid() {
 
   const bgImage = getHeaderImage();
 
-  // --- Carga Inicial ---
+  // Carga Inicial
   useEffect(() => {
     if (!id) return;
 
     const fetchAll = async () => {
       try {
-        // 1. Cargar Curso
+        // Cargar Curso
         const respuestaCurso = await fetch(
           `http://localhost:3000/cursos/${id}`,
         ).then((respuesta) => (respuesta.ok ? respuesta.json() : null));
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
 
-        // 2. Cargar Profesor
+        // Cargar Profesor
         if (respuestaCurso.profesor) {
           fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)
             .then((respuesta) => respuesta.json())
@@ -118,7 +112,7 @@ function CursoGrid() {
             .catch(console.warn);
         }
 
-        // 3. Cargar Contenidos y Usuarios (paralelo)
+        // Cargar Contenidos y Usuarios
         const [
           datosVideos,
           datosApuntes,
@@ -157,7 +151,6 @@ function CursoGrid() {
         const filterById = (list) =>
           (list || []).filter((i) => String(i.curso) === String(id));
 
-        // Cambiar el id por el nombre del autor
         const apuntesFiltrados = filterById(datosApuntes.Apuntes).map((a) => ({
           ...a,
           nombreAutor: resolveName(a.autor),
@@ -169,7 +162,7 @@ function CursoGrid() {
           ejercicios: filterById(datosEjercicios.Ejercicios),
         });
 
-        // 4. Cargar Comentarios
+        // Cargar Comentarios
         fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
@@ -182,7 +175,7 @@ function CursoGrid() {
     fetchAll();
   }, [id]);
 
-  // --- Carga Datos Usuario (si es alumno) ---
+  // Carga Datos Usuario
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
@@ -192,7 +185,7 @@ function CursoGrid() {
         const respuestaRegistro = await fetch(
           `http://localhost:3000/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
         ).then((respuesta) => respuesta.json());
-        // Normalizar bools
+
         const toBool = (v) => v === true || v === 1 || v === "1";
         setRegistroUser({
           ...respuestaRegistro,
@@ -206,7 +199,7 @@ function CursoGrid() {
         if (respuestaRegistro.comentario)
           setCommentText(respuestaRegistro.comentario);
 
-        // Likes de Apuntes - Cargar en paralelo
+        // Likes de Apuntes
         const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
           [
             fetch(
@@ -223,16 +216,15 @@ function CursoGrid() {
           ],
         );
 
-        // Actualizar likes
         setLikedApuntes(likesData.apunteIds || []);
 
-        // Actualizar ejercicios subidos - Guardar datos completos para acceder al archivo
+        // Ejercicios subidos
         const misEntregas = (ejerciciosData.registros || []).filter(
           (registro) => String(registro.alumnoId) === String(user.id),
         );
         setUploadedEjercicios(misEntregas);
 
-        // Actualizar puntuaciones de ejercicios
+        // Puntuaciones de ejercicios
         const misPuntuaciones = (
           puntuacionesData.PuntuacionesEjercicios || []
         ).filter((p) => String(p.alumnoId) === String(user.id));
@@ -245,7 +237,7 @@ function CursoGrid() {
     fetchUserData();
   }, [id, user, tipo]);
 
-  // --- Handlers Profesor ---
+  // Handlers
   const handleDeleteItem = async (type, itemId) => {
     if (!window.confirm("¿Eliminar este elemento?")) return;
     try {
@@ -261,7 +253,7 @@ function CursoGrid() {
 
       setContenidos((prev) => ({
         ...prev,
-        [type + "s"]: prev[type + "s"].filter((i) => i.id !== itemId), // videos, apuntes, ejercicios
+        [type + "s"]: prev[type + "s"].filter((i) => i.id !== itemId),
       }));
     } catch (e) {
       alert("Error eliminando");
@@ -269,7 +261,6 @@ function CursoGrid() {
   };
 
   const isProfesorApunte = (apunte) => {
-    // Si coincide con ID profesor curso o el profesor cargado
     const auth = String(apunte?.autor || apunte?.usuarioId || "");
     if (curso?.profesor && auth === String(curso.profesor)) return true;
     if (
@@ -277,21 +268,17 @@ function CursoGrid() {
       (auth === String(profesor.id) || auth === String(profesor.usuarioId))
     )
       return true;
-    return false; // Simplificado
+    return false;
   };
 
-  // Manejo de la lógica de "Me gusta" o "Apuntarse"
-  // Action puede ser: 'favorito', 'apuntado', 'valoracion'
-  // value se usa para 'valoracion' (true/false)
   const handleLike = async (action, value) => {
     try {
       let url;
       let body = { cursoId: id, alumnoId: user.id };
 
-      // Determinamos el endpoint y el cuerpo de la solicitud según la acción
       if (action === "valoracion") {
         url = "http://localhost:3000/cursosalumnos/vote";
-        body.vote = value; // value será true para upvote, false para downvote
+        body.vote = value;
       } else if (action === "favorito") {
         url = "http://localhost:3000/cursosalumnos/toggle-fav";
       } else if (action === "apuntado") {
@@ -309,8 +296,8 @@ function CursoGrid() {
 
       if (respuesta.ok) {
         const datos = await respuesta.json();
-        const reg = datos.registro || datos; // backend devuelve registro o {registro...}
-        // update local state
+        const reg = datos.registro || datos;
+
         const toBool = (v) => v === true || v === 1 || v === "1";
         setRegistroUser((prev) => ({
           ...prev,
@@ -327,7 +314,6 @@ function CursoGrid() {
               : prev?.valoracion,
         }));
 
-        // Actualizar el contador de valoración del curso si la acción fue votar
         if (action === "valoracion" && datos.curso) {
           setCurso((c) => ({ ...c, valoracion: datos.curso.valoracion }));
         }
@@ -372,7 +358,6 @@ function CursoGrid() {
       const form = new FormData();
       form.append("archivo", file);
       form.append("ejercicioId", ejercicioId);
-      // Backend espera profileId para validar contra la tabla Alumnos
       form.append("profileId", user.id);
 
       const respuesta = await fetch("http://localhost:3000/ejerciciosalumnos", {
@@ -381,7 +366,6 @@ function CursoGrid() {
       });
       if (respuesta.ok) {
         const datos = await respuesta.json();
-        // Agregar el registro completo al estado para tener acceso al archivo
         const nuevoRegistro = {
           id: datos.id,
           ejercicioId: ejercicioId,
@@ -409,15 +393,14 @@ function CursoGrid() {
           headers: { "Content-Type": "application/json" },
           body: JSON.stringify({
             cursoId: id,
-            profileId: user.id, // Send profile ID
-            tipo: tipo, // Send user type
+            profileId: user.id,
+            tipo: tipo,
             comentario: commentText,
           }),
         },
       );
       if (respuesta.ok) {
         setCommentText("");
-        // Reload comments
         fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
@@ -489,13 +472,13 @@ function CursoGrid() {
   if (!curso) return <p>Cargando curso...</p>;
   if (error) return <p className="error">{error}</p>;
 
-  // Filtered Apuntes
+  // Apuntes Filtrados
   const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
   const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
 
   return (
     <div className="curso-grid">
-      {/* HEADER */}
+      {/* Cabecera */}
       <div className="curso-header">
         <img className="curso-header-bg" src={bgImage} alt="" />
         <div className="curso-header-info">
@@ -557,12 +540,12 @@ function CursoGrid() {
         )}
       </div>
 
-      {/* BODY */}
+      {/* Contenido Principal */}
       <div className="curso-contenedor-principal">
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
 
-          {/* VIDEOS */}
+          {/* Vídeos */}
           <h4>Vídeos</h4>
           {contenidos.videos.length > 0 ? (
             <div className="videos-list">
@@ -585,7 +568,7 @@ function CursoGrid() {
             <p>No hay vídeos.</p>
           )}
 
-          {/* APUNTES */}
+          {/* Apuntes */}
           <h4>Apuntes</h4>
           <div className="apuntes-columns-wrapper">
             <div className="profesor-apuntes">
@@ -642,7 +625,7 @@ function CursoGrid() {
             </div>
           </div>
 
-          {/* EJERCICIOS */}
+          {/* Ejercicios */}
           <h4>Ejercicios</h4>
           {contenidos.ejercicios.length > 0 ? (
             <div className="ejercicios-list">
@@ -732,7 +715,7 @@ function CursoGrid() {
           )}
         </div>
 
-        {/* SIDEBAR */}
+        {/* Sidebar Detalles */}
         <div className="curso-detalles">
           <div className="detalles-profesor">
             <p>Profesor</p>

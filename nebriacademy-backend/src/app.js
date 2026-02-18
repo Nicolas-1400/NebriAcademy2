@@ -4,11 +4,12 @@ const app = express();
 const path = require("path");
 const fs = require("fs");
 
-// Configuración de middlewares
-app.use(cors()); // Permitir peticiones desde el frontend
-app.use(express.json()); // Parsear JSON en las peticiones
+// Configuración de Middlewares
 
-// Crear directorios de assets del frontend si no existen (para evitar errores de multer)
+app.use(cors());
+app.use(express.json());
+
+// Configuración de Assets
 const assetsRoot = path.join(
   __dirname,
   "..",
@@ -28,7 +29,7 @@ try {
   console.error("Error creando carpetas de assets:", e);
 }
 
-// Servir archivos estáticos desde las carpetas de assets
+// Configuración de Archivos Estáticos
 app.use("/apuntes/files", express.static(path.join(assetsRoot, "Apuntes")));
 app.use("/videos/files", express.static(path.join(assetsRoot, "Videos")));
 app.use(
@@ -40,7 +41,7 @@ app.use(
   express.static(path.join(assetsRoot, "EjerciciosAlumnos")),
 );
 
-// Registrar rutas de la API por recurso
+// Configuración de Rutas
 app.use("/", require("./routes/index"));
 app.use("/administradores", require("./routes/administradores"));
 app.use("/alumnos", require("./routes/alumnos"));
@@ -59,17 +60,15 @@ app.use("/usuarios", require("./routes/usuarios"));
 app.use("/login", require("./database/login"));
 app.use("/videos", require("./routes/videos"));
 
-// Manejador global de errores para devolver mensajes útiles
+// Manejo de Errores
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err && err.stack ? err.stack : err);
-  res
-    .status(500)
-    .json({
-      error: err && err.message ? err.message : "Error interno del servidor",
-    });
+  res.status(500).json({
+    error: err && err.message ? err.message : "Error interno del servidor",
+  });
 });
 
-// Iniciar el servidor en el puerto 3000
+// Inicialización del Servidor
 app.listen(3000, () =>
   console.log("Servidor ejecutándose en http://localhost:3000"),
 );

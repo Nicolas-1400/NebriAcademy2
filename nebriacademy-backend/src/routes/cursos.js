@@ -4,18 +4,13 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// ==================================================================
-// RUTA: Obtener todos los cursos
-// Método: GET /
-// ==================================================================
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     console.log("Petición recibida: GET /cursos");
 
-    // Recuperar todos los cursos de BBDD
     const resultado = await Cursos.findAll();
 
-    // Mapping para backfill (misma lógica que frontend legacy)
     const map = [
       "Foto10",
       "Foto1",
@@ -29,18 +24,15 @@ router.get("/", async (req, res) => {
       "Foto9",
     ];
 
-    // Verificar y actualizar imágenes vacías
     for (const curso of resultado) {
       if (!curso.imagen || curso.imagen.trim() === "") {
         const index = curso.id % 10;
         const imageName = map[index];
         try {
-          // Force update specifically
           await Cursos.update(
             { imagen: imageName },
             { where: { id: curso.id } },
           );
-          // Update local instance for response
           curso.imagen = imageName;
         } catch (e) {
           console.error(`Backfill error for curso ${curso.id}: ${e.message}`);
@@ -48,7 +40,6 @@ router.get("/", async (req, res) => {
       }
     }
 
-    // Devolvemos un objeto con meta-información (cantidad) y la lista
     res.json({
       "Numero de cursos": resultado.length,
       Cursos: resultado,
@@ -59,26 +50,16 @@ router.get("/", async (req, res) => {
   }
 });
 
-// ==================================================================
-// RUTA: Obtener categorías de cursos
-// Método: GET /categorias
-// ==================================================================
 router.get("/categorias", (req, res) => {
   try {
-    // Extraer valores del ENUM 'categoria'
-    const vals = (Cursos && Cursos.categoria && Cursos.categoria.values) || [];
-
-    res.json({ categorias: vals });
+    const categ = Cursos.rawAttributes.categoria.values;
+    res.json({ categorias: categ });
   } catch (e) {
     console.error("Error devolviendo categorias Cursos:", e);
     res.status(500).json({ categorias: [] });
   }
 });
 
-// ==================================================================
-// RUTA: Obtener curso por ID
-// Método: GET /:id
-// ==================================================================
 router.get("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -97,17 +78,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ==================================================================
-// RUTA: Crear un nuevo curso
-// Método: POST /add
-// ==================================================================
+// Rutas de Creación
 router.post("/add", async (req, res) => {
   try {
     const data = req.body || {};
     const profesorInput = data.profesor;
     let profesorDbId = null;
 
-    // Verificar si se proporcionó un profesor (por ID o usuarioId)
     if (profesorInput) {
       const porId = await Profesores.findByPk(profesorInput);
       if (porId) {
@@ -120,11 +97,9 @@ router.post("/add", async (req, res) => {
       }
     }
 
-    // Crear el curso en la base de datos
     const cursoData = { valoracion: 0, ...data, profesor: profesorDbId };
     const nuevo = await Cursos.create(cursoData);
 
-    // Crear la relación (Profesores <-> Cursos) si corresponde
     if (profesorDbId) {
       await ProfesoresCursos.create({
         profesorId: profesorDbId,
@@ -141,10 +116,7 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// ==================================================================
-// RUTA: Actualizar un curso
-// Método: PUT /:id
-// ==================================================================
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -164,10 +136,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ==================================================================
-// RUTA: Eliminar un curso
-// Método: DELETE /:id
-// ==================================================================
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);

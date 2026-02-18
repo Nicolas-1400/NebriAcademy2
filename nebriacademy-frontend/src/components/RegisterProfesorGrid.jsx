@@ -1,20 +1,16 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-/**
- * Componente: RegisterProfesorGrid
- * Formulario para completar registro de profesor verificado.
- * (Flow: Reclamar cuenta pre-existente)
- */
 function RegisterProfesorGrid() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
     dni: "",
-    email: "", // Se rellena automáticamente
+    email: "",
     contrasena: "",
     numeroCuentaBancaria: "",
     pais: "",
@@ -24,6 +20,7 @@ function RegisterProfesorGrid() {
 
   const [error, setError] = useState("");
 
+  // Efectos
   useEffect(() => {
     const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
     const emailToUse = location.state?.email || verifiedEmail;
@@ -31,11 +28,11 @@ function RegisterProfesorGrid() {
     if (emailToUse) {
       setFormData((prev) => ({ ...prev, email: emailToUse }));
     } else {
-      // Si no hay email verificado, volver a verificación
       navigate("/Register/VerificacionProfesor");
     }
   }, [location.state, navigate]);
 
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -162,14 +159,7 @@ function RegisterProfesorGrid() {
             <option value="Otro">Otro</option>
           </select>
 
-          {/* Nota: La especialización no estaba en el endpoint de actualizar,
-              así que la quito o habría que añadirla al backend si fuese requerida.
-              El SQL original de Profesores la tiene como ENUM?
-              Voy a asumir que se mantiene o se añade si es necesaria.
-              Revisando backend/profesores.js -> .update(req.body) 
-              Si el body la trae y el modelo la permite, se actualizará.
-              La dejo por si acaso.
-           */}
+          {/* Especialización */}
           <select
             name="especializacion"
             value={formData.especializacion}

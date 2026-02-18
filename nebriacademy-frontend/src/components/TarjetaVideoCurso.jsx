@@ -1,10 +1,6 @@
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
-/**
- * Componente: TarjetaVideoCurso
- * Reproductor de video con controles de gestión para profesores.
- */
 function TarjetaVideoCurso({
   video,
   tipo,

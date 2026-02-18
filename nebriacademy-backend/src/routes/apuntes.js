@@ -10,8 +10,7 @@ const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
-// --- Configuración de Uploads (Multer) ---
-// Se almacenan físicamente en el frontend para ser servidos como estáticos
+// Configuración de Subida de Archivos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Apuntes",
@@ -23,9 +22,7 @@ const upload = multer({
   }),
 });
 
-// --- Rutas ---
-
-// GET / - Listar todos
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const data = await Apuntes.findAll();
@@ -36,17 +33,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /categorias - Enums de categoría
 router.get("/categorias", (req, res) => {
   try {
-    const vals = Apuntes.rawAttributes?.categoria?.values || [];
-    res.json({ categorias: vals });
+    const categ = Apuntes.rawAttributes?.categoria?.values || [];
+    res.json({ categorias: categ });
   } catch (e) {
     res.status(500).json({ categorias: [] });
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
@@ -58,11 +53,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-/**
- * POST /
- * Crea un apunte y asigna autor.
- * Resolución de autor: Recibe profileId y tipo, y busca el usuarioId correspondiente en la base de datos.
- */
+// Rutas de Creación
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -77,7 +68,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     } = req.body;
     let categoria = categoriaInput || null;
 
-    // 1. Resolver Autor (Usuario ID)
     let autorFinal = null;
 
     if (tipo === "alumno") {
@@ -96,7 +86,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Autor no identificado o no encontrado" });
 
-    // 2. Resolver Categoría (Heredar del curso si existe)
     if (cursoId) {
       const c = await Cursos.findByPk(cursoId);
       if (c?.categoria) categoria = c.categoria;
@@ -107,7 +96,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Categoría requerida si no hay curso" });
 
-    // 3. Crear Registro
     const nuevo = await Apuntes.create({
       autor: autorFinal,
       curso: cursoId || null,
@@ -125,7 +113,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar (Metadata o Archivo)
+// Rutas de Actualización
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
@@ -142,13 +130,12 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar registro y archivo
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
-    // Eliminar archivo físico
     if (apunte.archivo) {
       const filePath = path.join(uploadDir, apunte.archivo);
       fs.promises

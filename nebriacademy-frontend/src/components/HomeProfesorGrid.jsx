@@ -2,29 +2,22 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursos from "./TarjetaCursos";
 
-/**
- * Componente de página principal para profesores
- * Muestra los cursos asignados al profesor autenticado
- */
-/**
- * Componente: HomeProfesorGrid
- * Dashboard principal para profesores. Muestra sus cursos asignados.
- */
 function HomeProfesorGrid() {
+  // Estados
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
 
   const storeUser = useAuthStore((state) => state.user);
 
-  // Cargar usuario y sus cursos al montar
+  // Efectos
   useEffect(() => {
     if (!storeUser) return;
     setUsuario(storeUser);
     fetchCursosProfesor(storeUser.id);
   }, [storeUser]);
 
-  // Obtiene los cursos y filtra aquellos creados por este profesor
+  // Handlers
   const fetchCursosProfesor = async (profesorId) => {
     try {
       const respuesta = await fetch("http://localhost:3000/cursos");

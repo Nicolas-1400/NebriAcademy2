@@ -24,11 +24,6 @@ const IMAGES = [
   Foto9,
 ];
 
-/**
- * Componente: TarjetaCursos
- * Tarjeta principal de curso para listados.
- * Muestra información completa (imagen, profesor, categoría, etc.).
- */
 function TarjetaCursos({
   name,
   cursoId,
@@ -73,7 +68,9 @@ function TarjetaCursos({
       <p className="p-nivel">Nivel: {nivel}</p>
       <p className="p-descripcion">{descripcion}</p>
       <p className="p-profesor">{profesor}</p>
-      <p className="p-valoracion"><img src={Like} alt="Valoración" /> {valoracion}</p>
+      <p className="p-valoracion">
+        <img src={Like} alt="Valoración" /> {valoracion}
+      </p>
     </div>
   );
 }

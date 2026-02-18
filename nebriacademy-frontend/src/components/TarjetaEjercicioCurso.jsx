@@ -1,11 +1,6 @@
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
-/**
- * Componente: TarjetaEjercicioCurso
- * Item de lista para un ejercicio dentro de un curso.
- * Incluye controles de edición para profesores.
- */
 function TarjetaEjercicioCurso({
   ejercicio,
   tipo,
@@ -13,6 +8,7 @@ function TarjetaEjercicioCurso({
   handleEditNavigate,
   handleDeleteContenido,
 }) {
+  // Lógica
   const isProfesorEdit = tipo === "profesor" && editingMode;
 
   return (

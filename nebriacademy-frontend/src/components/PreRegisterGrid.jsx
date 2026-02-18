@@ -3,10 +3,6 @@ import familiaNebrija from "../assets/familiaNebrija.png";
 import individuo from "../assets/individuo.png";
 import profesor from "../assets/profesor.png";
 
-/**
- * Componente: PreRegisterGrid
- * Pantalla de selección de perfil para el registro.
- */
 function PreRegisterGrid() {
   const navigate = useNavigate();
 

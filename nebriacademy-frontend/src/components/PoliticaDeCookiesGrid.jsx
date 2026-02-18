@@ -1,7 +1,3 @@
-/**
- * Componente: PoliticaDeCookiesGrid
- * Página informativa sobre el uso de cookies en la plataforma.
- */
 function PoliticaDeCookiesGrid() {
   return (
     <div className="PoliticaDeCookiesGrid">

@@ -1,13 +1,10 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-/**
- * Componente: RegisterAlumnoExternoGrid
- * Formulario de registro para alumnos externos (con pago).
- */
 function RegisterAlumnoExternoGrid() {
   const navigate = useNavigate();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -21,6 +18,7 @@ function RegisterAlumnoExternoGrid() {
 
   const [error, setError] = useState("");
 
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

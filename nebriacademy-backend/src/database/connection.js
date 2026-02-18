@@ -1,13 +1,12 @@
 const { Sequelize } = require("sequelize");
 
-// Configuración de la instancia de Sequelize para conectar con MySQL
-// Base de datos: nebriacademy, Usuario: root, Sin contraseña, Host: localhost
+// Configuración de la Conexión
 const sequelize = new Sequelize("nebriacademy", "root", "", {
   host: "localhost",
   dialect: "mysql",
 });
 
-// Verificar la conexión a la base de datos al iniciar la aplicación
+// Verificación de la Conexión
 sequelize
   .authenticate()
   .then(() => {

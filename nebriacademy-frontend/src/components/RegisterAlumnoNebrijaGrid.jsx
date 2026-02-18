@@ -1,14 +1,11 @@
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-/**
- * Componente: RegisterAlumnoNebrijaGrid
- * Formulario para completar registro de alumnos verificados (Nebrija).
- */
 function RegisterAlumnoNebrijaGrid() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -21,6 +18,7 @@ function RegisterAlumnoNebrijaGrid() {
 
   const [error, setError] = useState("");
 
+  // Efectos
   useEffect(() => {
     const verifiedEmail = sessionStorage.getItem("verifiedStudentEmail");
     const emailToUse = location.state?.email || verifiedEmail;
@@ -32,6 +30,7 @@ function RegisterAlumnoNebrijaGrid() {
     }
   }, [location.state, navigate]);
 
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

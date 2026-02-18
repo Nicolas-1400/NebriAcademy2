@@ -4,21 +4,17 @@ const Administradores = require("../models/Administradores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
-// Endpoint de autenticación de usuario
-// Busca en las tres tablas (administradores, alumnos, profesores) y devuelve el usuario con su tipo
+// Rutas de Autenticación
+
 router.post("/auth", async (req, res) => {
   try {
     const { email, contrasena } = req.body;
     console.log(`POST /login/auth - Email: ${email}`);
-
-    // Validar que se proporcionen email y contraseña
     if (!email || !contrasena) {
       return res
         .status(400)
         .json({ error: "Email y contraseña son requeridos" });
     }
-
-    // Buscar en la tabla de administradores
     const admins = await Administradores.findAll();
     const admin = admins.find(
       (a) => a.email === email && a.contrasena === contrasena,
@@ -41,8 +37,6 @@ router.post("/auth", async (req, res) => {
         },
       });
     }
-
-    // Buscar en la tabla de alumnos
     const alumnos = await Alumnos.findAll();
     const alumno = alumnos.find(
       (a) => a.email === email && a.contrasena === contrasena,
@@ -66,8 +60,6 @@ router.post("/auth", async (req, res) => {
         },
       });
     }
-
-    // Buscar en la tabla de profesores
     const profesores = await Profesores.findAll();
     const profesor = profesores.find(
       (p) => p.email === email && p.contrasena === contrasena,
@@ -93,7 +85,6 @@ router.post("/auth", async (req, res) => {
       });
     }
 
-    // Si no se encuentra en ninguna tabla, credenciales incorrectas
     return res.status(401).json({ error: "Email o contraseña incorrectos" });
   } catch (error) {
     console.error("Error en login:", error);

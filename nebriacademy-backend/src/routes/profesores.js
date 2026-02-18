@@ -3,7 +3,7 @@ const router = express.Router();
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const data = await Profesores.findAll();
@@ -13,18 +13,15 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /especializaciones - Obtener valores del ENUM para el frontend
-// Útil para poblar selects en formularios sin harcodear valores en el cliente
 router.get("/especializaciones", (req, res) => {
   try {
-    const vals = Profesores.rawAttributes?.especializacion?.values || [];
-    res.json({ especializaciones: vals });
+    const categ = Profesores.rawAttributes?.especializacion?.values || [];
+    res.json({ especializaciones: categ });
   } catch (e) {
     res.status(500).json({ especializaciones: [] });
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -34,7 +31,7 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -47,7 +44,7 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Eliminar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -60,13 +57,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// POST /registerProfesor/auth - Registro completo
-// --- Auth y Registro de Profesores (FLOW: RECLAMAR CUENTA) ---
-
-/**
- * Validar email + código para reclamar cuenta de PROFESOR pre-generada.
- */
-// Ruta para verificar email y código (ahora contrasena)
+// Rutas de Registro y Autenticación
 router.post("/verificacionprofesor/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 
@@ -77,14 +68,12 @@ router.post("/verificacionprofesor/auth", async (req, res) => {
       return res.status(404).json({ error: "Email no encontrado" });
     }
 
-    // Verificar si la cuenta ya ha sido reclamada
     if (profesor.nombre || profesor.apellidos) {
       return res
         .status(400)
         .json({ error: "Esta cuenta ya ha sido registrada" });
     }
 
-    // Verificar código
     if (profesor.contrasena !== contrasena) {
       return res
         .status(401)
@@ -98,10 +87,6 @@ router.post("/verificacionprofesor/auth", async (req, res) => {
   }
 });
 
-/**
- * Completar registro de PROFESOR tras validación.
- * ACTUALIZA el registro existente.
- */
 router.post("/verificacionprofesor/completar", async (req, res) => {
   try {
     const {
@@ -130,7 +115,6 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
       return res.status(400).json({ error: "Faltan campos obligatorios" });
     }
 
-    // Buscar cuenta
     const profesor = await Profesores.findOne({ where: { email } });
 
     if (!profesor) {
@@ -141,7 +125,6 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
-    // Actualizar
     await profesor.update({
       nombre,
       apellidos,

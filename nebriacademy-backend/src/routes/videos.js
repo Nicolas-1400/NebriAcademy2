@@ -7,22 +7,19 @@ const fs = require("fs");
 const Videos = require("../models/Videos.js");
 const Profesores = require("../models/Profesores.js");
 
-// --- Config Upload ---
+// Configuración de Uploads
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Videos",
 );
-// --- Config Upload (Multer) ---
-// Middleware 'multer' para gestionar la recepción de archivos multipart/form-data.
-// Los archivos se guardan en una carpeta local accesible por el frontend.
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
-    filename: (req, file, cb) => cb(null, path.basename(file.originalname)), // Mantiene el nombre original del archivo
+    filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
   }),
 });
 
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await Videos.findAll();
@@ -32,7 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
@@ -42,34 +38,21 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-/**
- * POST /
- * Crea video, sube archivo y asigna profesor.
- * Resolución de autor: Recibe profileId y tipo, busca el profesor correspondiente.
- */
+// Rutas de Creación
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    // 1. Validaciones
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
     const { nombre, curso, profileId, tipo } = req.body;
 
     if (!nombre || !curso || !profileId || !tipo)
       return res.status(400).json({ error: "Datos incompletos" });
 
-    // 2. Resolver Profesor ID
     let profesorId = null;
 
     if (tipo === "profesor") {
-      // En la tabla Videos, 'autor' suele ser el ID del profesor (profileId),
-      // NO el usuarioId. Verificamos que exista.
       const p = await Profesores.findByPk(profileId);
       if (p) profesorId = p.id;
     } else if (tipo === "administrador") {
-      // Los admins pueden subir videos, pero la tabla Videos espera un ID de profesor en 'autor'?
-      // Si el esquema lo requiere, esto podría fallar si no hay un "profesor comodín".
-      // Asumiremos por ahora que solo profesores suben videos a sus cursos,
-      // o que el admin actúa como tal.
-      // Si el admin tiene perfil de profesor, lo usamos.
       const admin = await require("../models/Administradores").findByPk(
         profileId,
       );
@@ -86,7 +69,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
-    // 3. Crear
     const nuevo = await Videos.create({
       autor: profesorId,
       curso,
@@ -102,7 +84,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
@@ -118,13 +100,12 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// DELETE /:id - Borrar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
     if (!v) return res.status(404).json({ error: "No encontrado" });
 
-    // Borrar archivo físico
     if (v.archivo) {
       const p = path.join(uploadDir, v.archivo);
       fs.promises.unlink(p).catch(() => {});

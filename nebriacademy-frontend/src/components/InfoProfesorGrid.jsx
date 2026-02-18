@@ -4,17 +4,16 @@ import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
-/**
- * Componente: InfoProfesorGrid
- * Muestra perfil público del profesor y sus cursos.
- */
 function InfoProfesorGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
+
+  // Estados
   const [profesor, setProfesor] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
 
+  // Efectos
   useEffect(() => {
     if (!id) return;
 

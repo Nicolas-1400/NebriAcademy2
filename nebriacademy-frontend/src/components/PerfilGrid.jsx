@@ -4,14 +4,11 @@ import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
-/**
- * Componente: PerfilGrid
- * Permite a los alumnos ver y editar su perfil.
- */
 function PerfilGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -27,15 +24,15 @@ function PerfilGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // Efectos
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
-    // Cargar datos frescos del servidor
     fetch(`http://localhost:3000/usuarios/${user.id}?tipo=alumno`)
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
         const datosIniciales = datos || user;
-        if (datos) setUser(datos, "alumno"); // Actualizar store si hay datos frescos
+        if (datos) setUser(datos, "alumno");
 
         setFormData({
           nombre: datosIniciales.nombre || "",
@@ -50,16 +47,13 @@ function PerfilGrid() {
       })
       .catch((error) => console.error("Error cargando perfil:", error));
   }, [user?.id, tipo, setUser]);
-  // user?.id es estable. Evitamos 'user' completo en deps para no re-renderizar infinito si user cambia.
 
-  // Función que actualiza los datos del formulario mientras el usuario escribe.
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Manejador del envío del formulario.
-  // Envía los datos modificados al servidor para guardarlos.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");

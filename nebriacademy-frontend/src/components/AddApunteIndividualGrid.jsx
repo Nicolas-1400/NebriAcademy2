@@ -2,14 +2,11 @@ import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Componente: AddApunteIndividualGrid
- * Permite subir un apunte no asociado a un curso específico.
- */
 function AddApunteIndividualGrid() {
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -20,6 +17,7 @@ function AddApunteIndividualGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Efectos
   useEffect(() => {
     fetch("http://localhost:3000/apuntes/categorias")
       .then((respuesta) => respuesta.json())
@@ -29,6 +27,7 @@ function AddApunteIndividualGrid() {
       .catch((error) => console.error("Error cargando categorias:", error));
   }, []);
 
+  // Handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -46,7 +45,6 @@ function AddApunteIndividualGrid() {
       if (formData.categoria) form.append("categoria", formData.categoria);
 
       if (usuario) {
-        // Enviar profileId y tipo para que el backend resuelva el usuarioId
         form.append("profileId", usuario.id);
         form.append("tipo", tipo);
       }

@@ -7,7 +7,7 @@ const fs = require("fs");
 const Ejercicios = require("../models/Ejercicios.js");
 const Profesores = require("../models/Profesores.js");
 
-// --- Configuración Upload ---
+// Configuración de Subida de Archivos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Ejercicios",
@@ -19,9 +19,7 @@ const upload = multer({
   }),
 });
 
-// --- Rutas ---
-
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await Ejercicios.findAll();
@@ -31,7 +29,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
@@ -41,22 +38,15 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-/**
- * POST /
- * Crea ejercicio, sube archivo y asigna profesor (autor).
- * Resolución de autor: Recibe profileId y tipo, busca el profesor correspondiente.
- */
+// Rutas de Creación
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
-    // 1. Validaciones básicas
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
     const { nombre, descripcion, curso, profileId, tipo } = req.body;
     if (!nombre) return res.status(400).json({ error: "Nombre requerido" });
     if (!profileId || !tipo)
       return res.status(400).json({ error: "Faltan datos de autor" });
 
-    // 2. Resolver Profesor ID
-    // La tabla Ejercicios usa 'autor' como ID de Profesor (no User ID)
     let profesorId = null;
 
     if (tipo === "profesor") {
@@ -79,7 +69,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
-    // 3. Crear Registro
     const nuevo = await Ejercicios.create({
       autor: profesorId,
       curso: curso || null,
@@ -95,7 +84,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// PUT /:id - Actualizar
+// Rutas de Actualización
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
@@ -111,16 +100,15 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// DELETE /:id - Borrar
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
     if (!ej) return res.status(404).json({ error: "No encontrado" });
 
-    // Borrar archivo físico
     if (ej.archivo) {
       const p = path.join(uploadDir, ej.archivo);
-      fs.promises.unlink(p).catch(() => {}); // Ignorar error si no existe
+      fs.promises.unlink(p).catch(() => {});
     }
 
     await ej.destroy();

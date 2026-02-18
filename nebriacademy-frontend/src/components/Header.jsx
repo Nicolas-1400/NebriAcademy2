@@ -1,9 +1,5 @@
 import Logo from "../assets/nebriLogo.png";
 
-/**
- * Componente: Header
- * Cabecera simple para páginas de registro/login.
- */
 function Header() {
   return (
     <header className="header">

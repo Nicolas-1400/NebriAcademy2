@@ -24,10 +24,6 @@ const IMAGES = [
   Foto9,
 ];
 
-/**
- * Componente: TarjetaCursoPequena
- * Tarjeta compacta para carruseles de cursos.
- */
 function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
   const navigate = useNavigate();
 
@@ -59,7 +55,10 @@ function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
       <img src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
       <p className="p-nivel">Nivel: {nivel}</p>
-      <p className="p-valoracion"> <img src={Like} alt="Valoración" /> {valoracion}</p>
+      <p className="p-valoracion">
+        {" "}
+        <img src={Like} alt="Valoración" /> {valoracion}
+      </p>
     </div>
   );
 }

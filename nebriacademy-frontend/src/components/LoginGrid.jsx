@@ -2,11 +2,8 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Componente: LoginGrid
- * Formulario de inicio de sesión con validación y gestión de estado global.
- */
 function LoginGrid() {
+  // Estados
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -14,17 +11,12 @@ function LoginGrid() {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  /*
-   * Gestión del evento de Login
-   * Realiza una petición POST asíncrona al backend para validar credenciales.
-   * Si es exitoso, actualiza el estado global de la aplicación (Zustand) y redirige.
-   */
+  // Handlers
   const handleLogin = async (evento) => {
-    evento.preventDefault(); // Previene la recarga estándar del formulario HTML
+    evento.preventDefault();
     setError("");
 
     try {
-      // Petición HTTP a la API REST (Endpoint de Autenticación)
       const respuesta = await fetch("http://localhost:3000/login/auth", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -34,15 +26,12 @@ function LoginGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // Login correcto: Actualizar store y redirigir
         setUser(datos.usuario, datos.tipo);
         navigate("/Home");
       } else {
-        // Manejo de errores (Credenciales inválidas, usuario no encontrado)
         setError(datos.error || "Error en el login");
       }
     } catch (err) {
-      // Manejo de errores de red o servidor
       console.error(err);
       setError("Error de conexión con el servidor");
     }

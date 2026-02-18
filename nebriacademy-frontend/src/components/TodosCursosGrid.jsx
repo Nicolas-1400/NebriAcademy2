@@ -2,10 +2,6 @@ import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 
-/**
- * Componente: TodosCursosGrid
- * Catalogo de cursos con búsqueda y filtros por categoría y nivel.
- */
 function TodosCursosGrid() {
   const { state } = useLocation();
   const [data, setData] = useState({
@@ -24,12 +20,10 @@ function TodosCursosGrid() {
 
   const NIVELES = ["Básico", "Intermedio", "Avanzado"];
 
-  // --- Carga de Datos ---
-  // Se ejecuta una sola vez al montar el componente
+  // Carga de Datos
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        // Solicitamos cursos, profesores y categorías en paralelo para optimizar la carga
         const [respuestaCursos, respuestaProfesores, respuestaCategorias] =
           await Promise.all([
             fetch("http://localhost:3000/cursos").then((respuesta) =>
@@ -43,7 +37,6 @@ function TodosCursosGrid() {
             ),
           ]);
 
-        // Guardamos todo en el estado local 'data'
         setData({
           cursos: respuestaCursos.Cursos || [],
           profesores: respuestaProfesores.Profesores || [],
@@ -57,7 +50,7 @@ function TodosCursosGrid() {
     cargarDatos();
   }, []);
 
-  // --- Helpers ---
+  // Helpers
   const getProfesorName = (pid) => {
     const p = data.profesores.find((prof) => prof.id === pid);
     return p ? `Profesor: ${p.nombre} ${p.apellidos}` : "Profesor: Desconocido";
@@ -65,22 +58,17 @@ function TodosCursosGrid() {
 
   const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
 
-  // --- Filtros (Memoized) ---
-  // Filtramos la lista de cursos en memoria. Usamos useMemo para que este cálculo
-  // solo se repita si cambian los datos o los filtros, evitando lentitud al escribir.
+  // Filtros
   const filteredCursos = useMemo(() => {
     return data.cursos.filter((c) => {
-      // 1. Filtro por Categoría
       if (filters.category && c.categoria !== filters.category) return false;
 
-      // 2. Filtro por Nivel (insensible a mayúsculas/minúsculas)
       if (
         filters.level &&
         (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()
       )
         return false;
 
-      // 3. Búsqueda por Nombre (tipo 'LIKE' simple)
       if (
         filters.searchTerm &&
         !(c.nombreCurso || "")
@@ -89,7 +77,7 @@ function TodosCursosGrid() {
       )
         return false;
 
-      return true; // Pasa todos los filtros
+      return true;
     });
   }, [data, filters]);
 

@@ -8,7 +8,7 @@ const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
 const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
 
-// --- Config Upload ---
+// Configuración de Subida de Archivos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
@@ -20,9 +20,7 @@ const upload = multer({
   }),
 });
 
-// --- Rutas ---
-
-// GET / - Listar
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const all = await EjerciciosAlumnos.findAll();
@@ -32,7 +30,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Detalle
 router.get("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -42,16 +39,12 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Entregar ejercicio
+// Rutas de Entrega de Ejercicios
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     const { ejercicioId, profileId } = req.body;
 
-    // Validación de integridad referencial
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
-
-    // Aquí 'profileId' debe corresponder al ID de la tabla Alumnos
-    // ya que la tabla relacionar 'EjerciciosAlumnos' usa 'alumnoId' que FK a Alumnos.
     const validAlumno = await Alumnos.findByPk(profileId);
 
     if (!validEjercicio || !validAlumno) {
@@ -60,7 +53,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 
     const nuevo = await EjerciciosAlumnos.create({
       ejercicioId,
-      alumnoId: profileId, // Usamos el profileId comprobado
+      alumnoId: profileId,
       archivo: req.file ? req.file.filename : null,
     });
 
@@ -71,7 +64,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// PUT /:id - Editar entrega
+// Rutas de Actualización
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -87,13 +80,12 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// DELETE /:id - Borrar registro y archivo
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
-    // Eliminar archivo físico
     if (r.archivo) {
       const p = path.join(uploadDir, r.archivo);
       fs.promises.unlink(p).catch(() => {});

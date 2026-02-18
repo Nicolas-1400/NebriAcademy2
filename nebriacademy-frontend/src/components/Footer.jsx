@@ -4,10 +4,6 @@ import X from "../assets/X.png";
 import Instagram from "../assets/instagram.png";
 import YouTube from "../assets/youtube.png";
 
-/**
- * Componente: Footer
- * Pie de página con enlaces legales y redes sociales.
- */
 function Footer() {
   return (
     <div className="footer">

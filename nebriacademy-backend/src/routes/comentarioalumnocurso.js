@@ -4,28 +4,23 @@ const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
-// GET / - Listar comentarios (filtrando por cursoId opcional)
-// Mejora: Obtiene los nombres de los autores eficientemente
+// Rutas de Obtención
 router.get("/", async (req, res) => {
   try {
     const { cursoId } = req.query;
 
-    // Obtener comentarios (filtrados si hay cursoId)
     const filtro = cursoId ? { where: { cursoId } } : {};
     const comentarios = await ComentarioAlumnoCurso.findAll(filtro);
 
-    // Enriquecer con nombre de autores
     const enhanced = await Promise.all(
       comentarios.map(async (c) => {
         let nombre = "Usuario",
           apellidos = "";
 
-        // Buscar en Alumnos
         let autor = await Alumnos.findOne({
           where: { usuarioId: c.usuarioId },
         });
 
-        // Si no es alumno, buscar en Profesores
         if (!autor) {
           autor = await Profesores.findOne({
             where: { usuarioId: c.usuarioId },
@@ -58,7 +53,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /:id - Obtener uno
 router.get("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
@@ -68,14 +62,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// POST / - Crear
+// Rutas de Creación
 router.post("/", async (req, res) => {
   try {
     const { profileId, tipo, cursoId, comentario } = req.body;
     if (!profileId || !tipo || !cursoId || !comentario)
       return res.status(400).json({ error: "Faltan datos" });
 
-    // Lookup valid usuarioId based on profileId and tipo
     let usuarioId = null;
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
@@ -84,7 +77,6 @@ router.post("/", async (req, res) => {
       const u = await Profesores.findByPk(profileId);
       if (u) usuarioId = u.usuarioId;
     } else if (tipo === "administrador") {
-      // Admin table also has usuarioId
       const u = await require("../models/Administradores").findByPk(profileId);
       if (u) usuarioId = u.usuarioId;
     }
@@ -104,7 +96,7 @@ router.post("/", async (req, res) => {
   }
 });
 
-// PUT /:id - Editar (solo autor)
+// Rutas de Actualización
 router.put("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
@@ -112,7 +104,6 @@ router.put("/:id", async (req, res) => {
 
     const { profileId, tipo, comentario } = req.body;
 
-    // Lookup requester usuarioId
     let requesterUsuarioId = null;
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
@@ -136,15 +127,14 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// DELETE /:id - Borrar (solo autor)
+// Rutas de Eliminación
 router.delete("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
     if (!c) return res.status(404).json({ error: "No encontrado" });
 
-    const { profileId, tipo } = req.query; // Send via query params
+    const { profileId, tipo } = req.query;
 
-    // Lookup requester usuarioId
     let requesterUsuarioId = null;
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);

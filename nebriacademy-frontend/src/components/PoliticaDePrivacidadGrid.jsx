@@ -1,7 +1,3 @@
-/**
- * Componente: PoliticaDePrivacidadGrid
- * Página informativa sobre la política de privacidad y protección de datos.
- */
 function PoliticaDePrivacidadGrid() {
   return (
     <div className="PoliticaDePrivacidadGrid">

@@ -1,17 +1,15 @@
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
-/**
- * Componente: TodosProfesoresGrid
- * Listado de todos los profesores registrados.
- */
 function TodosProfesoresGrid() {
+  // Estados
   const [profesores, setProfesores] = useState([]);
   const [error, setError] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
+  // Efectos
   useEffect(() => {
     fetch("http://localhost:3000/profesores")
       .then((respuesta) => respuesta.json())
@@ -24,23 +22,21 @@ function TodosProfesoresGrid() {
       });
   }, []);
 
-  // Obtener especializaciones únicas
+  // Helpers
   const specializations = [
     ...new Set(
       profesores.map((p) => p.especializacion).filter((e) => e), // Filtrar nulos/vacíos
     ),
   ];
 
-  // Filtrar profesores
+  // Filtros
   const filteredProfesores = profesores.filter((p) => {
-    // 1. Filtro por especialización
     if (
       selectedSpecialization &&
       p.especializacion !== selectedSpecialization
     ) {
       return false;
     }
-    // 2. Filtro por búsqueda (Nombre o Apellidos)
     if (searchTerm) {
       const term = searchTerm.toLowerCase();
       const fullName = `${p.nombre} ${p.apellidos}`.toLowerCase();

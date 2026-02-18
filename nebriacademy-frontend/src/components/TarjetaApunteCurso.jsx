@@ -3,11 +3,6 @@ import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
-/**
- * Componente: TarjetaApunteCurso
- * Muestra un apunte en el contexto de un curso.
- * Incluye controles de edición/borrado para profesores.
- */
 function TarjetaApunteCurso({
   apunte,
   usuario,

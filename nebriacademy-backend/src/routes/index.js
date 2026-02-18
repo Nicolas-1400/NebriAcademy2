@@ -1,10 +1,7 @@
 const express = require("express");
 const router = express.Router();
 
-/**
- * GET /
- * Información general de la API.
- */
+// Ruta Principal de la API
 router.get("/", (req, res) => {
   res.send(`
     <h1>API NebriAcademy</h1>

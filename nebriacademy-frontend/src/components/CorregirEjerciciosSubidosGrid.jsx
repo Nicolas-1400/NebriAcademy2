@@ -3,17 +3,15 @@ import { useParams } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
-/**
- * Componente: CorregirEjerciciosSubidosGrid
- * Permite al profesor ver ejercicios y asignar puntuaciones.
- */
 function CorregirEjerciciosSubidosGrid() {
+  // Estados
   const { id } = useParams();
   const [registros, setRegistros] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   const [puntuaciones, setPuntuaciones] = useState([]);
   const [inputScores, setInputScores] = useState({});
 
+  // Efectos
   useEffect(() => {
     Promise.all([
       fetch("http://localhost:3000/ejerciciosalumnos").then((respuesta) =>
@@ -55,6 +53,7 @@ function CorregirEjerciciosSubidosGrid() {
       );
   }, [id]);
 
+  // Lógica de visualización
   const ejerciciosConNombre = useMemo(() => {
     return registros.map((r) => {
       const alumno = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));
@@ -67,6 +66,7 @@ function CorregirEjerciciosSubidosGrid() {
     });
   }, [registros, alumnos]);
 
+  // Helpers
   const getExistingScore = (ejercicioId, alumnoId) => {
     return puntuaciones.find(
       (p) =>
@@ -75,6 +75,7 @@ function CorregirEjerciciosSubidosGrid() {
     );
   };
 
+  // Handlers
   const handeScoreInput = (regId, val) => {
     setInputScores((prev) => ({ ...prev, [regId]: val }));
   };
@@ -142,7 +143,10 @@ function CorregirEjerciciosSubidosGrid() {
                     onChange={(e) => handeScoreInput(reg.id, e.target.value)}
                     placeholder="0-10"
                   />
-                  <button className="btn-guardar-nota" onClick={() => handleSubmitScore(reg)}>
+                  <button
+                    className="btn-guardar-nota"
+                    onClick={() => handleSubmitScore(reg)}
+                  >
                     Guardar nota
                   </button>
                   {/* <button className="btn-borrar-ejercicio" onClick={() => alert("Funcionalidad de borrado no implementada")}>

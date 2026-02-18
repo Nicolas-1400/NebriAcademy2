@@ -2,17 +2,13 @@ import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
-/**
- * Componente: AddContenidoCursoGrid
- * Permite subir nuevos materiales (Apuntes, Videos, Ejercicios) a un curso existente.
- */
 function AddContenidoCursoGrid() {
+  // Estados
   const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user: usuario, tipo: tipoUsuario } = useAuthStore();
 
-  // Resolución de ID del curso y Tipo de contenido
   const cursoId = state?.cursoId || (id && Number(id) > 0 ? Number(id) : null);
   const initialTipo =
     tipoUsuario !== "profesor" ? "apunte" : state?.tipo || "apunte";
@@ -20,16 +16,13 @@ function AddContenidoCursoGrid() {
   const [tipo, setTipo] = useState(initialTipo);
   const [categoria, setCategoria] = useState("");
 
-  // Estado del formulario
   const [file, setFile] = useState(null);
   const [nombre, setNombre] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Cargar categoría del curso
-  // Efecto para cargar la categoría del curso automáticamente
-  // Esto asegura que el contenido nuevo herede la categoría del curso al que pertenece
+  // Efectos
   useEffect(() => {
     if (cursoId) {
       fetch(`http://localhost:3000/cursos/${cursoId}`)
@@ -39,14 +32,12 @@ function AddContenidoCursoGrid() {
     }
   }, [cursoId]);
 
-  // Maneja el envío del formulario
-  // Determina el endpoint correcto según el tipo de contenido (video, apunte, ejercicio)
+  // Handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
     setError("");
 
-    // Validación básica: El usuario debe haber seleccionado un archivo
     if (!file) {
       setLoading(false);
       return setError("Debes seleccionar un archivo");
@@ -57,28 +48,23 @@ function AddContenidoCursoGrid() {
     }
 
     try {
-      // Selección del endpoint de la API basado en el tipo de contenido
       const getEndpoint = () => {
         if (tipo === "video") return "videos";
         if (tipo === "apunte") return "apuntes";
         if (tipo === "ejercicio") return "ejercicios";
-        return ""; // Caso por defecto para evitar errores si el tipo es desconocido
+        return "";
       };
 
       const endpoint = getEndpoint();
 
       const form = new FormData();
-      // Añadimos los campos comunes a todos los tipos de contenido
       form.append("nombre", nombre);
       form.append("archivo", file);
       form.append("curso", cursoId);
       if (categoria) form.append("categoria", categoria);
 
-      // Campos específicos por tipo
       if (tipo !== "video") form.append("descripcion", descripcion);
 
-      // Autor: Dependiendo del endpoint, se espera 'autor' o 'usuarioId'
-      // Ahora estandarizado: Enviamos profileId y tipo para que el backend resuelva
       if (usuario) {
         form.append("profileId", usuario.id);
         form.append("tipo", tipoUsuario);

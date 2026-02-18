@@ -6,11 +6,8 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-/**
- * Componente: MiEspacioGrid
- * Dashboard personal del alumno. Muestra sus cursos (matriculados/favoritos) y apuntes (creados/guardados) en carruseles.
- */
 function MiEspacioGrid() {
+  // Estados
   const { user } = useAuthStore();
   const [data, setData] = useState({
     cursos: [],
@@ -31,9 +28,7 @@ function MiEspacioGrid() {
     favApuntes: useRef(null),
   };
 
-  // --- Carga de Datos ---
-  // Cargamos todos los datos necesarios al mismo tiempo (Cursos, Alumnos, Apuntes...)
-  // Usamos Promise.all para que sea más rápido que ir uno por uno.
+  // Carga de Datos
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -79,7 +74,7 @@ function MiEspacioGrid() {
     cargarDatos();
   }, []);
 
-  // Cargar Likes Usuario
+  // Carga Likes Usuario
   useEffect(() => {
     if (!user) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
@@ -88,16 +83,13 @@ function MiEspacioGrid() {
       .catch(console.error);
   }, [user]);
 
-  // --- Filtros ---
-  // Filtramos los cursos en los que el alumno está apuntado.
-  // Usamos useMemo para recordar el resultado y no tener que recalcularlo si los datos no cambian.
+  // Filtros
   const cursosEnProceso = useMemo(() => {
     if (!user) return [];
-    // Cruzamos los datos: Buscamos qué cursos corresponden a las inscripciones del alumno
     return data.cursosAlumnos
       .filter((ca) => ca.alumnoId === user.id && ca.apuntado)
       .map((ca) => data.cursos.find((c) => c.id === ca.cursoId))
-      .filter(Boolean) // Quitamos vacíos si no se encuentra el curso
+      .filter(Boolean)
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   }, [data, user]);
 
@@ -122,7 +114,7 @@ function MiEspacioGrid() {
     return data.apuntes.filter((a) => likedApuntes.includes(a.id));
   }, [data, user, likedApuntes]);
 
-  // --- Helpers ---
+  // Helpers
   const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
     if (!aid) return "";
@@ -155,7 +147,6 @@ function MiEspacioGrid() {
         setLikedApuntes((prev) =>
           isLike ? [...prev, apunte.id] : prev.filter((id) => id !== apunte.id),
         );
-        // Update local apunte valoracion
         const newVal = d.apunte?.valoracion;
         setData((D) => ({
           ...D,
@@ -174,7 +165,6 @@ function MiEspacioGrid() {
       dir === "left" ? ref.current.slickPrev() : ref.current.slickNext();
   };
 
-  // Resize fix for slick
   useEffect(() => {
     if (!loading) {
       setTimeout(
