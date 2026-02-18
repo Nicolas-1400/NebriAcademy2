@@ -10,7 +10,7 @@ function AddCursoGrid() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
-  const [imagen, setImagen] = useState("Foto1"); // Default image
+  const [imagen, setImagen] = useState("Foto1");
 
   // Estados de Contenidos Opcionales
   const [fileApunte, setFileApunte] = useState(null);

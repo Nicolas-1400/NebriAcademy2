@@ -6,11 +6,6 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-/**
- * Componente de feed principal para alumnos
- * Muestra secciones de: Tus Cursos, Novedades, Cursos Populares y filtros por categoría
- * Incluye carruseles interactivos para navegar entre cursos
- */
 function HomeFeed() {
   // Estados
   const [usuario, setUsuario] = useState(null);
