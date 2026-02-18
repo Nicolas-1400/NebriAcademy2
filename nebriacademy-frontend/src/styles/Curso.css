@@ -566,17 +566,7 @@
    11. MENSAJE SIN CONTENIDO (vacío)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.contenido-curso > p {
-  font-size: 13px;
-  color: #999;
-  font-style: italic;
-  text-align: center;
-  padding: 30px;
-  background-color: #f9f9f9;
-  border-radius: 8px;
-}
-
-.profesor-apuntes p, .alumnos-apuntes p {
+.sin-contenido {
   font-size: 13px;
   color: #999;
   font-style: italic;

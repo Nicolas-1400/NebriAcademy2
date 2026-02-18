@@ -97,10 +97,9 @@ function TodosProfesoresGrid() {
       </aside>
 
       {/* GRID */}
-      <div className="profesores-grid-container">
+      <div className="profesores-grid"> 
+        <h2>Profesores</h2>
         {filteredProfesores.length > 0 ? (
-          <div className="profesores-grid">
-            <h2>Profesores</h2>
             <div className="profesores-contenedor">
               {filteredProfesores.map((p) => (
                 <TarjetaProfesores
@@ -112,7 +111,6 @@ function TodosProfesoresGrid() {
                 />
               ))}
             </div>
-          </div>
         ) : (
           <p className="mensaje-vacio">No se encontraron profesores.</p>
         )}

@@ -16,6 +16,7 @@
 .tarjeta-curso-pequena:hover {
     scale: 0.995;
     box-shadow: 0 10px 25px rgb(255, 255, 255);
+    background-color: var(--color-fondo);
 }
 
 .tarjeta-curso-pequena img {

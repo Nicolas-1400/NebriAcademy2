@@ -565,7 +565,7 @@ function CursoGrid() {
               ))}
             </div>
           ) : (
-            <p>No hay vídeos.</p>
+            <p className="sin-contenido">No hay vídeos.</p>
           )}
 
           {/* Apuntes */}
@@ -594,7 +594,7 @@ function CursoGrid() {
                   ))}
                 </ul>
               ) : (
-                <p>Sin apuntes.</p>
+                <p className="sin-contenido">Sin apuntes.</p>
               )}
             </div>
             <div className="alumnos-apuntes">
@@ -620,7 +620,7 @@ function CursoGrid() {
                   ))}
                 </ul>
               ) : (
-                <p>Sin apuntes.</p>
+                <p className="sin-contenido">Sin apuntes.</p>
               )}
             </div>
           </div>
@@ -711,7 +711,7 @@ function CursoGrid() {
               ))}
             </div>
           ) : (
-            <p>No hay ejercicios.</p>
+            <p className="sin-contenido">No hay ejercicios.</p>
           )}
         </div>
 
