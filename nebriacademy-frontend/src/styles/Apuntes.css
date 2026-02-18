@@ -11,6 +11,8 @@
   background-position: center;
 }
 
+/* BUSCADOR */
+
 .buscador-sidebar-apuntes {
   width: 25%;
   background-color: white;
@@ -138,6 +140,8 @@
   border-top: 1px solid #ddd;
   margin: 20px 0;
 }
+
+/* APUNTES */
 
 .apuntes-contenedor {
   width: 75%;

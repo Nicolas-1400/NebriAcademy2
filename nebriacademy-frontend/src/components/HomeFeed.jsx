@@ -180,7 +180,7 @@ function HomeFeed() {
   return (
     <div className="HomeFeed">
       <h1>
-        Bienvenido/a{" "}
+        Bienvenido/a:{" "}
         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="HomeFeed-secciones">

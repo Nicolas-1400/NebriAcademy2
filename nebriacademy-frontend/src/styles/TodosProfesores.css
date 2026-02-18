@@ -1,13 +1,28 @@
+/* BUSCADOR */
+.buscador-sidebar-profesores {
+  width: 25%;
+  background-color: white;
+  padding: 25px;
+  border-radius: 10px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.445);
+  height: fit-content;
+  top: 20px;
+}
+
+/* PROFESORES */
 .TodosProfesoresGrid {
-  padding: 40px 20px;
-  width: 100%;
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+  min-height: calc(100vh - 250px);
   background-image: url("../assets/fondo-clase.jpg");
   background-size: cover;
   background-position: center;
 }
 
 .profesores-grid {
-  background-color: rgba(255, 255, 255, 0.8);
+  width: 75%;
+  background-color: rgba(255, 224, 224, 0.9);
   border-radius: 10px;
 }
 
