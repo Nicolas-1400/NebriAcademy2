@@ -96,6 +96,17 @@ function Nav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    const handleResize = () => {
+      if (window.innerWidth > 768 && isMenuOpen) {
+        setIsMenuOpen(false);
+      }
+    };
+
+    window.addEventListener("resize", handleResize);
+    return () => window.removeEventListener("resize", handleResize);
+  }, [isMenuOpen]);
+
   // Handlers
   const handleLogout = () => {
     logoutStore();
@@ -357,7 +368,15 @@ function Nav() {
                 className="perfil-button"
                 onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
               >
-                <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
+                <img
+                  className="perfil-nav"
+                  src={
+                    usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
+                      ? PERFILES[usuario.imagenPerfil]
+                      : ImagenPerfilDefault
+                  }
+                  alt="Perfil"
+                />
               </button>
 
               {isdesplegableOpen && (
