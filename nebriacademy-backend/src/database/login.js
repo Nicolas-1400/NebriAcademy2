@@ -81,6 +81,7 @@ router.post("/auth", async (req, res) => {
           pais: profesor.pais,
           localidad: profesor.localidad,
           especializacion: profesor.especializacion,
+          imagenPerfil: profesor.imagenPerfil,
         },
       });
     }

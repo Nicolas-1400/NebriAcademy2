@@ -1,0 +1,137 @@
+Cosas para el FUTURO
+
+Fran: 
+- Imágenes dar a elegir (10),
+- Profesores tendrían que poder ver los cursos, tienen que pedir permiso a los administradores
+- Administradores para que puedan supervisar la página (A futuro)
+- Comentarios de profesores no funcionan
+- No funciona la edición de perfil
+
+Opcional:
+Trasladarlo a Vue.
+
+Para registrarse:
+Crear una BDD con los alumnos de la Nebrija.
+Comparar si al crear el usuario, coincide.
+Enviar un código al correo del alumno.
+Usar claudinary para hacer una api y así no tener que subir las cosas a local
+
+NavBar: 
+**Desplegable en los botones, por ejemplo en cursos, que aparezcan los tipos**
+
+Zustand (distintos usuarios):
+Alumnos y Profesores
+
+Cosas que habría que mirar para el TFG (IMPORTANTE):
+1. Filtrado y Búsqueda de Datos (El problema de TodosCursosGrid)
+Actualmente, el Frontend descarga toda la base de datos para buscar algo.
+
+Cómo está ahora (Frontend): En TodosCursosGrid.jsx, la aplicación descarga todos los cursos y todos los profesores de golpe. Luego, tu navegador usa 
+filter()
+ para buscar si escribes "Java".
+Problema: Si tienes 1,000 cursos, el usuario tiene que descargar una lista gigante solo para ver 3.
+Cómo debería ser (Backend): El Frontend debería enviar solo la búsqueda: GET /cursos?busqueda=Java&nivel=Intermedio. El Backend hace la consulta a la base de datos y devuelve solo los 3 resultados exactos.
+2. Agregación de Datos "Dashboard" (El caso de MiEspacioGrid y 
+CursoGrid
+)
+El Frontend está haciendo de "pegamento" de datos, haciendo muchas llamadas para montar una sola pantalla.
+
+Cómo está ahora (Frontend): Para mostrar 
+CursoGrid
+, el componente tiene que pedir:
+Datos del curso.
+Datos del profesor.
+Lista de videos (y luego filtrar los de este curso).
+Lista de apuntes (y filtrar).
+Lista de ejercicios (y filtrar).
+Cómo debería ser (Backend): Crear un endpoint "Detalle De Curso" en el Backend (GET /cursos/:id/completo).
+El Backend hace una sola consulta (o varias internas rápidas) y devuelve un solo objeto JSON con todo listo: { curso: {...}, profesor: {...}, contenidos: { videos: [...], apuntes: [...] } }.
+El Frontend pasaría de tener 5 
+fetch
+ y 50 líneas de lógica de filtrado a tener 1 
+fetch
+ y 0 lógica.
+3. Lógica de "Mis Cosas" (MiEspacioGrid)
+Cómo está ahora: Para saber qué cursos mostrarte en "Mi Espacio", el front descarga la lista de todas las inscripciones de todos los alumnos, y luego busca línea por línea cuáles son las tuyas.
+Riesgo: Esto es inseguro (técnicamente estás enviando datos de otros alumnos al navegador, aunque no los muestres) y muy ineficiente.
+Cómo debería ser: Un endpoint GET /alumnos/me/mis-cursos que use el ID del usuario logueado (desde el token o sesión) y devuelva directamente su lista limpia.
+Resumen: El Frontend ahora mismo tiene mucha "lógica de negocio" (filtrar, ordenar, cruzar datos). Si mueves eso al Backend, tus componentes de React quedarían limpísimos, solo se encargarían de pintar datos, que es su trabajo real.
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+Crear nuevo back:
+
+Microsoft Windows [Versión 10.0.26200.7623]
+(c) Microsoft Corporation. Todos los derechos reservados.
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB>cd back
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm init
+This utility will walk you through creating a package.json file.
+It only covers the most common items, and tries to guess sensible defaults.
+
+See `npm help init` for definitive documentation on these fields
+and exactly what they do.
+
+Use `npm install <pkg>` afterwards to install a package and
+save it as a dependency in the package.json file.
+
+Press ^C at any time to quit.
+package name: (back)
+version: (1.0.0)                                                                                                                                                   
+description:                                                                                                                                                       
+entry point: (index.js)                                                                                                                                            
+test command:                                                                                                                                                      
+git repository:                                                                                                                                                    
+keywords:                                                                                                                                                          
+author:                                                                                                                                                            
+license: (ISC)                                                                                                                                                     
+About to write to C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back\package.json:
+
+{
+  "name": "back",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "",
+  "license": "ISC"
+}
+
+
+Is this OK? (yes)
+
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm i -g nodemon
+
+changed 29 packages in 4s
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>npm i express
+
+added 65 packages, and audited 66 packages in 6s
+
+22 packages are looking for funding
+  run `npm fund` for details
+
+found 0 vulnerabilities
+
+C:\Users\grana\OneDrive\Escritorio\2º\Ruben\Desarrollo\connectFB\back>  

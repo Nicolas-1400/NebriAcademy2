@@ -22,6 +22,7 @@ const Profesores = sequelize.define(
       "BDD",
       "Marketing",
     ),
+    imagenPerfil: DataTypes.STRING,
   },
   { timestamps: false },
 );

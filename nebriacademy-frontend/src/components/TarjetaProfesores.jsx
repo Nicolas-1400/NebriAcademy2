@@ -1,32 +1,20 @@
 import { useNavigate } from "react-router-dom";
-import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
-import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
-import Foto3 from "../assets/ImagenesCursos/Foto3.jpg";
-import Foto4 from "../assets/ImagenesCursos/Foto4.jpg";
-import Foto5 from "../assets/ImagenesCursos/Foto5.jpg";
-import Foto6 from "../assets/ImagenesCursos/Foto6.jpg";
-import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
-import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
-import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
-import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
+import ImagenDefault from "../assets/individuo.png";
+import { PERFILES } from "./TarjetaImagenPerfil";
 
-const IMAGES = [
-  Foto10,
-  Foto1,
-  Foto2,
-  Foto3,
-  Foto4,
-  Foto5,
-  Foto6,
-  Foto7,
-  Foto8,
-  Foto9,
-];
-
-function TarjetaProfesores({ nombre, apellidos, especializacion, profesorId }) {
+function TarjetaProfesores({
+  nombre,
+  apellidos,
+  especializacion,
+  profesorId,
+  imagenPerfil,
+}) {
   const navigate = useNavigate();
   // Helpers
-  const imageSrc = IMAGES[profesorId % 10];
+  const imageSrc =
+    imagenPerfil && PERFILES[imagenPerfil]
+      ? PERFILES[imagenPerfil]
+      : ImagenDefault;
 
   return (
     <div

@@ -1,10 +1,10 @@
-@import './general.css';
+@import "./general.css";
 
 /* Título de bienvenida */
 .home-profesor-grid h1 {
   font-size: 32px;
   color: var(--rojo-nebrija);
-  margin:  20px;
+  margin: 20px;
   font-weight: 700;
 }
 

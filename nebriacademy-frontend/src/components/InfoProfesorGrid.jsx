@@ -1,7 +1,8 @@
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
-import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
+import { PERFILES } from "./TarjetaImagenPerfil";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
 function InfoProfesorGrid() {
@@ -78,7 +79,15 @@ function InfoProfesorGrid() {
 
       <div className="datosPerfil">
         <h1>Profesor</h1>
-        <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
+        <img
+          className="imagenPerfil"
+          src={
+            profesor?.imagenPerfil && PERFILES[profesor.imagenPerfil]
+              ? PERFILES[profesor.imagenPerfil]
+              : ImagenPerfilDefault
+          }
+          alt="Perfil Usuario"
+        />
         <h2 className="nombrePerfil">
           {profesor
             ? `${profesor.nombre} ${profesor.apellidos}`

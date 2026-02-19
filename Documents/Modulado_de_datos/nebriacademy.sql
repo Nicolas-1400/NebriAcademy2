@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 18-02-2026 a las 12:11:00
+-- Tiempo de generación: 19-02-2026 a las 12:57:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -200,8 +200,8 @@ INSERT INTO `cursos` (`id`, `nombreCurso`, `categoria`, `profesor`, `nivel`, `va
 (17, 'Análisis de Datos con SQL', 'BDD', 2, 'Avanzado', 0, 'Técnicas avanzadas de análisis y visualización de datos con SQL.', 'Foto7'),
 (18, 'Protección de Datos GDPR', 'Ciberseguridad', 3, 'Intermedio', 0, 'Cumplimiento del Reglamento General de Protección de Datos.', 'Foto8'),
 (19, 'Email Marketing', 'Marketing', 5, 'Intermedio', 0, 'Campañas efectivas de email marketing y automatización.', 'Foto9'),
-(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 1, 'Crea diseños web adaptables a todos los dispositivos.', 'Foto10'),
-(21, 'Iniciazión a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ', 'Foto1'),
+(20, 'Diseño Responsive', 'Diseño', 4, 'Intermedio', 0, 'Crea diseños web adaptables a todos los dispositivos.', 'Foto10'),
+(21, 'Iniciación a las BDD', 'BDD', 6, 'Básico', 1, 'Aquí aprendereis los principios básicos de las bases de datos ', 'Foto1'),
 (24, 'Prueba', 'Ciberseguridad', 6, 'Intermedio', 0, 'Hola', 'Foto6');
 
 -- --------------------------------------------------------
@@ -251,7 +251,7 @@ INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`
 (25, 12, 8, 0, 1, NULL),
 (26, 20, 1, 0, 0, 1),
 (27, 21, 9, 0, 1, 1),
-(28, 20, 9, NULL, 1, NULL);
+(28, 20, 9, 1, 1, 0);
 
 -- --------------------------------------------------------
 
@@ -288,6 +288,13 @@ CREATE TABLE `ejerciciosalumnos` (
   `archivo` varchar(1000) NOT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
+--
+-- Volcado de datos para la tabla `ejerciciosalumnos`
+--
+
+INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VALUES
+(1, 1, 9, 'Actividad 3 - Power BI.pdf');
+
 -- --------------------------------------------------------
 
 --
@@ -321,20 +328,21 @@ CREATE TABLE `profesores` (
   `redes` text DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
   `localidad` varchar(50) DEFAULT NULL,
-  `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL
+  `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL,
+  `imagenPerfil` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `profesores`
 --
 
-INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`, `especializacion`) VALUES
-(1, 1, 'Ana', 'García López', '11111111A', 'ana.garcia@nebriacademy.com', 'prof123', 'ES1234567890123456789012', '600111222', '@ana_prof', 'España', 'Madrid', 'Programación'),
-(2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD'),
-(3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad'),
-(4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño'),
-(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing'),
-(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', NULL, NULL, 'España', 'Madrid', 'Programación');
+INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`, `especializacion`, `imagenPerfil`) VALUES
+(1, 1, 'Ana', 'García López', '11111111A', 'ana.garcia@nebriacademy.com', 'prof123', 'ES1234567890123456789012', '600111222', '@ana_prof', 'España', 'Madrid', 'Programación', NULL),
+(2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD', NULL),
+(3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad', NULL),
+(4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño', NULL),
+(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing', NULL),
+(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', '', '', 'España', 'Madrid', 'Programación', 'hombre-7');
 
 -- --------------------------------------------------------
 
@@ -388,6 +396,13 @@ CREATE TABLE `puntuacionesejercicios` (
   `alumnoId` int(11) NOT NULL,
   `puntuacion` float DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `puntuacionesejercicios`
+--
+
+INSERT INTO `puntuacionesejercicios` (`id`, `ejercicioId`, `alumnoId`, `puntuacion`) VALUES
+(1, 1, 9, 6);
 
 -- --------------------------------------------------------
 
@@ -588,25 +603,25 @@ ALTER TABLE `alumnos`
 -- AUTO_INCREMENT de la tabla `apuntes`
 --
 ALTER TABLE `apuntes`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntesalumnos`
 --
 ALTER TABLE `apuntesalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
 
 --
 -- AUTO_INCREMENT de la tabla `comentarioalumnocurso`
 --
 ALTER TABLE `comentarioalumnocurso`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
 
 --
 -- AUTO_INCREMENT de la tabla `cursos`
 --
 ALTER TABLE `cursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
@@ -624,7 +639,7 @@ ALTER TABLE `ejercicios`
 -- AUTO_INCREMENT de la tabla `ejerciciosalumnos`
 --
 ALTER TABLE `ejerciciosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `incidencias`
@@ -642,13 +657,13 @@ ALTER TABLE `profesores`
 -- AUTO_INCREMENT de la tabla `profesorescursos`
 --
 ALTER TABLE `profesorescursos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=28;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `puntuacionesejercicios`
 --
 ALTER TABLE `puntuacionesejercicios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `usuarios`

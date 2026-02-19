@@ -1,126 +1,156 @@
-@import './general.css';
+@import "./general.css";
 
 .tarjeta-curso {
-    max-width: 400px;
-    background-color: white;
-    border-radius: 10px;
-    padding: 20px;
-    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
-    cursor: pointer;
-    transition: all 0.2s ease;
-    display: flex;
-    flex-direction: column;
+  max-width: 400px;
+  background-color: white;
+  border-radius: 10px;
+  padding: 20px;
+  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: flex;
+  flex-direction: column;
+  position: relative;
 }
 
 .tarjeta-curso:hover {
-    transform: translateY(-3px);
-    box-shadow: 0 10px 25px rgba(194, 0, 47, 0.2);
+  transform: translateY(-3px);
+  box-shadow: 0 10px 25px rgba(194, 0, 47, 0.2);
 }
 
 .tarjeta-curso img {
-    width: 100%;
-    height: 200px;
-    object-fit: cover;
-    border-radius: 8px;
-    margin-bottom: 15px;
+  width: 100%;
+  height: 200px;
+  object-fit: cover;
+  border-radius: 8px;
+  margin-bottom: 15px;
 }
 
 .tarjeta-curso h3 {
-    font-size: 18px;
-    color: var(--rojo-nebrija);
-    margin-bottom: 10px;
+  font-size: 18px;
+  color: var(--rojo-nebrija);
+  margin-bottom: 10px;
 }
 
 .tarjeta-curso p {
-    font-size: 13px;
-    color: #666;
-    margin-bottom: 8px;
-    line-height: 1.5;
+  font-size: 13px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.5;
 }
 
 .tarjeta-curso .p-categoria {
-    font-weight: bold;
-    color: #999;
-    text-transform: capitalize;
-    margin-bottom: 12px;
-    font-size: 12px;
+  font-weight: bold;
+  color: #999;
+  text-transform: capitalize;
+  margin-bottom: 12px;
+  font-size: 12px;
 }
 
 .tarjeta-curso .p-nivel {
-    font-weight: 600;
-    color: #555;
-    font-size: 12px;
+  font-weight: 600;
+  color: #555;
+  font-size: 12px;
 }
 
 .tarjeta-curso .p-descripcion {
-    color: #777;
-    font-size: 13px;
-    line-height: 1.6;
-    margin: 10px 0;
+  color: #777;
+  font-size: 13px;
+  line-height: 1.6;
+  margin: 10px 0;
 }
 
 .tarjeta-curso .p-profesor {
-    font-style: italic;
-    color: #888;
-    font-size: 12px;
-    margin-top: 8px;
+  font-style: italic;
+  color: #888;
+  font-size: 12px;
+  margin-top: 8px;
 }
 
 .tarjeta-curso .p-valoracion {
-    margin-top: auto;
-    color: var(--rojo-nebrija);
-    font-weight: bold;
-    font-size: 13px;
-    display: flex;
-    flex-direction: row;
-    justify-content: flex-end;
+  margin-top: auto;
+  color: var(--rojo-nebrija);
+  font-weight: bold;
+  font-size: 13px;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-end;
 }
 
 /* RESPONSIVE 1024px */
 @media (max-width: 1024px) {
-    .tarjeta-curso {
-        padding: 18px;
-        max-width: 380px;
-    }
+  .tarjeta-curso {
+    padding: 18px;
+    max-width: 380px;
+  }
 
-    .tarjeta-curso img {
-        height: 180px;
-        margin-bottom: 14px;
-    }
+  .tarjeta-curso img {
+    height: 180px;
+    margin-bottom: 14px;
+  }
 
-    .tarjeta-curso h3 {
-        font-size: 17px;
-        margin-bottom: 9px;
-    }
+  .tarjeta-curso h3 {
+    font-size: 17px;
+    margin-bottom: 9px;
+  }
 
-    .tarjeta-curso p {
-        font-size: 12px;
-    }
+  .tarjeta-curso p {
+    font-size: 12px;
+  }
 
-    .tarjeta-curso .p-descripcion {
-        margin: 8px 0;
-    }
+  .tarjeta-curso .p-descripcion {
+    margin: 8px 0;
+  }
 }
 
 /* RESPONSIVE 768px */
 @media (max-width: 768px) {
+  .tarjeta-curso {
+    padding: 15px;
+  }
 
-.tarjeta-curso {
-        padding: 15px;
-    }
+  .tarjeta-curso img {
+    height: 150px;
+    margin-bottom: 12px;
+  }
 
-    .tarjeta-curso img {
-        height: 150px;
-        margin-bottom: 12px;
-    }
+  .tarjeta-curso h3 {
+    font-size: 16px;
+    margin-bottom: 8px;
+  }
 
-    .tarjeta-curso h3 {
-        font-size: 16px;
-        margin-bottom: 8px;
-    }
+  .tarjeta-curso p {
+    font-size: 12px;
+    margin-bottom: 6px;
+  }
+}
 
-    .tarjeta-curso p {
-        font-size: 12px;
-        margin-bottom: 6px;
-    }
+/* Botón Eliminar Overlay */
+.btn-delete-overlay {
+  position: absolute;
+  top: 5px;
+  right: 5px;
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid red;
+  border-radius: 50%;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+  z-index: 10;
+  transition: all 0.2s ease;
+}
+
+.btn-delete-overlay:hover {
+  background: red;
+  transform: scale(1.1);
+}
+
+.btn-delete-overlay img {
+  width: 16px;
+  height: 16px;
+  margin: 0;
+  border-radius: 0;
 }

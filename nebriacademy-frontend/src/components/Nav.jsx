@@ -1,7 +1,8 @@
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/nebriLogo.png";
-import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
+import { PERFILES } from "./TarjetaImagenPerfil";
 import ImagenBotonMas from "../assets/botonMas.png";
 import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";
 import useAuthStore from "../store/useAuthStore";
@@ -312,7 +313,15 @@ function Nav() {
             className="perfil-button"
             onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
           >
-            <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
+            <img
+              className="perfil-nav"
+              src={
+                usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
+                  ? PERFILES[usuario.imagenPerfil]
+                  : ImagenPerfilDefault
+              }
+              alt="Perfil"
+            />
           </button>
 
           {isdesplegableOpen && (
@@ -344,34 +353,34 @@ function Nav() {
           <div className="contenedor-elementos-derecha-responsive">
             {/* Perfil en Móvil */}
             <div className="perfil-desplegable-container" ref={desplegableRef}>
-          <button
-            className="perfil-button"
-            onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
-          >
-            <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
-          </button>
-
-          {isdesplegableOpen && (
-            <div className="desplegable-menu">
-              <h3>
-                {usuario?.nombre} {usuario?.apellidos}
-              </h3>
-              <p>{usuario?.email}</p>
               <button
-                className="desplegable-item"
-                onClick={() => {
-                  navigate("/Home/Perfil");
-                  setIsdesplegableOpen(false);
-                }}
+                className="perfil-button"
+                onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
               >
-                Mi Perfil
+                <img className="perfil-nav" src={ImagenPerfil} alt="Perfil" />
               </button>
-              <button className="desplegable-item" onClick={handleLogout}>
-                Cerrar Sesión
-              </button>
+
+              {isdesplegableOpen && (
+                <div className="desplegable-menu">
+                  <h3>
+                    {usuario?.nombre} {usuario?.apellidos}
+                  </h3>
+                  <p>{usuario?.email}</p>
+                  <button
+                    className="desplegable-item"
+                    onClick={() => {
+                      navigate("/Home/Perfil");
+                      setIsdesplegableOpen(false);
+                    }}
+                  >
+                    Mi Perfil
+                  </button>
+                  <button className="desplegable-item" onClick={handleLogout}>
+                    Cerrar Sesión
+                  </button>
+                </div>
+              )}
             </div>
-          )}
-        </div>
 
             {renderNavButtons()}
             {renderSearch()}

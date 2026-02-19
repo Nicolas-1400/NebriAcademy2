@@ -97,20 +97,21 @@ function TodosProfesoresGrid() {
       </aside>
 
       {/* GRID */}
-      <div className="profesores-grid"> 
+      <div className="profesores-grid">
         <h2>Profesores</h2>
         {filteredProfesores.length > 0 ? (
-            <div className="profesores-contenedor">
-              {filteredProfesores.map((p) => (
-                <TarjetaProfesores
-                  key={p.id}
-                  nombre={p.nombre}
-                  apellidos={p.apellidos}
-                  especializacion={p.especializacion}
-                  profesorId={p.id}
-                />
-              ))}
-            </div>
+          <div className="profesores-contenedor">
+            {filteredProfesores.map((p) => (
+              <TarjetaProfesores
+                key={p.id}
+                nombre={p.nombre}
+                apellidos={p.apellidos}
+                especializacion={p.especializacion}
+                profesorId={p.id}
+                imagenPerfil={p.imagenPerfil}
+              />
+            ))}
+          </div>
         ) : (
           <p className="mensaje-vacio">No se encontraron profesores.</p>
         )}

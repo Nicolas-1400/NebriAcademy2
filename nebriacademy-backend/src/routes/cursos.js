@@ -1,5 +1,7 @@
 const express = require("express");
 const router = express.Router();
+const path = require("path");
+const fs = require("fs");
 const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
@@ -144,12 +146,114 @@ router.delete("/:id", async (req, res) => {
 
     const curso = await Cursos.findByPk(id);
 
-    if (curso) {
-      await curso.destroy();
-      res.json({ mensaje: "Curso eliminado correctamente" });
-    } else {
-      res.status(404).json({ error: "Curso no encontrado" });
+    if (!curso) {
+      return res.status(404).json({ error: "Curso no encontrado" });
     }
+
+    // 1. Obtener y eliminar Videos
+    const videos = await require("../models/Videos.js").findAll({
+      where: { curso: id },
+    });
+    for (const v of videos) {
+      if (v.archivo) {
+        const p = path.join(
+          __dirname,
+          "../../../nebriacademy-frontend/src/assets/Videos",
+          v.archivo,
+        );
+        fs.promises
+          .unlink(p)
+          .catch((e) =>
+            console.warn(`Error borrando video físico: ${e.message}`),
+          );
+      }
+      await v.destroy();
+    }
+
+    // 2. Obtener y eliminar Apuntes
+    const apuntes = await require("../models/Apuntes.js").findAll({
+      where: { curso: id },
+    });
+    for (const a of apuntes) {
+      if (a.archivo) {
+        const p = path.join(
+          __dirname,
+          "../../../nebriacademy-frontend/src/assets/Apuntes",
+          a.archivo,
+        );
+        fs.promises
+          .unlink(p)
+          .catch((e) =>
+            console.warn(`Error borrando apunte físico: ${e.message}`),
+          );
+      }
+      await a.destroy();
+    }
+
+    // 3. Obtener y eliminar Ejercicios (del profesor)
+    const ejercicios = await require("../models/Ejercicios.js").findAll({
+      where: { curso: id },
+    });
+    // Para cada ejercicio, eliminar entregas de alumnos y el archivo del ejercicio
+    for (const e of ejercicios) {
+      // 3.1 Eliminar entregas de alumnos asociadas a este ejercicio
+      const entregas = await require("../models/EjerciciosAlumnos.js").findAll({
+        where: { ejercicioId: e.id },
+      });
+      for (const ent of entregas) {
+        if (ent.archivo) {
+          const p = path.join(
+            __dirname,
+            "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
+            ent.archivo,
+          );
+          fs.promises
+            .unlink(p)
+            .catch((err) =>
+              console.warn(`Error borrando entrega física: ${err.message}`),
+            );
+        }
+        await ent.destroy();
+      }
+
+      // 3.2 Eliminar puntuaciones
+      await require("../models/PuntuacionesEjercicios.js").destroy({
+        where: { ejercicioId: e.id },
+      });
+
+      // 3.3 Eliminar archivo del ejercicio (si existe)
+      if (e.archivo) {
+        const p = path.join(
+          __dirname,
+          "../../../nebriacademy-frontend/src/assets/Ejercicios",
+          e.archivo,
+        );
+        fs.promises
+          .unlink(p)
+          .catch((err) =>
+            console.warn(`Error borrando ejercicio físico: ${err.message}`),
+          );
+      }
+      await e.destroy();
+    }
+
+    // 4. Eliminar Comentarios
+    await require("../models/ComentatioAlumnoCurso.js").destroy({
+      where: { cursoId: id },
+    });
+
+    // 5. Eliminar Relaciones (CursosAlumnos, ProfesoresCursos)
+    await require("../models/CursosAlumnos.js").destroy({
+      where: { cursoId: id },
+    });
+    await require("../models/ProfesoresCursos.js").destroy({
+      where: { cursoId: id },
+    });
+
+    // 6. Eliminar el Curso
+    await curso.destroy();
+
+    res.json({ mensaje: "Curso y todo su contenido eliminado correctamente" });
   } catch (error) {
     console.error("Error al eliminar curso:", error);
     res.status(500).json({ error: "Error interno del servidor" });

@@ -10,6 +10,7 @@ import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import Like from "../assets/me-gusta-marcado.png";
+import Eliminar from "../assets/Eliminar.png";
 
 const IMAGES = [
   Foto10,
@@ -33,6 +34,8 @@ function TarjetaCursos({
   profesor,
   valoracion,
   imagen,
+  isDeleting,
+  onDelete,
 }) {
   const navigate = useNavigate();
 
@@ -61,6 +64,15 @@ function TarjetaCursos({
       className="tarjeta-curso"
       onClick={() => navigate(`/Home/Cursos/${cursoId}`)}
     >
+      {isDeleting && (
+        <button
+          onClick={onDelete}
+          className="btn-delete-overlay"
+          title="Eliminar curso"
+        >
+          <img src={Eliminar} alt="X" />
+        </button>
+      )}
       <img src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
       <p className="p-categoria">Categoría: {categoria}</p>
