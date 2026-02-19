@@ -37,27 +37,32 @@ function HomeProfesorGrid() {
   return (
     <div className="home-profesor-grid">
       <h1>
-        Bienvenido/a: {" "}
+        Bienvenido/a:{" "}
         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="grid-cursos-profesor">
-        {cursos.length === 0 ? (
-          <p>No tienes cursos asignados todavía.</p>
-        ) : (
-          cursos.map((c) => (
-            <TarjetaCursos
-              key={c.id}
-              name={c.nombreCurso}
-              cursoId={c.id}
-              categoria={c.categoria}
-              nivel={c.nivel}
-              descripcion={c.descripcion}
-              profesor={usuario ? `${usuario.nombre} ${usuario.apellidos}` : ""}
-              valoracion={c.valoracion}
-              imagen={c.imagen}
-            />
-          ))
-        )}
+        <h2>Tus cursos</h2>
+        <div className="grid-cursos-profesor-cursos">
+          {cursos.length === 0 ? (
+            <p>No tienes cursos asignados todavía.</p>
+          ) : (
+            cursos.map((c) => (
+              <TarjetaCursos
+                key={c.id}
+                name={c.nombreCurso}
+                cursoId={c.id}
+                categoria={c.categoria}
+                nivel={c.nivel}
+                descripcion={c.descripcion}
+                profesor={
+                  usuario ? `${usuario.nombre} ${usuario.apellidos}` : ""
+                }
+                valoracion={c.valoracion}
+                imagen={c.imagen}
+              />
+            ))
+          )}
+        </div>
       </div>
     </div>
   );
