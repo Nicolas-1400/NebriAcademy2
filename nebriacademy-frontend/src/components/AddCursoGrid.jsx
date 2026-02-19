@@ -184,163 +184,171 @@ function AddCursoGrid() {
 
   return (
     <div className="perfil-curso">
-      <div className="formularioEditarPerfil">
+      <div className="form-add-curso">
         <h3>Crear Curso</h3>
         <form onSubmit={handleSubmit}>
           {/* Datos del Curso */}
-          <div className="curso-cont">
-            <div className="formulario-grupo">
-              <label>Nombre del curso *</label>
-              <input
-                type="text"
-                value={nombreCurso}
-                onChange={(e) => setNombreCurso(e.target.value)}
-                required
-              />
+          <div className="contenedor-contenidos">
+            <div className="line-1">
+              <div className="curso-cont">
+                <div className="formulario-grupo">
+                  <label>Nombre del curso *</label>
+                  <input
+                    type="text"
+                    value={nombreCurso}
+                    onChange={(e) => setNombreCurso(e.target.value)}
+                    required
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Categoría *</label>
+                  <select
+                    value={categoria}
+                    onChange={(e) => setCategoria(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona categoría
+                    </option>
+                    <option value="Programacion">Programación</option>
+                    <option value="Diseño">Diseño</option>
+                    <option value="Ciberseguridad">Ciberseguridad</option>
+                    <option value="BDD">Base de datos</option>
+                    <option value="Marketing">Marketing</option>
+                  </select>
+                </div>
+                <div className="formulario-grupo">
+                  <label>Nivel *</label>
+                  <select
+                    value={nivel}
+                    onChange={(e) => setNivel(e.target.value)}
+                    required
+                  >
+                    <option value="" disabled>
+                      Selecciona nivel
+                    </option>
+                    <option value="Básico">Básico</option>
+                    <option value="Intermedio">Intermedio</option>
+                    <option value="Avanzado">Avanzado</option>
+                  </select>
+                </div>
+                <div className="formulario-grupo">
+                  <label>Descripción *</label>
+                  <textarea
+                    className="descripcion-textarea"
+                    value={descripcion}
+                    onChange={(e) => setDescripcion(e.target.value)}
+                    required
+                  />
+                </div>
+              </div>
+
+              {/* Apunte Opcional */}
+              <div className="apuntes-cont">
+                <h4>Añadir Apunte (Opcional)</h4>
+                <div className="formulario-grupo">
+                  <label>Nombre</label>
+                  <input
+                    type="text"
+                    value={nombreApunte}
+                    onChange={(e) => setNombreApunte(e.target.value)}
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Archivo (.pdf, .doc, .docx, .ppt, .pptx)</label>
+                  <input
+                    type="file"
+                    ref={fileInputRef}
+                    accept=".pdf,.doc,.docx,.ppt,.pptx"
+                    onChange={(e) => setFileApunte(e.target.files[0] || null)}
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Descripción</label>
+                  <textarea
+                    className="descripcion-textarea"
+                    value={descripcionApunte}
+                    onChange={(e) => setDescripcionApunte(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="formulario-grupo">
-              <label>Categoría *</label>
-              <select
-                value={categoria}
-                onChange={(e) => setCategoria(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Selecciona categoría
-                </option>
-                <option value="Programacion">Programación</option>
-                <option value="Diseño">Diseño</option>
-                <option value="Ciberseguridad">Ciberseguridad</option>
-                <option value="BDD">Base de datos</option>
-                <option value="Marketing">Marketing</option>
-              </select>
+            <div className="line-2">
+              {/* Video Opcional */}
+              <div className="video-cont">
+                <h4>Añadir Video (Opcional)</h4>
+                <div className="formulario-grupo">
+                  <label>Nombre</label>
+                  <input
+                    type="text"
+                    value={nombreVideo}
+                    onChange={(e) => setNombreVideo(e.target.value)}
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Archivo (Video)</label>
+                  <input
+                    type="file"
+                    ref={fileVideoInputRef}
+                    accept="video/*"
+                    onChange={(e) => setFileVideo(e.target.files[0] || null)}
+                  />
+                </div>
+              </div>
+
+              {/* Ejercicio Opcional */}
+              <div className="ejercicio-cont">
+                <h4>Añadir Ejercicio (Opcional)</h4>
+                <div className="formulario-grupo">
+                  <label>Nombre</label>
+                  <input
+                    type="text"
+                    value={nombreEjercicio}
+                    onChange={(e) => setNombreEjercicio(e.target.value)}
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Archivo (.zip, .pdf...)</label>
+                  <input
+                    type="file"
+                    ref={fileEjercicioInputRef}
+                    accept=".pdf,.doc,.docx,.zip,.rar"
+                    onChange={(e) =>
+                      setFileEjercicio(e.target.files[0] || null)
+                    }
+                  />
+                </div>
+                <div className="formulario-grupo">
+                  <label>Descripción</label>
+                  <input
+                    type="text"
+                    value={descripcionEjercicio}
+                    onChange={(e) => setDescripcionEjercicio(e.target.value)}
+                  />
+                </div>
+              </div>
             </div>
-            <div className="formulario-grupo">
-              <label>Nivel *</label>
-              <select
-                value={nivel}
-                onChange={(e) => setNivel(e.target.value)}
-                required
-              >
-                <option value="" disabled>
-                  Selecciona nivel
-                </option>
-                <option value="Básico">Básico</option>
-                <option value="Intermedio">Intermedio</option>
-                <option value="Avanzado">Avanzado</option>
-              </select>
-            </div>
-            <div className="formulario-grupo">
-              <label>Descripción *</label>
-              <textarea
-                className="descripcion-textarea"
-                value={descripcion}
-                onChange={(e) => setDescripcion(e.target.value)}
-                required
-              />
-            </div>
+
             {/* Selección de Imagen de Fondo */}
             <TarjetaFondos selectedImage={imagen} onSelect={setImagen} />
-          </div>
 
-          {/* Apunte Opcional */}
-          <div className="apuntes-cont">
-            <h4>Añadir Apunte (Opcional)</h4>
-            <div className="formulario-grupo">
-              <label>Nombre</label>
-              <input
-                type="text"
-                value={nombreApunte}
-                onChange={(e) => setNombreApunte(e.target.value)}
-              />
-            </div>
-            <div className="formulario-grupo">
-              <label>Archivo (.pdf, .doc...)</label>
-              <input
-                type="file"
-                ref={fileInputRef}
-                accept=".pdf,.doc,.docx,.ppt,.pptx"
-                onChange={(e) => setFileApunte(e.target.files[0] || null)}
-              />
-            </div>
-            <div className="formulario-grupo">
-              <label>Descripción</label>
-              <textarea
-                className="descripcion-textarea"
-                value={descripcionApunte}
-                onChange={(e) => setDescripcionApunte(e.target.value)}
-              />
-            </div>
-          </div>
+            {/* Botones */}
+            <div className="botones-cont">
+              {success && <p className="mensaje-exito">{success}</p>}
+              {error && <p className="mensaje-error">{error}</p>}
 
-          {/* Video Opcional */}
-          <div className="video-cont">
-            <h4>Añadir Video (Opcional)</h4>
-            <div className="formulario-grupo">
-              <label>Nombre</label>
-              <input
-                type="text"
-                value={nombreVideo}
-                onChange={(e) => setNombreVideo(e.target.value)}
-              />
+              <button type="submit" className="boton-editar-perfil">
+                Crear curso
+              </button>
+              <button
+                type="button"
+                className="boton-go-back"
+                onClick={() => navigate("/Home")}
+              >
+                <img src={flecha} alt="Volver" />
+                <p>Volver</p>
+              </button>
             </div>
-            <div className="formulario-grupo">
-              <label>Archivo (Video)</label>
-              <input
-                type="file"
-                ref={fileVideoInputRef}
-                accept="video/*"
-                onChange={(e) => setFileVideo(e.target.files[0] || null)}
-              />
-            </div>
-          </div>
-
-          {/* Ejercicio Opcional */}
-          <div className="ejercicio-cont">
-            <h4>Añadir Ejercicio (Opcional)</h4>
-            <div className="formulario-grupo">
-              <label>Nombre</label>
-              <input
-                type="text"
-                value={nombreEjercicio}
-                onChange={(e) => setNombreEjercicio(e.target.value)}
-              />
-            </div>
-            <div className="formulario-grupo">
-              <label>Archivo (.zip, .pdf...)</label>
-              <input
-                type="file"
-                ref={fileEjercicioInputRef}
-                accept=".pdf,.doc,.docx,.zip,.rar"
-                onChange={(e) => setFileEjercicio(e.target.files[0] || null)}
-              />
-            </div>
-            <div className="formulario-grupo">
-              <label>Descripción</label>
-              <input
-                type="text"
-                value={descripcionEjercicio}
-                onChange={(e) => setDescripcionEjercicio(e.target.value)}
-              />
-            </div>
-          </div>
-
-          {/* Botones */}
-          <div className="mt-4">
-            {success && <p className="mensaje-exito">{success}</p>}
-            {error && <p className="mensaje-error">{error}</p>}
-
-            <button type="submit" className="boton-editar-perfil">
-              Crear curso
-            </button>
-            <button
-              type="button"
-              className="boton-go-back"
-              onClick={() => navigate("/Home")}
-            >
-              <img src={flecha} alt="Volver" />
-              <p>Volver</p>
-            </button>
           </div>
         </form>
       </div>

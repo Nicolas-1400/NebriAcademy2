@@ -2,18 +2,50 @@
 
 /* Título de bienvenida */
 .home-profesor-grid h1 {
+  margin: 20px;
   font-size: 32px;
   color: var(--rojo-nebrija);
   margin: 20px;
   font-weight: 700;
+  background-color: white;
+  border: 3px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  padding: 5px;
+  width: fit-content;
+  box-shadow: 8px 8px 3px rgba(202, 0, 27, 0.619);
 }
 
 /* Grid de cursos del profesor */
+
 .grid-cursos-profesor {
+  padding: 30px;
+  margin: 20px;
+  border-radius: 20px;
+  background: linear-gradient(
+    45deg,
+    rgb(220, 0, 0),
+    rgb(255, 196, 196),
+    rgb(220, 0, 0)
+  );
+}
+
+.grid-cursos-profesor h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 20px;
+  font-weight: 600;
+  padding: 5px;
+  background-color: white;
+  border: 2px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  width: fit-content;
+  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.3);
+}
+
+.grid-cursos-profesor-cursos {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
   gap: 30px;
-  padding: 20px;
 }
 
 /* Mensaje vacío */
@@ -27,6 +59,39 @@
   background-color: #f9f9f9;
   border-radius: 8px;
   border: 1px dashed #ddd;
+}
+
+/* Borrar */
+.header-container {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.btn-delete-mode {
+  background: none;
+  border: none;
+  cursor: pointer;
+  padding: 10px;
+  transition: transform 0.2s ease;
+}
+
+.btn-delete-mode:hover {
+  transform: scale(1.1);
+}
+
+.icon-delete-mode {
+  width: 40px;
+  height: 40px;
+  transition: filter 0.3s ease;
+}
+
+.icon-delete-mode.active {
+  filter: drop-shadow(0 0 5px red);
+}
+
+.icon-delete-mode.inactive {
+  filter: drop-shadow(0 0 2px gray);
 }
 
 /* RESPONSIVE - Tablets (1024px) */

@@ -8,17 +8,51 @@
   min-height: 60vh;
 }
 
-.formularioEditarPerfil {
-  width: 720px;
+.form-add-curso {
+  width: 70%;
   background-color: white;
   padding: 24px;
   border-radius: 10px;
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-.formularioEditarPerfil h3 {
+.form-add-curso h3 {
   color: var(--rojo-nebrija);
-  margin-bottom: 12px;
+  margin-bottom: 15px;
+  border-bottom: 2px solid var(--rojo-nebrija);
+}
+
+.contenedor-contenidos {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  gap: 10px;
+}
+
+.line-1,
+.line-2 {
+  display: flex;
+  flex-direction: row;
+  width: 100%;
+}
+
+.curso-cont,
+.apuntes-cont,
+.video-cont,
+.ejercicio-cont {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  background-color: var(--color-hover-boton);
+  width: 95%;
+}
+
+.apuntes-cont h4,
+.video-cont h4,
+.ejercicio-cont h4 {
+  margin-bottom: 10px;
+  border-bottom: 2px solid var(--rojo-nebrija);
 }
 
 .formulario-grupo {
@@ -35,6 +69,7 @@
   border: 2px solid #e6e6e6;
   border-radius: 6px;
   font-size: 14px;
+  width: 100%;
 }
 
 .descripcion-textarea {
@@ -117,10 +152,21 @@
     padding: 35px 20px;
   }
 
-  .formularioEditarPerfil {
+  .form-add-curso {
     width: 90%;
     max-width: 800px;
     padding: 22px;
+  }
+
+  .contenedor-contenidos {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .line-1,
+  .line-2 {
+    display: flex;
+    flex-direction: column;
   }
 
   .formulario-grupo input,
@@ -153,12 +199,11 @@
     min-height: auto;
   }
 
-  .formularioEditarPerfil {
-    width: 100%;
-    padding: 16px;
+  .form-add-curso {
+    width: 95%;
   }
 
-  .formularioEditarPerfil h3 {
+  .form-add-curso h3 {
     font-size: 18px;
     margin-bottom: 14px;
   }
@@ -208,7 +253,7 @@
     padding: 15px 10px;
   }
 
-  .formularioEditarPerfil {
+  .form-add-curso {
     padding: 12px;
   }
 
@@ -217,4 +262,3 @@
     margin-bottom: 10px;
   }
 }
-
