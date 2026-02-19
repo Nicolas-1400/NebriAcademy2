@@ -127,29 +127,14 @@ function HomeFeed() {
 
   /* Slider */
   const settingsSlider = {
-    dots: true,
-    infinite: false,
+    dots: false,
+    infinite: true,
     speed: 500,
     slidesToShow: 4,
     slidesToScroll: 1,
-    style: { width: "2484px !important" },
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 3,
-          slidesToScroll: 1,
-          style: { width: "2484px !important" },
-        },
-      },
-      {
-        breakpoint: 768,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-          style: { width: "1660px !important" },
-        },
-      },
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 2 } },
     ],
   };
 

@@ -77,7 +77,7 @@
 }
 
 .btn-delete-mode:hover {
-  transform: scale(1.1);
+  filter: drop-shadow(0 0 5px red);
 }
 
 .icon-delete-mode {
@@ -87,12 +87,9 @@
 }
 
 .icon-delete-mode.active {
-  filter: drop-shadow(0 0 5px red);
+  filter: drop-shadow(0 0 2px black);
 }
 
-.icon-delete-mode.inactive {
-  filter: drop-shadow(0 0 2px gray);
-}
 
 /* RESPONSIVE - Tablets (1024px) */
 @media (max-width: 1024px) {
