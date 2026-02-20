@@ -9,6 +9,7 @@
   min-height: calc(100vh - 250px);
   background-image: url("../assets/fondo-apuntes.png");
   background-position: center;
+  word-break: break-all;
 }
 
 /* BUSCADOR */

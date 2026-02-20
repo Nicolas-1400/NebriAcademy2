@@ -27,6 +27,7 @@
   align-items: baseline;
   gap: 10px;
   padding: 0 20px;
+  width: 250px;
   cursor: pointer;
 }
 
@@ -242,12 +243,6 @@
     padding: 10px;
     gap: 10px;
     position: relative;
-  }
-
-  .contenedor-logo-titulo {
-    flex: 1 0 100%;
-    order: 1;
-    padding: 0 10px;
   }
 
   .contenedor-logo-titulo h2 {

@@ -5,6 +5,8 @@ import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
+import "../styles/InfoProfesor.css"
+
 function InfoProfesorGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
@@ -49,8 +51,8 @@ function InfoProfesorGrid() {
   if (error) return <p className="error-msg">{error}</p>;
 
   return (
-    <div className="perfil">
-      <div className="formularioEditarPerfil">
+    <div className="profesor-contenedor-principal">
+      <div className="profesor-contenedor-cursos">
         <h3>Cursos</h3>
         {cursos.length > 0 ? (
           <div className="cursos-profesor">
@@ -69,12 +71,12 @@ function InfoProfesorGrid() {
           <p>Este profesor no tiene cursos publicados.</p>
         )}
 
-        <div className="botones-perfil">
+       
           <button className="boton-go-back" onClick={() => navigate(-1)}>
             <img src={flecha} alt="Volver" />
             <p>Volver</p>
           </button>
-        </div>
+        
       </div>
 
       <div className="datosPerfil">

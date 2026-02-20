@@ -52,7 +52,7 @@ function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
       className="tarjeta-curso-pequena"
       onClick={() => navigate(`/Home/Cursos/${cursoId}`)}
     >
-      <img src={imageSrc} alt="Imagen del curso" />
+      <img className="img-curso" src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
       <p className="p-nivel">Nivel: {nivel}</p>
       <p className="p-valoracion">

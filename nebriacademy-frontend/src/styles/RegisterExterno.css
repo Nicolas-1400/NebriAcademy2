@@ -251,6 +251,22 @@ option {
 }
 
 @media (max-width: 768px) {
+  .register-grid-externo {
+    background-image: url("../assets/FondoLogin_rotado.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+    padding: 18px;
+    align-items: center;
+  }
+
+  .formulario-register-contenedor {
+    width: 90%;
+    max-width: 420px;
+    padding: 22px;
+    margin: 0 auto;
+  }
+
   .register-precios {
     width: 90%;
     max-width: 420px;
@@ -259,9 +275,5 @@ option {
   }
   .precio {
     font-size: 22px;
-  }
-  .register-grid-externo {
-    padding: 18px;
-    align-items: center;
   }
 }

@@ -499,7 +499,6 @@
   align-items: center;
   justify-content: center;
   gap: 8px;
-  width: 5%;
 }
 
 .btn-corregir-ejercicio,
@@ -826,5 +825,10 @@
   .detalles-descripcion p,
   .detalles-comentarios p {
     font-size: 15px;
+  }
+}
+@media (max-width: 655px) {
+  .curso-grid {
+    word-break: break-word;
   }
 }

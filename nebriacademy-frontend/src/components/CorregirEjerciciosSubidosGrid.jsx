@@ -1,6 +1,7 @@
 import { useEffect, useState, useMemo } from "react";
-import { useParams } from "react-router-dom";
+import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
+import flecha from "../assets/flecha-correcta.png";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
 function CorregirEjerciciosSubidosGrid() {
@@ -10,6 +11,7 @@ function CorregirEjerciciosSubidosGrid() {
   const [alumnos, setAlumnos] = useState([]);
   const [puntuaciones, setPuntuaciones] = useState([]);
   const [inputScores, setInputScores] = useState({});
+  const navigate = useNavigate();
 
   // Efectos
   useEffect(() => {
@@ -149,9 +151,6 @@ function CorregirEjerciciosSubidosGrid() {
                   >
                     Guardar nota
                   </button>
-                  {/* <button className="btn-borrar-ejercicio" onClick={() => alert("Funcionalidad de borrado no implementada")}>
-                    Borrar ejercicio
-                  </button> */}
                 </div>
               </li>
             );
@@ -160,6 +159,10 @@ function CorregirEjerciciosSubidosGrid() {
       ) : (
         <p>No hay entregas para este ejercicio.</p>
       )}
+      <button className="boton-go-back" onClick={() => navigate(-1)}>
+        <img src={flecha} alt="Volver" />
+        <p>Volver</p>
+      </button>
     </div>
   );
 }

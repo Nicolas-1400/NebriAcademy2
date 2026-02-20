@@ -73,11 +73,13 @@ function TarjetaCursos({
           <img src={Eliminar} alt="X" />
         </button>
       )}
-      <img src={imageSrc} alt="Imagen del curso" />
+      <img className="img-curso" src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
+      <div className="p-datos">
       <p className="p-categoria">Categoría: {categoria}</p>
       <p className="p-nivel">Nivel: {nivel}</p>
       <p className="p-descripcion">{descripcion}</p>
+      </div>
       <p className="p-profesor">{profesor}</p>
       <p className="p-valoracion">
         <img src={Like} alt="Valoración" /> {valoracion}
