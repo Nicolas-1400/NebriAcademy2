@@ -1,3 +1,6 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const express = require("express");
 const router = express.Router();
 const path = require("path");
@@ -6,7 +9,10 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// Rutas de Obtención
+// ==========================================
+// 2. OBTENER DATOS (GET)
+// ==========================================
+// Usa findAll en la tabla Cursos y completa propiedades vacías de la petición.
 router.get("/", async (req, res) => {
   try {
     console.log("Petición recibida: GET /cursos");
@@ -80,7 +86,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Creación
+// ==========================================
+// 3. CREACIÓN (POST)
+// ==========================================
+// Inserta en modelo usando variables JSON y adjunta una tabla n:m a posterior.
 router.post("/add", async (req, res) => {
   try {
     const data = req.body || {};
@@ -118,7 +127,10 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// Rutas de Actualización
+// ==========================================
+// 4. ACTUALIZACIÓN (PUT)
+// ==========================================
+// Sobrescribe valores JSON a través del objeto extraído por params id.
 router.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -138,7 +150,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Eliminación
+// ==========================================
+// 5. ELIMINACIÓN MASIVA (DELETE CACHE & DB)
+// ==========================================
+// Aplica unlink en FS sobre bucles en tablas relacionadas, culminando en un rotundo destroy.
 router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -260,4 +275,8 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ==========================================
+// 6. EXPORTACIONES
+// ==========================================
+// Se exportan las rutas para que la aplicación las lea y las exponga al frontend.
 module.exports = router;

@@ -2,7 +2,10 @@ const express = require("express");
 const router = express.Router();
 const Administradores = require("../models/Administradores.js");
 
-// Rutas de Obtención
+// ==========================================
+// 1. Rutas de Obtención
+// ==========================================
+// Devuelve el grupo de registros usando findAll en formato de arreglo.
 router.get("/", async (req, res) => {
   try {
     const todos = await Administradores.findAll();
@@ -26,7 +29,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Creación
+// ==========================================
+// 2. Rutas de Creación
+// ==========================================
+// Llama a Administradores.create().
 router.post("/", async (req, res) => {
   try {
     const nuevo = await Administradores.create(req.body);
@@ -37,7 +43,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Rutas de Actualización
+// ==========================================
+// 3. Rutas de Actualización
+// ==========================================
+// Localiza el registro mediante findByPk y aplica actualización.
 router.put("/:id", async (req, res) => {
   try {
     const admin = await Administradores.findByPk(req.params.id);
@@ -51,7 +60,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Eliminación
+// ==========================================
+// 4. Rutas de Eliminación
+// ==========================================
+// Ejecuta la destrucción del registro pasando la id recibida.
 router.delete("/:id", async (req, res) => {
   try {
     const filas = await Administradores.destroy({

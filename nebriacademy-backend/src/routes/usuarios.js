@@ -1,3 +1,7 @@
+// ==========================================
+// ==========================================
+// 1. IMPORTACIONES Y HELPERS
+// ==========================================
 const express = require("express");
 const router = express.Router();
 const Usuarios = require("../models/Usuarios.js");
@@ -5,7 +9,7 @@ const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 const Administradores = require("../models/Administradores.js");
 
-// Helpers
+// Funcionalidad switch auxiliar que localiza esquemas por medio de string.
 const getModelByType = (tipo) => {
   switch (tipo) {
     case "alumno":
@@ -19,7 +23,10 @@ const getModelByType = (tipo) => {
   }
 };
 
-// Rutas de Obtención
+// ==========================================
+// 2. LECTURA (GET)
+// ==========================================
+// Lista de tablas base ejecutadas directamente desde findAll.
 router.get("/", async (req, res) => {
   try {
     const all = await Usuarios.findAll();
@@ -44,7 +51,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Creación
+// ==========================================
+// 3. CREACIÓN DIRECTA (POST)
+// ==========================================
+// Genera instancia insertando a través del create().
 router.post("/", async (req, res) => {
   try {
     const nuevo = await Usuarios.create(req.body);
@@ -54,7 +64,10 @@ router.post("/", async (req, res) => {
   }
 });
 
-// Rutas de Actualización
+// ==========================================
+// 4. ACTUALIZACIÓN GENÉRICA (PUT)
+// ==========================================
+// Utiliza destructuring para identificar base destino y dispara update.
 router.put("/:id", async (req, res) => {
   try {
     const { tipo } = req.body;
@@ -72,7 +85,10 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Eliminación
+// ==========================================
+// 5. ELIMINACIÓN (DELETE)
+// ==========================================
+// Suprime fila universal invocando method destroy localizándola por PK.
 router.delete("/:id", async (req, res) => {
   try {
     const u = await Usuarios.findByPk(req.params.id);
@@ -85,4 +101,7 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ==========================================
+// 6. EXPORTACIONES
+// ==========================================
 module.exports = router;

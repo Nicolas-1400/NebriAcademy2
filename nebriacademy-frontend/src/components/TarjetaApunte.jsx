@@ -1,6 +1,12 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
 function TarjetaApunte({
   apunte,
   usuario,
@@ -8,8 +14,14 @@ function TarjetaApunte({
   onToggleLike,
   autorNombre,
 }) {
+  // ==========================================
+  // 3. ESTADOS Y VARIABLES
+  // ==========================================
   const isLiked = likedIds.includes(apunte.id);
 
+  // ==========================================
+  // 4. RENDERIZADO
+  // ==========================================
   return (
     <div key={apunte.id} className="item-row">
       <div className="item-main">
@@ -29,7 +41,6 @@ function TarjetaApunte({
           <p>{apunte.categoria}</p>
         </div>
 
-        {/* Sección de Likes */}
         <div className="apunte-like">
           {onToggleLike && usuario?.id && (
             <>
@@ -48,4 +59,7 @@ function TarjetaApunte({
   );
 }
 
+// ==========================================
+// 5. EXPORTACIONES
+// ==========================================
 export default TarjetaApunte;

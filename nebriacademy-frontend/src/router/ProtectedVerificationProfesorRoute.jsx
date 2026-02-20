@@ -11,7 +11,9 @@ function ProtectedVerificationProfesorRoute({ children }) {
     return <Navigate to="/Register/VerificacionProfesor" replace />;
   }
 
-  // Renderizado
+  // ==========================================
+  // 1. Renderizado
+  // ==========================================
   return children;
 }
 

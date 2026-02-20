@@ -1,26 +1,50 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
+// EditarApunteIndividualGrid: Panel de actualización de propiedades para un apunte pre-existente.
+// Desacoplado de la estructura de cursos, pensado para apuntes genéricos subidos de forma comunitaria.
 function EditarApunteIndividualGrid() {
-  // Estados
+  // ==========================================
+  // 3. ESTADOS Y HOOKS
+  // ==========================================
   const { state } = useLocation();
   const navigate = useNavigate();
+  // El objeto Original es recibido como prop persistente en la matriz de historial (router state)
   const { apunte } = state || {};
 
+  // Formulario de edición basado flexiblemente en el objeto semilla
   const [nombre, setNombre] = useState(apunte?.nombre || "");
   const [descripcion, setDescripcion] = useState(apunte?.descripcion || "");
+
+  // Archivo de Reemplazo (Null por defecto a no ser que el usuario modifique también el adjunto)
   const [newFile, setNewFile] = useState(null);
+
+  // Indicadores funcionales y perceptuales
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Efectos
+  // ==========================================
+  // 4. EFECTOS
+  // ==========================================
+
+  // Seguridad: Evita renderizar un formulario vacío si accedieron sin pasar un apunte vía URL directa
   useEffect(() => {
     if (!apunte) {
       navigate("/Home/Apuntes");
     }
   }, [apunte, navigate]);
 
-  // Handlers
+  // ==========================================
+  // 5. MANEJADORES DE EVENTO
+  // ==========================================
+
+  // Serializa los campos en un JSON o un FormData (según corresponda) y los inyecta al endpoint PUT
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -29,6 +53,8 @@ function EditarApunteIndividualGrid() {
       const url = `http://localhost:3000/apuntes/${apunte.id}`;
 
       let respuesta;
+
+      // Si detecta un recambio físico del documento -> Inyección multipart form-data
       if (newFile) {
         const form = new FormData();
         form.append("nombre", nombre);
@@ -36,7 +62,9 @@ function EditarApunteIndividualGrid() {
         form.append("archivo", newFile);
 
         respuesta = await fetch(url, { method: "PUT", body: form });
-      } else {
+      }
+      // Si la carga útil atiende solamente a Texto -> Formato JSON ligero clásico
+      else {
         const body = { nombre, descripcion };
 
         respuesta = await fetch(url, {
@@ -51,21 +79,28 @@ function EditarApunteIndividualGrid() {
         throw new Error(datos.error || "Error actualizando apunte");
       }
 
+      // Conduce de vuelta al directorio de apuntes
       navigate("/Home/Apuntes");
     } catch (error) {
       console.error(error);
       setError(error.message || "Error al guardar cambios");
     } finally {
+      // Re-habilita el cursor tras culminar operaciones
       setLoading(false);
     }
   };
 
+  // ==========================================
+  // 6. RENDERIZADO AL DOM
+  // ==========================================
   if (!apunte) return <p>Cargando...</p>;
 
   return (
     <div className="editar-curso-container">
       <h2>Editar Apunte</h2>
+
       <div className="add-contenido-form">
+        {/* Helper visual que indica el fichero original alojado */}
         <p>
           <strong>Archivo actual:</strong>{" "}
           {apunte.archivo ? (
@@ -128,4 +163,7 @@ function EditarApunteIndividualGrid() {
   );
 }
 
+// ==========================================
+// 7. EXPORTACIONES MÓDULO
+// ==========================================
 export default EditarApunteIndividualGrid;

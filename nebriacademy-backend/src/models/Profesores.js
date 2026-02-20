@@ -1,6 +1,13 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ==========================================
+// 2. DEFINICIÓN DEL MODELO
+// ==========================================
+// Perfil detallado del docente. Guarda su especialización, biografía pública y medios de contacto (Redes).
 const Profesores = sequelize.define(
   "profesores",
   {
@@ -27,4 +34,7 @@ const Profesores = sequelize.define(
   { timestamps: false },
 );
 
+// ==========================================
+// 3. EXPORTACIONES
+// ==========================================
 module.exports = Profesores;

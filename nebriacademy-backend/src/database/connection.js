@@ -1,12 +1,21 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const { Sequelize } = require("sequelize");
 
-// Configuración de la Conexión
+// ==========================================
+// 2. CONFIGURACIÓN DEL ORM
+// ==========================================
+// Instanciación de Sequelize vinculada a la base de datos MySQL local "nebriacademy"
 const sequelize = new Sequelize("nebriacademy", "root", "", {
   host: "localhost",
   dialect: "mysql",
 });
 
-// Verificación de la Conexión
+// ==========================================
+// 3. PRUEBA DE CONECTIVIDAD
+// ==========================================
+// Intento asíncrono preliminar para asegurar que la BDD responde antes de empezar a servir
 sequelize
   .authenticate()
   .then(() => {

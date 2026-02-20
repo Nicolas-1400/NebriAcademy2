@@ -1,14 +1,31 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
+// VerificacionAlumnoNebrijaGrid: Primer paso en el flujo de registro institucional.
+// Solícita un correo y un código para validar que la persona pertenece efectivamente a la academia.
 function VerificacionAlumnoNebrijaGrid() {
-  // Estados
+  // ==========================================
+  // 3. ESTADOS Y HOOKS
+  // ==========================================
+  // Manejo estándar de credenciales de entrada
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
+
+  // Feedback visual para denegaciones de acceso o problemas de conexión
   const [error, setError] = useState("");
+
   const navigate = useNavigate();
 
-  // Handlers
+  // ==========================================
+  // 4. FUNCIONES Y HANDLERS
+  // ==========================================
+  // Proceso de confrontación de credenciales institucionales contra la base de datos
   const handleVerification = async (e) => {
     e.preventDefault();
     setError("");
@@ -26,6 +43,8 @@ function VerificacionAlumnoNebrijaGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
+        // En caso positivo, se emite un salvoconducto vía sessionStorage
+        // y se redirige a la fase 2 cargando el correo en la ruta (location.state)
         sessionStorage.setItem("verifiedStudentEmail", email);
         navigate("/Register/RegisterAlumnoNebrija", { state: { email } });
       } else {
@@ -37,6 +56,9 @@ function VerificacionAlumnoNebrijaGrid() {
     }
   };
 
+  // ==========================================
+  // 5. RENDERIZADO
+  // ==========================================
   return (
     <div className="login-grid">
       <div className="formulario-login-contenedor">
@@ -66,4 +88,7 @@ function VerificacionAlumnoNebrijaGrid() {
   );
 }
 
+// ==========================================
+// 6. EXPORTACIONES
+// ==========================================
 export default VerificacionAlumnoNebrijaGrid;

@@ -1,6 +1,13 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ==========================================
+// 2. DEFINICIÓN DEL MODELO
+// ==========================================
+// Relación de matrícula. Determina qué cuentas de estudiantes tienen derecho legal de visualización sobre un curso.
 const CursosAlumnos = sequelize.define(
   "cursosalumnos",
   {
@@ -13,4 +20,7 @@ const CursosAlumnos = sequelize.define(
   { timestamps: false },
 );
 
+// ==========================================
+// 3. EXPORTACIONES
+// ==========================================
 module.exports = CursosAlumnos;

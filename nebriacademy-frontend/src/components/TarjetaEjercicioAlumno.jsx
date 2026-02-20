@@ -1,5 +1,14 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
+
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
 function TarjetaEjercicioAlumno({ registro }) {
-  // Lógica
+  // ==========================================
+  // 3. ESTADOS Y HOOKS
+  // ==========================================
   const archivo = registro.archivo || registro.file || registro.archivoNombre;
   const nombre = registro.nombre || registro.archivoNombre || archivo;
   const descripcion = registro.descripcion || registro.descripcionAlumno;
@@ -12,6 +21,9 @@ function TarjetaEjercicioAlumno({ registro }) {
       ? `${registro.alumno.nombre} ${registro.alumno.apellidos}`
       : null);
 
+  // ==========================================
+  // 4. RENDERIZADO
+  // ==========================================
   return (
     <li key={registro.id} className="item-row">
       <div className="item-main">
@@ -33,4 +45,7 @@ function TarjetaEjercicioAlumno({ registro }) {
   );
 }
 
+// ==========================================
+// 5. EXPORTACIONES
+// ==========================================
 export default TarjetaEjercicioAlumno;
