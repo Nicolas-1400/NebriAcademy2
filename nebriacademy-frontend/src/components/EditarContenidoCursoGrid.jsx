@@ -1,29 +1,40 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario genérico para editar vídeos, apuntes o ejercicios de un curso.
+// El tipo de contenido y los datos actuales llegan en el state de navegación.
 function EditarContenidoCursoGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { tipo, item, cursoId } = state || {};
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Precargamos los campos con los valores actuales del contenido
   const [nombre, setNombre] = useState(item?.nombre || "");
   const [descripcion, setDescripcion] = useState(item?.descripcion || "");
+  // El archivo es opcional: si no se selecciona uno nuevo, se mantiene el actual
   const [newFile, setNewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Si llegamos sin datos del contenido, redirigimos al curso correspondiente
   useEffect(() => {
     if (!tipo || !item) {
       navigate(`/Home/Cursos/${cursoId || ""}`);
     }
   }, [tipo, item, navigate, cursoId]);
 
+  // Determina el endpoint de la API según el tipo de contenido que se está editando
   const getEndpoint = () => {
     if (tipo === "video") return "videos";
     if (tipo === "apunte") return "apuntes";
     return "ejercicios";
   };
 
+  // Envía los cambios al backend: con FormData si hay nuevo archivo, o con JSON si no
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -34,6 +45,7 @@ function EditarContenidoCursoGrid() {
 
       let respuesta;
       if (newFile) {
+        // Si se seleccionó un archivo nuevo, enviamos todo como FormData (multipart)
         const form = new FormData();
         form.append("nombre", nombre);
         if (tipo !== "video") form.append("descripcion", descripcion);
@@ -41,6 +53,7 @@ function EditarContenidoCursoGrid() {
 
         respuesta = await fetch(url, { method: "PUT", body: form });
       } else {
+        // Si no hay archivo nuevo, enviamos solo texto como JSON
         const body = { nombre };
         if (tipo !== "video") body.descripcion = descripcion;
 
@@ -71,6 +84,7 @@ function EditarContenidoCursoGrid() {
     <div className="editar-curso-container">
       <h2>Editar {tipo}</h2>
       <div className="add-contenido-form">
+        {/* Enlace al archivo actual para que el usuario pueda verlo antes de reemplazarlo */}
         <p>
           <strong>Archivo actual:</strong>{" "}
           {item.archivo ? (
@@ -95,6 +109,7 @@ function EditarContenidoCursoGrid() {
           />
         </div>
 
+        {/* El campo descripción no aplica a los vídeos */}
         {tipo !== "video" && (
           <div className="form-group">
             <label>Descripción</label>

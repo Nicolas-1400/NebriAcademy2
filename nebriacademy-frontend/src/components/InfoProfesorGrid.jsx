@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
@@ -7,14 +8,19 @@ import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
 import "../styles/InfoProfesor.css";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de detalle de un profesor: muestra sus datos personales y los cursos que imparte
 function InfoProfesorGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [profesor, setProfesor] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Cuando el ID del profesor (de la URL) esté disponible, cargamos sus datos y todos los cursos en paralelo
   useEffect(() => {
     if (!id) return;
 
@@ -34,6 +40,7 @@ function InfoProfesorGrid() {
         const listaCursos = Array.isArray(respuestaCursos.Cursos)
           ? respuestaCursos.Cursos
           : respuestaCursos || [];
+        // Filtramos del listado total solo los cursos que pertenecen a este profesor
         setCursos(
           listaCursos.filter((curso) => String(curso.profesor) === String(id)),
         );
@@ -50,6 +57,7 @@ function InfoProfesorGrid() {
 
   return (
     <div className="profesor-contenedor-principal">
+      {/* Lista de cursos del profesor */}
       <div className="profesor-contenedor-cursos">
         <h3>Cursos</h3>
         {cursos.length > 0 ? (
@@ -75,6 +83,7 @@ function InfoProfesorGrid() {
         </button>
       </div>
 
+      {/* Datos personales del profesor: foto, nombre, email, especialización, país y localidad */}
       <div className="datosPerfil">
         <h1>Profesor</h1>
         <img

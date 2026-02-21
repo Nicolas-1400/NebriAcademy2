@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Hom1 from "../assets/perfiles/hombre-1.png";
 import Hom2 from "../assets/perfiles/hombre-2.png";
 import Hom3 from "../assets/perfiles/hombre-3.png";
@@ -31,6 +32,9 @@ import Muj14 from "../assets/perfiles/mujer-14.png";
 import Muj15 from "../assets/perfiles/mujer-15.png";
 import Muj16 from "../assets/perfiles/mujer-16.png";
 
+// ── CONSTANTES ─────────────────────────────────────────────────────────────
+// Mapa exportado de nombre de archivo → imagen importada.
+// Se usa en toda la app (Nav, PerfilProfesor, TarjetaProfesores, InfoProfesor...) para resolver la imagen de perfil.
 export const PERFILES = {
   "hombre-1": Hom1,
   "hombre-2": Hom2,
@@ -66,7 +70,10 @@ export const PERFILES = {
   "mujer-16": Muj16,
 };
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Componente que muestra la galería de avatares de perfil para que el usuario elija el suyo
 function TarjetaImagenPerfil({ imagenSeleccionada, onSelect }) {
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="grid-imagenes-perfil">
       {Object.entries(PERFILES).map(([nombreArchivo, src]) => (
@@ -74,6 +81,7 @@ function TarjetaImagenPerfil({ imagenSeleccionada, onSelect }) {
           key={nombreArchivo}
           src={src}
           alt={nombreArchivo}
+          // La imagen actualmente seleccionada recibe la clase "seleccionada" para resaltarse visualmente
           className={`imagen-opcion ${imagenSeleccionada === nombreArchivo ? "seleccionada" : ""}`}
           onClick={() => onSelect(nombreArchivo)}
         />

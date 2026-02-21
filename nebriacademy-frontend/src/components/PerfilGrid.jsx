@@ -1,13 +1,18 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Perfil del alumno: muestra sus datos y permite editarlos
 function PerfilGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado del formulario de edición
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -23,6 +28,8 @@ function PerfilGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos los datos más recientes del alumno desde la API y los precargamos en el formulario
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
@@ -30,6 +37,7 @@ function PerfilGrid() {
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
         const datosIniciales = datos || user;
+        // Actualizamos también el store global para que el Nav muestre datos frescos
         if (datos) setUser(datos, "alumno");
 
         setFormData({
@@ -46,11 +54,14 @@ function PerfilGrid() {
       .catch((error) => console.error("Error cargando perfil:", error));
   }, [user?.id, tipo, setUser]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Actualiza el campo correspondiente del formulario cuando el usuario escribe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Envía los cambios al backend. Si la contraseña está vacía, no se incluye en el payload.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");
@@ -75,6 +86,7 @@ function PerfilGrid() {
         setUser(usuarioActualizado, "alumno");
         setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
+        // El mensaje de éxito desaparece solo tras 3 segundos
         setTimeout(() => setMensajeExito(""), 3000);
       } else {
         const errorDatos = await respuesta.json();
@@ -91,6 +103,7 @@ function PerfilGrid() {
 
   return (
     <div className="perfil">
+      {/* Panel izquierdo: datos de solo lectura del alumno */}
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
@@ -105,6 +118,7 @@ function PerfilGrid() {
         )}
       </div>
 
+      {/* Panel derecho: formulario para editar los datos del perfil */}
       <div className="formularioEditarPerfil">
         <h3>Editar Perfil</h3>
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}

@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -6,10 +7,14 @@ import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
 import TarjetaImagenPerfil, { PERFILES } from "./TarjetaImagenPerfil";
 import "../styles/TarjetaImagenPerfil.css";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Perfil del profesor: muestra sus datos y permite editarlos, incluyendo la imagen de avatar
 function PerfilProfesorGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado del formulario de edición
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -27,6 +32,8 @@ function PerfilProfesorGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos los datos más recientes del profesor desde la API y los precargamos en el formulario
   useEffect(() => {
     if (!user || tipo !== "profesor") return;
 
@@ -34,6 +41,7 @@ function PerfilProfesorGrid() {
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
         const datosIniciales = datos || user;
+        // Actualizamos también el store global para que el Nav muestre datos frescos
         if (datos) setUser(datos, "profesor");
 
         setFormData({
@@ -54,15 +62,19 @@ function PerfilProfesorGrid() {
       );
   }, [user?.id, tipo, setUser]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Actualiza el campo correspondiente del formulario cuando el usuario escribe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Actualiza la imagen de perfil seleccionada en el formulario
   const handleImageSelect = (nombreImagen) => {
     setFormData((prev) => ({ ...prev, imagenPerfil: nombreImagen }));
   };
 
+  // Envía los cambios al backend. Si la contraseña está vacía, no se incluye en el payload.
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");
@@ -87,20 +99,23 @@ function PerfilProfesorGrid() {
         setUser(usuarioActualizado, "profesor");
         setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
+        // El mensaje de éxito desaparece solo tras 3 segundos
         setTimeout(() => setMensajeExito(""), 3000);
       } else {
         const datosError = await respuesta.json();
         throw new Error(datosError.error || "Error al actualizar perfil");
       }
     } catch (error) {
-      setMensajeError(e.message || "Error de conexión");
+      setMensajeError(error.message || "Error de conexión");
     } finally {
       setLoading(false);
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (!user) return <p>Cargando perfil...</p>;
 
+  // Determinamos qué imagen mostrar en el panel izquierdo
   const imagenMostrar =
     formData.imagenPerfil && PERFILES[formData.imagenPerfil]
       ? PERFILES[formData.imagenPerfil]
@@ -108,6 +123,7 @@ function PerfilProfesorGrid() {
 
   return (
     <div className="perfil">
+      {/* Panel izquierdo: datos de solo lectura del profesor */}
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img
@@ -128,12 +144,14 @@ function PerfilProfesorGrid() {
         )}
       </div>
 
+      {/* Panel derecho: formulario para editar los datos del perfil del profesor */}
       <div className="formularioEditarPerfil">
         <h3>Editar Perfil</h3>
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
 
         <form onSubmit={handleSubmit} className="formulario-profesor">
+          {/* Sección superior: galería de avatares a la izquierda y datos personales a la derecha */}
           <div className="seccion-superior-form">
             <div className="columna-imagen">
               <label className="label-seccion">Imagen de Perfil:</label>

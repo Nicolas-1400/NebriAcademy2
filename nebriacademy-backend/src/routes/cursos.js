@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const path = require("path");
@@ -6,40 +7,14 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /cursos — Devuelve todos los cursos registrados.
+// La imagen de cada curso se resuelve en el frontend (TarjetaCursos.jsx) usando el nombre guardado en BD o el ID del curso como fallback.
 router.get("/", async (req, res) => {
   try {
     console.log("Petición recibida: GET /cursos");
 
     const resultado = await Cursos.findAll();
-
-    const map = [
-      "Foto10",
-      "Foto1",
-      "Foto2",
-      "Foto3",
-      "Foto4",
-      "Foto5",
-      "Foto6",
-      "Foto7",
-      "Foto8",
-      "Foto9",
-    ];
-
-    for (const curso of resultado) {
-      if (!curso.imagen || curso.imagen.trim() === "") {
-        const index = curso.id % 10;
-        const imageName = map[index];
-        try {
-          await Cursos.update(
-            { imagen: imageName },
-            { where: { id: curso.id } },
-          );
-          curso.imagen = imageName;
-        } catch (e) {
-          console.error(`Backfill error for curso ${curso.id}: ${e.message}`);
-        }
-      }
-    }
 
     res.json({
       "Numero de cursos": resultado.length,
@@ -51,6 +26,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /cursos/categorias — Devuelve los valores válidos del campo categoria (los definidos en el ENUM)
 router.get("/categorias", (req, res) => {
   try {
     const categ = Cursos.getAttributes().categoria.values;
@@ -61,6 +37,7 @@ router.get("/categorias", (req, res) => {
   }
 });
 
+// GET /cursos/:id — Devuelve un curso concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -79,6 +56,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /cursos/add — Crea un nuevo curso.
+// Acepta el profesor por su ID directo o por su usuarioId, y crea también el vínculo en la tabla ProfesoresCursos.
 router.post("/add", async (req, res) => {
   try {
     const data = req.body || {};
@@ -86,10 +66,12 @@ router.post("/add", async (req, res) => {
     let profesorDbId = null;
 
     if (profesorInput) {
+      // Intentamos encontrar al profesor por su ID de la tabla profesores
       const porId = await Profesores.findByPk(profesorInput);
       if (porId) {
         profesorDbId = porId.id;
       } else {
+        // Si no lo encontramos por ID, lo buscamos por su usuarioId
         const porUsuario = await Profesores.findOne({
           where: { usuarioId: profesorInput },
         });
@@ -97,9 +79,11 @@ router.post("/add", async (req, res) => {
       }
     }
 
+    // Creamos el curso con valoracion inicial 0
     const cursoData = { valoracion: 0, ...data, profesor: profesorDbId };
     const nuevo = await Cursos.create(cursoData);
 
+    // Registramos también la relación entre el profesor y el curso en la tabla intermedia
     if (profesorDbId) {
       await ProfesoresCursos.create({
         profesorId: profesorDbId,
@@ -116,6 +100,8 @@ router.post("/add", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /cursos/:id — Actualiza los datos de un curso con los campos que vengan en el body
 router.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -135,6 +121,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /cursos/:id — Elimina un curso completo junto con todo su contenido asociado (borrado en cascada manual)
 router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -146,6 +134,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
+    // Borramos los vídeos del curso: primero el archivo físico y luego el registro en BD
     const videos = await require("../models/Videos.js").findAll({
       where: { curso: id },
     });
@@ -165,6 +154,7 @@ router.delete("/:id", async (req, res) => {
       await v.destroy();
     }
 
+    // Borramos los apuntes del curso: primero el archivo físico y luego el registro en BD
     const apuntes = await require("../models/Apuntes.js").findAll({
       where: { curso: id },
     });
@@ -184,10 +174,12 @@ router.delete("/:id", async (req, res) => {
       await a.destroy();
     }
 
+    // Borramos los ejercicios del curso y también las entregas y puntuaciones de cada uno
     const ejercicios = await require("../models/Ejercicios.js").findAll({
       where: { curso: id },
     });
     for (const e of ejercicios) {
+      // Para cada ejercicio, borramos las entregas de los alumnos
       const entregas = await require("../models/EjerciciosAlumnos.js").findAll({
         where: { ejercicioId: e.id },
       });
@@ -207,6 +199,7 @@ router.delete("/:id", async (req, res) => {
         await ent.destroy();
       }
 
+      // Borramos también las puntuaciones que el profesor haya puesto a ese ejercicio
       await require("../models/PuntuacionesEjercicios.js").destroy({
         where: { ejercicioId: e.id },
       });
@@ -226,6 +219,7 @@ router.delete("/:id", async (req, res) => {
       await e.destroy();
     }
 
+    // Borramos los comentarios y las relaciones alumno-curso asociadas a este curso
     await require("../models/ComentatioAlumnoCurso.js").destroy({
       where: { cursoId: id },
     });
@@ -237,6 +231,7 @@ router.delete("/:id", async (req, res) => {
       where: { cursoId: id },
     });
 
+    // Finalmente eliminamos el propio curso
     await curso.destroy();
 
     res.json({ mensaje: "Curso y todo su contenido eliminado correctamente" });
@@ -246,4 +241,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

@@ -1,8 +1,13 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Listado de todos los cursos con filtros por categoría, nivel y buscador de texto
 function TodosCursosGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Leemos la categoría preseleccionada si venimos del HomeFeed pulsando una categoría
   const { state } = useLocation();
   const [data, setData] = useState({
     cursos: [],
@@ -11,6 +16,7 @@ function TodosCursosGrid() {
   });
   const [error, setError] = useState(null);
 
+  // Estado de los filtros: categoría, nivel y buscador de texto
   const [filters, setFilters] = useState({
     category: state?.selectedCategory || "",
     level: "",
@@ -19,6 +25,8 @@ function TodosCursosGrid() {
 
   const NIVELES = ["Básico", "Intermedio", "Avanzado"];
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos cursos, profesores y categorías en paralelo
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -48,13 +56,16 @@ function TodosCursosGrid() {
     cargarDatos();
   }, []);
 
+  // Busca el nombre del profesor a partir del ID del curso para mostrarlo en la tarjeta
   const getProfesorName = (pid) => {
     const p = data.profesores.find((prof) => prof.id === pid);
     return p ? `Profesor: ${p.nombre} ${p.apellidos}` : "Profesor: Desconocido";
   };
 
+  // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
 
+  // Lista de cursos filtrada según los criterios activos; se recalcula solo cuando cambien datos o filtros
   const filteredCursos = useMemo(() => {
     return data.cursos.filter((c) => {
       if (filters.category && c.categoria !== filters.category) return false;
@@ -81,6 +92,7 @@ function TodosCursosGrid() {
 
   return (
     <div className="todos-cursos-grid">
+      {/* Sidebar lateral con buscador y filtros de categoría y nivel */}
       <aside className="buscador-sidebar">
         <form
           className="formulario-busqueda"
@@ -151,6 +163,7 @@ function TodosCursosGrid() {
         </div>
       </aside>
 
+      {/* Grid principal con las tarjetas de los cursos filtrados */}
       <main className="cursos-contenedor">
         <h2>Cursos</h2>
         <div className="cursos-grid">

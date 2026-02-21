@@ -1,12 +1,15 @@
+// Importamos las dependencias principales del servidor
 const express = require("express");
 const cors = require("cors");
 const app = express();
 const path = require("path");
 const fs = require("fs");
 
+// cors permite peticiones desde el frontend (distinto puerto), express.json() procesa cuerpos JSON
 app.use(cors());
 app.use(express.json());
 
+// Ruta base donde se guardan físicamente los archivos subidos (apuntes, vídeos, ejercicios...)
 const assetsRoot = path.join(
   __dirname,
   "..",
@@ -17,6 +20,7 @@ const assetsRoot = path.join(
 );
 const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos"];
 
+// Al arrancar el servidor, se crean las carpetas de assets si aún no existen
 try {
   if (!fs.existsSync(assetsRoot)) fs.mkdirSync(assetsRoot, { recursive: true });
   for (const d of assetsDirs) {
@@ -27,6 +31,7 @@ try {
   console.error("Error creando carpetas de assets:", e);
 }
 
+// Exponemos cada carpeta de assets como una URL pública para que el frontend pueda descargar los archivos
 app.use("/apuntes/files", express.static(path.join(assetsRoot, "Apuntes")));
 app.use("/videos/files", express.static(path.join(assetsRoot, "Videos")));
 app.use(
@@ -38,6 +43,7 @@ app.use(
   express.static(path.join(assetsRoot, "EjerciciosAlumnos")),
 );
 
+// Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL
 app.use("/", require("./routes/index"));
 app.use("/alumnos", require("./routes/alumnos"));
 app.use("/apuntes", require("./routes/apuntes"));
@@ -54,6 +60,7 @@ app.use("/usuarios", require("./routes/usuarios"));
 app.use("/login", require("./database/login"));
 app.use("/videos", require("./routes/videos"));
 
+// Middleware global de errores: si cualquier ruta falla de forma inesperada, devuelve un 500 en lugar de romper el servidor
 app.use((err, req, res, next) => {
   console.error("Unhandled error:", err && err.stack ? err.stack : err);
   res.status(500).json({
@@ -61,6 +68,7 @@ app.use((err, req, res, next) => {
   });
 });
 
+// Arrancamos el servidor en el puerto 3000
 app.listen(3000, () =>
   console.log("Servidor ejecutándose en http://localhost:3000"),
 );

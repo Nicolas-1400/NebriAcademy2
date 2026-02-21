@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -7,10 +8,14 @@ const fs = require("fs");
 const Videos = require("../models/Videos.js");
 const Profesores = require("../models/Profesores.js");
 
+// ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
+// Carpeta donde se guardan físicamente los archivos de vídeo subidos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Videos",
 );
+
+// Configuramos multer para guardar el archivo en uploadDir conservando el nombre original
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
@@ -18,6 +23,8 @@ const upload = multer({
   }),
 });
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /videos — Devuelve todos los vídeos registrados
 router.get("/", async (req, res) => {
   try {
     const all = await Videos.findAll();
@@ -27,6 +34,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /videos/:id — Devuelve un vídeo concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
@@ -36,6 +44,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /videos — Sube un nuevo vídeo. Solo los profesores pueden hacerlo.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -46,6 +56,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 
     let profesorId = null;
 
+    // Solo aceptamos subidas de vídeo si el usuario es un profesor válido
     if (tipo === "profesor") {
       const p = await Profesores.findByPk(profileId);
       if (p) profesorId = p.id;
@@ -56,6 +67,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
+    // Creamos el registro del vídeo en BD con el archivo ya guardado en disco
     const nuevo = await Videos.create({
       autor: profesorId,
       curso,
@@ -71,6 +83,8 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /videos/:id — Actualiza los datos de un vídeo. Si se adjunta archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
@@ -86,11 +100,14 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /videos/:id — Elimina el vídeo de la BD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);
     if (!v) return res.status(404).json({ error: "No encontrado" });
 
+    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
     if (v.archivo) {
       const p = path.join(uploadDir, v.archivo);
       fs.promises.unlink(p).catch(() => {});
@@ -103,4 +120,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

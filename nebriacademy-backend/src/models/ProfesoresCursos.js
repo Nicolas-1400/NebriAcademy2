@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Tabla intermedia que vincula a cada profesor con los cursos que imparte
 const ProfesoresCursos = sequelize.define(
   "profesorescursos",
   {
@@ -10,4 +14,5 @@ const ProfesoresCursos = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = ProfesoresCursos;

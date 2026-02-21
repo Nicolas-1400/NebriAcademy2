@@ -1,9 +1,12 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
+// ── FUNCIONES AUXILIARES ─────────────────────────────────────────────────────
+// Función auxiliar que devuelve el modelo correcto según el tipo de usuario recibido
 const getModelByType = (tipo) => {
   switch (tipo) {
     case "alumno":
@@ -15,6 +18,8 @@ const getModelByType = (tipo) => {
   }
 };
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /usuarios — Devuelve todos los registros de la tabla usuarios
 router.get("/", async (req, res) => {
   try {
     const all = await Usuarios.findAll();
@@ -24,6 +29,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /usuarios/:id — Devuelve un usuario concreto. Requiere el query param "tipo" para saber en qué tabla buscar
 router.get("/:id", async (req, res) => {
   try {
     const { tipo } = req.query;
@@ -39,6 +45,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /usuarios — Crea un nuevo registro en la tabla base de usuarios
 router.post("/", async (req, res) => {
   try {
     const nuevo = await Usuarios.create(req.body);
@@ -48,6 +56,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /usuarios/:id — Actualiza los datos de un usuario. El tipo en el body determina en qué tabla buscar
 router.put("/:id", async (req, res) => {
   try {
     const { tipo } = req.body;
@@ -65,6 +75,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /usuarios/:id — Elimina el registro de la tabla usuarios
 router.delete("/:id", async (req, res) => {
   try {
     const u = await Usuarios.findByPk(req.params.id);
@@ -77,4 +89,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState, useRef, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
@@ -6,8 +7,13 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Espacio personal del alumno: muestra cursos en progreso, favoritos y apuntes propios y guardados
 function MiEspacioGrid() {
   const { user } = useAuthStore();
+
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Datos principales cargados de la API
   const [data, setData] = useState({
     cursos: [],
     cursosAlumnos: [],
@@ -15,10 +21,12 @@ function MiEspacioGrid() {
     alumnos: [],
     profesores: [],
   });
+  // IDs de apuntes a los que el usuario ha dado like
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
+  // Referencias a cada slider para controlarlos con los botones de flecha
   const sliders = {
     proceso: useRef(null),
     favCursos: useRef(null),
@@ -26,6 +34,8 @@ function MiEspacioGrid() {
     favApuntes: useRef(null),
   };
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos todos los datos necesarios en paralelo
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -71,6 +81,7 @@ function MiEspacioGrid() {
     cargarDatos();
   }, []);
 
+  // Cargamos los likes del alumno cuando el usuario esté disponible
   useEffect(() => {
     if (!user) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
@@ -79,6 +90,8 @@ function MiEspacioGrid() {
       .catch(console.error);
   }, [user]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Cursos en los que el alumno está apuntado, ordenados por valoración
   const cursosEnProceso = useMemo(() => {
     if (!user) return [];
     return data.cursosAlumnos
@@ -88,6 +101,7 @@ function MiEspacioGrid() {
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   }, [data, user]);
 
+  // Cursos que el alumno ha marcado como favorito
   const cursosFavoritos = useMemo(() => {
     if (!user) return [];
     return data.cursosAlumnos
@@ -97,6 +111,7 @@ function MiEspacioGrid() {
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   }, [data, user]);
 
+  // Apuntes cuyo autor es el alumno logueado (comparamos por usuarioId)
   const misApuntes = useMemo(() => {
     if (!user) return [];
     return data.apuntes.filter(
@@ -104,11 +119,13 @@ function MiEspacioGrid() {
     );
   }, [data, user]);
 
+  // Apuntes a los que el alumno ha dado like
   const apuntesFavoritos = useMemo(() => {
     if (!user) return [];
     return data.apuntes.filter((a) => likedApuntes.includes(a.id));
   }, [data, user, likedApuntes]);
 
+  // Resuelve el nombre del autor de un apunte buscando primero entre alumnos y luego entre profesores
   const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
     if (!aid) return "";
@@ -123,6 +140,7 @@ function MiEspacioGrid() {
     return "Anónimo";
   };
 
+  // Alterna el like de un apunte: actualiza el backend y luego el estado local
   const handleToggleLike = async (apunte) => {
     if (!user) return;
     try {
@@ -138,9 +156,11 @@ function MiEspacioGrid() {
       const d = await res.json();
       if (res.ok) {
         const isLike = d.registro?.valoracion === true;
+        // Actualizamos la lista local de apuntes con like
         setLikedApuntes((prev) =>
           isLike ? [...prev, apunte.id] : prev.filter((id) => id !== apunte.id),
         );
+        // Actualizamos el contador de likes visible en la tarjeta
         const newVal = d.apunte?.valoracion;
         setData((D) => ({
           ...D,
@@ -154,11 +174,13 @@ function MiEspacioGrid() {
     }
   };
 
+  // Mueve el slider indicado hacia la izquierda o derecha
   const slide = (ref, dir) => {
     if (ref.current)
       dir === "left" ? ref.current.slickPrev() : ref.current.slickNext();
   };
 
+  // Cuando los datos terminan de cargar, reiniciamos los sliders al primer elemento
   useEffect(() => {
     if (!loading) {
       setTimeout(
@@ -181,6 +203,7 @@ function MiEspacioGrid() {
       </div>
     );
 
+  // Configuración del carrusel: 4 elementos visibles por defecto, menos en pantallas pequeñas
   const sliderSettings = {
     dots: false,
     infinite: false,
@@ -193,6 +216,8 @@ function MiEspacioGrid() {
     ],
   };
 
+  // Renderiza una sección genérica con título, carrusel y botones de navegación.
+  // Si son cursos muestra TarjetaCursoPequena; si son apuntes, TarjetaApunte.
   const renderSection = (title, items, sliderRef, type) => (
     <div className={`MiEspacio-seccion-${type}`}>
       <h2>{title}</h2>

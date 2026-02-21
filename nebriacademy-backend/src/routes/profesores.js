@@ -1,8 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /profesores — Devuelve todos los profesores registrados
 router.get("/", async (req, res) => {
   try {
     const data = await Profesores.findAll();
@@ -12,6 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /profesores/especializaciones — Devuelve los valores válidos del campo especializacion (los definidos en el ENUM)
 router.get("/especializaciones", (req, res) => {
   try {
     const categ = Profesores.getAttributes().especializacion?.values || [];
@@ -21,6 +25,7 @@ router.get("/especializaciones", (req, res) => {
   }
 });
 
+// GET /profesores/:id — Devuelve un profesor concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -30,6 +35,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /profesores/:id — Actualiza los datos del profesor con los campos que vengan en el body
 router.put("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -42,6 +49,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /profesores/:id — Elimina el registro del profesor de la base de datos
 router.delete("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -54,22 +63,28 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /profesores/verificacionprofesor/auth — Primera fase del registro para profesores.
+// Comprueba que el email existe y que la contraseña temporal es correcta.
 router.post("/verificacionprofesor/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 
   try {
+    // Buscamos la cuenta del profesor por email
     const profesor = await Profesores.findOne({ where: { email } });
 
     if (!profesor) {
       return res.status(404).json({ error: "Email no encontrado" });
     }
 
+    // Si ya tiene nombre y apellidos, la cuenta fue completada anteriormente
     if (profesor.nombre || profesor.apellidos) {
       return res
         .status(400)
         .json({ error: "Esta cuenta ya ha sido registrada" });
     }
 
+    // Verificamos que la contraseña temporal coincide con la almacenada
     if (profesor.contrasena !== contrasena) {
       return res
         .status(401)
@@ -83,6 +98,7 @@ router.post("/verificacionprofesor/auth", async (req, res) => {
   }
 });
 
+// POST /profesores/verificacionprofesor/completar — Segunda fase: rellena los datos personales del profesor
 router.post("/verificacionprofesor/completar", async (req, res) => {
   try {
     const {
@@ -97,6 +113,7 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
       especializacion,
     } = req.body;
 
+    // Comprobamos que todos los campos obligatorios están presentes
     if (
       !nombre ||
       !apellidos ||
@@ -116,10 +133,12 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
       return res.status(404).json({ error: "Cuenta no encontrada" });
     }
 
+    // Si ya tiene datos personales, la cuenta ya fue completada anteriormente
     if (profesor.nombre || profesor.apellidos) {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
+    // Actualizamos el registro del profesor con los datos del formulario
     await profesor.update({
       nombre,
       apellidos,
@@ -145,4 +164,5 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

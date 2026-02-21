@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Tarjeta que muestra un vídeo dentro de la vista de un curso.
+// Si el usuario es profesor y está en modo edición, muestra botones de editar y borrar.
 function TarjetaVideoCurso({
   video,
   tipo,
@@ -8,13 +12,16 @@ function TarjetaVideoCurso({
   handleEditNavigate,
   handleDeleteContenido,
 }) {
+  // Los botones de edición solo son visibles si el usuario es profesor y el modo edición está activo
   const isProfesorEdit = tipo === "profesor" && editingMode;
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div key={video.id} className="video-item">
       <div>
         <h5>{video.nombre}</h5>
 
+        {/* Controles de edición: solo visibles para el profesor en modo edición */}
         {isProfesorEdit && (
           <div className="edit-controls">
             <button
@@ -33,6 +40,7 @@ function TarjetaVideoCurso({
         )}
       </div>
 
+      {/* Elemento de vídeo nativo del navegador que carga el archivo desde el servidor */}
       <video controls>
         <source
           src={`http://localhost:3000/videos/files/${video.archivo}`}

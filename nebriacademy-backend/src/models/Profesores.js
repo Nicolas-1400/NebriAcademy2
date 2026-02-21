@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Definimos el modelo "profesores". Además de los campos comunes, tiene especializacion (ENUM con valores fijos) e imagenPerfil
 const Profesores = sequelize.define(
   "profesores",
   {
@@ -15,6 +19,7 @@ const Profesores = sequelize.define(
     redes: DataTypes.TEXT,
     pais: DataTypes.STRING,
     localidad: DataTypes.STRING,
+    // ENUM: solo acepta uno de estos valores concretos
     especializacion: DataTypes.ENUM(
       "Programación",
       "Diseño",
@@ -27,4 +32,5 @@ const Profesores = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = Profesores;

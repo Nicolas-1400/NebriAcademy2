@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
 import Foto3 from "../assets/ImagenesCursos/Foto3.jpg";
@@ -10,6 +11,8 @@ import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import "../styles/TarjetaFondos.css";
 
+// ── CONSTANTES ─────────────────────────────────────────────────────────────
+// Mapa de nombre → objeto de imagen importado por Vite
 const IMAGES = {
   Foto1,
   Foto2,
@@ -23,6 +26,8 @@ const IMAGES = {
   Foto10,
 };
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Componente que muestra una galería de imágenes de fondo para que el usuarios elija la portada del curso
 function TarjetaFondos({ selectedImage, onSelect }) {
   const imageKeys = [
     "Foto1",
@@ -37,6 +42,7 @@ function TarjetaFondos({ selectedImage, onSelect }) {
     "Foto10",
   ];
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="tarjeta-fondos-container">
       <h4>Selecciona una imagen de fondo</h4>
@@ -44,6 +50,7 @@ function TarjetaFondos({ selectedImage, onSelect }) {
         {imageKeys.map((key) => (
           <div
             key={key}
+            // La imagen seleccionada recibe la clase "selected" para resaltarse visualmente
             className={`fondo-item ${selectedImage === key ? "selected" : ""}`}
             onClick={() => onSelect(key)}
           >

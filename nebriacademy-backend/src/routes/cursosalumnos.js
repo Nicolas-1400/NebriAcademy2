@@ -1,8 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const CursosAlumnos = require("../models/CursosAlumnos.js");
 const Cursos = require("../models/Cursos.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /cursosalumnos — Devuelve todos los registros de la relación alumno-curso
 router.get("/", async (req, res) => {
   try {
     const data = await CursosAlumnos.findAll();
@@ -12,6 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /cursosalumnos/registro — Busca el registro concreto de un alumno en un curso (por query params)
 router.get("/registro", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.query;
@@ -24,6 +28,7 @@ router.get("/registro", async (req, res) => {
   }
 });
 
+// GET /cursosalumnos/:id — Devuelve un registro concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const r = await CursosAlumnos.findByPk(req.params.id);
@@ -33,6 +38,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /cursosalumnos/vote — Gestiona el voto (like/dislike) de un alumno sobre un curso.
+// Si el alumno vota lo mismo que ya tenía, se deshace el voto. Si cambia de voto, el delta es doble.
 router.post("/vote", async (req, res) => {
   try {
     const { cursoId, alumnoId, vote } = req.body;
@@ -40,6 +48,7 @@ router.post("/vote", async (req, res) => {
       return res.status(400).json({ error: "Datos inválidos" });
     }
 
+    // Si no existe registro para este alumno y curso, lo creamos con valores por defecto
     const [registro] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: {
@@ -55,20 +64,26 @@ router.post("/vote", async (req, res) => {
     let delta = 0;
     let nuevoEstado = vote;
 
+    // Calculamos cuánto cambia la valoración del curso según el estado anterior del voto
     if (actual === vote) {
+      // El alumno vota igual que antes: se cancela el voto
       nuevoEstado = null;
       delta = -intVote;
     } else if (actual === null || actual === undefined) {
+      // No tenía voto previo: sumamos o restamos 1
       delta = intVote;
     } else {
+      // Tenía voto contrario: el cambio vale doble (ej: de -1 a +1 son 2 puntos)
       delta = intVote * 2;
     }
 
     const curso = await Cursos.findByPk(cursoId);
     if (!curso) return res.status(404).json({ error: "Curso no encontrado" });
 
+    // Actualizamos la valoración total del curso
     await curso.increment("valoracion", { by: delta });
 
+    // Guardamos el nuevo estado del voto del alumno
     await registro.update({ valoracion: nuevoEstado });
 
     res.json({
@@ -81,17 +96,20 @@ router.post("/vote", async (req, res) => {
   }
 });
 
+// POST /cursosalumnos/toggle-fav — Añade o quita un curso de favoritos para el alumno
 router.post("/toggle-fav", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
     if (!cursoId || !alumnoId)
       return res.status(400).json({ error: "Faltan datos" });
 
+    // Si no existe el registro aún, lo creamos directamente con favorito: true
     const [registro] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: { favorito: true },
     });
 
+    // Si ya existía, invertimos el estado actual del favorito
     if (!registro.isNewRecord)
       await registro.update({ favorito: !registro.favorito });
 
@@ -101,17 +119,20 @@ router.post("/toggle-fav", async (req, res) => {
   }
 });
 
+// POST /cursosalumnos/toggle-apuntado — Inscribe o desinscribe a un alumno en un curso
 router.post("/toggle-apuntado", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.body;
     if (!cursoId || !alumnoId)
       return res.status(400).json({ error: "Faltan datos" });
 
+    // Si no existe el registro aún, lo creamos directamente con apuntado: true
     const [registro] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: { apuntado: true },
     });
 
+    // Si ya existía, invertimos el estado de inscripción
     if (!registro.isNewRecord)
       await registro.update({ apuntado: !registro.apuntado });
 
@@ -121,6 +142,7 @@ router.post("/toggle-apuntado", async (req, res) => {
   }
 });
 
+// POST /cursosalumnos/comment — Guarda o actualiza el comentario de un alumno en un curso
 router.post("/comment", async (req, res) => {
   try {
     const { cursoId, alumnoId, comentario } = req.body;
@@ -133,6 +155,7 @@ router.post("/comment", async (req, res) => {
     });
 
     if (!registro.isNewRecord) {
+      // Limitamos el comentario a 500 caracteres para evitar entradas demasiado largas
       await registro.update({
         comentario: comentario ? String(comentario).slice(0, 500) : null,
       });
@@ -143,6 +166,8 @@ router.post("/comment", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /cursosalumnos/:id — Actualiza un registro concreto con los campos que vengan en el body
 router.put("/:id", async (req, res) => {
   try {
     const registro = await CursosAlumnos.findByPk(req.params.id);
@@ -155,6 +180,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /cursosalumnos/:id — Elimina el registro de la relación alumno-curso
 router.delete("/:id", async (req, res) => {
   try {
     const r = await CursosAlumnos.destroy({ where: { id: req.params.id } });
@@ -166,4 +193,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
@@ -11,8 +12,9 @@ import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import Like from "../assets/me-gusta-marcado.png";
 
-const IMAGES = [
-  Foto10,
+// ── CONSTANTES ─────────────────────────────────────────────────────────────
+// Mapa de nombre → imagen importada para resolver la portada del curso
+const IMAGES_MAP = {
   Foto1,
   Foto2,
   Foto3,
@@ -22,31 +24,18 @@ const IMAGES = [
   Foto7,
   Foto8,
   Foto9,
-];
+  Foto10,
+};
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Versión compacta de la tarjeta de curso: se usa en los carruseles del HomeFeed y en Mi Espacio
 function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
   const navigate = useNavigate();
 
-  const IMAGES_MAP = {
-    Foto1,
-    Foto2,
-    Foto3,
-    Foto4,
-    Foto5,
-    Foto6,
-    Foto7,
-    Foto8,
-    Foto9,
-    Foto10,
-  };
+  // Obtenemos la imagen directamente del mapa por el nombre guardado en la BD
+  const imageSrc = IMAGES_MAP[imagen];
 
-  const getCourseImage = () => {
-    if (imagen && IMAGES_MAP[imagen]) return IMAGES_MAP[imagen];
-    return IMAGES[cursoId % 10];
-  };
-
-  const imageSrc = getCourseImage();
-
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div
       className="tarjeta-curso-pequena"

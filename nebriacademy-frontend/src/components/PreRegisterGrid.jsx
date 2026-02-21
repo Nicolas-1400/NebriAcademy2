@@ -1,11 +1,15 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import familiaNebrija from "../assets/familiaNebrija.png";
 import individuo from "../assets/individuo.png";
 import profesor from "../assets/profesor.png";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Pantalla previa al registro: el usuario elige si es alumno Nebrija, alumno externo o profesor
 function PreRegisterGrid() {
   const navigate = useNavigate();
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="pre-register-grid">
       <h2>¿Eres estudiante de la familia Nebrija?</h2>

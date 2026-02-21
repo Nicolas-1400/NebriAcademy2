@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -8,10 +9,14 @@ const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
 const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
 
+// ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
+// Carpeta donde se guardan físicamente las entregas de ejercicios que suben los alumnos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
 );
+
+// Configuramos multer para guardar el archivo en uploadDir conservando el nombre original
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
@@ -19,6 +24,8 @@ const upload = multer({
   }),
 });
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /ejerciciosalumnos — Devuelve todos los registros de entregas de alumnos
 router.get("/", async (req, res) => {
   try {
     const all = await EjerciciosAlumnos.findAll();
@@ -28,6 +35,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /ejerciciosalumnos/:id — Devuelve una entrega concreta por su ID
 router.get("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -37,10 +45,13 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /ejerciciosalumnos — Registra la entrega de un alumno para un ejercicio concreto
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     const { ejercicioId, profileId } = req.body;
 
+    // Verificamos que tanto el ejercicio como el alumno existen en la BD antes de crear el registro
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
     const validAlumno = await Alumnos.findByPk(profileId);
 
@@ -48,6 +59,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       return res.status(400).json({ error: "Ejercicio o Alumno inválido" });
     }
 
+    // Creamos el registro de la entrega, asociando el alumno al ejercicio con el archivo subido
     const nuevo = await EjerciciosAlumnos.create({
       ejercicioId,
       alumnoId: profileId,
@@ -61,6 +73,8 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /ejerciciosalumnos/:id — Actualiza una entrega. Si llega archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -76,11 +90,14 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /ejerciciosalumnos/:id — Elimina la entrega de la BD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
+    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
     if (r.archivo) {
       const p = path.join(uploadDir, r.archivo);
       fs.promises.unlink(p).catch(() => {});
@@ -93,4 +110,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

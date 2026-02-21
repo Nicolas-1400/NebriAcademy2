@@ -1,17 +1,25 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
 import flecha from "../assets/flecha-correcta.png";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página para que el profesor corrija las entregas de los alumnos a un ejercicio concreto
 function CorregirEjerciciosSubidosGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const { id } = useParams();
   const [registros, setRegistros] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
+  // Lista de puntuaciones ya guardadas para saber si hacer PUT o POST al guardar nota
   const [puntuaciones, setPuntuaciones] = useState([]);
+  // Objeto para guardar el valor tecleado en el input de nota de cada entrega
   const [inputScores, setInputScores] = useState({});
   const navigate = useNavigate();
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar, cargamos en paralelo las entregas, los alumnos y las puntuaciones existentes
   useEffect(() => {
     Promise.all([
       fetch("http://localhost:3000/ejerciciosalumnos").then((respuesta) =>
@@ -28,6 +36,7 @@ function CorregirEjerciciosSubidosGrid() {
         const allRegs = Array.isArray(datosRegistros.registros)
           ? datosRegistros.registros
           : datosRegistros || [];
+        // Si llega un ID en la URL, filtramos solo las entregas de ese ejercicio
         setRegistros(
           id
             ? allRegs.filter(
@@ -53,6 +62,7 @@ function CorregirEjerciciosSubidosGrid() {
       );
   }, [id]);
 
+  // Enriquecemos cada registro con el nombre completo del alumno para mostrarlo en la tarjeta
   const ejerciciosConNombre = useMemo(() => {
     return registros.map((r) => {
       const alumno = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));
@@ -65,6 +75,7 @@ function CorregirEjerciciosSubidosGrid() {
     });
   }, [registros, alumnos]);
 
+  // Busca si ya existe una puntuación guardada para un ejercicio-alumno concreto
   const getExistingScore = (ejercicioId, alumnoId) => {
     return puntuaciones.find(
       (p) =>
@@ -73,10 +84,12 @@ function CorregirEjerciciosSubidosGrid() {
     );
   };
 
+  // Actualiza el valor del input de nota para un registro concreto
   const handeScoreInput = (regId, val) => {
     setInputScores((prev) => ({ ...prev, [regId]: val }));
   };
 
+  // Guarda o actualiza la puntuación de una entrega: usa PUT si ya existe, POST si no
   const handleSubmitScore = async (reg) => {
     const val = Number(inputScores[reg.id]);
     if (isNaN(val) || val < 0 || val > 10 || inputScores[reg.id] === "") {
@@ -103,6 +116,7 @@ function CorregirEjerciciosSubidosGrid() {
       const datos = await respuesta.json();
       if (!respuesta.ok) throw new Error(datos.error || "Error guardando nota");
 
+      // Actualizamos la lista local de puntuaciones sin recargar la página
       setPuntuaciones((prev) =>
         existing
           ? prev.map((p) => (p.id === datos.id ? datos : p))
@@ -122,6 +136,7 @@ function CorregirEjerciciosSubidosGrid() {
         <ul className="ejercicios-lista">
           {ejerciciosConNombre.map((reg) => {
             const existing = getExistingScore(reg.id, reg.alumnoId);
+            // Mostramos en el input el valor tecleado o, si no, la nota ya guardada
             const currentVal =
               inputScores[reg.id] !== undefined
                 ? inputScores[reg.id]
@@ -130,6 +145,7 @@ function CorregirEjerciciosSubidosGrid() {
             return (
               <li className="ejercicio-contenedor" key={reg.id}>
                 <TarjetaEjercicioAlumno registro={reg} />
+                {/* Input de nota del 0 al 10 y botón para guardar */}
                 <div className="calificar-container">
                   <input
                     type="number"

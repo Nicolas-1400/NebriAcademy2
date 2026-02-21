@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
@@ -26,12 +27,17 @@ import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
 import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de detalle de un curso: muestra su contenido (vídeos, apuntes, ejercicios),
+// permite a los alumnos votar, apuntarse y comentar, y al profesor editar el contenido.
 function CursoGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, tipo } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [curso, setCurso] = useState(null);
+  // Estado del botón "+" para animar su rotación al abrirse el menú de añadir contenido
   const [rotado, setRotado] = useState(false);
   const [profesor, setProfesor] = useState(null);
   const [contenidos, setContenidos] = useState({
@@ -41,30 +47,23 @@ function CursoGrid() {
   });
   const [comentarios, setComentarios] = useState([]);
 
+  // Datos específicos del alumno logueado: relación con el curso, likes y entregas
   const [registroUser, setRegistroUser] = useState(null);
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [puntuacionesEjercicios, setPuntuacionesEjercicios] = useState([]);
 
   const [error, setError] = useState(null);
+  // editingMode activa los controles de editar/borrar sobre el contenido del curso (solo profesor)
   const [editingMode, setEditingMode] = useState(false);
+  // showAddMenu controla la visibilidad del menú desplegable para añadir contenido (solo profesor)
   const [showAddMenu, setShowAddMenu] = useState(false);
   const [commentText, setCommentText] = useState("");
+  // editingComment guarda el ID y texto del comentario que se está editando en línea
   const [editingComment, setEditingComment] = useState({ id: null, text: "" });
 
-  const fotos = [
-    Foto1,
-    Foto2,
-    Foto3,
-    Foto4,
-    Foto5,
-    Foto6,
-    Foto7,
-    Foto8,
-    Foto9,
-    Foto10,
-  ];
-
+  // ── CONSTANTES ─────────────────────────────────────────────────────────────
+  // Mapa de nombre → imagen importada para resolver la portada del curso desde la BD
   const IMAGES_MAP = {
     Foto1,
     Foto2,
@@ -78,15 +77,11 @@ function CursoGrid() {
     Foto10,
   };
 
-  const getHeaderImage = () => {
-    if (curso?.imagen && IMAGES_MAP[curso.imagen])
-      return IMAGES_MAP[curso.imagen];
-    const cid = curso?.id || id;
-    return fotos[cid % 10] || Foto1;
-  };
+  // Obtenemos la imagen de cabecera directamente del mapa por el nombre guardado en la BD
+  const bgImage = IMAGES_MAP[curso?.imagen] || Foto1;
 
-  const bgImage = getHeaderImage();
-
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Carga principal: curso, vídeos, apuntes (con nombre de autor), ejercicios y comentarios
   useEffect(() => {
     if (!id) return;
 
@@ -98,6 +93,7 @@ function CursoGrid() {
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
 
+        // Cargamos el profesor del curso en paralelo sin bloquear el resto
         if (respuestaCurso.profesor) {
           fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)
             .then((respuesta) => respuesta.json())
@@ -125,6 +121,7 @@ function CursoGrid() {
           fetch("http://localhost:3000/alumnos").then((r) => r.json()),
         ]);
 
+        // Resuelve el nombre completo del autor de un apunte buscando entre alumnos y profesores
         const resolveName = (id) => {
           const aid = Number(id);
           const alum = (datosAlumnos.Alumnos || []).find(
@@ -138,9 +135,11 @@ function CursoGrid() {
           return "Desconocido";
         };
 
+        // Filtramos el contenido global para quedarnos solo con el de este curso
         const filterById = (list) =>
           (list || []).filter((i) => String(i.curso) === String(id));
 
+        // Enriquecemos cada apunte con el nombre del autor para mostrarlo en la tarjeta
         const apuntesFiltrados = filterById(datosApuntes.Apuntes).map((a) => ({
           ...a,
           nombreAutor: resolveName(a.autor),
@@ -164,6 +163,7 @@ function CursoGrid() {
     fetchAll();
   }, [id]);
 
+  // Carga los datos personalizados del alumno logueado: relación con el curso, likes y entregas
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
@@ -173,6 +173,7 @@ function CursoGrid() {
           `http://localhost:3000/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
         ).then((respuesta) => respuesta.json());
 
+        // Normalizamos los booleanos que MySQL puede devolver como 0/1 o "0"/"1"
         const toBool = (v) => v === true || v === 1 || v === "1";
         setRegistroUser({
           ...respuestaRegistro,
@@ -204,6 +205,7 @@ function CursoGrid() {
 
         setLikedApuntes(likesData.apunteIds || []);
 
+        // Solo cargamos las entregas y puntuaciones del alumno logueado
         const misEntregas = (ejerciciosData.registros || []).filter(
           (registro) => String(registro.alumnoId) === String(user.id),
         );
@@ -221,6 +223,8 @@ function CursoGrid() {
     fetchUserData();
   }, [id, user, tipo]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Elimina un elemento de contenido del curso (vídeo, apunte o ejercicio) con confirmación
   const handleDeleteItem = async (type, itemId) => {
     if (!window.confirm("¿Eliminar este elemento?")) return;
     try {
@@ -234,6 +238,7 @@ function CursoGrid() {
         method: "DELETE",
       });
 
+      // Eliminamos el elemento del estado local sin recargar la página
       setContenidos((prev) => ({
         ...prev,
         [type + "s"]: prev[type + "s"].filter((i) => i.id !== itemId),
@@ -243,6 +248,7 @@ function CursoGrid() {
     }
   };
 
+  // Comprueba si el autor de un apunte es el profesor del curso
   const isProfesorApunte = (apunte) => {
     const auth = String(apunte?.autor || apunte?.usuarioId || "");
     if (curso?.profesor && auth === String(curso.profesor)) return true;
@@ -254,6 +260,7 @@ function CursoGrid() {
     return false;
   };
 
+  // Gestiona las acciones del alumno sobre el curso: valorar, marcar favorito y apuntarse
   const handleLike = async (action, value) => {
     try {
       let url;
@@ -281,6 +288,7 @@ function CursoGrid() {
         const datos = await respuesta.json();
         const reg = datos.registro || datos;
 
+        // Actualizamos el estado local del registro del alumno normalizando booleanos
         const toBool = (v) => v === true || v === 1 || v === "1";
         setRegistroUser((prev) => ({
           ...prev,
@@ -297,6 +305,7 @@ function CursoGrid() {
               : prev?.valoracion,
         }));
 
+        // Si la acción es valoración, actualizamos también el contador en la cabecera
         if (action === "valoracion" && datos.curso) {
           setCurso((c) => ({ ...c, valoracion: datos.curso.valoracion }));
         }
@@ -306,6 +315,7 @@ function CursoGrid() {
     }
   };
 
+  // Alterna el like de un apunte del alumno y actualiza el contador localmente
   const handleToggleApunteLike = async (apunte) => {
     if (!user?.id || tipo !== "alumno") return;
     try {
@@ -324,6 +334,7 @@ function CursoGrid() {
         setLikedApuntes((prev) =>
           isLike ? [...prev, apunte.id] : prev.filter((x) => x !== apunte.id),
         );
+        // Actualizamos el contador de likes en el contenido local sin recargar
         setContenidos((prev) => ({
           ...prev,
           apuntes: prev.apuntes.map((a) =>
@@ -336,6 +347,7 @@ function CursoGrid() {
     }
   };
 
+  // Sube la entrega de un ejercicio del alumno al servidor y la registra en el estado local
   const uploadEjercicio = async (file, ejercicioId) => {
     try {
       const form = new FormData();
@@ -366,6 +378,7 @@ function CursoGrid() {
     }
   };
 
+  // Envía un nuevo comentario al backend y recarga la lista de comentarios del curso
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     try {
@@ -384,6 +397,7 @@ function CursoGrid() {
       );
       if (respuesta.ok) {
         setCommentText("");
+        // Recargamos la lista para mostrar el nuevo comentario con nombre del autor
         fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
@@ -395,6 +409,7 @@ function CursoGrid() {
     }
   };
 
+  // Elimina un comentario con confirmación y lo quita del estado local
   const deleteComment = async (cid) => {
     if (!window.confirm("Borrar comentario?")) return;
     try {
@@ -410,6 +425,7 @@ function CursoGrid() {
     }
   };
 
+  // Inicia la edición en línea de un comentario existente
   const startEditComment = (c) => {
     setEditingComment({ id: c.id, text: c.comentario });
   };
@@ -418,6 +434,7 @@ function CursoGrid() {
     setEditingComment({ id: null, text: "" });
   };
 
+  // Guarda el texto editado del comentario en el backend y actualiza el estado local
   const saveEditComment = async () => {
     if (!editingComment.text.trim()) return;
     try {
@@ -451,14 +468,17 @@ function CursoGrid() {
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (!curso) return <p>Cargando curso...</p>;
   if (error) return <p className="error">{error}</p>;
 
+  // Separamos los apuntes del profesor de los de los alumnos para mostrarlos en columnas distintas
   const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
   const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
 
   return (
     <div className="curso-grid">
+      {/* Cabecera del curso: imagen de fondo, título, categoría, nivel y controles del alumno */}
       <div className="curso-header">
         <img className="curso-header-bg" src={bgImage} alt="" />
         <div className="curso-header-info">
@@ -467,6 +487,7 @@ function CursoGrid() {
           <p>Nivel: {curso.nivel}</p>
         </div>
 
+        {/* Botones de valoración, favorito y apuntarme: solo para alumnos */}
         {tipo === "alumno" && (
           <div className="curso-header-botones">
             <p>
@@ -511,6 +532,7 @@ function CursoGrid() {
             </p>
           </div>
         )}
+        {/* El profesor solo ve la valoración total, sin poder votar */}
         {tipo === "profesor" && (
           <div className="curso-header-botones">
             <p>
@@ -521,6 +543,7 @@ function CursoGrid() {
       </div>
 
       <div className="curso-contenedor-principal">
+        {/* Sección central: vídeos, apuntes y ejercicios del curso */}
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
 
@@ -547,6 +570,7 @@ function CursoGrid() {
           )}
 
           <h4>Apuntes</h4>
+          {/* Los apuntes se dividen en dos columnas: del profesor y de los alumnos */}
           <div className="apuntes-columns-wrapper">
             <div className="profesor-apuntes">
               <h5>Apuntes profesor</h5>
@@ -622,6 +646,7 @@ function CursoGrid() {
                   </div>
                   <div className="ejercicio-row-boton">
                     {tipo === "profesor" ? (
+                      // El profesor puede ir a la pantalla de corrección de entregas
                       <button
                         className="btn-corregir-ejercicio"
                         onClick={() =>
@@ -633,6 +658,7 @@ function CursoGrid() {
                         <img src={CorregirEjercicio2} alt="Corregir" />
                       </button>
                     ) : (
+                      // El alumno puede subir su entrega o ver el archivo ya subido y su nota
                       <div>
                         {(() => {
                           const entrega = uploadedEjercicios.find(
@@ -644,6 +670,7 @@ function CursoGrid() {
                           return (
                             <>
                               {entrega ? (
+                                // Si ya entregó, mostramos un enlace al archivo subido
                                 <a
                                   href={`http://localhost:3000/ejerciciosalumnos/files/${entrega.archivo}`}
                                   target="_blank"
@@ -656,6 +683,7 @@ function CursoGrid() {
                                   />
                                 </a>
                               ) : (
+                                // Si no ha entregado, mostramos el input de subida disfrazado de botón
                                 <label className="btn-subir-ejercicio">
                                   <input
                                     type="file"
@@ -672,6 +700,7 @@ function CursoGrid() {
                                   />
                                 </label>
                               )}
+                              {/* Si el profesor ya puso nota, se muestra debajo del ejercicio */}
                               {puntuacion && (
                                 <div className="puntuacion-ejercicio">
                                   <p>Nota: {puntuacion.puntuacion}</p>
@@ -691,6 +720,7 @@ function CursoGrid() {
           )}
         </div>
 
+        {/* Panel lateral derecho: datos del profesor, descripción del curso y comentarios */}
         <div className="curso-detalles">
           <div className="detalles-profesor">
             <p>Profesor</p>
@@ -711,6 +741,7 @@ function CursoGrid() {
                     {c.nombre} {c.apellidos}
                   </div>
                   {editingComment.id === c.id ? (
+                    // Formulario de edición en línea para el comentario activo
                     <div className="edit-comment-box">
                       <textarea
                         value={editingComment.text}
@@ -727,6 +758,7 @@ function CursoGrid() {
                   ) : (
                     <>
                       <p>{c.comentario}</p>
+                      {/* Los botones de editar/borrar solo aparecen al autor del comentario */}
                       {user &&
                         Number(c.usuarioId) ===
                           Number(user.usuarioId || user.id) && (
@@ -744,6 +776,7 @@ function CursoGrid() {
                 </div>
               ))}
             </div>
+            {/* Caja para escribir nuevos comentarios: solo visible para alumnos */}
             {tipo === "alumno" && (
               <div className="escribir-comentario">
                 <textarea
@@ -759,6 +792,7 @@ function CursoGrid() {
         </div>
       </div>
 
+      {/* Botones flotantes: modo edición (solo profesor) y añadir contenido */}
       {(tipo === "profesor" || tipo === "alumno") && (
         <div className="fixed-action-group">
           {tipo === "profesor" && (
@@ -776,10 +810,12 @@ function CursoGrid() {
               onClick={() => {
                 setRotado((prev) => !prev);
                 if (tipo === "alumno") {
+                  // El alumno solo puede subir apuntes
                   navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
                     state: { tipo: "apunte", cursoId: id },
                   });
                 } else {
+                  // El profesor abre un menú para elegir el tipo de contenido a subir
                   setShowAddMenu(!showAddMenu);
                 }
               }}

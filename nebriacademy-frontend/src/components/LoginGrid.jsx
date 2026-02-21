@@ -1,8 +1,13 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario de inicio de sesión: valida credenciales contra el backend y redirige al home
 function LoginGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado local para los campos del formulario y para mostrar errores
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -10,6 +15,8 @@ function LoginGrid() {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Maneja el envío del formulario: hace la petición al backend y redirige si el login es correcto
   const handleLogin = async (evento) => {
     evento.preventDefault();
     setError("");
@@ -24,6 +31,7 @@ function LoginGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
+        // Guardamos el usuario en el store global y navegamos al home
         setUser(datos.usuario, datos.tipo);
         navigate("/Home");
       } else {
@@ -35,9 +43,11 @@ function LoginGrid() {
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="login-grid">
       <div className="formulario-login-contenedor">
+        {/* Formulario de login: al hacer submit se ejecuta handleLogin */}
         <form className="formulario-login" onSubmit={handleLogin}>
           <input
             type="email"
@@ -54,6 +64,7 @@ function LoginGrid() {
             required
           />
 
+          {/* Mostramos el error solo si hay alguno */}
           {error && <p className="error-login">{error}</p>}
 
           <button type="submit">Iniciar Sesión</button>

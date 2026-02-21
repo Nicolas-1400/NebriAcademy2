@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/nebriLogo.png";
@@ -7,18 +8,24 @@ import ImagenBotonMas from "../assets/botonMas.png";
 import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";
 import useAuthStore from "../store/useAuthStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa
 function Nav() {
   const navigate = useNavigate();
   const { user: usuario, tipo, logout: logoutStore } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado de apertura/cierre del menú desplegable de perfil, el menú hamburguesa y el buscador
   const [isdesplegableOpen, setIsdesplegableOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
+  // Referencias para detectar clics fuera de cada panel y cerrarlo
   const desplegableRef = useRef(null);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
 
+  // Estado del buscador: texto introducido, lista de sugerencias y caché de datos de la API
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [dataCache, setDataCache] = useState({
@@ -29,6 +36,8 @@ function Nav() {
     profesores: [],
   });
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos todos los datos necesarios para el buscador en caché
   useEffect(() => {
     const endpoints = [
       { key: "cursos", url: "http://localhost:3000/cursos", listKey: "Cursos" },
@@ -50,6 +59,7 @@ function Nav() {
       },
     ];
 
+    // allSettled permite que aunque falle un endpoint, los demás sigan cargando
     Promise.allSettled(
       endpoints.map((ep) =>
         fetch(ep.url).then((respuesta) => respuesta.json()),
@@ -68,6 +78,7 @@ function Nav() {
     });
   }, []);
 
+  // Cierra el desplegable de perfil, el buscador o el menú hamburguesa si se hace clic fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (
@@ -92,6 +103,7 @@ function Nav() {
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Cierra el menú hamburguesa automáticamente si la ventana se hace suficientemente grande
   useEffect(() => {
     const handleResize = () => {
       if (window.innerWidth > 768 && isMenuOpen) {
@@ -103,12 +115,15 @@ function Nav() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMenuOpen]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Limpia el store de autenticación y redirige al login al cerrar sesión
   const handleLogout = () => {
     logoutStore();
     navigate("/");
     setIsdesplegableOpen(false);
   };
 
+  // Devuelve el nombre a mostrar en el buscador según el tipo de elemento
   const getDisplayName = (item, type) => {
     if (!item) return "";
     switch (type) {
@@ -126,6 +141,7 @@ function Nav() {
     }
   };
 
+  // Filtra la caché de datos con el texto que el usuario va escribiendo y actualiza las sugerencias
   const handleQueryChange = (e) => {
     const q = e.target.value;
     setQuery(q);
@@ -139,6 +155,7 @@ function Nav() {
     const qLower = q.toLowerCase();
     const results = [];
 
+    // Busca coincidencias por nombre en cada tipo de recurso
     const searchIn = (list, typeStr) => {
       list.forEach((item) => {
         const name = getDisplayName(item, typeStr.toLowerCase());
@@ -159,6 +176,7 @@ function Nav() {
     searchIn(dataCache.ejercicios, "Ejercicio");
     searchIn(dataCache.profesores, "Profesor");
 
+    // Eliminamos duplicados y limitamos a 8 resultados para no saturar el desplegable
     const unique = [];
     const seen = new Set();
     for (const r of results) {
@@ -174,6 +192,7 @@ function Nav() {
     setIsSearchOpen(true);
   };
 
+  // Al hacer clic en una sugerencia, navega a la página correspondiente o abre el archivo directamente
   const handleSuggestionClick = (s) => {
     setQuery("");
     setSuggestions([]);
@@ -184,6 +203,7 @@ function Nav() {
     if (s.type === "Curso") navigate(`/Home/Cursos/${s.id}`);
     else if (s.type === "Profesor") navigate(`/Home/Profesores/${s.id}`);
     else {
+      // Para vídeos, apuntes y ejercicios: si tienen archivo lo abrimos en nueva pestaña; si no, navegamos
       const folderMap = {
         Video: "videos",
         Apunte: "apuntes",
@@ -206,6 +226,7 @@ function Nav() {
     }
   };
 
+  // Renderiza los botones de navegación según si el usuario es alumno o profesor
   const renderNavButtons = () => {
     if (tipo === "profesor") {
       return (
@@ -254,6 +275,7 @@ function Nav() {
     );
   };
 
+  // El buscador solo se muestra si el usuario es alumno
   const renderSearch = () =>
     tipo === "alumno" ? (
       <div ref={searchRef} className="search-wrapper">
@@ -284,6 +306,7 @@ function Nav() {
 
   return (
     <div className="nav">
+      {/* Logo: al hacer clic navega al Home */}
       <div
         role="button"
         className="contenedor-logo-titulo"
@@ -293,6 +316,7 @@ function Nav() {
         <h2>NebriAcademy</h2>
       </div>
 
+      {/* Botón hamburguesa: solo visible en pantallas pequeñas */}
       <button
         className="menu-hamburguesa-btn"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -304,10 +328,12 @@ function Nav() {
         />
       </button>
 
+      {/* Zona derecha de la nav: botones, buscador e imagen de perfil */}
       <div className="contenedor-elementos-derecha">
         {renderNavButtons()}
         {renderSearch()}
 
+        {/* Botón de perfil con desplegable para ver datos, ir al perfil o cerrar sesión */}
         <div className="perfil-desplegable-container" ref={desplegableRef}>
           <button
             className="perfil-button"
@@ -347,6 +373,7 @@ function Nav() {
         </div>
       </div>
 
+      {/* Menú hamburguesa desplegable (versión responsive): contiene los mismos botones y el perfil */}
       {isMenuOpen && (
         <div className="menu-hamburguesa-desplegable" ref={menuRef}>
           <div className="contenedor-elementos-derecha-responsive">

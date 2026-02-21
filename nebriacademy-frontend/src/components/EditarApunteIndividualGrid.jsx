@@ -1,23 +1,31 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario para editar un apunte existente. Los datos del apunte llegan en el state de navegación.
 function EditarApunteIndividualGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { apunte } = state || {};
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Precargamos los campos con los datos actuales del apunte
   const [nombre, setNombre] = useState(apunte?.nombre || "");
   const [descripcion, setDescripcion] = useState(apunte?.descripcion || "");
+  // El archivo es opcional: si no se selecciona uno nuevo, se mantiene el actual
   const [newFile, setNewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  // Si llegamos a esta página sin datos del apunte, redirigimos a la lista de apuntes
   useEffect(() => {
     if (!apunte) {
       navigate("/Home/Apuntes");
     }
   }, [apunte, navigate]);
 
+  // Envía los cambios al backend: con FormData si hay nuevo archivo, o con JSON si no
   const handleSave = async () => {
     setLoading(true);
     setError(null);
@@ -27,6 +35,7 @@ function EditarApunteIndividualGrid() {
 
       let respuesta;
       if (newFile) {
+        // Si se seleccionó un archivo nuevo, enviamos todo como FormData (multipart)
         const form = new FormData();
         form.append("nombre", nombre);
         form.append("descripcion", descripcion);
@@ -34,6 +43,7 @@ function EditarApunteIndividualGrid() {
 
         respuesta = await fetch(url, { method: "PUT", body: form });
       } else {
+        // Si no hay archivo nuevo, enviamos solo texto como JSON
         const body = { nombre, descripcion };
 
         respuesta = await fetch(url, {
@@ -63,6 +73,7 @@ function EditarApunteIndividualGrid() {
     <div className="editar-curso-container">
       <h2>Editar Apunte</h2>
       <div className="add-contenido-form">
+        {/* Enlace al archivo actual para que el usuario pueda verlo antes de reemplazarlo */}
         <p>
           <strong>Archivo actual:</strong>{" "}
           {apunte.archivo ? (

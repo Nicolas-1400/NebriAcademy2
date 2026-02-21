@@ -1,9 +1,13 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /comentarioalumnocurso — Devuelve todos los comentarios, opcionalmente filtrados por cursoId.
+// Para cada comentario, busca al autor (alumno o profesor) y añade su nombre y apellidos a la respuesta.
 router.get("/", async (req, res) => {
   try {
     const { cursoId } = req.query;
@@ -11,6 +15,7 @@ router.get("/", async (req, res) => {
     const filtro = cursoId ? { where: { cursoId } } : {};
     const comentarios = await ComentarioAlumnoCurso.findAll(filtro);
 
+    // Para cada comentario, buscamos primero en alumnos y si no, en profesores
     const enhanced = await Promise.all(
       comentarios.map(async (c) => {
         let nombre = "Usuario",
@@ -20,6 +25,7 @@ router.get("/", async (req, res) => {
           where: { usuarioId: c.usuarioId },
         });
 
+        // Si no lo encontramos en alumnos, lo intentamos en profesores
         if (!autor) {
           autor = await Profesores.findOne({
             where: { usuarioId: c.usuarioId },
@@ -31,6 +37,7 @@ router.get("/", async (req, res) => {
           apellidos = autor.apellidos;
         }
 
+        // Devolvemos el comentario con el nombre del autor
         return {
           id: c.id,
           usuarioId: c.usuarioId,
@@ -52,6 +59,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /comentarioalumnocurso/:id — Devuelve un comentario concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
@@ -61,6 +69,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /comentarioalumnocurso — Crea un nuevo comentario en un curso.
 router.post("/", async (req, res) => {
   try {
     const { profileId, tipo, cursoId, comentario } = req.body;
@@ -68,17 +78,17 @@ router.post("/", async (req, res) => {
       return res.status(400).json({ error: "Faltan datos" });
 
     let usuarioId = null;
+
+    // Buscamos al usuario para obtener su usuarioId
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
-      if (u) usuarioId = u.usuarioId;
-    } else if (tipo === "profesor") {
-      const u = await Profesores.findByPk(profileId);
       if (u) usuarioId = u.usuarioId;
     }
 
     if (!usuarioId)
       return res.status(404).json({ error: "Usuario no encontrado" });
 
+    // Guardamos el comentario en la BD vinculado al usuario y al curso
     const nuevo = await ComentarioAlumnoCurso.create({
       usuarioId,
       cursoId,
@@ -91,6 +101,9 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /comentarioalumnocurso/:id — Edita un comentario existente.
+// Solo puede editarlo el mismo usuario que lo creó (se verifica comparando el usuarioId).
 router.put("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
@@ -99,14 +112,14 @@ router.put("/:id", async (req, res) => {
     const { profileId, tipo, comentario } = req.body;
 
     let requesterUsuarioId = null;
+
+    // Obtenemos el usuarioId del que hace la petición para comprobarlo con el del comentario
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
       if (u) requesterUsuarioId = u.usuarioId;
-    } else if (tipo === "profesor") {
-      const u = await Profesores.findByPk(profileId);
-      if (u) requesterUsuarioId = u.usuarioId;
     }
 
+    // Si el usuarioId no coincide con el del comentario, devolvemos 403 (prohibido)
     if (!requesterUsuarioId || requesterUsuarioId !== c.usuarioId) {
       return res.status(403).json({ error: "No autorizado" });
     }
@@ -121,6 +134,9 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /comentarioalumnocurso/:id — Elimina un comentario.
+// Solo puede borrarlo el mismo usuario que lo creó (misma comprobación de usuarioId).
 router.delete("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
@@ -132,11 +148,8 @@ router.delete("/:id", async (req, res) => {
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
       if (u) requesterUsuarioId = u.usuarioId;
-    } else if (tipo === "profesor") {
-      const u = await Profesores.findByPk(profileId);
-      if (u) requesterUsuarioId = u.usuarioId;
     }
-
+    // Si el usuarioId no coincide con el del comentario, devolvemos 403 (prohibido)
     if (!requesterUsuarioId || requesterUsuarioId !== c.usuarioId) {
       return res.status(403).json({ error: "No autorizado" });
     }
@@ -149,4 +162,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

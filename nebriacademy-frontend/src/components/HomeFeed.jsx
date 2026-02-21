@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -6,7 +7,11 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de inicio del alumno: muestra novedades, sus cursos y los cursos populares en carruseles
 function HomeFeed() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado: datos del usuario, lista de cursos, relaciones alumno-curso y categorías disponibles
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
@@ -16,16 +21,20 @@ function HomeFeed() {
   const [loading, setLoading] = useState(true);
 
   const navigate = useNavigate();
+  // Referencias a cada slider para poder controlarlos manualmente con los botones de flecha
   const novedadesSliderRef = useRef(null);
   const tusCursosSliderRef = useRef(null);
   const popularesSliderRef = useRef(null);
 
   const storeUser = useAuthStore((state) => state.user);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Sincronizamos el estado local de usuario con el store global cuando cambie
   useEffect(() => {
     if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
 
+  // Al montar el componente, cargamos cursos, relaciones alumno-curso y categorías en paralelo
   useEffect(() => {
     setLoading(true);
     setError(null);
@@ -57,6 +66,8 @@ function HomeFeed() {
       .finally(() => setLoading(false));
   }, []);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Filtra los cursos en los que el alumno está apuntado y los ordena por valoración
   const tusCursos = () => {
     if (!usuario) return [];
     return cursosAlumnos
@@ -66,20 +77,24 @@ function HomeFeed() {
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
+  // Ordena todos los cursos por ID descendente para mostrar los más recientes primero
   const novedades = () => {
     return cursos.slice().sort((a, b) => b.id - a.id);
   };
 
+  // Ordena todos los cursos por valoración descendente
   const cursosPopulares = () => {
     return cursos
       .slice()
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
+  // Navega a la página de cursos con la categoría preseleccionada como filtro
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };
 
+  // Controla el slider (izquierda/derecha) usando la referencia al componente Slider
   const handleSliderArrow = (sliderRef, direction) => {
     if (!sliderRef.current) return;
     direction === "left"
@@ -87,6 +102,7 @@ function HomeFeed() {
       : sliderRef.current.slickNext();
   };
 
+  // Cuando los datos terminan de cargar, forzamos un refresco del tamaño de los sliders para evitar problemas de layout
   useEffect(() => {
     if (!loading) {
       const t = setTimeout(() => {
@@ -119,6 +135,7 @@ function HomeFeed() {
     );
   }
 
+  // Configuración del carrusel: 4 tarjetas visibles, responsive hasta 2 en móvil
   const settingsSlider = {
     dots: false,
     infinite: true,
@@ -138,6 +155,7 @@ function HomeFeed() {
         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="HomeFeed-secciones">
+        {/* Sección Novedades: cursos ordenados por ID descendente */}
         <div className="HomeFeed-seccion-novedades">
           <h2>Novedades</h2>
           <div className="HomeFeed-carousel-container">
@@ -178,6 +196,7 @@ function HomeFeed() {
           </div>
         </div>
 
+        {/* Sección Tus cursos: solo los cursos en los que el alumno está inscrito */}
         <div className="HomeFeed-seccion-tus-cursos">
           <h2>Tus cursos</h2>
           <div className="HomeFeed-carousel-container">
@@ -220,6 +239,7 @@ function HomeFeed() {
           </div>
         </div>
 
+        {/* Sección Categorías: botones que filtran los cursos al hacer clic */}
         <div className="HomeFeed-seccion-categorias">
           <h2>Categorías</h2>
           <div className="HomeFeed-categorias-buttons">
@@ -235,6 +255,7 @@ function HomeFeed() {
           </div>
         </div>
 
+        {/* Sección Cursos populares: todos los cursos ordenados por valoración */}
         <div className="HomeFeed-seccion-cursos-populares">
           <h2>Cursos populares</h2>
           <div className="HomeFeed-carousel-container">

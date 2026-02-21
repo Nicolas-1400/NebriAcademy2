@@ -1,5 +1,6 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
+// Importamos todas las páginas de la aplicación
 import Login from "../pages/Login.jsx";
 import NotFound from "../pages/NotFound";
 import Home from "../pages/Home.jsx";
@@ -22,6 +23,8 @@ import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
 import RegisterProfesor from "../pages/RegisterProfesor.jsx";
 import Perfil from "../pages/Perfil.jsx";
+
+// Importamos los guardas de ruta que protegen el acceso según el estado de sesión
 import ProtectedRoute from "./ProtectedRoute";
 import ProtectedVerificationRoute from "./ProtectedVerificationRoute.jsx";
 import ProtectedVerificationProfesorRoute from "./ProtectedVerificationProfesorRoute.jsx";
@@ -33,6 +36,7 @@ function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
+        {/* Rutas públicas: accesibles sin estar logueado */}
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
 
@@ -41,6 +45,7 @@ function AppRouter() {
           element={<RegisterAlumnoExterno />}
         />
 
+        {/* Flujo de registro para alumnos de Nebrija: verificación → formulario de registro */}
         <Route
           path="/Register/VerificacionAlumnoNebrija"
           element={<VerificacionAlumnoNebrija />}
@@ -48,12 +53,14 @@ function AppRouter() {
         <Route
           path="/Register/RegisterAlumnoNebrija"
           element={
+            // ProtectedVerificationRoute impide acceder al registro sin haber verificado el email primero
             <ProtectedVerificationRoute>
               <RegisterAlumnoNebrija />
             </ProtectedVerificationRoute>
           }
         />
 
+        {/* Flujo de registro para profesores: verificación → formulario de registro */}
         <Route
           path="/Register/VerificacionProfesor"
           element={<VerificacionProfesor />}
@@ -61,14 +68,17 @@ function AppRouter() {
         <Route
           path="/Register/RegisterProfesor"
           element={
+            // ProtectedVerificationProfesorRoute impide acceder sin haber verificado el email de profesor
             <ProtectedVerificationProfesorRoute>
               <RegisterProfesor />
             </ProtectedVerificationProfesorRoute>
           }
         />
 
+        {/* Ruta comodín: si ninguna ruta coincide, mostramos la página 404 */}
         <Route path="*" element={<NotFound />} />
 
+        {/* Rutas privadas: requieren usuario logueado (ProtectedRoute lo comprueba) */}
         <Route
           path="/Home"
           element={
@@ -186,6 +196,7 @@ function AppRouter() {
           }
         />
 
+        {/* Rutas exclusivas de profesor: requieren además que el tipo de usuario sea "profesor" */}
         <Route
           path="/Home/AddCurso"
           element={

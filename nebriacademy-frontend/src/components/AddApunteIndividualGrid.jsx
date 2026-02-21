@@ -1,11 +1,15 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario para que cualquier usuario (alumno o profesor) pueda subir un nuevo apunte
 function AddApunteIndividualGrid() {
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -16,6 +20,7 @@ function AddApunteIndividualGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Cargamos las categorías disponibles al montar el componente para rellenar el selector
   useEffect(() => {
     fetch("http://localhost:3000/apuntes/categorias")
       .then((respuesta) => respuesta.json())
@@ -25,6 +30,7 @@ function AddApunteIndividualGrid() {
       .catch((error) => console.error("Error cargando categorias:", error));
   }, []);
 
+  // Construye un FormData con el archivo y los metadatos, y los envía al backend
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);
@@ -41,6 +47,7 @@ function AddApunteIndividualGrid() {
       form.append("descripcion", formData.descripcion);
       if (formData.categoria) form.append("categoria", formData.categoria);
 
+      // Enviamos el ID del usuario y su tipo para que el backend sepa quién es el autor
       if (usuario) {
         form.append("profileId", usuario.id);
         form.append("tipo", tipo);

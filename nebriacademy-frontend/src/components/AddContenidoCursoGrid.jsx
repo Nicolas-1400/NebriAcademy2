@@ -1,18 +1,26 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario para que el profesor suba vídeos, apuntes o ejercicios a un curso concreto
 function AddContenidoCursoGrid() {
   const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user: usuario, tipo: tipoUsuario } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // El ID del curso puede venir del state de navegación o de los parámetros de la URL
   const cursoId = state?.cursoId || (id && Number(id) > 0 ? Number(id) : null);
+  // Si el usuario no es profesor, solo puede subir apuntes
   const initialTipo =
     tipoUsuario !== "profesor" ? "apunte" : state?.tipo || "apunte";
 
+  // tipo indica qué se va a subir: "video", "apunte" o "ejercicio"
   const [tipo, setTipo] = useState(initialTipo);
+  // La categoría se autocompleta tomando la del curso al que pertenece el contenido
   const [categoria, setCategoria] = useState("");
 
   const [file, setFile] = useState(null);
@@ -21,6 +29,7 @@ function AddContenidoCursoGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
+  // Cargamos la categoría del curso para asociarla automáticamente al contenido subido
   useEffect(() => {
     if (cursoId) {
       fetch(`http://localhost:3000/cursos/${cursoId}`)
@@ -45,6 +54,7 @@ function AddContenidoCursoGrid() {
     }
 
     try {
+      // Determinamos el endpoint de la API según el tipo de contenido a subir
       const getEndpoint = () => {
         if (tipo === "video") return "videos";
         if (tipo === "apunte") return "apuntes";
@@ -60,8 +70,10 @@ function AddContenidoCursoGrid() {
       form.append("curso", cursoId);
       if (categoria) form.append("categoria", categoria);
 
+      // Los vídeos no tienen descripción en el modelo de datos
       if (tipo !== "video") form.append("descripcion", descripcion);
 
+      // Enviamos el ID del usuario y su tipo para que el backend pueda registrar la autoría
       if (usuario) {
         form.append("profileId", usuario.id);
         form.append("tipo", tipoUsuario);
@@ -100,6 +112,7 @@ function AddContenidoCursoGrid() {
           />
         </div>
 
+        {/* El campo descripción no se muestra para los vídeos */}
         {tipo !== "video" && (
           <div className="form-group">
             <label>Descripción</label>
@@ -120,6 +133,7 @@ function AddContenidoCursoGrid() {
           />
         </div>
 
+        {/* La categoría viene del curso y no es editable por el usuario */}
         <div className="form-group">
           <label>Categoría</label>
           <input className="input-area" value={categoria} disabled />

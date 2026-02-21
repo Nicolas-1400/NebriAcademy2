@@ -1,4 +1,4 @@
-@import './general.css';
+@import "./general.css";
 
 .HomeFeed {
   padding: 40px 20px;
@@ -25,13 +25,12 @@
   gap: 50px;
   padding: 20px;
   border-radius: 20px;
-  background: 
-    linear-gradient(
-      45deg, 
-      rgb(220, 0, 0), 
-      rgb(255, 196, 196), 
-      rgb(220, 0, 0)
-    );
+  background: linear-gradient(
+    45deg,
+    rgb(220, 0, 0),
+    rgb(255, 196, 196),
+    rgb(220, 0, 0)
+  );
 }
 
 /* Secciones de Carouseles */
@@ -127,7 +126,6 @@
 .carousel-btn-right {
   order: 1;
 }
-
 
 /* Overrides for react-slick inline width on .slick-track */
 .HomeFeed-tus-cursos-carousel .slick-track {

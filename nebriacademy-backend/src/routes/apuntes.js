@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -10,10 +11,14 @@ const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
+// ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
+// Carpeta donde se guardan físicamente los archivos de apuntes subidos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Apuntes",
 );
+
+// Configuramos multer para que guarde el archivo en uploadDir conservando el nombre original
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
@@ -21,6 +26,8 @@ const upload = multer({
   }),
 });
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /apuntes — Devuelve todos los apuntes registrados
 router.get("/", async (req, res) => {
   try {
     const data = await Apuntes.findAll();
@@ -31,6 +38,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /apuntes/categorias — Devuelve los valores del ENUM de categorias definidos en el modelo
 router.get("/categorias", (req, res) => {
   try {
     const categ = Apuntes.getAttributes()?.categoria?.values || [];
@@ -40,6 +48,7 @@ router.get("/categorias", (req, res) => {
   }
 });
 
+// GET /apuntes/:id — Devuelve un apunte concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
@@ -51,6 +60,9 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /apuntes — Sube un nuevo apunte. Requiere un archivo adjunto (PDF u otro).
+// Detecta si quien sube es alumno o profesor para asignar el autor correcto.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -67,6 +79,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 
     let autorFinal = null;
 
+    // Según el tipo de usuario, buscamos su usuarioId para usarlo como autor del apunte
     if (tipo === "alumno") {
       const u = await Alumnos.findByPk(profileId);
       if (u) autorFinal = u.usuarioId;
@@ -80,6 +93,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Autor no identificado o no encontrado" });
 
+    // Si el apunte está asociado a un curso, heredamos la categoría de ese curso
     if (cursoId) {
       const c = await Cursos.findByPk(cursoId);
       if (c?.categoria) categoria = c.categoria;
@@ -90,6 +104,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Categoría requerida si no hay curso" });
 
+    // Creamos el registro del apunte en la BD con el archivo ya guardado en disco
     const nuevo = await Apuntes.create({
       autor: autorFinal,
       curso: cursoId || null,
@@ -107,6 +122,8 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /apuntes/:id — Actualiza los datos de un apunte. Si se adjunta un archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
@@ -123,11 +140,14 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /apuntes/:id — Elimina el apunte de la BD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
+    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
     if (apunte.archivo) {
       const filePath = path.join(uploadDir, apunte.archivo);
       fs.promises
@@ -145,4 +165,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

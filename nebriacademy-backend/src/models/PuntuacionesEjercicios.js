@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Tabla que almacena la nota que el profesor pone a la entrega de un alumno en un ejercicio concreto
 const PuntuacionesEjercicios = sequelize.define(
   "puntuacionesejercicios",
   {
@@ -11,4 +15,5 @@ const PuntuacionesEjercicios = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = PuntuacionesEjercicios;

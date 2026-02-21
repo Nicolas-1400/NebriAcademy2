@@ -1,12 +1,18 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Primer paso del registro para alumnos de Nebrija: verifica el email y el código temporal
 function VerificacionAlumnoNebrijaGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Envía el email y el código al backend. Si son correctos, guarda el email en sessionStorage y navega al formulario de registro.
   const handleVerification = async (e) => {
     e.preventDefault();
     setError("");
@@ -24,6 +30,7 @@ function VerificacionAlumnoNebrijaGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
+        // Guardamos el email en sessionStorage para que el guarda de ruta lo encuentre en el siguiente paso
         sessionStorage.setItem("verifiedStudentEmail", email);
         navigate("/Register/RegisterAlumnoNebrija", { state: { email } });
       } else {
@@ -35,6 +42,7 @@ function VerificacionAlumnoNebrijaGrid() {
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="login-grid">
       <div className="formulario-login-contenedor">

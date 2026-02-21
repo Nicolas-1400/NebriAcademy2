@@ -1,7 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /profesorescursos — Devuelve todos los vínculos entre profesores y cursos
 router.get("/", async (req, res) => {
   try {
     const all = await ProfesoresCursos.findAll();
@@ -14,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /profesorescursos/:id — Devuelve un vínculo concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
@@ -23,6 +27,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /profesorescursos — Crea un nuevo vínculo entre un profesor y un curso
 router.post("/", async (req, res) => {
   try {
     const created = await ProfesoresCursos.create(req.body);
@@ -32,6 +38,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /profesorescursos/:id — Actualiza un vínculo concreto con los campos que vengan en el body
 router.put("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
@@ -44,6 +52,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /profesorescursos/:id — Elimina el vínculo entre un profesor y un curso
 router.delete("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
@@ -56,4 +66,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

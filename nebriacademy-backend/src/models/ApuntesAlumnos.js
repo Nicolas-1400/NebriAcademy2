@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Tabla intermedia entre apuntes y alumnos. El campo megusta registra si el alumno ha dado like al apunte (null = sin voto)
 const ApuntesAlumnos = sequelize.define(
   "apuntesalumnos",
   {
@@ -11,4 +15,5 @@ const ApuntesAlumnos = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = ApuntesAlumnos;

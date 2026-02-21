@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Tabla intermedia que registra la relación alumno-curso: si está apuntado, si lo tiene en favoritos y si lo ha valorado
 const CursosAlumnos = sequelize.define(
   "cursosalumnos",
   {
@@ -8,9 +12,11 @@ const CursosAlumnos = sequelize.define(
     alumnoId: DataTypes.INTEGER,
     favorito: DataTypes.BOOLEAN,
     apuntado: DataTypes.BOOLEAN,
+    // field: "valoración" indica el nombre real de la columna en la BD (con tilde)
     valoracion: { type: DataTypes.BOOLEAN, field: "valoración" },
   },
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = CursosAlumnos;

@@ -1,9 +1,14 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario de registro para alumnos externos (no pertenecientes a la familia Nebrija)
 function RegisterAlumnoExternoGrid() {
   const navigate = useNavigate();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado del formulario con todos los campos necesarios para el registro externo
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -17,11 +22,13 @@ function RegisterAlumnoExternoGrid() {
 
   const [error, setError] = useState("");
 
+  // Actualiza el campo correspondiente del formulario cuando el usuario escribe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Envía los datos al backend para crear la cuenta. Si el registro es correcto, redirige al login.
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -54,6 +61,7 @@ function RegisterAlumnoExternoGrid() {
     <div className="register-grid-externo">
       <div className="formulario-register-contenedor">
         <h2>Registrate</h2>
+        {/* Formulario de registro: todos los campos son obligatorios */}
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
             name="nombre"
@@ -152,6 +160,7 @@ function RegisterAlumnoExternoGrid() {
         </p>
       </div>
 
+      {/* Panel informativo con el precio y las ventajas de la plataforma */}
       <div className="register-precios">
         <h2>Precio</h2>
         <div className="precios-contenido">

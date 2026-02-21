@@ -1,6 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Definimos el modelo "cursos". El campo categoria usa ENUM para limitar los valores posibles.
+// El campo imagen almacena el nombre del archivo de portada del curso.
 const Cursos = sequelize.define(
   "cursos",
   {
@@ -21,4 +26,5 @@ const Cursos = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = Cursos;

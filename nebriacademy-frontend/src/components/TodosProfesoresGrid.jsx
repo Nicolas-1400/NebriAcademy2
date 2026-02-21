@@ -1,13 +1,20 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Listado de todos los profesores con buscador por nombre y filtro por especialización
 function TodosProfesoresGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [profesores, setProfesores] = useState([]);
   const [error, setError] = useState(null);
 
+  // Estado del buscador por nombre y del filtro por especialización
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos todos los profesores
   useEffect(() => {
     fetch("http://localhost:3000/profesores")
       .then((respuesta) => respuesta.json())
@@ -20,10 +27,13 @@ function TodosProfesoresGrid() {
       });
   }, []);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Obtenemos las especializaciones únicas del listado para rellenar el filtro dinámicamente
   const specializations = [
     ...new Set(profesores.map((p) => p.especializacion).filter((e) => e)),
   ];
 
+  // Filtramos la lista de profesores según los criterios activos (nombre y/o especialización)
   const filteredProfesores = profesores.filter((p) => {
     if (
       selectedSpecialization &&
@@ -39,10 +49,12 @@ function TodosProfesoresGrid() {
     return true;
   });
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="TodosProfesoresGrid">
+      {/* Sidebar lateral con buscador por nombre y filtro por especialización */}
       <aside className="buscador-sidebar-profesores">
         <div className="formulario-busqueda">
           <input
@@ -89,6 +101,7 @@ function TodosProfesoresGrid() {
         </div>
       </aside>
 
+      {/* Grid principal con las tarjetas de los profesores filtrados */}
       <div className="profesores-grid">
         <h2>Profesores</h2>
         {filteredProfesores.length > 0 ? (

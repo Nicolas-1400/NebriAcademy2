@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
@@ -6,27 +7,35 @@ import SalirEdicion from "../assets/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from "../store/useAuthStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página principal de apuntes: listado global con filtros, likes y modo edición
 function ApuntesGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [data, setData] = useState({
     apuntes: [],
     profesores: [],
     alumnos: [],
     categorias: [],
   });
+  // IDs de apuntes a los que el usuario ha dado like
   const [likedIds, setLikedIds] = useState([]);
   const [error, setError] = useState(null);
 
+  // Estado de los filtros: categoría, buscador de texto y modo de vista
   const [filters, setFilters] = useState({
     category: "",
     searchTerm: "",
     viewMode: "all",
   });
+  // En modo edición se muestran los botones de editar/borrar en cada apunte propio
   const [editMode, setEditMode] = useState(false);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Al montar el componente, cargamos apuntes, profesores, alumnos y categorías en paralelo
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -64,6 +73,7 @@ function ApuntesGrid() {
     cargarDatos();
   }, []);
 
+  // Cargamos los likes del alumno cuando el usuario esté disponible
   useEffect(() => {
     if (!usuario?.id) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`)
@@ -72,6 +82,8 @@ function ApuntesGrid() {
       .catch(console.error);
   }, [usuario]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Resuelve el nombre del autor de un apunte buscando primero entre alumnos y luego entre profesores
   const resolveAutorNombre = (autorId) => {
     const aid = Number(autorId);
     const alum = data.alumnos.find(
@@ -85,12 +97,14 @@ function ApuntesGrid() {
     return "Desconocido";
   };
 
+  // Comprueba si el usuario actual es el autor del apunte para mostrar los controles de edición
   const canEdit = (apunte) => {
     if (!usuario) return false;
     const currentUserId = usuario.usuarioId || usuario.id;
     return Number(currentUserId) === Number(apunte.autor);
   };
 
+  // Lista de apuntes filtrada y ordenada según los criterios activos; se recalcula al cambiar datos o filtros
   const processedApuntes = useMemo(() => {
     let list = data.apuntes.filter((a) => {
       if (filters.category && a.categoria !== filters.category) return false;
@@ -106,6 +120,7 @@ function ApuntesGrid() {
       return true;
     });
 
+    // Modos de vista especiales que filtran u ordenan la lista resultante
     if (filters.viewMode === "misApuntes" && usuario?.usuarioId) {
       list = list.filter((a) => Number(a.autor) === Number(usuario.usuarioId));
     } else if (filters.viewMode === "favoritos") {
@@ -118,6 +133,7 @@ function ApuntesGrid() {
     return list;
   }, [data, filters, usuario, likedIds]);
 
+  // Alterna el like de un apunte (solo alumnos): actualiza backend y estado local
   const handleToggleLike = async (apunte) => {
     if (!usuario?.id || tipo !== "alumno") return;
     try {
@@ -136,6 +152,7 @@ function ApuntesGrid() {
         setLikedIds((prev) =>
           isLike ? [...prev, apunte.id] : prev.filter((x) => x !== apunte.id),
         );
+        // Actualizamos el contador de likes en la lista sin recargar la página
         setData((prev) => ({
           ...prev,
           apuntes: prev.apuntes.map((a) =>
@@ -148,6 +165,7 @@ function ApuntesGrid() {
     }
   };
 
+  // Borra un apunte con confirmación y lo elimina también del estado local
   const handleDelete = async (aid) => {
     if (!window.confirm("¿Borrar apunte?")) return;
     try {
@@ -161,6 +179,7 @@ function ApuntesGrid() {
     }
   };
 
+  // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (field, val) =>
     setFilters((prev) => ({ ...prev, [field]: val }));
 
@@ -168,6 +187,7 @@ function ApuntesGrid() {
 
   return (
     <div className="apuntes-grid">
+      {/* Sidebar lateral con buscador, filtros de categoría, modos de vista y botón de limpiar */}
       <aside className="buscador-sidebar-apuntes">
         <div className="formulario-busqueda">
           <input
@@ -226,6 +246,7 @@ function ApuntesGrid() {
                 Novedades
               </button>
             </li>
+            {/* El modo "Favoritos" solo está disponible para alumnos */}
             {tipo === "alumno" && (
               <li>
                 <button
@@ -250,6 +271,7 @@ function ApuntesGrid() {
         </div>
       </aside>
 
+      {/* Grid principal con la lista de apuntes filtrados */}
       <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
@@ -265,6 +287,7 @@ function ApuntesGrid() {
                     autorNombre={resolveAutorNombre(ap.autor)}
                     isEditMode={editMode}
                   />
+                  {/* Botones de editar/borrar visibles solo en modo edición y si el usuario es el autor */}
                   {editMode && canEdit(ap) && (
                     <div className="apunte-edit-controls">
                       <button
@@ -290,6 +313,7 @@ function ApuntesGrid() {
         </div>
       </main>
 
+      {/* Botones flotantes: activar modo edición y subir nuevo apunte */}
       <div className="fixed-action-group">
         <button
           className="editarApuntes"

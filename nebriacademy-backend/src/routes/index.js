@@ -1,6 +1,9 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET / — Devuelve una página HTML básica listando los endpoints disponibles de la API
 router.get("/", (req, res) => {
   res.send(`
     <h1>API NebriAcademy</h1>
@@ -17,4 +20,5 @@ router.get("/", (req, res) => {
   `);
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

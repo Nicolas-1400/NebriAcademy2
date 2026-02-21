@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -7,10 +8,14 @@ const fs = require("fs");
 const Ejercicios = require("../models/Ejercicios.js");
 const Profesores = require("../models/Profesores.js");
 
+// ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
+// Carpeta donde se guardan físicamente los archivos de ejercicios subidos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Ejercicios",
 );
+
+// Configuramos multer para guardar el archivo en uploadDir conservando el nombre original
 const upload = multer({
   storage: multer.diskStorage({
     destination: uploadDir,
@@ -18,6 +23,8 @@ const upload = multer({
   }),
 });
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /ejercicios — Devuelve todos los ejercicios registrados
 router.get("/", async (req, res) => {
   try {
     const all = await Ejercicios.findAll();
@@ -27,6 +34,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /ejercicios/:id — Devuelve un ejercicio concreto por su ID
 router.get("/:id", async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
@@ -36,6 +44,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /ejercicios — Sube un nuevo ejercicio. Solo los profesores pueden crearlo.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -46,6 +56,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 
     let profesorId = null;
 
+    // Solo aceptamos si el usuario es un profesor válido
     if (tipo === "profesor") {
       const prof = await Profesores.findByPk(profileId);
       if (prof) profesorId = prof.id;
@@ -56,6 +67,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
+    // Creamos el registro del ejercicio en BD con el archivo ya guardado en disco
     const nuevo = await Ejercicios.create({
       autor: profesorId,
       curso: curso || null,
@@ -71,6 +83,8 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /ejercicios/:id — Actualiza los datos de un ejercicio. Si llega archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
@@ -86,11 +100,14 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /ejercicios/:id — Elimina el ejercicio de la BD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
     if (!ej) return res.status(404).json({ error: "No encontrado" });
 
+    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
     if (ej.archivo) {
       const p = path.join(uploadDir, ej.archivo);
       fs.promises.unlink(p).catch(() => {});
@@ -103,4 +120,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

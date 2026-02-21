@@ -1,7 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const PuntuacionesEjercicios = require("../models/PuntuacionesEjercicios.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /puntuacionesejercicios — Devuelve todas las puntuaciones registradas
 router.get("/", async (req, res) => {
   try {
     const all = await PuntuacionesEjercicios.findAll();
@@ -14,6 +17,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /puntuacionesejercicios/:id — Devuelve una puntuación concreta por su ID
 router.get("/:id", async (req, res) => {
   try {
     const p = await PuntuacionesEjercicios.findByPk(req.params.id);
@@ -23,6 +27,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /puntuacionesejercicios — Crea una nueva puntuación para la entrega de un alumno
 router.post("/", async (req, res) => {
   try {
     const created = await PuntuacionesEjercicios.create(req.body);
@@ -32,6 +38,8 @@ router.post("/", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /puntuacionesejercicios/:id — Actualiza la nota de una entrega ya calificada
 router.put("/:id", async (req, res) => {
   try {
     const p = await PuntuacionesEjercicios.findByPk(req.params.id);
@@ -44,6 +52,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /puntuacionesejercicios/:id — Elimina la puntuación de una entrega
 router.delete("/:id", async (req, res) => {
   try {
     const p = await PuntuacionesEjercicios.findByPk(req.params.id);
@@ -56,4 +66,5 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

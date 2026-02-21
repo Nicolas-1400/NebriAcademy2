@@ -1,22 +1,31 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursos from "./TarjetaCursos";
 import Eliminar from "../assets/Eliminar.png";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Home del profesor: muestra sus cursos y permite eliminarlos con confirmación
 function HomeProfesorGrid() {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
+  // isDeleting activa el botón de eliminar visible sobre cada tarjeta de curso
   const [isDeleting, setIsDeleting] = useState(false);
 
   const storeUser = useAuthStore((state) => state.user);
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Cuando el usuario del store esté disponible, lo guardamos y cargamos sus cursos
   useEffect(() => {
     if (!storeUser) return;
     setUsuario(storeUser);
     fetchCursosProfesor(storeUser.id);
   }, [storeUser]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Obtiene todos los cursos y filtra solo los que pertenecen al profesor logueado
   const fetchCursosProfesor = async (profesorId) => {
     try {
       const respuesta = await fetch("http://localhost:3000/cursos");
@@ -32,6 +41,7 @@ function HomeProfesorGrid() {
     }
   };
 
+  // Pide confirmación y borra el curso del backend. Si el borrado tiene éxito, actualiza la lista local.
   const handleDeleteCurso = async (cursoId, e) => {
     e.stopPropagation();
     if (
@@ -57,6 +67,7 @@ function HomeProfesorGrid() {
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (error) return <div>{error}</div>;
 
   return (
@@ -66,6 +77,7 @@ function HomeProfesorGrid() {
           Bienvenido/a:{" "}
           {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
         </h1>
+        {/* Botón de papelera para activar/desactivar el modo borrado sobre los cursos */}
         <button
           onClick={() => setIsDeleting(!isDeleting)}
           className="btn-delete-mode"

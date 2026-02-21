@@ -1,8 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
 const Alumnos = require("../models/Alumnos.js");
 const Usuarios = require("../models/Usuarios.js");
 
+// ── GET ─────────────────────────────────────────────────────────────────────
+// GET /alumnos — Devuelve todos los alumnos registrados
 router.get("/", async (req, res) => {
   try {
     const todos = await Alumnos.findAll();
@@ -13,6 +16,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// GET /alumnos/:id — Devuelve un alumno concreto buscándolo por su ID
 router.get("/:id", async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
@@ -25,6 +29,8 @@ router.get("/:id", async (req, res) => {
   }
 });
 
+// ── PUT ─────────────────────────────────────────────────────────────────────
+// PUT /alumnos/:id — Actualiza los datos del alumno con los campos que vengan en el body
 router.put("/:id", async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
@@ -38,6 +44,8 @@ router.put("/:id", async (req, res) => {
   }
 });
 
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// DELETE /alumnos/:id — Elimina el registro del alumno de la base de datos
 router.delete("/:id", async (req, res) => {
   try {
     const filas = await Alumnos.destroy({ where: { id: req.params.id } });
@@ -50,6 +58,8 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// POST /alumnos/registerAlumnoExterno/auth — Registra un alumno que no es de Nebrija
 router.post("/registerAlumnoExterno/auth", async (req, res) => {
   try {
     const {
@@ -63,6 +73,7 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
       localidad,
     } = req.body;
 
+    // Todos estos campos son obligatorios; si falta alguno, se rechaza la petición
     if (
       !nombre ||
       !apellidos ||
@@ -76,13 +87,16 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
       return res.status(400).json({ error: "Todos los campos obligatorios" });
     }
 
+    // Comprobamos que el email no esté ya registrado antes de crear nada
     const existente = await Alumnos.findOne({ where: { email } });
     if (existente)
       return res.status(400).json({ error: "Email ya registrado" });
 
+    // Creamos primero el registro base en la tabla "usuarios"
     const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
 
     try {
+      // Creamos el alumno vinculado al usuario recién creado
       const nuevoAlumno = await Alumnos.create({
         usuarioId: nuevoUsuario.id,
         nombre,
@@ -100,6 +114,7 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
         usuario: { id: nuevoAlumno.id, nombre, email },
       });
     } catch (createError) {
+      // Si falló la creación del alumno, borramos el usuario para no dejar datos huérfanos
       await nuevoUsuario.destroy();
       throw createError;
     }
@@ -109,22 +124,27 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
   }
 });
 
+// POST /alumnos/verificacionnebrija/auth — Primera fase del registro para alumnos de Nebrija.
+// El alumno ya existe en la BD con email y contraseña temporal; aquí se verifica que son correctos.
 router.post("/verificacionnebrija/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 
   try {
+    // Buscamos la cuenta por email
     const alumno = await Alumnos.findOne({ where: { email } });
 
     if (!alumno) {
       return res.status(404).json({ error: "Email no encontrado" });
     }
 
+    // Si ya tiene nombre y apellidos, la cuenta fue completada antes; no se puede volver a verificar
     if (alumno.nombre || alumno.apellidos) {
       return res
         .status(400)
         .json({ error: "Esta cuenta ya ha sido registrada" });
     }
 
+    // Verificamos que la contraseña temporal enviada coincide con la almacenada
     if (alumno.contrasena !== contrasena) {
       return res
         .status(401)
@@ -138,11 +158,13 @@ router.post("/verificacionnebrija/auth", async (req, res) => {
   }
 });
 
+// POST /alumnos/verificacionnebrija/completar — Segunda fase: rellena los datos personales del alumno Nebrija
 router.post("/verificacionnebrija/completar", async (req, res) => {
   try {
     const { nombre, apellidos, dni, contrasena, email, pais, localidad } =
       req.body;
 
+    // Comprobamos que todos los campos necesarios para completar el perfil estén presentes
     if (
       !nombre ||
       !apellidos ||
@@ -161,10 +183,12 @@ router.post("/verificacionnebrija/completar", async (req, res) => {
       return res.status(404).json({ error: "Cuenta no encontrada" });
     }
 
+    // Si ya tiene datos personales, la cuenta ya fue completada anteriormente
     if (alumno.nombre || alumno.apellidos) {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
+    // Actualizamos el registro del alumno con los datos del formulario
     await alumno.update({
       nombre,
       apellidos,
@@ -184,4 +208,5 @@ router.post("/verificacionnebrija/completar", async (req, res) => {
   }
 });
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

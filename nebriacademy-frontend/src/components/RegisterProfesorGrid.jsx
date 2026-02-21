@@ -1,10 +1,14 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Segundo paso del registro de profesor: el profesor ya verificado completa sus datos personales
 function RegisterProfesorGrid() {
   const navigate = useNavigate();
   const location = useLocation();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -19,6 +23,8 @@ function RegisterProfesorGrid() {
 
   const [error, setError] = useState("");
 
+  // Al montar el componente, recuperamos el email verificado (del state de navegación o del sessionStorage)
+  // y lo precargamos en el formulario. Si no hay email, redirigimos a la verificación.
   useEffect(() => {
     const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
     const emailToUse = location.state?.email || verifiedEmail;
@@ -30,11 +36,13 @@ function RegisterProfesorGrid() {
     }
   }, [location.state, navigate]);
 
+  // Actualiza el campo correspondiente del formulario cuando el usuario escribe
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Envía los datos al backend para completar el registro. Limpia el sessionStorage y redirige al login si todo va bien.
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -52,6 +60,7 @@ function RegisterProfesorGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
+        // Eliminamos la clave de sessionStorage para que no quede rastro de la verificación
         sessionStorage.removeItem("verifiedProfessorEmail");
         navigate("/");
       } else {
@@ -68,6 +77,7 @@ function RegisterProfesorGrid() {
       <div className="formulario-register-contenedor">
         <h2>Regístrate (Profesor)</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
+          {/* El email viene precargado y no es editable: identifica la cuenta a completar */}
           <input
             name="email"
             type="email"
