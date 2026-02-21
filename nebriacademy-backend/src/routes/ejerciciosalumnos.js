@@ -8,10 +8,6 @@ const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
 const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
 
-// ==========================================
-// 1. Configuración de Subida de Archivos
-// ==========================================
-// Determina Multer de archivos ZIP/PDF cargados por Req.
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
@@ -23,15 +19,9 @@ const upload = multer({
   }),
 });
 
-// ==========================================
-// 2. Rutas de Obtención
-// ==========================================
-// Devuelve un GET total de findAll.
 router.get("/", async (req, res) => {
   try {
-    // Genera retorno desde Sequelize sobre metadatos integrados.
     const all = await EjerciciosAlumnos.findAll();
-    // Completa JSON a front resolviendo promesa con array retornado.
     res.json({ "Numero de registros": all.length, registros: all });
   } catch (error) {
     res.status(500).json({ error: "Server error" });
@@ -47,15 +37,10 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 3. Rutas de Entrega de Ejercicios
-// ==========================================
-// Usa Express POST con Multer intercept para almacenar en FS y MySQL.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     const { ejercicioId, profileId } = req.body;
 
-    // Busca existencia en modelos originarios (Ejercicios, Alumnos).
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
     const validAlumno = await Alumnos.findByPk(profileId);
 
@@ -63,14 +48,12 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       return res.status(400).json({ error: "Ejercicio o Alumno inválido" });
     }
 
-    // Registra nuevo CursosAlumnos con clave provista de archivo .filename.
     const nuevo = await EjerciciosAlumnos.create({
       ejercicioId,
       alumnoId: profileId,
       archivo: req.file ? req.file.filename : null,
     });
 
-    // Termina operación.
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {
     console.error(error);
@@ -78,10 +61,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// ==========================================
-// 4. Rutas de Actualización
-// ==========================================
-// Regla PUT para machacar archivos enviados adjuntos y parámetros en tabla.
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -97,10 +76,6 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// ==========================================
-// 5. Rutas de Eliminación
-// ==========================================
-// Combina unlink sobre Path en FS y un posterior Destroy de sequelize.
 router.delete("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);

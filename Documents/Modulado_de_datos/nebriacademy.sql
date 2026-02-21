@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 19-02-2026 a las 12:57:39
+-- Tiempo de generación: 21-02-2026 a las 13:37:58
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -251,7 +251,8 @@ INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`
 (25, 12, 8, 0, 1, NULL),
 (26, 20, 1, 0, 0, 1),
 (27, 21, 9, 0, 1, 1),
-(28, 20, 9, 1, 1, 0);
+(28, 20, 9, 1, 1, 0),
+(29, 24, 9, 0, 0, NULL);
 
 -- --------------------------------------------------------
 
@@ -627,7 +628,7 @@ ALTER TABLE `cursos`
 -- AUTO_INCREMENT de la tabla `cursosalumnos`
 --
 ALTER TABLE `cursosalumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=30;
 
 --
 -- AUTO_INCREMENT de la tabla `ejercicios`

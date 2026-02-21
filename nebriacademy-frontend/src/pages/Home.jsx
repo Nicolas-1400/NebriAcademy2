@@ -8,7 +8,6 @@ function Home() {
   return (
     <div>
       <Nav />
-      {/* Renderizar vista de profesor o alumno según el tipo de usuario */}
       {useAuthStore((state) => state.tipo) === "profesor" ? (
         <HomeProfesorGrid />
       ) : (

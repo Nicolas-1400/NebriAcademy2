@@ -2,7 +2,6 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 function EditarApunteIndividualGrid() {
-  // Estados
   const { state } = useLocation();
   const navigate = useNavigate();
   const { apunte } = state || {};
@@ -13,14 +12,12 @@ function EditarApunteIndividualGrid() {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Efectos
   useEffect(() => {
     if (!apunte) {
       navigate("/Home/Apuntes");
     }
   }, [apunte, navigate]);
 
-  // Handlers
   const handleSave = async () => {
     setLoading(true);
     setError(null);

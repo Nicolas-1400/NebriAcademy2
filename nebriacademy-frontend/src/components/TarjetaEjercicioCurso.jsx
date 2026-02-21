@@ -8,7 +8,6 @@ function TarjetaEjercicioCurso({
   handleEditNavigate,
   handleDeleteContenido,
 }) {
-  // Lógica
   const isProfesorEdit = tipo === "profesor" && editingMode;
 
   return (

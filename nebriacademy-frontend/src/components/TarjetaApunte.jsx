@@ -29,7 +29,6 @@ function TarjetaApunte({
           <p>{apunte.categoria}</p>
         </div>
 
-        {/* Sección de Likes */}
         <div className="apunte-like">
           {onToggleLike && usuario?.id && (
             <>

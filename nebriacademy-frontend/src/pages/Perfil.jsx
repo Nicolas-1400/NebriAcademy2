@@ -8,7 +8,6 @@ function Perfil() {
   return (
     <div>
       <Nav />
-      {/* Renderizar perfil de profesor o alumno según el tipo de usuario */}
       {useAuthStore((state) => state.tipo) === "profesor" ? (
         <PerfilProfesorGrid />
       ) : (

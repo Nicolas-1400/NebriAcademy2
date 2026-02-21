@@ -2,14 +2,12 @@ import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
 function TodosProfesoresGrid() {
-  // Estados
   const [profesores, setProfesores] = useState([]);
   const [error, setError] = useState(null);
 
   const [searchTerm, setSearchTerm] = useState("");
   const [selectedSpecialization, setSelectedSpecialization] = useState("");
 
-  // Efectos
   useEffect(() => {
     fetch("http://localhost:3000/profesores")
       .then((respuesta) => respuesta.json())
@@ -22,14 +20,10 @@ function TodosProfesoresGrid() {
       });
   }, []);
 
-  // Helpers
   const specializations = [
-    ...new Set(
-      profesores.map((p) => p.especializacion).filter((e) => e), // Filtrar nulos/vacíos
-    ),
+    ...new Set(profesores.map((p) => p.especializacion).filter((e) => e)),
   ];
 
-  // Filtros
   const filteredProfesores = profesores.filter((p) => {
     if (
       selectedSpecialization &&
@@ -49,7 +43,6 @@ function TodosProfesoresGrid() {
 
   return (
     <div className="TodosProfesoresGrid">
-      {/* SIDEBAR */}
       <aside className="buscador-sidebar-profesores">
         <div className="formulario-busqueda">
           <input
@@ -96,7 +89,6 @@ function TodosProfesoresGrid() {
         </div>
       </aside>
 
-      {/* GRID */}
       <div className="profesores-grid">
         <h2>Profesores</h2>
         {filteredProfesores.length > 0 ? (

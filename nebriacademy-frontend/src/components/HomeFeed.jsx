@@ -7,13 +7,11 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function HomeFeed() {
-  // Estados
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
   const [categorias, setCategorias] = useState([]);
 
-  // UI States
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(true);
 
@@ -24,7 +22,6 @@ function HomeFeed() {
 
   const storeUser = useAuthStore((state) => state.user);
 
-  // Efectos
   useEffect(() => {
     if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
@@ -60,7 +57,6 @@ function HomeFeed() {
       .finally(() => setLoading(false));
   }, []);
 
-  // Lógica
   const tusCursos = () => {
     if (!usuario) return [];
     return cursosAlumnos
@@ -80,7 +76,6 @@ function HomeFeed() {
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
   };
 
-  // Handlers
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };
@@ -92,7 +87,6 @@ function HomeFeed() {
       : sliderRef.current.slickNext();
   };
 
-  // Resize fix para Sliders
   useEffect(() => {
     if (!loading) {
       const t = setTimeout(() => {
@@ -125,7 +119,6 @@ function HomeFeed() {
     );
   }
 
-  /* Slider */
   const settingsSlider = {
     dots: false,
     infinite: true,
@@ -145,7 +138,6 @@ function HomeFeed() {
         {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
       </h1>
       <div className="HomeFeed-secciones">
-        {/* Sección 1: Novedades */}
         <div className="HomeFeed-seccion-novedades">
           <h2>Novedades</h2>
           <div className="HomeFeed-carousel-container">
@@ -186,7 +178,6 @@ function HomeFeed() {
           </div>
         </div>
 
-        {/* Sección 2: Tus Cursos */}
         <div className="HomeFeed-seccion-tus-cursos">
           <h2>Tus cursos</h2>
           <div className="HomeFeed-carousel-container">
@@ -229,7 +220,6 @@ function HomeFeed() {
           </div>
         </div>
 
-        {/* Sección 3: Categorías */}
         <div className="HomeFeed-seccion-categorias">
           <h2>Categorías</h2>
           <div className="HomeFeed-categorias-buttons">
@@ -245,7 +235,6 @@ function HomeFeed() {
           </div>
         </div>
 
-        {/* Sección 4: Cursos Populares */}
         <div className="HomeFeed-seccion-cursos-populares">
           <h2>Cursos populares</h2>
           <div className="HomeFeed-carousel-container">

@@ -31,7 +31,6 @@ function CursoGrid() {
   const navigate = useNavigate();
   const { user, tipo } = useAuthStore();
 
-  // Datos del Curso
   const [curso, setCurso] = useState(null);
   const [rotado, setRotado] = useState(false);
   const [profesor, setProfesor] = useState(null);
@@ -42,13 +41,11 @@ function CursoGrid() {
   });
   const [comentarios, setComentarios] = useState([]);
 
-  // Estado Usuario-Curso
   const [registroUser, setRegistroUser] = useState(null);
   const [uploadedEjercicios, setUploadedEjercicios] = useState([]);
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [puntuacionesEjercicios, setPuntuacionesEjercicios] = useState([]);
 
-  // Estados interfaz usuario
   const [error, setError] = useState(null);
   const [editingMode, setEditingMode] = useState(false);
   const [showAddMenu, setShowAddMenu] = useState(false);
@@ -90,20 +87,17 @@ function CursoGrid() {
 
   const bgImage = getHeaderImage();
 
-  // Carga Inicial
   useEffect(() => {
     if (!id) return;
 
     const fetchAll = async () => {
       try {
-        // Cargar Curso
         const respuestaCurso = await fetch(
           `http://localhost:3000/cursos/${id}`,
         ).then((respuesta) => (respuesta.ok ? respuesta.json() : null));
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
 
-        // Cargar Profesor
         if (respuestaCurso.profesor) {
           fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)
             .then((respuesta) => respuesta.json())
@@ -111,7 +105,6 @@ function CursoGrid() {
             .catch(console.warn);
         }
 
-        // Cargar Contenidos y Usuarios
         const [
           datosVideos,
           datosApuntes,
@@ -132,7 +125,6 @@ function CursoGrid() {
           fetch("http://localhost:3000/alumnos").then((r) => r.json()),
         ]);
 
-        // Helper para resolver nombres de autor
         const resolveName = (id) => {
           const aid = Number(id);
           const alum = (datosAlumnos.Alumnos || []).find(
@@ -146,7 +138,6 @@ function CursoGrid() {
           return "Desconocido";
         };
 
-        // Helper para filtrar solo los contenidos que pertenecen a este curso
         const filterById = (list) =>
           (list || []).filter((i) => String(i.curso) === String(id));
 
@@ -161,7 +152,6 @@ function CursoGrid() {
           ejercicios: filterById(datosEjercicios.Ejercicios),
         });
 
-        // Cargar Comentarios
         fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
@@ -174,13 +164,11 @@ function CursoGrid() {
     fetchAll();
   }, [id]);
 
-  // Carga Datos Usuario
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
     const fetchUserData = async () => {
       try {
-        // Estado Matricula
         const respuestaRegistro = await fetch(
           `http://localhost:3000/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
         ).then((respuesta) => respuesta.json());
@@ -198,7 +186,6 @@ function CursoGrid() {
         if (respuestaRegistro.comentario)
           setCommentText(respuestaRegistro.comentario);
 
-        // Likes de Apuntes
         const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
           [
             fetch(
@@ -217,13 +204,11 @@ function CursoGrid() {
 
         setLikedApuntes(likesData.apunteIds || []);
 
-        // Ejercicios subidos
         const misEntregas = (ejerciciosData.registros || []).filter(
           (registro) => String(registro.alumnoId) === String(user.id),
         );
         setUploadedEjercicios(misEntregas);
 
-        // Puntuaciones de ejercicios
         const misPuntuaciones = (
           puntuacionesData.PuntuacionesEjercicios || []
         ).filter((p) => String(p.alumnoId) === String(user.id));
@@ -236,7 +221,6 @@ function CursoGrid() {
     fetchUserData();
   }, [id, user, tipo]);
 
-  // Handlers
   const handleDeleteItem = async (type, itemId) => {
     if (!window.confirm("¿Eliminar este elemento?")) return;
     try {
@@ -450,7 +434,6 @@ function CursoGrid() {
         },
       );
       if (res.ok) {
-        // Update local state
         setComentarios((prev) =>
           prev.map((c) =>
             c.id === editingComment.id
@@ -471,13 +454,11 @@ function CursoGrid() {
   if (!curso) return <p>Cargando curso...</p>;
   if (error) return <p className="error">{error}</p>;
 
-  // Apuntes Filtrados
   const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
   const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
 
   return (
     <div className="curso-grid">
-      {/* Cabecera */}
       <div className="curso-header">
         <img className="curso-header-bg" src={bgImage} alt="" />
         <div className="curso-header-info">
@@ -539,12 +520,10 @@ function CursoGrid() {
         )}
       </div>
 
-      {/* Contenido Principal */}
       <div className="curso-contenedor-principal">
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
 
-          {/* Vídeos */}
           <h4>Vídeos</h4>
           {contenidos.videos.length > 0 ? (
             <div className="videos-list">
@@ -567,7 +546,6 @@ function CursoGrid() {
             <p className="sin-contenido">No hay vídeos.</p>
           )}
 
-          {/* Apuntes */}
           <h4>Apuntes</h4>
           <div className="apuntes-columns-wrapper">
             <div className="profesor-apuntes">
@@ -624,7 +602,6 @@ function CursoGrid() {
             </div>
           </div>
 
-          {/* Ejercicios */}
           <h4>Ejercicios</h4>
           {contenidos.ejercicios.length > 0 ? (
             <div className="ejercicios-list">
@@ -714,7 +691,6 @@ function CursoGrid() {
           )}
         </div>
 
-        {/* Sidebar Detalles */}
         <div className="curso-detalles">
           <div className="detalles-profesor">
             <p>Profesor</p>
@@ -783,7 +759,6 @@ function CursoGrid() {
         </div>
       </div>
 
-      {/* Acciones (Profesor: Todo | Alumno: Subir Apunte) */}
       {(tipo === "profesor" || tipo === "alumno") && (
         <div className="fixed-action-group">
           {tipo === "profesor" && (

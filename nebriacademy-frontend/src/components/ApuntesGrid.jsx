@@ -11,7 +11,6 @@ function ApuntesGrid() {
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
-  // Estados
   const [data, setData] = useState({
     apuntes: [],
     profesores: [],
@@ -28,7 +27,6 @@ function ApuntesGrid() {
   });
   const [editMode, setEditMode] = useState(false);
 
-  // Efectos
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -74,7 +72,6 @@ function ApuntesGrid() {
       .catch(console.error);
   }, [usuario]);
 
-  // Lógica
   const resolveAutorNombre = (autorId) => {
     const aid = Number(autorId);
     const alum = data.alumnos.find(
@@ -96,10 +93,8 @@ function ApuntesGrid() {
 
   const processedApuntes = useMemo(() => {
     let list = data.apuntes.filter((a) => {
-      // Filtro por Categoría
       if (filters.category && a.categoria !== filters.category) return false;
 
-      // Filtro de Texto
       const term = filters.searchTerm.toLowerCase();
       if (term) {
         const matchName = (a.nombre || "").toLowerCase().includes(term);
@@ -111,7 +106,6 @@ function ApuntesGrid() {
       return true;
     });
 
-    // Ordenamiento
     if (filters.viewMode === "misApuntes" && usuario?.usuarioId) {
       list = list.filter((a) => Number(a.autor) === Number(usuario.usuarioId));
     } else if (filters.viewMode === "favoritos") {
@@ -124,7 +118,6 @@ function ApuntesGrid() {
     return list;
   }, [data, filters, usuario, likedIds]);
 
-  // Handlers
   const handleToggleLike = async (apunte) => {
     if (!usuario?.id || tipo !== "alumno") return;
     try {
@@ -168,7 +161,6 @@ function ApuntesGrid() {
     }
   };
 
-  // Helpers
   const updateFilter = (field, val) =>
     setFilters((prev) => ({ ...prev, [field]: val }));
 
@@ -176,7 +168,6 @@ function ApuntesGrid() {
 
   return (
     <div className="apuntes-grid">
-      {/* Sidebar Filtros */}
       <aside className="buscador-sidebar-apuntes">
         <div className="formulario-busqueda">
           <input
@@ -259,7 +250,6 @@ function ApuntesGrid() {
         </div>
       </aside>
 
-      {/* Lista Principal */}
       <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
@@ -300,7 +290,6 @@ function ApuntesGrid() {
         </div>
       </main>
 
-      {/* Botones de Acción */}
       <div className="fixed-action-group">
         <button
           className="editarApuntes"

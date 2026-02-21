@@ -8,7 +8,6 @@ function PerfilGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
-  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -24,7 +23,6 @@ function PerfilGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Efectos
   useEffect(() => {
     if (!user || tipo !== "alumno") return;
 
@@ -48,7 +46,6 @@ function PerfilGrid() {
       .catch((error) => console.error("Error cargando perfil:", error));
   }, [user?.id, tipo, setUser]);
 
-  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));

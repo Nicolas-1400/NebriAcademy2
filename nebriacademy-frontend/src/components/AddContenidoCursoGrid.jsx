@@ -3,7 +3,6 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
 function AddContenidoCursoGrid() {
-  // Estados
   const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -22,7 +21,6 @@ function AddContenidoCursoGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Efectos
   useEffect(() => {
     if (cursoId) {
       fetch(`http://localhost:3000/cursos/${cursoId}`)
@@ -32,7 +30,6 @@ function AddContenidoCursoGrid() {
     }
   }, [cursoId]);
 
-  // Handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);

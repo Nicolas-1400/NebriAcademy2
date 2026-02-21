@@ -3,11 +3,6 @@ const router = express.Router();
 const ApuntesAlumnos = require("../models/ApuntesAlumnos.js");
 const Apuntes = require("../models/Apuntes.js");
 
-// ==========================================
-// ==========================================
-// 1. Rutas de Obtención
-// ==========================================
-// Llama a findAll y devuelve los datos resultantes de la tabla cruzada.
 router.get("/", async (req, res) => {
   try {
     const all = await ApuntesAlumnos.findAll();
@@ -32,10 +27,6 @@ router.get("/registro", async (req, res) => {
   }
 });
 
-// ==========================================
-// 2. Rutas de Votación
-// ==========================================
-// Procesa las variables del cuerpo JSON para alternar un valor booleano.
 router.post("/vote", async (req, res) => {
   try {
     const { apunteId, alumnoId, vote } = req.body;
@@ -70,10 +61,6 @@ router.post("/vote", async (req, res) => {
   }
 });
 
-// ==========================================
-// 3. Rutas de Likes
-// ==========================================
-// Mapea y devuelve las id de recursos donde coincida el alumno en formato arreglo.
 router.get("/likes", async (req, res) => {
   try {
     const { alumnoId } = req.query;

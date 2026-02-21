@@ -1,13 +1,6 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
-// ==========================================
-// 2. DEFINICIÓN DEL MODELO
-// ==========================================
-// Esquema de almacenamiento para materiales de estudio estáticos (PDFs, Word) vinculados a un temario.
 const Apuntes = sequelize.define(
   "apuntes",
   {
@@ -28,7 +21,4 @@ const Apuntes = sequelize.define(
   { timestamps: false },
 );
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 module.exports = Apuntes;

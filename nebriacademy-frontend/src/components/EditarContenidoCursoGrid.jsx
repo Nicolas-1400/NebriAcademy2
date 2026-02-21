@@ -1,23 +1,17 @@
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
-/**
- * Componente: EditarContenidoCursoGrid
- * Permite editar contenido (video, apunte, ejercicio) de un curso.
- */
 function EditarContenidoCursoGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { tipo, item, cursoId } = state || {};
 
-  // Estados
   const [nombre, setNombre] = useState(item?.nombre || "");
   const [descripcion, setDescripcion] = useState(item?.descripcion || "");
   const [newFile, setNewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Efectos
   useEffect(() => {
     if (!tipo || !item) {
       navigate(`/Home/Cursos/${cursoId || ""}`);
@@ -30,7 +24,6 @@ function EditarContenidoCursoGrid() {
     return "ejercicios";
   };
 
-  // Handlers
   const handleSave = async () => {
     setLoading(true);
     setError(null);

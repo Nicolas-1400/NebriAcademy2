@@ -3,7 +3,6 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
 function LoginGrid() {
-  // Estados
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
@@ -11,7 +10,6 @@ function LoginGrid() {
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  // Handlers
   const handleLogin = async (evento) => {
     evento.preventDefault();
     setError("");

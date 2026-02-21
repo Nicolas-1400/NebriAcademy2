@@ -10,7 +10,6 @@ function PerfilProfesorGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
-  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -28,7 +27,6 @@ function PerfilProfesorGrid() {
   const [mensajeError, setMensajeError] = useState("");
   const [loading, setLoading] = useState(false);
 
-  // Efectos
   useEffect(() => {
     if (!user || tipo !== "profesor") return;
 
@@ -56,7 +54,6 @@ function PerfilProfesorGrid() {
       );
   }, [user?.id, tipo, setUser]);
 
-  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -104,7 +101,6 @@ function PerfilProfesorGrid() {
 
   if (!user) return <p>Cargando perfil...</p>;
 
-  // Resolver imagen de perfil
   const imagenMostrar =
     formData.imagenPerfil && PERFILES[formData.imagenPerfil]
       ? PERFILES[formData.imagenPerfil]
@@ -138,7 +134,6 @@ function PerfilProfesorGrid() {
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
 
         <form onSubmit={handleSubmit} className="formulario-profesor">
-          {/* SECCIÓN SUPERIOR: Imagen + Datos Principales */}
           <div className="seccion-superior-form">
             <div className="columna-imagen">
               <label className="label-seccion">Imagen de Perfil:</label>

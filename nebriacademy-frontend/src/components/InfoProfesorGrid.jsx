@@ -5,18 +5,16 @@ import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 
-import "../styles/InfoProfesor.css"
+import "../styles/InfoProfesor.css";
 
 function InfoProfesorGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
 
-  // Estados
   const [profesor, setProfesor] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
 
-  // Efectos
   useEffect(() => {
     if (!id) return;
 
@@ -71,12 +69,10 @@ function InfoProfesorGrid() {
           <p>Este profesor no tiene cursos publicados.</p>
         )}
 
-       
-          <button className="boton-go-back" onClick={() => navigate(-1)}>
-            <img src={flecha} alt="Volver" />
-            <p>Volver</p>
-          </button>
-        
+        <button className="boton-go-back" onClick={() => navigate(-1)}>
+          <img src={flecha} alt="Volver" />
+          <p>Volver</p>
+        </button>
       </div>
 
       <div className="datosPerfil">

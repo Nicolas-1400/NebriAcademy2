@@ -1,9 +1,5 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import AppRouter from "./router/AppRouter.jsx";
 
-// Hojas de Estilos CSS Globales y Modulares
 import "./styles/general.css";
 import "./styles/Header.css";
 import "./styles/Nav.css";
@@ -27,14 +23,8 @@ import "./styles/HomeProfesor.css";
 import "./styles/NotFound.css";
 import "./styles/TarjetaApunte.css";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL (RAÍZ)
-// ==========================================
 function App() {
   return <AppRouter />;
 }
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 export default App;

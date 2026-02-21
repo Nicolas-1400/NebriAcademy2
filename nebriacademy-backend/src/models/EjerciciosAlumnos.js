@@ -1,13 +1,6 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
-// ==========================================
-// 2. DEFINICIÓN DEL MODELO
-// ==========================================
-// Casillero de entregas. Archiva el PDF/ZIP que un alumno sube en respuesta a una asignación concreta.
 const EjerciciosAlumnos = sequelize.define(
   "ejerciciosalumnos",
   {
@@ -18,7 +11,4 @@ const EjerciciosAlumnos = sequelize.define(
   { timestamps: false },
 );
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 module.exports = EjerciciosAlumnos;

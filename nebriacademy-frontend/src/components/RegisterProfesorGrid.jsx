@@ -5,7 +5,6 @@ function RegisterProfesorGrid() {
   const navigate = useNavigate();
   const location = useLocation();
 
-  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -20,7 +19,6 @@ function RegisterProfesorGrid() {
 
   const [error, setError] = useState("");
 
-  // Efectos
   useEffect(() => {
     const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
     const emailToUse = location.state?.email || verifiedEmail;
@@ -32,7 +30,6 @@ function RegisterProfesorGrid() {
     }
   }, [location.state, navigate]);
 
-  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
@@ -159,7 +156,6 @@ function RegisterProfesorGrid() {
             <option value="Otro">Otro</option>
           </select>
 
-          {/* Especialización */}
           <select
             name="especializacion"
             value={formData.especializacion}

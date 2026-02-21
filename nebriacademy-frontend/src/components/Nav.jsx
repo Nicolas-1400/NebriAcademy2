@@ -11,17 +11,14 @@ function Nav() {
   const navigate = useNavigate();
   const { user: usuario, tipo, logout: logoutStore } = useAuthStore();
 
-  // Estados UI
   const [isdesplegableOpen, setIsdesplegableOpen] = useState(false);
   const [isMenuOpen, setIsMenuOpen] = useState(false);
   const [isSearchOpen, setIsSearchOpen] = useState(false);
 
-  // Referencias
   const desplegableRef = useRef(null);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
 
-  // Estados Datos
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
   const [dataCache, setDataCache] = useState({
@@ -32,7 +29,6 @@ function Nav() {
     profesores: [],
   });
 
-  // Efectos
   useEffect(() => {
     const endpoints = [
       { key: "cursos", url: "http://localhost:3000/cursos", listKey: "Cursos" },
@@ -107,7 +103,6 @@ function Nav() {
     return () => window.removeEventListener("resize", handleResize);
   }, [isMenuOpen]);
 
-  // Handlers
   const handleLogout = () => {
     logoutStore();
     navigate("/");
@@ -211,7 +206,6 @@ function Nav() {
     }
   };
 
-  // Botones de Navegación
   const renderNavButtons = () => {
     if (tipo === "profesor") {
       return (
@@ -260,7 +254,6 @@ function Nav() {
     );
   };
 
-  // Buscador
   const renderSearch = () =>
     tipo === "alumno" ? (
       <div ref={searchRef} className="search-wrapper">
@@ -291,7 +284,6 @@ function Nav() {
 
   return (
     <div className="nav">
-      {/* Logo */}
       <div
         role="button"
         className="contenedor-logo-titulo"
@@ -301,7 +293,6 @@ function Nav() {
         <h2>NebriAcademy</h2>
       </div>
 
-      {/* Botón Hamburguesa */}
       <button
         className="menu-hamburguesa-btn"
         onClick={() => setIsMenuOpen(!isMenuOpen)}
@@ -313,12 +304,10 @@ function Nav() {
         />
       </button>
 
-      {/* Contenido Desktop */}
       <div className="contenedor-elementos-derecha">
         {renderNavButtons()}
         {renderSearch()}
 
-        {/* Perfil Desktop */}
         <div className="perfil-desplegable-container" ref={desplegableRef}>
           <button
             className="perfil-button"
@@ -358,11 +347,9 @@ function Nav() {
         </div>
       </div>
 
-      {/* Menú Móvil Desplegable */}
       {isMenuOpen && (
         <div className="menu-hamburguesa-desplegable" ref={menuRef}>
           <div className="contenedor-elementos-derecha-responsive">
-            {/* Perfil en Móvil */}
             <div className="perfil-desplegable-container" ref={desplegableRef}>
               <button
                 className="perfil-button"

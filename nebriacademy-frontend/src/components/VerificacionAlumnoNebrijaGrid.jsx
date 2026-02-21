@@ -2,13 +2,11 @@ import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
 function VerificacionAlumnoNebrijaGrid() {
-  // Estados
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
   const [error, setError] = useState("");
   const navigate = useNavigate();
 
-  // Handlers
   const handleVerification = async (e) => {
     e.preventDefault();
     setError("");

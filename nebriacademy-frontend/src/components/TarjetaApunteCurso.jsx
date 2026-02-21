@@ -30,7 +30,6 @@ function TarjetaApunteCurso({
         <p className="apunte-autor">{apunte.nombreAutor || apunte.autor}</p>
       </div>
 
-      {/* Controles de Profesor */}
       {isProfesorEdit && (
         <div className="edit-controls">
           <button
@@ -48,7 +47,6 @@ function TarjetaApunteCurso({
         </div>
       )}
 
-      {/* Sección de Likes */}
       <div className="apunte-like">
         {onToggleLike && usuario?.id && (
           <>

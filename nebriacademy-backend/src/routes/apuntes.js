@@ -1,6 +1,3 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
@@ -13,10 +10,6 @@ const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
-// ==========================================
-// 2. CONFIGURACIÓN DE MULTIMEDIA (MULTER)
-// ==========================================
-// Determina el directorio uniendo variables absolutas locales con path.
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Apuntes",
@@ -28,18 +21,11 @@ const upload = multer({
   }),
 });
 
-// ==========================================
-// 3. OBTENCIÓN DE DATOS (GET)
-// ==========================================
-// Devuelve lista total usando findAll().
 router.get("/", async (req, res) => {
   try {
-    // Retorna todos los registros obtenidos.
     const data = await Apuntes.findAll();
-    // Devuelve un objeto JSON contando el tamaño del conteo.
     res.json({ "Numero de apuntes": data.length, Apuntes: data });
   } catch (error) {
-    // Emite error de servidor por la consola.
     console.error(error);
     res.status(500).json({ error: "Server error" });
   }
@@ -56,9 +42,7 @@ router.get("/categorias", (req, res) => {
 
 router.get("/:id", async (req, res) => {
   try {
-    // Consulta registro puntual pasándole el número identificador.
     const apunte = await Apuntes.findByPk(req.params.id);
-    // Responde con resultado si encuentra coincidencia o pasa a error común.
     apunte
       ? res.json(apunte)
       : res.status(404).json({ error: "No encontrado" });
@@ -67,10 +51,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 4. AGREGACIÓN CON VALIDACIÓN DE AUTOR (POST)
-// ==========================================
-// Recibe el fichero y levanta registro con dependencias de Multer.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -130,22 +110,14 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// ==========================================
-// 5. EDICIÓN DEL RECURSO (PUT)
-// ==========================================
-// Localiza fichero por identificador y sobreescribe atributos indicados.
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
-    // Averigua que el bloque a tratar existe primero consultando la base.
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
-    // Acompaña el resto de pares de valores obtenidos de req.body.
     const updates = { ...req.body };
-    // Refuerza detectando si ha ingresado nuevo componente físico de Multer.
     if (req.file) updates.archivo = req.file.filename;
 
-    // Emplea el agrupamiento para incitar actualización en MySQL.
     const actualizado = await apunte.update(updates);
     res.json(actualizado);
   } catch (error) {
@@ -154,17 +126,11 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
   }
 });
 
-// ==========================================
-// 6. ELIMINACIÓN FÍSICA Y DE REGISTRO (DELETE)
-// ==========================================
-// Deshace rastro de documento a nivel de tablas relacionales y directorios.
 router.delete("/:id", async (req, res) => {
   try {
-    // Asegura tener fila real llamando a la columna inicial.
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
-    // Ubica el fichero físico y asincronamente lo deshace pasándole ignore en .catch.
     if (apunte.archivo) {
       const filePath = path.join(uploadDir, apunte.archivo);
       fs.promises
@@ -174,7 +140,6 @@ router.delete("/:id", async (req, res) => {
         );
     }
 
-    // Ejecuta el vaciado del registro lanzando directriz destroy de ORM.
     await apunte.destroy();
     res.json({ mensaje: "Eliminado correctamente" });
   } catch (error) {
@@ -183,7 +148,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 7. EXPORTACIONES
-// ==========================================
 module.exports = router;

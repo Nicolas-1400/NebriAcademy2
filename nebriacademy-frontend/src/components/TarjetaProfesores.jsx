@@ -10,7 +10,6 @@ function TarjetaProfesores({
   imagenPerfil,
 }) {
   const navigate = useNavigate();
-  // Helpers
   const imageSrc =
     imagenPerfil && PERFILES[imagenPerfil]
       ? PERFILES[imagenPerfil]

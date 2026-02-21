@@ -1,13 +1,6 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const express = require("express");
 const router = express.Router();
 
-// ==========================================
-// 2. RUTAS DE OBTENCIÓN (GET)
-// ==========================================
-// Devuelve un template string HTML listando los endpoints activos.
 router.get("/", (req, res) => {
   res.send(`
     <h1>API NebriAcademy</h1>
@@ -26,7 +19,4 @@ router.get("/", (req, res) => {
   `);
 });
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 module.exports = router;

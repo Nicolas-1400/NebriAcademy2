@@ -5,7 +5,6 @@ import flecha from "../assets/flecha-correcta.png";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
 function CorregirEjerciciosSubidosGrid() {
-  // Estados
   const { id } = useParams();
   const [registros, setRegistros] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
@@ -13,7 +12,6 @@ function CorregirEjerciciosSubidosGrid() {
   const [inputScores, setInputScores] = useState({});
   const navigate = useNavigate();
 
-  // Efectos
   useEffect(() => {
     Promise.all([
       fetch("http://localhost:3000/ejerciciosalumnos").then((respuesta) =>
@@ -55,7 +53,6 @@ function CorregirEjerciciosSubidosGrid() {
       );
   }, [id]);
 
-  // Lógica de visualización
   const ejerciciosConNombre = useMemo(() => {
     return registros.map((r) => {
       const alumno = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));
@@ -68,7 +65,6 @@ function CorregirEjerciciosSubidosGrid() {
     });
   }, [registros, alumnos]);
 
-  // Helpers
   const getExistingScore = (ejercicioId, alumnoId) => {
     return puntuaciones.find(
       (p) =>
@@ -77,7 +73,6 @@ function CorregirEjerciciosSubidosGrid() {
     );
   };
 
-  // Handlers
   const handeScoreInput = (regId, val) => {
     setInputScores((prev) => ({ ...prev, [regId]: val }));
   };

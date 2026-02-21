@@ -1,22 +1,10 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const express = require("express");
 const router = express.Router();
 
-// Importación directa de Modelos Sequelize necesarios para contrastar las credenciales
 const Administradores = require("../models/Administradores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
-// ==========================================
-// 2. ENDPOINTS Y RUTAS
-// ==========================================
-
-// Endpoint: POST /login/auth
-// Propósito: Autenticación unificada de usuarios.
-// Lógica: Busca secuencialmente en las tres tablas (Administradores, Alumnos, Profesores)
-// devolviendo un token simulado o la estructura del usuario si hay coincidencias.
 router.post("/auth", async (req, res) => {
   try {
     const { email, contrasena } = req.body;

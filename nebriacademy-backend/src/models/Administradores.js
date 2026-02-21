@@ -1,13 +1,6 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
-// ==========================================
-// 2. DEFINICIÓN DEL MODELO
-// ==========================================
-// Modelo de máxima jerarquía. Coordina el acceso sin restricciones al panel de control de la academia.
 const Administradores = sequelize.define(
   "administradores",
   {
@@ -25,7 +18,4 @@ const Administradores = sequelize.define(
   { timestamps: false },
 );
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 module.exports = Administradores;

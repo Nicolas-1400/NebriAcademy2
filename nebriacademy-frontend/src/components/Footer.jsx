@@ -7,14 +7,12 @@ import YouTube from "../assets/youtube.png";
 function Footer() {
   return (
     <div className="footer">
-      {/* Enlaces Legales */}
       <div className="footer-politicas">
         <a href="/Home/PoliticaDePrivacidad">Política de privacidad</a>
         <a href="/Home/NotaLegal">Nota legal</a>
         <a href="/Home/PoliticaDeCookies">Política de cookies</a>
       </div>
 
-      {/* Redes Sociales */}
       <div className="footer-redes">
         <a
           href="https://www.linkedin.com/school/universidad-nebrija/"

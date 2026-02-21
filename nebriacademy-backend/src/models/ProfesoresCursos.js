@@ -1,13 +1,6 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
-// ==========================================
-// 2. DEFINICIÓN DEL MODELO
-// ==========================================
-// Tabla organizativa que liga a uno o más profesores con la administración coordinada de un aula virtual conjunta.
 const ProfesoresCursos = sequelize.define(
   "profesorescursos",
   {
@@ -17,7 +10,4 @@ const ProfesoresCursos = sequelize.define(
   { timestamps: false },
 );
 
-// ==========================================
-// 3. EXPORTACIONES
-// ==========================================
 module.exports = ProfesoresCursos;

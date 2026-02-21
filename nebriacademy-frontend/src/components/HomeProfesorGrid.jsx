@@ -4,7 +4,6 @@ import TarjetaCursos from "./TarjetaCursos";
 import Eliminar from "../assets/Eliminar.png";
 
 function HomeProfesorGrid() {
-  // Estados
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [error, setError] = useState(null);
@@ -12,14 +11,12 @@ function HomeProfesorGrid() {
 
   const storeUser = useAuthStore((state) => state.user);
 
-  // Efectos
   useEffect(() => {
     if (!storeUser) return;
     setUsuario(storeUser);
     fetchCursosProfesor(storeUser.id);
   }, [storeUser]);
 
-  // Handlers
   const fetchCursosProfesor = async (profesorId) => {
     try {
       const respuesta = await fetch("http://localhost:3000/cursos");

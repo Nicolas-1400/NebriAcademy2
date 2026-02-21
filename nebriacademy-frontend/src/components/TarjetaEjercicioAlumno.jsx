@@ -1,10 +1,8 @@
 function TarjetaEjercicioAlumno({ registro }) {
-  // Lógica
   const archivo = registro.archivo || registro.file || registro.archivoNombre;
   const nombre = registro.nombre || registro.archivoNombre || archivo;
   const descripcion = registro.descripcion || registro.descripcionAlumno;
 
-  // Resolución del nombre del alumno
   const alumnoNombre =
     registro.alumnoNombre ||
     registro.nombreAlumno ||

@@ -11,7 +11,6 @@ function TodosCursosGrid() {
   });
   const [error, setError] = useState(null);
 
-  // Filtros
   const [filters, setFilters] = useState({
     category: state?.selectedCategory || "",
     level: "",
@@ -20,7 +19,6 @@ function TodosCursosGrid() {
 
   const NIVELES = ["Básico", "Intermedio", "Avanzado"];
 
-  // Carga de Datos
   useEffect(() => {
     const cargarDatos = async () => {
       try {
@@ -50,7 +48,6 @@ function TodosCursosGrid() {
     cargarDatos();
   }, []);
 
-  // Helpers
   const getProfesorName = (pid) => {
     const p = data.profesores.find((prof) => prof.id === pid);
     return p ? `Profesor: ${p.nombre} ${p.apellidos}` : "Profesor: Desconocido";
@@ -58,7 +55,6 @@ function TodosCursosGrid() {
 
   const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
 
-  // Filtros
   const filteredCursos = useMemo(() => {
     return data.cursos.filter((c) => {
       if (filters.category && c.categoria !== filters.category) return false;

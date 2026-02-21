@@ -1,6 +1,3 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 const express = require("express");
 const router = express.Router();
 const path = require("path");
@@ -9,10 +6,6 @@ const Cursos = require("../models/Cursos.js");
 const Profesores = require("../models/Profesores.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
-// ==========================================
-// 2. OBTENER DATOS (GET)
-// ==========================================
-// Usa findAll en la tabla Cursos y completa propiedades vacías de la petición.
 router.get("/", async (req, res) => {
   try {
     console.log("Petición recibida: GET /cursos");
@@ -86,10 +79,6 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 3. CREACIÓN (POST)
-// ==========================================
-// Inserta en modelo usando variables JSON y adjunta una tabla n:m a posterior.
 router.post("/add", async (req, res) => {
   try {
     const data = req.body || {};
@@ -127,10 +116,6 @@ router.post("/add", async (req, res) => {
   }
 });
 
-// ==========================================
-// 4. ACTUALIZACIÓN (PUT)
-// ==========================================
-// Sobrescribe valores JSON a través del objeto extraído por params id.
 router.put("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -150,10 +135,6 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 5. ELIMINACIÓN MASIVA (DELETE CACHE & DB)
-// ==========================================
-// Aplica unlink en FS sobre bucles en tablas relacionadas, culminando en un rotundo destroy.
 router.delete("/:id", async (req, res) => {
   try {
     const id = parseInt(req.params.id);
@@ -165,7 +146,6 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    // 1. Obtener y eliminar Videos
     const videos = await require("../models/Videos.js").findAll({
       where: { curso: id },
     });
@@ -185,7 +165,6 @@ router.delete("/:id", async (req, res) => {
       await v.destroy();
     }
 
-    // 2. Obtener y eliminar Apuntes
     const apuntes = await require("../models/Apuntes.js").findAll({
       where: { curso: id },
     });
@@ -205,13 +184,10 @@ router.delete("/:id", async (req, res) => {
       await a.destroy();
     }
 
-    // 3. Obtener y eliminar Ejercicios (del profesor)
     const ejercicios = await require("../models/Ejercicios.js").findAll({
       where: { curso: id },
     });
-    // Para cada ejercicio, eliminar entregas de alumnos y el archivo del ejercicio
     for (const e of ejercicios) {
-      // 3.1 Eliminar entregas de alumnos asociadas a este ejercicio
       const entregas = await require("../models/EjerciciosAlumnos.js").findAll({
         where: { ejercicioId: e.id },
       });
@@ -231,12 +207,10 @@ router.delete("/:id", async (req, res) => {
         await ent.destroy();
       }
 
-      // 3.2 Eliminar puntuaciones
       await require("../models/PuntuacionesEjercicios.js").destroy({
         where: { ejercicioId: e.id },
       });
 
-      // 3.3 Eliminar archivo del ejercicio (si existe)
       if (e.archivo) {
         const p = path.join(
           __dirname,
@@ -252,12 +226,10 @@ router.delete("/:id", async (req, res) => {
       await e.destroy();
     }
 
-    // 4. Eliminar Comentarios
     await require("../models/ComentatioAlumnoCurso.js").destroy({
       where: { cursoId: id },
     });
 
-    // 5. Eliminar Relaciones (CursosAlumnos, ProfesoresCursos)
     await require("../models/CursosAlumnos.js").destroy({
       where: { cursoId: id },
     });
@@ -265,7 +237,6 @@ router.delete("/:id", async (req, res) => {
       where: { cursoId: id },
     });
 
-    // 6. Eliminar el Curso
     await curso.destroy();
 
     res.json({ mensaje: "Curso y todo su contenido eliminado correctamente" });
@@ -275,8 +246,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// ==========================================
-// 6. EXPORTACIONES
-// ==========================================
-// Se exportan las rutas para que la aplicación las lea y las exponga al frontend.
 module.exports = router;

@@ -7,7 +7,6 @@ import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
 function MiEspacioGrid() {
-  // Estados
   const { user } = useAuthStore();
   const [data, setData] = useState({
     cursos: [],
@@ -20,7 +19,6 @@ function MiEspacioGrid() {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Referencias Sliders
   const sliders = {
     proceso: useRef(null),
     favCursos: useRef(null),
@@ -28,7 +26,6 @@ function MiEspacioGrid() {
     favApuntes: useRef(null),
   };
 
-  // Carga de Datos
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -74,7 +71,6 @@ function MiEspacioGrid() {
     cargarDatos();
   }, []);
 
-  // Carga Likes Usuario
   useEffect(() => {
     if (!user) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
@@ -83,7 +79,6 @@ function MiEspacioGrid() {
       .catch(console.error);
   }, [user]);
 
-  // Filtros
   const cursosEnProceso = useMemo(() => {
     if (!user) return [];
     return data.cursosAlumnos
@@ -114,7 +109,6 @@ function MiEspacioGrid() {
     return data.apuntes.filter((a) => likedApuntes.includes(a.id));
   }, [data, user, likedApuntes]);
 
-  // Helpers
   const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
     if (!aid) return "";

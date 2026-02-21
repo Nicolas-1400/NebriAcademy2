@@ -6,7 +6,6 @@ function AddApunteIndividualGrid() {
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
 
-  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     descripcion: "",
@@ -17,7 +16,6 @@ function AddApunteIndividualGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // Efectos
   useEffect(() => {
     fetch("http://localhost:3000/apuntes/categorias")
       .then((respuesta) => respuesta.json())
@@ -27,7 +25,6 @@ function AddApunteIndividualGrid() {
       .catch((error) => console.error("Error cargando categorias:", error));
   }, []);
 
-  // Handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError(null);

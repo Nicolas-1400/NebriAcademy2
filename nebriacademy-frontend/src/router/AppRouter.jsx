@@ -1,7 +1,5 @@
-// Importaciones de React Router
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Importaciones de Páginas
 import Login from "../pages/Login.jsx";
 import NotFound from "../pages/NotFound";
 import Home from "../pages/Home.jsx";
@@ -31,16 +29,13 @@ import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
 import NotaLegal from "../pages/NotaLegal.jsx";
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
 
-// Componente Principal de Enrutamiento
 function AppRouter() {
   return (
     <BrowserRouter>
       <Routes>
-        {/* Rutas Públicas */}
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
 
-        {/* Rutas de Registro de Alumnos */}
         <Route
           path="/Register/RegisterAlumnoExterno"
           element={<RegisterAlumnoExterno />}
@@ -59,7 +54,6 @@ function AppRouter() {
           }
         />
 
-        {/* Rutas de Registro de Profesores */}
         <Route
           path="/Register/VerificacionProfesor"
           element={<VerificacionProfesor />}
@@ -73,12 +67,8 @@ function AppRouter() {
           }
         />
 
-        {/* Ruta 404 */}
         <Route path="*" element={<NotFound />} />
 
-        {/* Rutas Protegidas */}
-
-        {/* Home y Perfil */}
         <Route
           path="/Home"
           element={
@@ -104,7 +94,6 @@ function AppRouter() {
           }
         />
 
-        {/* Cursos */}
         <Route
           path="/Home/Cursos"
           element={
@@ -130,7 +119,6 @@ function AppRouter() {
           }
         />
 
-        {/* Profesores */}
         <Route
           path="/Home/Profesores"
           element={
@@ -148,7 +136,6 @@ function AppRouter() {
           }
         />
 
-        {/* Apuntes */}
         <Route
           path="/Home/Apuntes"
           element={
@@ -174,7 +161,6 @@ function AppRouter() {
           }
         />
 
-        {/* Páginas Legales */}
         <Route
           path="/Home/PoliticaDePrivacidad"
           element={
@@ -200,7 +186,6 @@ function AppRouter() {
           }
         />
 
-        {/* Rutas Exclusivas de Profesores */}
         <Route
           path="/Home/AddCurso"
           element={

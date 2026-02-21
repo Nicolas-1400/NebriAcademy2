@@ -5,14 +5,12 @@ import flecha from "../assets/flecha-correcta.png";
 import TarjetaFondos from "./TarjetaFondos";
 
 function AddCursoGrid() {
-  // Estados del Curso
   const [nombreCurso, setNombreCurso] = useState("");
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
   const [imagen, setImagen] = useState("Foto1");
 
-  // Estados de Contenidos Opcionales
   const [fileApunte, setFileApunte] = useState(null);
   const [descripcionApunte, setDescripcionApunte] = useState("");
   const [nombreApunte, setNombreApunte] = useState("");
@@ -27,7 +25,6 @@ function AddCursoGrid() {
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Referencias
   const fileInputRef = useRef(null);
   const fileVideoInputRef = useRef(null);
   const fileEjercicioInputRef = useRef(null);
@@ -35,7 +32,6 @@ function AddCursoGrid() {
   const navigate = useNavigate();
   const usuarioStore = useAuthStore((state) => state.user);
 
-  // Handlers
   const uploadContent = async (endpoint, file, metadata) => {
     if (!file) return;
 
@@ -77,7 +73,6 @@ function AddCursoGrid() {
     try {
       const profesorId = usuarioStore?.id;
 
-      // 1. Crear Curso
       const respuestaCurso = await fetch("http://localhost:3000/cursos/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -98,10 +93,8 @@ function AddCursoGrid() {
       const courseId =
         datosCurso.id || datosCurso.idCurso || datosCurso.cursoId;
 
-      // 2. Subir contenidos opcionales en paralelo
       const uploads = [];
 
-      // Apunte
       if (fileApunte) {
         uploads.push(
           uploadContent("apuntes", fileApunte, {
@@ -116,7 +109,6 @@ function AddCursoGrid() {
         );
       }
 
-      // Video
       if (fileVideo) {
         uploads.push(
           uploadContent("videos", fileVideo, {
@@ -129,7 +121,6 @@ function AddCursoGrid() {
         );
       }
 
-      // Ejercicio
       if (fileEjercicio) {
         uploads.push(
           uploadContent("ejercicios", fileEjercicio, {
@@ -187,7 +178,6 @@ function AddCursoGrid() {
       <div className="form-add-curso">
         <h3>Crear Curso</h3>
         <form onSubmit={handleSubmit}>
-          {/* Datos del Curso */}
           <div className="contenedor-contenidos">
             <div className="line-1">
               <div className="curso-cont">
@@ -243,7 +233,6 @@ function AddCursoGrid() {
                 </div>
               </div>
 
-              {/* Apunte Opcional */}
               <div className="apuntes-cont">
                 <h4>Añadir Apunte (Opcional)</h4>
                 <div className="formulario-grupo">
@@ -274,7 +263,6 @@ function AddCursoGrid() {
               </div>
             </div>
             <div className="line-2">
-              {/* Video Opcional */}
               <div className="video-cont">
                 <h4>Añadir Video (Opcional)</h4>
                 <div className="formulario-grupo">
@@ -296,7 +284,6 @@ function AddCursoGrid() {
                 </div>
               </div>
 
-              {/* Ejercicio Opcional */}
               <div className="ejercicio-cont">
                 <h4>Añadir Ejercicio (Opcional)</h4>
                 <div className="formulario-grupo">
@@ -329,10 +316,8 @@ function AddCursoGrid() {
               </div>
             </div>
 
-            {/* Selección de Imagen de Fondo */}
             <TarjetaFondos selectedImage={imagen} onSelect={setImagen} />
 
-            {/* Botones */}
             <div className="botones-cont">
               {success && <p className="mensaje-exito">{success}</p>}
               {error && <p className="mensaje-error">{error}</p>}
