@@ -1,9 +1,15 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const express = require("express");
 const router = express.Router();
 const Profesores = require("../models/Profesores.js");
 const Usuarios = require("../models/Usuarios.js");
 
-// Rutas de Obtención
+// ==========================================
+// 2. LECTURA DE DATOS (GET)
+// ==========================================
+// Devuelve lista total invocada por findAll.
 router.get("/", async (req, res) => {
   try {
     const data = await Profesores.findAll();
@@ -13,6 +19,7 @@ router.get("/", async (req, res) => {
   }
 });
 
+// Obtiene los valores predeterminados de un enum o arreglo del modelo.
 router.get("/especializaciones", (req, res) => {
   try {
     const categ = Profesores.getAttributes().especializacion?.values || [];
@@ -22,6 +29,7 @@ router.get("/especializaciones", (req, res) => {
   }
 });
 
+// Consulta Primary Key.
 router.get("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -31,20 +39,29 @@ router.get("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Actualización
+// ==========================================
+// 3. ACTUALIZACIÓN (PUT)
+// ==========================================
+// Modifica instancia identificada por URL param a través de un JSON enviado en cuerpo res.
 router.put("/:id", async (req, res) => {
   try {
+    // Busca objeto.
     const p = await Profesores.findByPk(req.params.id);
     if (!p) return res.status(404).json({ error: "No encontrado" });
 
+    // Modifica usando body.
     await p.update(req.body);
+    // Devuelve JSON actualizado.
     res.json(p);
   } catch (e) {
     res.status(500).json({ error: "Server error" });
   }
 });
 
-// Rutas de Eliminación
+// ==========================================
+// 4. ELIMINACIÓN (DELETE)
+// ==========================================
+// Identifica primary key y llama a la clase genérica destroy de sequelize.
 router.delete("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
@@ -57,7 +74,10 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// Rutas de Registro y Autenticación
+// ==========================================
+// 5. REGISTRO Y VERIFICACIÓN (POST)
+// ==========================================
+// Valida strings de autenticación iniciales contra base de datos.
 router.post("/verificacionprofesor/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 
@@ -68,12 +88,14 @@ router.post("/verificacionprofesor/auth", async (req, res) => {
       return res.status(404).json({ error: "Email no encontrado" });
     }
 
+    // Impide usar la misma clave si la cuenta ya tiene un perfil anexado.
     if (profesor.nombre || profesor.apellidos) {
       return res
         .status(400)
         .json({ error: "Esta cuenta ya ha sido registrada" });
     }
 
+    // Evalúa si la credencial ingresada existe coincidiendo nativamente.
     if (profesor.contrasena !== contrasena) {
       return res
         .status(401)
@@ -87,6 +109,7 @@ router.post("/verificacionprofesor/auth", async (req, res) => {
   }
 });
 
+// Reemplaza por el objeto enviado, dando el registro por completado.
 router.post("/verificacionprofesor/completar", async (req, res) => {
   try {
     const {
@@ -116,7 +139,6 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
     }
 
     const profesor = await Profesores.findOne({ where: { email } });
-
     if (!profesor) {
       return res.status(404).json({ error: "Cuenta no encontrada" });
     }
@@ -125,6 +147,7 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
+    // Llama a update aplicando los ajustes pasados en el arreglo JSON.
     await profesor.update({
       nombre,
       apellidos,
@@ -150,4 +173,7 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
   }
 });
 
+// ==========================================
+// 6. EXPORTACIONES
+// ==========================================
 module.exports = router;

@@ -1,17 +1,29 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
+// Pantalla inicial de autenticación.
 function LoginGrid() {
-  // Estados
+  // ==========================================
+  // 3. ESTADOS Y HOOKS
+  // ==========================================
   const [email, setEmail] = useState("");
   const [contrasena, setContrasena] = useState("");
-  const [error, setError] = useState("");
 
+  const [error, setError] = useState("");
   const navigate = useNavigate();
   const setUser = useAuthStore((state) => state.setUser);
 
-  // Handlers
+  // ==========================================
+  // 4. FUNCIONES Y HANDLERS
+  // ==========================================
+
   const handleLogin = async (evento) => {
     evento.preventDefault();
     setError("");
@@ -37,6 +49,9 @@ function LoginGrid() {
     }
   };
 
+  // ==========================================
+  // 5. RENDERIZADO
+  // ==========================================
   return (
     <div className="login-grid">
       <div className="formulario-login-contenedor">
@@ -67,4 +82,7 @@ function LoginGrid() {
   );
 }
 
+// ==========================================
+// 6. EXPORTACIONES
+// ==========================================
 export default LoginGrid;

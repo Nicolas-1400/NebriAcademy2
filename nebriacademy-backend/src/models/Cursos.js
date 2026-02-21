@@ -1,6 +1,12 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ==========================================
+// 2. DEFINICIÓN DEL MODELO
+// ==========================================
 const Cursos = sequelize.define(
   "cursos",
   {
@@ -21,4 +27,7 @@ const Cursos = sequelize.define(
   { timestamps: false },
 );
 
+// ==========================================
+// 3. EXPORTACIONES
+// ==========================================
 module.exports = Cursos;

@@ -1,7 +1,9 @@
-// Importaciones de React Router
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
-// Importaciones de Páginas
+// Páginas de la Aplicación
 import Login from "../pages/Login.jsx";
 import NotFound from "../pages/NotFound";
 import Home from "../pages/Home.jsx";
@@ -31,7 +33,11 @@ import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
 import NotaLegal from "../pages/NotaLegal.jsx";
 import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
 
-// Componente Principal de Enrutamiento
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
+// AppRouter: Orquestador global de navegación. Relaciona URIs con Componentes (Páginas)
+// y envuelve las rutas sensibles con wrappers de protección (ProtectedRoute).
 function AppRouter() {
   return (
     <BrowserRouter>
@@ -230,4 +236,7 @@ function AppRouter() {
   );
 }
 
+// ==========================================
+// 3. EXPORTACIONES
+// ==========================================
 export default AppRouter;

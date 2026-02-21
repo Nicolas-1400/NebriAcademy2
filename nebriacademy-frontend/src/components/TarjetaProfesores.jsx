@@ -1,7 +1,14 @@
+// ==========================================
+// 1. IMPORTACIONES
+// ==========================================
 import { useNavigate } from "react-router-dom";
 import ImagenDefault from "../assets/individuo.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 
+// ==========================================
+// 2. COMPONENTE PRINCIPAL
+// ==========================================
+// Renderiza la información resumida de cada profesor en la grilla y maneja su redirección al perfil público
 function TarjetaProfesores({
   nombre,
   apellidos,
@@ -9,6 +16,9 @@ function TarjetaProfesores({
   profesorId,
   imagenPerfil,
 }) {
+  // ==========================================
+  // 3. ESTADOS Y HOOKS
+  // ==========================================
   const navigate = useNavigate();
   // Helpers
   const imageSrc =
@@ -16,6 +26,9 @@ function TarjetaProfesores({
       ? PERFILES[imagenPerfil]
       : ImagenDefault;
 
+  // ==========================================
+  // 4. RENDERIZADO
+  // ==========================================
   return (
     <div
       className="tarjeta-profesor"
@@ -30,4 +43,7 @@ function TarjetaProfesores({
   );
 }
 
+// ==========================================
+// 5. EXPORTACIONES
+// ==========================================
 export default TarjetaProfesores;
