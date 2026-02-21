@@ -5,7 +5,7 @@ const Usuarios = sequelize.define(
   "usuarios",
   {
     tipo: {
-      type: DataTypes.ENUM("alumno", "profesor", "administrador"),
+      type: DataTypes.ENUM("alumno", "profesor"),
       allowNull: false,
     },
   },

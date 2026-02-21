@@ -74,9 +74,6 @@ router.post("/", async (req, res) => {
     } else if (tipo === "profesor") {
       const u = await Profesores.findByPk(profileId);
       if (u) usuarioId = u.usuarioId;
-    } else if (tipo === "administrador") {
-      const u = await require("../models/Administradores").findByPk(profileId);
-      if (u) usuarioId = u.usuarioId;
     }
 
     if (!usuarioId)

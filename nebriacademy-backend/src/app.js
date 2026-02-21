@@ -39,7 +39,6 @@ app.use(
 );
 
 app.use("/", require("./routes/index"));
-app.use("/administradores", require("./routes/administradores"));
 app.use("/alumnos", require("./routes/alumnos"));
 app.use("/apuntes", require("./routes/apuntes"));
 app.use("/apuntesalumnos", require("./routes/apuntesalumnos"));
@@ -48,7 +47,6 @@ app.use("/cursosalumnos", require("./routes/cursosalumnos"));
 app.use("/comentarioalumnocurso", require("./routes/comentarioalumnocurso"));
 app.use("/ejercicios", require("./routes/ejercicios"));
 app.use("/ejerciciosalumnos", require("./routes/ejerciciosalumnos"));
-app.use("/incidencias", require("./routes/incidencias"));
 app.use("/profesores", require("./routes/profesores"));
 app.use("/profesorescursos", require("./routes/profesorescursos"));
 app.use("/puntuacionesejercicios", require("./routes/puntuacionesejercicios"));

@@ -1,7 +1,6 @@
 const express = require("express");
 const router = express.Router();
 
-const Administradores = require("../models/Administradores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
@@ -14,28 +13,7 @@ router.post("/auth", async (req, res) => {
         .status(400)
         .json({ error: "Email y contraseña son requeridos" });
     }
-    const admins = await Administradores.findAll();
-    const admin = admins.find(
-      (a) => a.email === email && a.contrasena === contrasena,
-    );
-    if (admin) {
-      return res.json({
-        mensaje: "Login exitoso",
-        tipo: "administrador",
-        usuario: {
-          id: admin.id,
-          usuarioId: admin.usuarioId,
-          dni: admin.dni,
-          nombre: admin.nombre,
-          apellidos: admin.apellidos,
-          email: admin.email,
-          numTelefono: admin.numTelefono,
-          redes: admin.redes,
-          pais: admin.pais,
-          localidad: admin.localidad,
-        },
-      });
-    }
+    
     const alumnos = await Alumnos.findAll();
     const alumno = alumnos.find(
       (a) => a.email === email && a.contrasena === contrasena,

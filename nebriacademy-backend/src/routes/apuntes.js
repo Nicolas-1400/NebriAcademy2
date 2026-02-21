@@ -73,9 +73,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     } else if (tipo === "profesor") {
       const u = await Profesores.findByPk(profileId);
       if (u) autorFinal = u.usuarioId;
-    } else if (tipo === "administrador") {
-      const u = await require("../models/Administradores").findByPk(profileId);
-      if (u) autorFinal = u.usuarioId;
     }
 
     if (!autorFinal)

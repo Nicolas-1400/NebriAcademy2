@@ -49,16 +49,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     if (tipo === "profesor") {
       const prof = await Profesores.findByPk(profileId);
       if (prof) profesorId = prof.id;
-    } else if (tipo === "administrador") {
-      const admin = await require("../models/Administradores").findByPk(
-        profileId,
-      );
-      if (admin && admin.usuarioId) {
-        const p = await Profesores.findOne({
-          where: { usuarioId: admin.usuarioId },
-        });
-        if (p) profesorId = p.id;
-      }
     }
 
     if (!profesorId)
