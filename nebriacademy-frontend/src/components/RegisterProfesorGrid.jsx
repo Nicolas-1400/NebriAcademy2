@@ -1,21 +1,11 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useState, useEffect } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// RegisterProfesorGrid: Etapa final del alta para docentes.
-// Requiere autenticación de correo previo. Carga detalles clave como especialización y datos bancarios.
 function RegisterProfesorGrid() {
-  // ==========================================
-  // 3. ESTADOS Y HOOKS
-  // ==========================================
   const navigate = useNavigate();
   const location = useLocation();
 
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -30,11 +20,7 @@ function RegisterProfesorGrid() {
 
   const [error, setError] = useState("");
 
-  // ==========================================
-  // 4. EFECTOS
-  // ==========================================
-  // Validación de seguridad para la persistencia del flujo.
-  // Exige que el email provenga del sessionStorage o routing (previa verificación de código OTP).
+  // Efectos
   useEffect(() => {
     const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
     const emailToUse = location.state?.email || verifiedEmail;
@@ -42,21 +28,16 @@ function RegisterProfesorGrid() {
     if (emailToUse) {
       setFormData((prev) => ({ ...prev, email: emailToUse }));
     } else {
-      // Redirige al inicio si carece de validación, evitando accesos directos por URL
       navigate("/Register/VerificacionProfesor");
     }
   }, [location.state, navigate]);
 
-  // ==========================================
-  // 5. FUNCIONES Y HANDLERS
-  // ==========================================
-  // Actualiza los datos del objeto general basados en cada tecla o select del usuario
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Cierra el proceso confirmando la cuenta contra la base de datos
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -74,7 +55,6 @@ function RegisterProfesorGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // Purga del testigo temporal y redirección exitosa.
         sessionStorage.removeItem("verifiedProfessorEmail");
         navigate("/");
       } else {
@@ -86,15 +66,11 @@ function RegisterProfesorGrid() {
     }
   };
 
-  // ==========================================
-  // 6. RENDERIZADO
-  // ==========================================
   return (
     <div className="register-grid-externo">
       <div className="formulario-register-contenedor">
         <h2>Regístrate (Profesor)</h2>
         <form className="formulario-register" onSubmit={handleRegister}>
-          {/* El email se preserva pero se inhibe su alteración por motivos de validación institucional */}
           <input
             name="email"
             type="email"
@@ -183,6 +159,7 @@ function RegisterProfesorGrid() {
             <option value="Otro">Otro</option>
           </select>
 
+          {/* Especialización */}
           <select
             name="especializacion"
             value={formData.especializacion}
@@ -210,7 +187,4 @@ function RegisterProfesorGrid() {
   );
 }
 
-// ==========================================
-// 7. EXPORTACIONES
-// ==========================================
 export default RegisterProfesorGrid;

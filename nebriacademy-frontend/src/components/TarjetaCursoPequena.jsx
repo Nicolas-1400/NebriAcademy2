@@ -1,6 +1,3 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useNavigate } from "react-router-dom";
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
@@ -14,9 +11,6 @@ import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import Like from "../assets/me-gusta-marcado.png";
 
-// ==========================================
-// 2. CONSTANTES GLOBALES
-// ==========================================
 const IMAGES = [
   Foto10,
   Foto1,
@@ -30,13 +24,7 @@ const IMAGES = [
   Foto9,
 ];
 
-// ==========================================
-// 3. COMPONENTE PRINCIPAL
-// ==========================================
 function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
-  // ==========================================
-  // 4. ESTADOS Y HOOKS
-  // ==========================================
   const navigate = useNavigate();
 
   const IMAGES_MAP = {
@@ -52,10 +40,6 @@ function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
     Foto10,
   };
 
-  // ==========================================
-  // 5. FUNCIONES Y HANDLERS
-  // ==========================================
-  // Obtiene la imagen del curso o asigna una por defecto según el ID
   const getCourseImage = () => {
     if (imagen && IMAGES_MAP[imagen]) return IMAGES_MAP[imagen];
     return IMAGES[cursoId % 10];
@@ -63,9 +47,6 @@ function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
 
   const imageSrc = getCourseImage();
 
-  // ==========================================
-  // 6. RENDERIZADO
-  // ==========================================
   return (
     <div
       className="tarjeta-curso-pequena"
@@ -82,7 +63,4 @@ function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
   );
 }
 
-// ==========================================
-// 7. EXPORTACIONES
-// ==========================================
 export default TarjetaCursoPequena;

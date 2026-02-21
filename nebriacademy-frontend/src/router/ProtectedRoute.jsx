@@ -14,9 +14,7 @@ function ProtectedRoute({ children, requiredTipo }) {
   if (requiredTipo && tipo !== requiredTipo)
     return <Navigate to="/Home" replace />;
 
-  // ==========================================
-  // 1. Renderizado
-  // ==========================================
+  // Renderizado
   return children;
 }
 

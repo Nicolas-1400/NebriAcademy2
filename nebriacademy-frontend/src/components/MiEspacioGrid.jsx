@@ -1,6 +1,3 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useEffect, useState, useRef, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
@@ -9,20 +6,9 @@ import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// MiEspacioGrid: Dashboard privado exclusivo para alumnos.
-// Centraliza el seguimiento de todo aquello en lo que ha mostrado interés:
-// Cursos en los que está matriculado, Cursos marcados como favoritos,
-// Apuntes propios redactados y Apuntes de la comunidad que ha guardado/likeado.
 function MiEspacioGrid() {
-  // ==========================================
-  // 3. ESTADOS Y HOOKS GLOBALES / LOCALES
-  // ==========================================
-
+  // Estados
   const { user } = useAuthStore();
-
   const [data, setData] = useState({
     cursos: [],
     cursosAlumnos: [],
@@ -30,13 +16,11 @@ function MiEspacioGrid() {
     alumnos: [],
     profesores: [],
   });
-
-  const [likedApuntes, setLikedApuntes] = useState([]); // Array de Ids para que los corazones brillen de rojo
-
-  const [loading, setLoading] = useState(true); // Pantalla de bloqueo durante peticiones pesadas HTTP
+  const [likedApuntes, setLikedApuntes] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Necesarios para dominar las librerías de terceros (Sliders) desde botones HTML customizados.
+  // Referencias Sliders
   const sliders = {
     proceso: useRef(null),
     favCursos: useRef(null),
@@ -44,10 +28,7 @@ function MiEspacioGrid() {
     favApuntes: useRef(null),
   };
 
-  // ==========================================
-  // 4. EFECTOS DEL CICLO DE VIDA
-  // ==========================================
-
+  // Carga de Datos
   useEffect(() => {
     const cargarDatos = async () => {
       setLoading(true);
@@ -91,8 +72,9 @@ function MiEspacioGrid() {
       }
     };
     cargarDatos();
-  }, []); // Carga única al montar el Panel
+  }, []);
 
+  // Carga Likes Usuario
   useEffect(() => {
     if (!user) return;
     fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
@@ -101,19 +83,7 @@ function MiEspacioGrid() {
       .catch(console.error);
   }, [user]);
 
-  useEffect(() => {
-    if (!loading) {
-      setTimeout(
-        () => Object.values(sliders).forEach((r) => r.current?.slickGoTo(0)),
-        100,
-      );
-    }
-  }, [loading, data]);
-
-  // ==========================================
-  // 5. VARIABLES MEMOIZADAS Y HELPERS DE MAPPINGS
-  // ==========================================
-
+  // Filtros
   const cursosEnProceso = useMemo(() => {
     if (!user) return [];
     return data.cursosAlumnos
@@ -144,26 +114,20 @@ function MiEspacioGrid() {
     return data.apuntes.filter((a) => likedApuntes.includes(a.id));
   }, [data, user, likedApuntes]);
 
+  // Helpers
   const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
     if (!aid) return "";
-
     const alum = data.alumnos.find(
       (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
     );
     if (alum) return `${alum.nombre} ${alum.apellidos}`;
-
     const prof = data.profesores.find(
       (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
     );
     if (prof) return `${prof.nombre} ${prof.apellidos}`;
-
     return "Anónimo";
   };
-
-  // ==========================================
-  // 6. FUNCIONES Y HANDLERS EVENTUALES
-  // ==========================================
 
   const handleToggleLike = async (apunte) => {
     if (!user) return;
@@ -178,14 +142,11 @@ function MiEspacioGrid() {
         }),
       });
       const d = await res.json();
-
       if (res.ok) {
         const isLike = d.registro?.valoracion === true;
-
         setLikedApuntes((prev) =>
           isLike ? [...prev, apunte.id] : prev.filter((id) => id !== apunte.id),
         );
-
         const newVal = d.apunte?.valoracion;
         setData((D) => ({
           ...D,
@@ -204,9 +165,14 @@ function MiEspacioGrid() {
       dir === "left" ? ref.current.slickPrev() : ref.current.slickNext();
   };
 
-  // ==========================================
-  // 7. BLOQUE CONDICIONAL DE PRE-RENDER
-  // ==========================================
+  useEffect(() => {
+    if (!loading) {
+      setTimeout(
+        () => Object.values(sliders).forEach((r) => r.current?.slickGoTo(0)),
+        100,
+      );
+    }
+  }, [loading, data]);
 
   if (loading)
     return (
@@ -214,7 +180,6 @@ function MiEspacioGrid() {
         <p>Cargando espacio personal...</p>
       </div>
     );
-
   if (error)
     return (
       <div className="MiEspacio">
@@ -223,11 +188,11 @@ function MiEspacioGrid() {
     );
 
   const sliderSettings = {
-    dots: false, // Indicador visual de página desactivado
-    infinite: false, // Tope físico en los extremos para no causar redundancias
-    speed: 500, // Duración animación MS
-    slidesToShow: 4, // Densidad gráfica (Pintar de 4 en 4)
-    slidesToScroll: 1, // Clic sobre flecha solo traslada 1 casilla aledaña
+    dots: false,
+    infinite: false,
+    speed: 500,
+    slidesToShow: 4,
+    slidesToScroll: 1,
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 2 } },
@@ -237,17 +202,13 @@ function MiEspacioGrid() {
   const renderSection = (title, items, sliderRef, type) => (
     <div className={`MiEspacio-seccion-${type}`}>
       <h2>{title}</h2>
-
       <div className="MiEspacio-carousel-container">
-        {/* Desplazador Izquierdo */}
         <button
           className="carousel-btn carousel-btn-left"
           onClick={() => slide(sliderRef, "left")}
         >
           ‹
         </button>
-
-        {/* Contenedor Carrusel Activo */}
         <Slider
           ref={sliderRef}
           {...sliderSettings}
@@ -282,8 +243,6 @@ function MiEspacioGrid() {
             <p className="mensaje-vacio">No hay elementos.</p>
           )}
         </Slider>
-
-        {/* Desplazador Derecho */}
         <button
           className="carousel-btn carousel-btn-right"
           onClick={() => slide(sliderRef, "right")}
@@ -294,35 +253,28 @@ function MiEspacioGrid() {
     </div>
   );
 
-  // ==========================================
-  // 8. BLOQUE RENDERIZADO GLOBAL JSX
-  // ==========================================
   return (
     <div className="MiEspacio">
       <h1>Tu espacio {user ? `${user.nombre} ${user.apellidos}` : ""}</h1>
       <div className="MiEspacio-secciones">
-        {/* Llamadas a la Función Fabril para desplegar en Cadenas de Bloque Dinámicos */}
         {renderSection(
           "Cursos en proceso",
           cursosEnProceso,
           sliders.proceso,
           "cursos-proceso",
         )}
-
         {renderSection(
           "Cursos favoritos",
           cursosFavoritos,
           sliders.favCursos,
           "cursos-favoritos",
         )}
-
         {renderSection(
           "Tus apuntes",
           misApuntes,
           sliders.misApuntes,
           "tus-apuntes",
         )}
-
         {renderSection(
           "Apuntes favoritos",
           apuntesFavoritos,
@@ -334,7 +286,4 @@ function MiEspacioGrid() {
   );
 }
 
-// ==========================================
-// 9. EXPORTACIONES MÓDULO
-// ==========================================
 export default MiEspacioGrid;

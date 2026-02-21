@@ -1,48 +1,33 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import TarjetaFondos from "./TarjetaFondos";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// Formulario complejo para la creación de un nuevo curso.
-// Permite definir la metadata del curso y, opcionalmente, adjuntar contenido inicial (apunte, vídeo, ejercicio).
 function AddCursoGrid() {
-  // ==========================================
-  // 3. ESTADOS Y HOOKS
-  // ==========================================
-
-  // Datos base del curso
+  // Estados del Curso
   const [nombreCurso, setNombreCurso] = useState("");
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
   const [imagen, setImagen] = useState("Foto1");
 
-  // Contenido opcional: Apunte
+  // Estados de Contenidos Opcionales
   const [fileApunte, setFileApunte] = useState(null);
   const [descripcionApunte, setDescripcionApunte] = useState("");
   const [nombreApunte, setNombreApunte] = useState("");
 
-  // Contenido opcional: Vídeo
   const [fileVideo, setFileVideo] = useState(null);
   const [nombreVideo, setNombreVideo] = useState("");
 
-  // Contenido opcional: Ejercicio
   const [fileEjercicio, setFileEjercicio] = useState(null);
   const [descripcionEjercicio, setDescripcionEjercicio] = useState("");
   const [nombreEjercicio, setNombreEjercicio] = useState("");
 
-  // Feedback de la UI
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
 
-  // Referencias para reiniciar los inputs de tipo file tras un envío exitoso
+  // Referencias
   const fileInputRef = useRef(null);
   const fileVideoInputRef = useRef(null);
   const fileEjercicioInputRef = useRef(null);
@@ -50,18 +35,12 @@ function AddCursoGrid() {
   const navigate = useNavigate();
   const usuarioStore = useAuthStore((state) => state.user);
 
-  // ==========================================
-  // 4. FUNCIONES Y HANDLERS
-  // ==========================================
-
-  // Helper asíncrono genérico para subir archivos multimedia adjuntos al backend
+  // Handlers
   const uploadContent = async (endpoint, file, metadata) => {
     if (!file) return;
 
     const form = new FormData();
     form.append("archivo", file);
-
-    // Inyecta dinámicamente cualquier metadata adicional (ID autor, ID curso, descripciones)
     Object.keys(metadata).forEach((key) => form.append(key, metadata[key]));
 
     try {
@@ -69,7 +48,6 @@ function AddCursoGrid() {
         method: "POST",
         body: form,
       });
-
       if (!respuesta.ok) {
         console.error(`Error subiendo ${endpoint}:`, respuesta.status);
         throw new Error(`Falló la subida de ${endpoint}`);
@@ -80,18 +58,15 @@ function AddCursoGrid() {
     }
   };
 
-  // Orquesta la creación del curso y la subida concurrente de todos los archivos anexados
   const handleSubmit = async (e) => {
     e.preventDefault();
     setError("");
     setSuccess("");
 
-    // Validaciones de campos obligatorios
     if (!nombreCurso || !categoria || !descripcion || !nivel) {
       return setError("Rellena todos los campos obligatorios del curso");
     }
 
-    // Validaciones de contenido: Si se adjunta archivo, debe especificarse un nombre
     if (fileApunte && !nombreApunte.trim())
       return setError("El apunte requiere un nombre");
     if (fileVideo && !nombreVideo.trim())
@@ -102,7 +77,7 @@ function AddCursoGrid() {
     try {
       const profesorId = usuarioStore?.id;
 
-      // PASO 1: Creación del Curso Base
+      // 1. Crear Curso
       const respuestaCurso = await fetch("http://localhost:3000/cursos/add", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
@@ -117,17 +92,16 @@ function AddCursoGrid() {
       });
 
       const datosCurso = await respuestaCurso.json();
-
       if (!respuestaCurso.ok)
         throw new Error(datosCurso.error || "Error al crear curso");
 
-      // Se recupera el ID insertado para vincular los contenidos
       const courseId =
         datosCurso.id || datosCurso.idCurso || datosCurso.cursoId;
 
-      // PASO 2: Preparación de subidas opcionales concurrentes
+      // 2. Subir contenidos opcionales en paralelo
       const uploads = [];
 
+      // Apunte
       if (fileApunte) {
         uploads.push(
           uploadContent("apuntes", fileApunte, {
@@ -142,6 +116,7 @@ function AddCursoGrid() {
         );
       }
 
+      // Video
       if (fileVideo) {
         uploads.push(
           uploadContent("videos", fileVideo, {
@@ -154,6 +129,7 @@ function AddCursoGrid() {
         );
       }
 
+      // Ejercicio
       if (fileEjercicio) {
         uploads.push(
           uploadContent("ejercicios", fileEjercicio, {
@@ -167,38 +143,32 @@ function AddCursoGrid() {
         );
       }
 
-      // PASO 3: Ejecución en paralelo de los adjuntos prometidos
       const results = await Promise.allSettled(uploads);
-
-      // Evalúa si alguna de las subidas secundarias falló
       const errors = results.filter(
         (resultado) => resultado.status === "rejected",
       );
 
       if (errors.length > 0) {
-        setError("Curso creado, pero hubo errores al subir algunos anexos.");
+        setError(
+          `Curso creado, pero hubo errores al subir algunos contenidos.`,
+        );
       } else {
         setSuccess("Curso y contenidos creados correctamente");
 
-        // Reseteo del formulario
         setNombreCurso("");
         setCategoria("");
         setDescripcion("");
         setNivel("");
         setImagen("Foto1");
-
         setFileApunte(null);
         setNombreApunte("");
         setDescripcionApunte("");
-
         setFileVideo(null);
         setNombreVideo("");
-
         setFileEjercicio(null);
         setNombreEjercicio("");
         setDescripcionEjercicio("");
 
-        // Reseteo físico de ref inputs
         if (fileInputRef.current) fileInputRef.current.value = "";
         if (fileVideoInputRef.current) fileVideoInputRef.current.value = "";
         if (fileEjercicioInputRef.current)
@@ -212,18 +182,14 @@ function AddCursoGrid() {
     }
   };
 
-  // ==========================================
-  // 5. RENDERIZADO
-  // ==========================================
   return (
     <div className="perfil-curso">
       <div className="form-add-curso">
         <h3>Crear Curso</h3>
-
         <form onSubmit={handleSubmit}>
+          {/* Datos del Curso */}
           <div className="contenedor-contenidos">
             <div className="line-1">
-              {/* === SECCIÓN: DATOS BÁSICOS DEL CURSO === */}
               <div className="curso-cont">
                 <div className="formulario-grupo">
                   <label>Nombre del curso *</label>
@@ -234,7 +200,6 @@ function AddCursoGrid() {
                     required
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Categoría *</label>
                   <select
@@ -252,7 +217,6 @@ function AddCursoGrid() {
                     <option value="Marketing">Marketing</option>
                   </select>
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Nivel *</label>
                   <select
@@ -268,7 +232,6 @@ function AddCursoGrid() {
                     <option value="Avanzado">Avanzado</option>
                   </select>
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Descripción *</label>
                   <textarea
@@ -280,10 +243,9 @@ function AddCursoGrid() {
                 </div>
               </div>
 
-              {/* === SECCIÓN: SUBIDA DE APUNTE OPCIONAL === */}
+              {/* Apunte Opcional */}
               <div className="apuntes-cont">
                 <h4>Añadir Apunte (Opcional)</h4>
-
                 <div className="formulario-grupo">
                   <label>Nombre</label>
                   <input
@@ -292,7 +254,6 @@ function AddCursoGrid() {
                     onChange={(e) => setNombreApunte(e.target.value)}
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Archivo (.pdf, .doc, .docx, .ppt, .pptx)</label>
                   <input
@@ -302,7 +263,6 @@ function AddCursoGrid() {
                     onChange={(e) => setFileApunte(e.target.files[0] || null)}
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Descripción</label>
                   <textarea
@@ -313,12 +273,10 @@ function AddCursoGrid() {
                 </div>
               </div>
             </div>
-
             <div className="line-2">
-              {/* === SECCIÓN: SUBIDA DE VÍDEO OPCIONAL === */}
+              {/* Video Opcional */}
               <div className="video-cont">
                 <h4>Añadir Video (Opcional)</h4>
-
                 <div className="formulario-grupo">
                   <label>Nombre</label>
                   <input
@@ -327,7 +285,6 @@ function AddCursoGrid() {
                     onChange={(e) => setNombreVideo(e.target.value)}
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Archivo (Video)</label>
                   <input
@@ -339,10 +296,9 @@ function AddCursoGrid() {
                 </div>
               </div>
 
-              {/* === SECCIÓN: SUBIDA DE EJERCICIO OPCIONAL === */}
+              {/* Ejercicio Opcional */}
               <div className="ejercicio-cont">
                 <h4>Añadir Ejercicio (Opcional)</h4>
-
                 <div className="formulario-grupo">
                   <label>Nombre</label>
                   <input
@@ -351,7 +307,6 @@ function AddCursoGrid() {
                     onChange={(e) => setNombreEjercicio(e.target.value)}
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Archivo (.zip, .pdf...)</label>
                   <input
@@ -363,7 +318,6 @@ function AddCursoGrid() {
                     }
                   />
                 </div>
-
                 <div className="formulario-grupo">
                   <label>Descripción</label>
                   <input
@@ -375,10 +329,10 @@ function AddCursoGrid() {
               </div>
             </div>
 
-            {/* === PORTADA DEL CURSO === */}
+            {/* Selección de Imagen de Fondo */}
             <TarjetaFondos selectedImage={imagen} onSelect={setImagen} />
 
-            {/* === ACCIONES Y FEEDBACK === */}
+            {/* Botones */}
             <div className="botones-cont">
               {success && <p className="mensaje-exito">{success}</p>}
               {error && <p className="mensaje-error">{error}</p>}
@@ -386,7 +340,6 @@ function AddCursoGrid() {
               <button type="submit" className="boton-editar-perfil">
                 Crear curso
               </button>
-
               <button
                 type="button"
                 className="boton-go-back"
@@ -403,7 +356,4 @@ function AddCursoGrid() {
   );
 }
 
-// ==========================================
-// 6. EXPORTACIONES
-// ==========================================
 export default AddCursoGrid;

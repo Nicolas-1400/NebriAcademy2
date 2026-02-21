@@ -11,9 +11,7 @@ function ProtectedVerificationRoute({ children }) {
     return <Navigate to="/Register/VerificacionAlumnoNebrija" replace />;
   }
 
-  // ==========================================
-  // 1. Renderizado
-  // ==========================================
+  // Renderizado
   return children;
 }
 

@@ -1,21 +1,10 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// RegisterAlumnoExternoGrid: Formulario de inscripción para alumnos sin afiliación previa a Nebrija.
-// Incluye todos los datos personales y el detalle de pago (tarjeta de crédito).
 function RegisterAlumnoExternoGrid() {
-  // ==========================================
-  // 3. ESTADOS Y HOOKS
-  // ==========================================
   const navigate = useNavigate();
 
-  // Objeto central que almacena y sincroniza la información completada en el formulario
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -29,16 +18,12 @@ function RegisterAlumnoExternoGrid() {
 
   const [error, setError] = useState("");
 
-  // ==========================================
-  // 4. FUNCIONES Y HANDLERS
-  // ==========================================
-  // Vincula los cambios en los inputs con la propiedad correspondiente del estado formData
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Ejecuta la petición POST de alta de cuenta enviando formData al backend
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
@@ -56,7 +41,7 @@ function RegisterAlumnoExternoGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // En caso de creación correcta de cuenta, envía al usuario al login
+        console.log("Registro exitoso:", datos);
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
@@ -67,15 +52,10 @@ function RegisterAlumnoExternoGrid() {
     }
   };
 
-  // ==========================================
-  // 5. RENDERIZADO
-  // ==========================================
   return (
     <div className="register-grid-externo">
-      {/* Columna Izquierda: Formulario de Registro */}
       <div className="formulario-register-contenedor">
         <h2>Registrate</h2>
-
         <form className="formulario-register" onSubmit={handleRegister}>
           <input
             name="nombre"
@@ -166,7 +146,6 @@ function RegisterAlumnoExternoGrid() {
           </select>
 
           {error && <p className="error-login">{error}</p>}
-
           <button type="submit">Registrarse</button>
         </form>
 
@@ -175,7 +154,6 @@ function RegisterAlumnoExternoGrid() {
         </p>
       </div>
 
-      {/* Columna Derecha: Información comercial / Beneficios */}
       <div className="register-precios">
         <h2>Precio</h2>
         <div className="precios-contenido">
@@ -199,7 +177,4 @@ function RegisterAlumnoExternoGrid() {
   );
 }
 
-// ==========================================
-// 6. EXPORTACIONES
-// ==========================================
 export default RegisterAlumnoExternoGrid;

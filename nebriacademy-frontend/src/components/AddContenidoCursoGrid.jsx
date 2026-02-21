@@ -1,23 +1,12 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// Formulario para la adición de recursos (apuntes, ejercicios, videos) a un curso existente.
 function AddContenidoCursoGrid() {
-  // ==========================================
-  // 3. ESTADOS Y HOOKS
-  // ==========================================
-
+  // Estados
   const { id } = useParams();
   const { state } = useLocation();
   const navigate = useNavigate();
-
   const { user: usuario, tipo: tipoUsuario } = useAuthStore();
 
   const cursoId = state?.cursoId || (id && Number(id) > 0 ? Number(id) : null);
@@ -33,9 +22,7 @@ function AddContenidoCursoGrid() {
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
-  // ==========================================
-  // 4. EFECTOS
-  // ==========================================
+  // Efectos
   useEffect(() => {
     if (cursoId) {
       fetch(`http://localhost:3000/cursos/${cursoId}`)
@@ -45,10 +32,7 @@ function AddContenidoCursoGrid() {
     }
   }, [cursoId]);
 
-  // ==========================================
-  // 5. FUNCIONES Y HANDLERS
-  // ==========================================
-
+  // Handlers
   const handleSubmit = async (e) => {
     e.preventDefault();
     setLoading(true);
@@ -77,7 +61,6 @@ function AddContenidoCursoGrid() {
       form.append("nombre", nombre);
       form.append("archivo", file);
       form.append("curso", cursoId);
-
       if (categoria) form.append("categoria", categoria);
 
       if (tipo !== "video") form.append("descripcion", descripcion);
@@ -106,13 +89,9 @@ function AddContenidoCursoGrid() {
     }
   };
 
-  // ==========================================
-  // 6. RENDERIZADO
-  // ==========================================
   return (
     <div className="addcontenidocursogrid">
       <h2>Añadir {tipo} al curso</h2>
-
       <form onSubmit={handleSubmit} className="add-contenido-form">
         <div className="form-group">
           <label>Nombre</label>
@@ -155,7 +134,6 @@ function AddContenidoCursoGrid() {
           <button type="submit" className="btn-subir" disabled={loading}>
             {loading ? "Subiendo..." : "Subir"}
           </button>
-
           <button
             type="button"
             className="btn-cancel"
@@ -169,7 +147,4 @@ function AddContenidoCursoGrid() {
   );
 }
 
-// ==========================================
-// 7. EXPORTACIONES
-// ==========================================
 export default AddContenidoCursoGrid;

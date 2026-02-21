@@ -1,39 +1,20 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
-// Hooks base de ciclo de vida en React
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
-// Herramientas de navegación programática
 import { useNavigate } from "react-router-dom";
-// Íconos y Assets Gráficos
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
-// Componente hermano/hijo destinado a la selección de avatares prestablecidos
 import TarjetaImagenPerfil, { PERFILES } from "./TarjetaImagenPerfil";
-// Hoja de estilos complementaria
 import "../styles/TarjetaImagenPerfil.css";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// PerfilProfesorGrid: Panel de control exclusivo para los profesores registrados.
-// Muestra su información pública y habilita un formulario reactivo para alterar su biografía o credenciales.
 function PerfilProfesorGrid() {
-  // Utilidad de enrutamiento histórico (sirve para el botón de ir atrás)
   const navigate = useNavigate();
-  // Estado global de sesión: extrae al actor actual y el mutador (setUser) para sincronizar en tiempo real los cambios Guardados
   const { user, setUser, tipo } = useAuthStore();
 
-  // ==========================================
-  // 3. ESTADOS Y HOOKS
-  // ==========================================
-
-  // Cachea temporalmente todos los campos que el profesor puede escribir antes de pulsar "Guardar"
+  // Estados
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
-    contrasena: "", // Vacío por defecto: Si se envía vacío, el Backend sabrá NO alterar el Hash de seguridad
+    contrasena: "",
     numCuentaBancaria: "",
     numTelefono: "",
     redes: "",
@@ -43,34 +24,24 @@ function PerfilProfesorGrid() {
     imagenPerfil: "",
   });
 
-  const [mensajeExito, setMensajeExito] = useState(""); // Alerta verde de guardado
-  const [mensajeError, setMensajeError] = useState(""); // Alerta roja de fallo
-  const [loading, setLoading] = useState(false); // Bloqueo de múltiples submits simultáneos
+  const [mensajeExito, setMensajeExito] = useState("");
+  const [mensajeError, setMensajeError] = useState("");
+  const [loading, setLoading] = useState(false);
 
-  // ==========================================
-  // 4. EFECTOS DEL CICLO DE VIDA
-  // ==========================================
-
-  // Descarga del estado actualizado del profesor directamente desde la Base de Datos al entrar a la página.
-  // Previene que se editen datos desactualizados en caso de que hubiese mutado desde otra ventana/dispositivo.
+  // Efectos
   useEffect(() => {
-    // Escudo de seguridad: Si no es profesor o no existe usuario activo, se aborta la carga
     if (!user || tipo !== "profesor") return;
 
     fetch(`http://localhost:3000/usuarios/${user.id}?tipo=profesor`)
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
-        // Fallback: Si la red falla a mitad del request, utilizamos la memoria de la cookie/Zustand
         const datosIniciales = datos || user;
-
-        // Sincroniza el store general para que la cabecera (Header/Nav) refleje cambios recientes al instante
         if (datos) setUser(datos, "profesor");
 
-        // Rellenado de campos temporales para el form (Controlled Inputs de React)
         setFormData({
           nombre: datosIniciales.nombre || "",
           apellidos: datosIniciales.apellidos || "",
-          contrasena: "", // Jamás recibimos/popularizamos contraseñas por red HTTP
+          contrasena: "",
           numCuentaBancaria: datosIniciales.numCuentaBancaria || "",
           numTelefono: datosIniciales.numTelefono || "",
           redes: datosIniciales.redes || "",
@@ -85,33 +56,24 @@ function PerfilProfesorGrid() {
       );
   }, [user?.id, tipo, setUser]);
 
-  // ==========================================
-  // 5. FUNCIONES Y HANDLERS (EVENTOS)
-  // ==========================================
-
-  // Emisor de evento sintético: Inyecta el texto typeado en el Input respetivo según su atributo 'name'
+  // Handlers
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
-  // Canal de Callback emitido desde el componente Hijo (TarjetaImagenPerfil)
-  // Re-empaqueta la selección del avatar y muta el estado principal de este Padre
   const handleImageSelect = (nombreImagen) => {
     setFormData((prev) => ({ ...prev, imagenPerfil: nombreImagen }));
   };
 
-  // Submit Maestro: Re-configuración de la entidad SQL del usuario
   const handleSubmit = async (e) => {
-    e.preventDefault(); // Detiene recarga brusca del navegador web
+    e.preventDefault();
     setMensajeError("");
     setMensajeExito("");
     setLoading(true);
 
     try {
-      // Clonado de los datos para su purificación antes del envío HTTP
       const payload = { ...formData, tipo: "profesor" };
-      // Purga estricta: Garantiza que contraseñas vacías no viajen en el bus de datos
       if (!payload.contrasena) delete payload.contrasena;
 
       const respuesta = await fetch(
@@ -124,44 +86,32 @@ function PerfilProfesorGrid() {
       );
 
       if (respuesta.ok) {
-        // En base a la respuesta del servidor, re-seteamos todos los cachés
         const usuarioActualizado = await respuesta.json();
         setUser(usuarioActualizado, "profesor");
         setFormData((prev) => ({ ...prev, contrasena: "" }));
-
-        // Destello afirmativo UI
         setMensajeExito("¡Perfil actualizado correctamente!");
-        setTimeout(() => setMensajeExito(""), 3000); // Auto-borrado tras 3 segundos
+        setTimeout(() => setMensajeExito(""), 3000);
       } else {
         const datosError = await respuesta.json();
         throw new Error(datosError.error || "Error al actualizar perfil");
       }
     } catch (error) {
-      setMensajeError(error.message || "Error de conexión");
+      setMensajeError(e.message || "Error de conexión");
     } finally {
-      setLoading(false); // Retira bloqueo de botones
+      setLoading(false);
     }
   };
 
-  // ==========================================
-  // 6. CÁLCULOS DEL RENDER
-  // ==========================================
-
-  // Salvaguarda: Retorno rápido en milisegundo anterior a la carga de Context
   if (!user) return <p>Cargando perfil...</p>;
 
-  // Selección Matemática de la URL visual en crudo base 64 para la Imagen Actual mostrada.
+  // Resolver imagen de perfil
   const imagenMostrar =
     formData.imagenPerfil && PERFILES[formData.imagenPerfil]
       ? PERFILES[formData.imagenPerfil]
       : ImagenPerfilDefault;
 
-  // ==========================================
-  // 7. BLOQUE DE RENDERIZADO (RETURN JSX)
-  // ==========================================
   return (
     <div className="perfil">
-      {/* Mitad Izquierda (O Arriba según Responsividad): Resumen Inamovible */}
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img
@@ -172,8 +122,6 @@ function PerfilProfesorGrid() {
         <h2 className="nombrePerfil">{`${user.nombre} ${user.apellidos}`}</h2>
         <p className="correoPerfil">{user.email}</p>
         <p className="tipoPerfil">Profesor</p>
-
-        {/* Desglose condicional de íconos públicos */}
         {user.especializacion && (
           <p className="especializacionPerfil">📚 {user.especializacion}</p>
         )}
@@ -184,18 +132,14 @@ function PerfilProfesorGrid() {
         )}
       </div>
 
-      {/* Mitad Derecha (O Abajo según Responsividad): Formulario Estático de Alteración */}
       <div className="formularioEditarPerfil">
         <h3>Editar Perfil</h3>
-
-        {/* Banners Superiores de Alerta (Toast en DOM) */}
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
 
         <form onSubmit={handleSubmit} className="formulario-profesor">
-          {/* SECCIÓN SUPERIOR: Contenedora principal de los sub-campos y la cuadrícula de avatares */}
+          {/* SECCIÓN SUPERIOR: Imagen + Datos Principales */}
           <div className="seccion-superior-form">
-            {/* Sector Seleccionador Multimedia */}
             <div className="columna-imagen">
               <label className="label-seccion">Imagen de Perfil:</label>
               <TarjetaImagenPerfil
@@ -204,7 +148,6 @@ function PerfilProfesorGrid() {
               />
             </div>
 
-            {/* Cuadrícula de Inputs de Metadatos Personales */}
             <div className="columna-datos">
               <div className="formulario-grupo">
                 <label htmlFor="nombre">Nombre:</label>
@@ -226,7 +169,6 @@ function PerfilProfesorGrid() {
                 />
               </div>
 
-              {/* El BackEnd asume que si esto llega en nulo, conservará la anterior. Esencial esta nota. */}
               <div className="formulario-grupo">
                 <label htmlFor="contrasena">Contraseña:</label>
                 <input
@@ -269,7 +211,6 @@ function PerfilProfesorGrid() {
                 />
               </div>
 
-              {/* Menú Categórico Controlado (Dropdown Especialización) */}
               <div className="formulario-grupo">
                 <label htmlFor="especializacion">Especialización:</label>
                 <select
@@ -288,7 +229,6 @@ function PerfilProfesorGrid() {
                 </select>
               </div>
 
-              {/* Menú Categórico Controlado (Dropdown País) */}
               <div className="formulario-grupo">
                 <label htmlFor="pais">País:</label>
                 <select
@@ -313,7 +253,6 @@ function PerfilProfesorGrid() {
                 </select>
               </div>
 
-              {/* Menú Categórico Temporal de Ciudades Target Españolas */}
               <div className="formulario-grupo">
                 <label htmlFor="localidad">Localidad:</label>
                 <select
@@ -335,7 +274,6 @@ function PerfilProfesorGrid() {
             </div>
           </div>
 
-          {/* Bloque Inferior Acciones Submit & Navigation */}
           <button
             type="submit"
             className="boton-editar-perfil"
@@ -358,7 +296,4 @@ function PerfilProfesorGrid() {
   );
 }
 
-// ==========================================
-// 8. EXPORTACIONES MÓDULO
-// ==========================================
 export default PerfilProfesorGrid;

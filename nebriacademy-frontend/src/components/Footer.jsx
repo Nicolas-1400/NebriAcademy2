@@ -1,28 +1,20 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import Linkedin from "../assets/linkedin.png";
 import Facebook from "../assets/facebook.png";
 import X from "../assets/X.png";
 import Instagram from "../assets/instagram.png";
 import YouTube from "../assets/youtube.png";
 
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// Pie de página estático con enlaces legales y redes sociales.
 function Footer() {
-  // ==========================================
-  // 3. RENDERIZADO
-  // ==========================================
   return (
     <div className="footer">
+      {/* Enlaces Legales */}
       <div className="footer-politicas">
         <a href="/Home/PoliticaDePrivacidad">Política de privacidad</a>
         <a href="/Home/NotaLegal">Nota legal</a>
         <a href="/Home/PoliticaDeCookies">Política de cookies</a>
       </div>
 
+      {/* Redes Sociales */}
       <div className="footer-redes">
         <a
           href="https://www.linkedin.com/school/universidad-nebrija/"
@@ -53,7 +45,4 @@ function Footer() {
   );
 }
 
-// ==========================================
-// 4. EXPORTACIONES MÓDULO
-// ==========================================
 export default Footer;

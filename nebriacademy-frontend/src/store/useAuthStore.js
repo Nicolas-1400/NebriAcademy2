@@ -1,13 +1,7 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import { create } from "zustand";
 import { persist } from "zustand/middleware";
 
-// ==========================================
-// 2. EXPORTACIÓN DEL ESTADO GLOBAL
-// ==========================================
-// Configuración de la tienda de Zustand para Auth. Utiliza persistencia para sobrellevar F5 (refrescos).
+// Store de Autenticación
 const useAuthStore = create(
   persist(
     (set) => ({

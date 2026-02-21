@@ -1,17 +1,4 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
-import React from "react";
-
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// PoliticaDeCookiesGrid: Componente de UI estática que renderiza bloque informativo legal
-// referido a la captura, traqueo y cesión de datos para el cumplimiento normativo internacional.
 function PoliticaDeCookiesGrid() {
-  // ==========================================
-  // 3. RENDERIZADO
-  // ==========================================
   return (
     <div className="PoliticaDeCookiesGrid">
       <h1>Política de cookies</h1>
@@ -272,7 +259,4 @@ function PoliticaDeCookiesGrid() {
   );
 }
 
-// ==========================================
-// 4. EXPORTACIONES
-// ==========================================
 export default PoliticaDeCookiesGrid;

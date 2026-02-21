@@ -1,6 +1,3 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
 import Foto3 from "../assets/ImagenesCursos/Foto3.jpg";
@@ -13,9 +10,6 @@ import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 import "../styles/TarjetaFondos.css";
 
-// ==========================================
-// 2. CONSTANTES GLOBALES
-// ==========================================
 const IMAGES = {
   Foto1,
   Foto2,
@@ -29,13 +23,7 @@ const IMAGES = {
   Foto10,
 };
 
-// ==========================================
-// 3. COMPONENTE PRINCIPAL
-// ==========================================
 function TarjetaFondos({ selectedImage, onSelect }) {
-  // ==========================================
-  // 4. ESTADOS Y VARIABLES
-  // ==========================================
   const imageKeys = [
     "Foto1",
     "Foto2",
@@ -49,9 +37,6 @@ function TarjetaFondos({ selectedImage, onSelect }) {
     "Foto10",
   ];
 
-  // ==========================================
-  // 5. RENDERIZADO
-  // ==========================================
   return (
     <div className="tarjeta-fondos-container">
       <h4>Selecciona una imagen de fondo</h4>
@@ -70,7 +55,4 @@ function TarjetaFondos({ selectedImage, onSelect }) {
   );
 }
 
-// ==========================================
-// 6. EXPORTACIONES
-// ==========================================
 export default TarjetaFondos;

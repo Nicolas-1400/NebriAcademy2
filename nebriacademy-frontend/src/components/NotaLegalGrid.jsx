@@ -1,15 +1,4 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
-
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// NotaLegalGrid: Despligue estático del aviso legal y titularidad exigidos por ley española.
 function NotaLegalGrid() {
-  // ==========================================
-  // 3. RENDERIZADO
-  // ==========================================
   return (
     <div className="NotaLegalGrid">
       <h1>Nota legal</h1>
@@ -174,7 +163,4 @@ function NotaLegalGrid() {
   );
 }
 
-// ==========================================
-// 4. EXPORTACIONES
-// ==========================================
 export default NotaLegalGrid;

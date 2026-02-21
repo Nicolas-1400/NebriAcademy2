@@ -1,17 +1,4 @@
-// ==========================================
-// 1. IMPORTACIONES
-// ==========================================
-import React from "react";
-
-// ==========================================
-// 2. COMPONENTE PRINCIPAL
-// ==========================================
-// PoliticaDePrivacidadGrid: Vista estática que refleja los términos legales y privacidad
-// en conformidad con el Reglamento General de Protección de Datos (RGPD) para España y UE.
 function PoliticaDePrivacidadGrid() {
-  // ==========================================
-  // 3. RENDERIZADO
-  // ==========================================
   return (
     <div className="PoliticaDePrivacidadGrid">
       <h1>Política de privacidad</h1>
@@ -760,7 +747,4 @@ function PoliticaDePrivacidadGrid() {
   );
 }
 
-// ==========================================
-// 4. EXPORTACIONES MÓDULO
-// ==========================================
 export default PoliticaDePrivacidadGrid;
