@@ -41,7 +41,6 @@
   gap: 20px;
   flex-wrap: wrap;
   padding: 20px;
-  justify-content: center;
 }
 
 .profesores-contenedor .tarjeta-profesor {
