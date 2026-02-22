@@ -67,7 +67,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
-    // Creamos el registro del ejercicio en BD con el archivo ya guardado en disco
+    // Creamos el registro del ejercicio en BDD con el archivo ya guardado localmente
     const nuevo = await Ejercicios.create({
       autor: profesorId,
       curso: curso || null,
@@ -84,7 +84,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 });
 
 // ── PUT ─────────────────────────────────────────────────────────────────────
-// PUT /ejercicios/:id — Actualiza los datos de un ejercicio. Si llega archivo nuevo, también se actualiza
+// PUT /ejercicios/:id — Actualiza los datos de un ejercicio. Si llega un archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
@@ -101,13 +101,13 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /ejercicios/:id — Elimina el ejercicio de la BD y borra también el archivo físico del disco
+// DELETE /ejercicios/:id — Elimina el ejercicio de la BDD y borra también el archivo local
 router.delete("/:id", async (req, res) => {
   try {
     const ej = await Ejercicios.findByPk(req.params.id);
     if (!ej) return res.status(404).json({ error: "No encontrado" });
 
-    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
+    // Intentamos borrar el fichero local; si no existe, ignoramos el error
     if (ej.archivo) {
       const p = path.join(uploadDir, ej.archivo);
       fs.promises.unlink(p).catch(() => {});

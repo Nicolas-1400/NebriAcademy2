@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /cursosalumnos/registro — Busca el registro concreto de un alumno en un curso (por query params)
+// GET /cursosalumnos/registro — Busca el registro concreto de un alumno en un curso
 router.get("/registro", async (req, res) => {
   try {
     const { cursoId, alumnoId } = req.query;
@@ -39,8 +39,8 @@ router.get("/:id", async (req, res) => {
 });
 
 // ── POST ────────────────────────────────────────────────────────────────────
-// POST /cursosalumnos/vote — Gestiona el voto (like/dislike) de un alumno sobre un curso.
-// Si el alumno vota lo mismo que ya tenía, se deshace el voto. Si cambia de voto, el delta es doble.
+// POST /cursosalumnos/vote — Gestiona el voto (upvote/downvote) de un alumno sobre un curso.
+// Si el alumno vota lo mismo que ya tenía, se deshace el voto. Si cambia de voto, el cambio es doble.
 router.post("/vote", async (req, res) => {
   try {
     const { cursoId, alumnoId, vote } = req.body;
@@ -61,34 +61,34 @@ router.post("/vote", async (req, res) => {
 
     const actual = registro.valoracion;
     const intVote = vote ? 1 : -1;
-    let delta = 0;
+    let cambio = 0;
     let nuevoEstado = vote;
 
     // Calculamos cuánto cambia la valoración del curso según el estado anterior del voto
     if (actual === vote) {
       // El alumno vota igual que antes: se cancela el voto
       nuevoEstado = null;
-      delta = -intVote;
+      cambio = -intVote;
     } else if (actual === null || actual === undefined) {
       // No tenía voto previo: sumamos o restamos 1
-      delta = intVote;
+      cambio = intVote;
     } else {
       // Tenía voto contrario: el cambio vale doble (ej: de -1 a +1 son 2 puntos)
-      delta = intVote * 2;
+      cambio = intVote * 2;
     }
 
     const curso = await Cursos.findByPk(cursoId);
     if (!curso) return res.status(404).json({ error: "Curso no encontrado" });
 
     // Actualizamos la valoración total del curso
-    await curso.increment("valoracion", { by: delta });
+    await curso.increment("valoracion", { by: cambio });
 
     // Guardamos el nuevo estado del voto del alumno
     await registro.update({ valoracion: nuevoEstado });
 
     res.json({
       registro: { ...registro.toJSON(), valoracion: nuevoEstado },
-      curso: { id: curso.id, valoracion: (curso.valoracion || 0) + delta },
+      curso: { id: curso.id, valoracion: (curso.valoracion || 0) + cambio },
     });
   } catch (error) {
     console.error("Error voto curso:", error);

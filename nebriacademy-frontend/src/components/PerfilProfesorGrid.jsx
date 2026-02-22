@@ -74,7 +74,7 @@ function PerfilProfesorGrid() {
     setFormData((prev) => ({ ...prev, imagenPerfil: nombreImagen }));
   };
 
-  // Envía los cambios al backend. Si la contraseña está vacía, no se incluye en el payload.
+  // Envía los cambios al backend. Si la contraseña está vacía, no se incluye en el payload(subida).
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMensajeError("");

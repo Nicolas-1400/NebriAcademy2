@@ -76,7 +76,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /usuarios/:id — Elimina el registro de la tabla usuarios
+// DELETE /usuarios/:id — Elimina el registro de la tabla usuarios 
 router.delete("/:id", async (req, res) => {
   try {
     const u = await Usuarios.findByPk(req.params.id);

@@ -2,7 +2,6 @@
 const express = require("express");
 const router = express.Router();
 const Profesores = require("../models/Profesores.js");
-const Usuarios = require("../models/Usuarios.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /profesores — Devuelve todos los profesores registrados

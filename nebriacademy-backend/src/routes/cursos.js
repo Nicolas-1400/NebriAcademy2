@@ -9,7 +9,8 @@ const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /cursos — Devuelve todos los cursos registrados.
-// La imagen de cada curso se resuelve en el frontend (TarjetaCursos.jsx) usando el nombre guardado en BD o el ID del curso como fallback.
+// La imagen de cada curso se resuelve en el frontend (TarjetaCursos.jsx) usando el nombre guardado en BDD o 
+// el ID del curso como fallback.
 router.get("/", async (req, res) => {
   try {
     console.log("Petición recibida: GET /cursos");
@@ -134,7 +135,7 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    // Borramos los vídeos del curso: primero el archivo físico y luego el registro en BD
+    // Borramos los vídeos del curso: primero el archivo físico y luego el registro en BDD
     const videos = await require("../models/Videos.js").findAll({
       where: { curso: id },
     });
@@ -154,7 +155,7 @@ router.delete("/:id", async (req, res) => {
       await v.destroy();
     }
 
-    // Borramos los apuntes del curso: primero el archivo físico y luego el registro en BD
+    // Borramos los apuntes del curso: primero el archivo físico y luego el registro en BDD
     const apuntes = await require("../models/Apuntes.js").findAll({
       where: { curso: id },
     });

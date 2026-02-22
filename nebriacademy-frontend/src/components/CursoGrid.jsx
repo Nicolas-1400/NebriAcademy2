@@ -63,7 +63,7 @@ function CursoGrid() {
   const [editingComment, setEditingComment] = useState({ id: null, text: "" });
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
-  // Mapa de nombre → imagen importada para resolver la portada del curso desde la BD
+  // Mapa de nombre → imagen importada para resolver la portada del curso desde la BDD
   const IMAGES_MAP = {
     Foto1,
     Foto2,
@@ -77,7 +77,7 @@ function CursoGrid() {
     Foto10,
   };
 
-  // Obtenemos la imagen de cabecera directamente del mapa por el nombre guardado en la BD
+  // Obtenemos la imagen de cabecera directamente del mapa por el nombre guardado en la BDD
   const bgImage = IMAGES_MAP[curso?.imagen] || Foto1;
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -132,14 +132,14 @@ function CursoGrid() {
             (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
           );
           if (prof) return `${prof.nombre} ${prof.apellidos}`;
-          return "Desconocido";
+          return "Autor no encontrado";
         };
 
         // Filtramos el contenido global para quedarnos solo con el de este curso
         const filterById = (list) =>
           (list || []).filter((i) => String(i.curso) === String(id));
 
-        // Enriquecemos cada apunte con el nombre del autor para mostrarlo en la tarjeta
+        // Añadimos a cada apunte el nombre del autor para mostrarlo en la tarjeta
         const apuntesFiltrados = filterById(datosApuntes.Apuntes).map((a) => ({
           ...a,
           nombreAutor: resolveName(a.autor),

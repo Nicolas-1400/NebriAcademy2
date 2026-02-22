@@ -4,7 +4,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Formulario de inicio de sesión: valida credenciales contra el backend y redirige al home
+// Formulario de inicio de sesión: valida credenciales con el backend y redirige al home
 function LoginGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   // Estado local para los campos del formulario y para mostrar errores

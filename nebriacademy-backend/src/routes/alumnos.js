@@ -114,7 +114,7 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
         usuario: { id: nuevoAlumno.id, nombre, email },
       });
     } catch (createError) {
-      // Si falló la creación del alumno, borramos el usuario para no dejar datos huérfanos
+      // Si falló la creación del alumno, borramos el usuario para no dejar datos residuales
       await nuevoUsuario.destroy();
       throw createError;
     }
@@ -125,7 +125,7 @@ router.post("/registerAlumnoExterno/auth", async (req, res) => {
 });
 
 // POST /alumnos/verificacionnebrija/auth — Primera fase del registro para alumnos de Nebrija.
-// El alumno ya existe en la BD con email y contraseña temporal; aquí se verifica que son correctos.
+// El alumno ya existe en la BDD con email y contraseña temporal; aquí se verifica que son correctos.
 router.post("/verificacionnebrija/auth", async (req, res) => {
   const { email, contrasena } = req.body;
 

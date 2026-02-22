@@ -30,7 +30,7 @@ function TarjetaCursos({
   const navigate = useNavigate();
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
-  // Mapa para buscar la imagen por nombre tal como viene guardada en la BD
+  // Mapa para buscar la imagen por nombre tal como viene guardada en la BDD
   const IMAGES_MAP = {
     Foto1,
     Foto2,
@@ -44,7 +44,7 @@ function TarjetaCursos({
     Foto10,
   };
 
-  // Obtenemos la imagen del curso directamente del mapa por su nombre guardado en la BD
+  // Obtenemos la imagen del curso directamente del mapa por su nombre guardado en la BDD
   const imageSrc = IMAGES_MAP[imagen];
 
   // ── RENDER ───────────────────────────────────────────────────────────────────

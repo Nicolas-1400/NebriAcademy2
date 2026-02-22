@@ -9,7 +9,7 @@ const Videos = require("../models/Videos.js");
 const Profesores = require("../models/Profesores.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
-// Carpeta donde se guardan físicamente los archivos de vídeo subidos
+// Carpeta donde se guardan localmente los archivos de vídeo subidos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Videos",
@@ -67,7 +67,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Profesor no identificado o no autorizado" });
 
-    // Creamos el registro del vídeo en BD con el archivo ya guardado en disco
+    // Creamos el registro del vídeo en BDD con el archivo ya guardado en disco
     const nuevo = await Videos.create({
       autor: profesorId,
       curso,
@@ -101,7 +101,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /videos/:id — Elimina el vídeo de la BD y borra también el archivo físico del disco
+// DELETE /videos/:id — Elimina el vídeo de la BDD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const v = await Videos.findByPk(req.params.id);

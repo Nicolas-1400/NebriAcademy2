@@ -15,7 +15,7 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /apuntesalumnos/registro — Busca el registro concreto de un alumno en un apunte (por query params)
+// GET /apuntesalumnos/registro — Busca el registro concreto de un alumno en un apunte
 router.get("/registro", async (req, res) => {
   try {
     const { apunteId, alumnoId } = req.query;
@@ -48,9 +48,9 @@ router.post("/vote", async (req, res) => {
     });
 
     // Si ya tenía like, lo cancelamos; si no tenía, lo activamos
-    const isLike = registro.megusta === true;
-    const nuevoValor = isLike ? null : true;
-    const cambioValoracion = isLike ? -1 : 1;
+    const isLiked = registro.megusta === true;
+    const nuevoValor = isLiked ? null : true;
+    const cambioValoracion = isLiked ? -1 : 1;
 
     const apunte = await Apuntes.findByPk(apunteId);
     if (!apunte) return res.status(404).json({ error: "Apunte no encontrado" });

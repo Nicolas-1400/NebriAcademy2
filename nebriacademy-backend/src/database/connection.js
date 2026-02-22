@@ -1,7 +1,7 @@
 // Usamos Sequelize como ORM para conectar con la base de datos MySQL
 const { Sequelize } = require("sequelize");
 
-// Creamos la instancia de conexión con el nombre de la BD, usuario y contraseña
+// Creamos la instancia de conexión con el nombre de la BDD, usuario y contraseña
 const sequelize = new Sequelize("nebriacademy", "root", "", {
   host: "localhost",
   dialect: "mysql",

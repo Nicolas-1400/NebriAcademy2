@@ -10,7 +10,7 @@ const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
-// Carpeta donde se guardan físicamente las entregas de ejercicios que suben los alumnos
+// Carpeta donde se guardan localmente las entregas de ejercicios que suben los alumnos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
@@ -51,7 +51,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     const { ejercicioId, profileId } = req.body;
 
-    // Verificamos que tanto el ejercicio como el alumno existen en la BD antes de crear el registro
+    // Verificamos que tanto el ejercicio como el alumno existen en la BDD antes de crear el registro
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
     const validAlumno = await Alumnos.findByPk(profileId);
 
@@ -74,7 +74,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 });
 
 // ── PUT ─────────────────────────────────────────────────────────────────────
-// PUT /ejerciciosalumnos/:id — Actualiza una entrega. Si llega archivo nuevo, también se actualiza
+// PUT /ejerciciosalumnos/:id — Actualiza una entrega. Si llega un archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -91,13 +91,13 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /ejerciciosalumnos/:id — Elimina la entrega de la BD y borra también el archivo físico del disco
+// DELETE /ejerciciosalumnos/:id — Elimina la entrega de la BDD y borra también el archivo local del disco
 router.delete("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
-    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
+    // Intentamos borrar el fichero local; si no existe, ignoramos el error
     if (r.archivo) {
       const p = path.join(uploadDir, r.archivo);
       fs.promises.unlink(p).catch(() => {});

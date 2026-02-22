@@ -32,7 +32,7 @@ const IMAGES_MAP = {
 function TarjetaCursoPequena({ name, cursoId, nivel, valoracion, imagen }) {
   const navigate = useNavigate();
 
-  // Obtenemos la imagen directamente del mapa por el nombre guardado en la BD
+  // Obtenemos la imagen directamente del mapa por el nombre guardado en la BDD
   const imageSrc = IMAGES_MAP[imagen];
 
   // ── RENDER ───────────────────────────────────────────────────────────────────

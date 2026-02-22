@@ -44,7 +44,6 @@ app.use(
 );
 
 // Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL
-app.use("/", require("./routes/index"));
 app.use("/alumnos", require("./routes/alumnos"));
 app.use("/apuntes", require("./routes/apuntes"));
 app.use("/apuntesalumnos", require("./routes/apuntesalumnos"));

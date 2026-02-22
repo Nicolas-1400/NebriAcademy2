@@ -1,5 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-// Importamos DataTypes para definir los tipos de columna y la conexión a la BD
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BDD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 

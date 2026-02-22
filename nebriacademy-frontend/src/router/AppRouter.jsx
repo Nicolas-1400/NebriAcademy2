@@ -75,7 +75,7 @@ function AppRouter() {
           }
         />
 
-        {/* Ruta comodín: si ninguna ruta coincide, mostramos la página 404 */}
+        {/* Ruta no encontrada: si ninguna ruta coincide, mostramos la página 404 */}
         <Route path="*" element={<NotFound />} />
 
         {/* Rutas privadas: requieren usuario logueado (ProtectedRoute lo comprueba) */}
@@ -90,7 +90,7 @@ function AppRouter() {
         <Route
           path="/Home/MiEspacio"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo="alumno">
               <MiEspacio />
             </ProtectedRoute>
           }
@@ -107,7 +107,7 @@ function AppRouter() {
         <Route
           path="/Home/Cursos"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo="alumno">
               <TodosCursos />
             </ProtectedRoute>
           }
@@ -132,7 +132,7 @@ function AppRouter() {
         <Route
           path="/Home/Profesores"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo="alumno">
               <TodosProfesores />
             </ProtectedRoute>
           }
@@ -140,7 +140,7 @@ function AppRouter() {
         <Route
           path="/Home/Profesores/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo="alumno">
               <InfoProfesor />
             </ProtectedRoute>
           }

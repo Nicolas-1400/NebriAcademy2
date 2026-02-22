@@ -62,7 +62,7 @@ function CorregirEjerciciosSubidosGrid() {
       );
   }, [id]);
 
-  // Enriquecemos cada registro con el nombre completo del alumno para mostrarlo en la tarjeta
+  // Añadimos a cada registro el nombre completo del alumno para mostrarlo en la tarjeta
   const ejerciciosConNombre = useMemo(() => {
     return registros.map((r) => {
       const alumno = alumnos.find((a) => Number(a.id) === Number(r.alumnoId));

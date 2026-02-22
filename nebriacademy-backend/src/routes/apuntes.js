@@ -7,12 +7,11 @@ const fs = require("fs");
 
 const Apuntes = require("../models/Apuntes.js");
 const Profesores = require("../models/Profesores.js");
-const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
-// Carpeta donde se guardan físicamente los archivos de apuntes subidos
+// Carpeta donde se guardan localmente los archivos de apuntes subidos
 const uploadDir = path.join(
   __dirname,
   "../../../nebriacademy-frontend/src/assets/Apuntes",
@@ -104,7 +103,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Categoría requerida si no hay curso" });
 
-    // Creamos el registro del apunte en la BD con el archivo ya guardado en disco
+    // Creamos el registro del apunte en la BDD con el archivo ya guardado en disco
     const nuevo = await Apuntes.create({
       autor: autorFinal,
       curso: cursoId || null,
@@ -141,7 +140,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /apuntes/:id — Elimina el apunte de la BD y borra también el archivo físico del disco
+// DELETE /apuntes/:id — Elimina el apunte de la BDD y borra también el archivo físico del disco
 router.delete("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);

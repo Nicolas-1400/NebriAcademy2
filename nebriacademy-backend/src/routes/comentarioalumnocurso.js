@@ -3,11 +3,10 @@ const express = require("express");
 const router = express.Router();
 const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
-const Profesores = require("../models/Profesores.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /comentarioalumnocurso — Devuelve todos los comentarios, opcionalmente filtrados por cursoId.
-// Para cada comentario, busca al autor (alumno o profesor) y añade su nombre y apellidos a la respuesta.
+// Para cada comentario, busca al autor (alumno) y añade su nombre y apellidos a la respuesta.
 router.get("/", async (req, res) => {
   try {
     const { cursoId } = req.query;
@@ -15,7 +14,7 @@ router.get("/", async (req, res) => {
     const filtro = cursoId ? { where: { cursoId } } : {};
     const comentarios = await ComentarioAlumnoCurso.findAll(filtro);
 
-    // Para cada comentario, buscamos primero en alumnos y si no, en profesores
+    // Para cada comentario, buscamos en alumnos
     const enhanced = await Promise.all(
       comentarios.map(async (c) => {
         let nombre = "Usuario",
@@ -24,13 +23,6 @@ router.get("/", async (req, res) => {
         let autor = await Alumnos.findOne({
           where: { usuarioId: c.usuarioId },
         });
-
-        // Si no lo encontramos en alumnos, lo intentamos en profesores
-        if (!autor) {
-          autor = await Profesores.findOne({
-            where: { usuarioId: c.usuarioId },
-          });
-        }
 
         if (autor) {
           nombre = autor.nombre;
@@ -88,7 +80,7 @@ router.post("/", async (req, res) => {
     if (!usuarioId)
       return res.status(404).json({ error: "Usuario no encontrado" });
 
-    // Guardamos el comentario en la BD vinculado al usuario y al curso
+    // Guardamos el comentario en la BDD vinculado al usuario y al curso
     const nuevo = await ComentarioAlumnoCurso.create({
       usuarioId,
       cursoId,

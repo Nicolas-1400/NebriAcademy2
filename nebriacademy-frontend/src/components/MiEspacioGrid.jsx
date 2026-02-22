@@ -137,7 +137,7 @@ function MiEspacioGrid() {
       (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
     );
     if (prof) return `${prof.nombre} ${prof.apellidos}`;
-    return "Anónimo";
+    return "Autor no encontrado";
   };
 
   // Alterna el like de un apunte: actualiza el backend y luego el estado local

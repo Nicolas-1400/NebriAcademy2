@@ -53,7 +53,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /puntuacionesejercicios/:id — Elimina la puntuación de una entrega
+// DELETE /puntuacionesejercicios/:id — Elimina la puntuación de una entrega 
 router.delete("/:id", async (req, res) => {
   try {
     const p = await PuntuacionesEjercicios.findByPk(req.params.id);

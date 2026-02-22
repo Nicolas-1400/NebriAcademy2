@@ -53,7 +53,7 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /profesorescursos/:id — Elimina el vínculo entre un profesor y un curso
+// DELETE /profesorescursos/:id — Elimina el vínculo entre un profesor y un curso 
 router.delete("/:id", async (req, res) => {
   try {
     const r = await ProfesoresCursos.findByPk(req.params.id);
