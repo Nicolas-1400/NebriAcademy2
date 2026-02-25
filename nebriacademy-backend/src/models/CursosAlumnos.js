@@ -13,7 +13,7 @@ const CursosAlumnos = sequelize.define(
     favorito: DataTypes.BOOLEAN,
     apuntado: DataTypes.BOOLEAN,
     // field: "valoración" indica el nombre real de la columna en la BDD (con tilde)
-    valoracion: { type: DataTypes.BOOLEAN},
+    valoracion: { type: DataTypes.BOOLEAN },
   },
   { timestamps: false },
 );
