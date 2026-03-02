@@ -70,7 +70,6 @@
 @media (max-width: 768px) {
     .footer {
         padding: 12px;
-        margin-top: 40px;
     }
 
     .footer-politicas {
@@ -107,7 +106,6 @@
 @media (max-width: 1024px) {
     .footer {
         padding: 13px;
-        margin-top: 35px;
     }
 
     .footer-politicas {

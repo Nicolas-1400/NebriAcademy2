@@ -28,7 +28,6 @@
   text-decoration: none;
   font-size: 15px;
   transition: all 0.3s ease;
-  word-break: break-word;
 }
 
 .item-main a:hover {
@@ -83,4 +82,58 @@
 .like-icon {
   cursor: pointer;
   width: 25px;
+}
+
+/* RESPONSIVE 768 */
+@media (max-width: 768px) {
+  .item-row {
+    padding: 10px;
+  }
+
+  .item-main a {
+    font-size: 14px;
+  }
+
+  .item-main p {
+    font-size: 10px;
+  }
+
+  .apunte-categoria p {
+    font-size: 10px;
+    word-break: normal;
+  }
+
+  .like-icon {
+    width: 20px;
+  } 
+  .like-count {
+    font-size: 14px;
+  }
+}
+
+/* RESPONSIVE 450 */
+@media (max-width: 450px) {
+  .item-row {
+    padding: 7px;
+  }
+
+  .item-main a {
+    font-size: 12px;
+  }
+
+  .item-main p {
+    font-size: 8px;
+  }
+
+  .apunte-categoria p {
+    font-size: 8px;
+    word-break: normal;
+  }
+
+  .like-icon {
+    width: 14px;
+  } 
+  .like-count {
+    font-size: 12px;
+  }
 }
