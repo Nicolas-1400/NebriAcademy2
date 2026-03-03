@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 21-02-2026 a las 14:17:58
+-- Tiempo de generación: 25-02-2026 a las 10:56:53
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -189,14 +189,14 @@ CREATE TABLE `cursosalumnos` (
   `alumnoId` int(11) NOT NULL,
   `favorito` tinyint(1) DEFAULT NULL,
   `apuntado` tinyint(1) DEFAULT NULL,
-  `valoración` tinyint(1) DEFAULT NULL
+  `valoracion` tinyint(1) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `cursosalumnos`
 --
 
-INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoración`) VALUES
+INSERT INTO `cursosalumnos` (`id`, `cursoId`, `alumnoId`, `favorito`, `apuntado`, `valoracion`) VALUES
 (1, 1, 1, 1, 1, NULL),
 (2, 1, 2, 1, 1, NULL),
 (3, 2, 1, 0, 1, NULL),
