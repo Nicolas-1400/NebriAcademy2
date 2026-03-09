@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 25-02-2026 a las 10:56:53
+-- Tiempo de generación: 09-03-2026 a las 12:12:38
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -20,6 +20,33 @@ SET time_zone = "+00:00";
 --
 -- Base de datos: `nebriacademy`
 --
+
+-- --------------------------------------------------------
+
+--
+-- Estructura de tabla para la tabla `administradores`
+--
+
+CREATE TABLE `administradores` (
+  `id` int(11) NOT NULL,
+  `usuarioId` int(11) NOT NULL,
+  `dni` varchar(20) NOT NULL,
+  `nombre` varchar(50) NOT NULL,
+  `apellidos` varchar(100) NOT NULL,
+  `email` varchar(100) NOT NULL,
+  `contrasena` varchar(255) NOT NULL,
+  `numTelefono` varchar(30) DEFAULT NULL,
+  `redes` varchar(255) DEFAULT NULL,
+  `pais` varchar(50) DEFAULT NULL,
+  `localidad` varchar(50) DEFAULT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Volcado de datos para la tabla `administradores`
+--
+
+INSERT INTO `administradores` (`id`, `usuarioId`, `dni`, `nombre`, `apellidos`, `email`, `contrasena`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
+(1, 14, '00000000Z', 'Admin', 'Principal', 'admin@nebriacademy.com', 'admin123', '600000000', '@admin', 'España', 'Madrid');
 
 -- --------------------------------------------------------
 
@@ -272,6 +299,20 @@ INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VAL
 -- --------------------------------------------------------
 
 --
+-- Estructura de tabla para la tabla `incidencias`
+--
+
+CREATE TABLE `incidencias` (
+  `id` int(11) NOT NULL,
+  `tipo` varchar(50) NOT NULL,
+  `descripcion` text DEFAULT NULL,
+  `resuelto` tinyint(1) DEFAULT 0,
+  `usuario` int(11) NOT NULL
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+-- --------------------------------------------------------
+
+--
 -- Estructura de tabla para la tabla `profesores`
 --
 
@@ -423,6 +464,15 @@ INSERT INTO `videos` (`id`, `autor`, `curso`, `nombre`, `archivo`) VALUES
 --
 
 --
+-- Indices de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD PRIMARY KEY (`id`),
+  ADD UNIQUE KEY `dni` (`dni`),
+  ADD UNIQUE KEY `email` (`email`),
+  ADD KEY `usuarioId` (`usuarioId`);
+
+--
 -- Indices de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
@@ -488,6 +538,13 @@ ALTER TABLE `ejerciciosalumnos`
   ADD KEY `alumnoId` (`alumnoId`);
 
 --
+-- Indices de la tabla `incidencias`
+--
+ALTER TABLE `incidencias`
+  ADD PRIMARY KEY (`id`),
+  ADD KEY `usuario` (`usuario`);
+
+--
 -- Indices de la tabla `profesores`
 --
 ALTER TABLE `profesores`
@@ -530,6 +587,12 @@ ALTER TABLE `videos`
 --
 -- AUTO_INCREMENT de las tablas volcadas
 --
+
+--
+-- AUTO_INCREMENT de la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT de la tabla `alumnos`
@@ -580,6 +643,12 @@ ALTER TABLE `ejerciciosalumnos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
+-- AUTO_INCREMENT de la tabla `incidencias`
+--
+ALTER TABLE `incidencias`
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
+
+--
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
@@ -612,6 +681,12 @@ ALTER TABLE `videos`
 --
 -- Restricciones para tablas volcadas
 --
+
+--
+-- Filtros para la tabla `administradores`
+--
+ALTER TABLE `administradores`
+  ADD CONSTRAINT `administradores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `alumnos`
@@ -666,6 +741,12 @@ ALTER TABLE `ejercicios`
 ALTER TABLE `ejerciciosalumnos`
   ADD CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE;
+
+--
+-- Filtros para la tabla `incidencias`
+--
+ALTER TABLE `incidencias`
+  ADD CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `profesores`

@@ -4,18 +4,18 @@ const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
 // ── MODELO ────────────────────────────────────────────────────────────────────
-// Definimos el modelo "usuarios", que es la entidad base compartida por alumnos y profesores.
-const Usuarios = sequelize.define(
-  "usuarios",
+// Tabla que almacena las incidencias que los usuarios reportan al administrador.
+// El campo "resuelto" indica si la incidencia ha sido atendida o sigue pendiente.
+const Incidencias = sequelize.define(
+  "incidencias",
   {
-    // El campo tipo indica si el registro pertenece a un alumno, un profesor o un administrador.
-    tipo: {
-      type: DataTypes.ENUM("alumno", "profesor", "administrador"),
-      allowNull: false,
-    },
+    tipo: DataTypes.STRING,
+    descripcion: DataTypes.TEXT,
+    resuelto: DataTypes.BOOLEAN,
+    usuario: DataTypes.INTEGER,
   },
   { timestamps: false },
 );
 
 // ── EXPORTAR ─────────────────────────────────────────────────────────────────
-module.exports = Usuarios;
+module.exports = Incidencias;

@@ -6,6 +6,7 @@ const path = require("path");
 const fs = require("fs");
 
 const Apuntes = require("../models/Apuntes.js");
+const Administradores = require("../models/Administradores.js");
 const Profesores = require("../models/Profesores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
@@ -84,6 +85,9 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       if (u) autorFinal = u.usuarioId;
     } else if (tipo === "profesor") {
       const u = await Profesores.findByPk(profileId);
+      if (u) autorFinal = u.usuarioId;
+    } else if (tipo === "administrador") {
+      const u = await Administradores.findByPk(profileId);
       if (u) autorFinal = u.usuarioId;
     }
 

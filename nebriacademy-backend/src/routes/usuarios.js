@@ -4,6 +4,7 @@ const router = express.Router();
 const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
+const Administradores = require("../models/Administradores.js");
 
 // ── FUNCIONES AUXILIARES ─────────────────────────────────────────────────────
 // Función auxiliar que devuelve el modelo correcto según el tipo de usuario recibido
@@ -13,6 +14,8 @@ const getModelByType = (tipo) => {
       return Alumnos;
     case "profesor":
       return Profesores;
+    case "administrador":
+      return Administradores;
     default:
       return null;
   }

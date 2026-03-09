@@ -3,10 +3,11 @@ const express = require("express");
 const router = express.Router();
 
 // Importamos los modelos que necesitamos para buscar las credenciales
+const Administradores = require("../models/Administradores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 
-// POST /login/auth — Recibe email y contraseña y decide si el usuario es alumno o profesor
+// POST /login/auth — Recibe email y contraseña y comprueba si el usuario es administrador, alumno o profesor
 router.post("/auth", async (req, res) => {
   try {
     const { email, contrasena } = req.body;
@@ -19,7 +20,31 @@ router.post("/auth", async (req, res) => {
         .json({ error: "Email y contraseña son requeridos" });
     }
 
-    // Buscamos primero entre los alumnos; si coincide email y contraseña, respondemos con sus datos
+    // Buscamos primero entre los administradores; si coincide email y contraseña, respondemos con sus datos
+    const admins = await Administradores.findAll();
+    const admin = admins.find(
+      (a) => a.email === email && a.contrasena === contrasena,
+    );
+    if (admin) {
+      return res.json({
+        mensaje: "Login exitoso",
+        tipo: "administrador",
+        usuario: {
+          id: admin.id,
+          usuarioId: admin.usuarioId,
+          dni: admin.dni,
+          nombre: admin.nombre,
+          apellidos: admin.apellidos,
+          email: admin.email,
+          numTelefono: admin.numTelefono,
+          redes: admin.redes,
+          pais: admin.pais,
+          localidad: admin.localidad,
+        },
+      });
+    }
+
+    // Si no era administrador, buscamos entre los alumnos con el mismo criterio
     const alumnos = await Alumnos.findAll();
     const alumno = alumnos.find(
       (a) => a.email === email && a.contrasena === contrasena,
