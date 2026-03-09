@@ -1,6 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+// Importamos DataTypes para definir los tipos de columna y la conexión a la BDD
 const { DataTypes } = require("sequelize");
 const sequelize = require("../database/connection");
 
+// ── MODELO ────────────────────────────────────────────────────────────────────
+// Definimos el modelo "administradores". Comparte campos comunes con alumnos y profesores
+// pero sin datos específicos de alumno (tarjeta) ni de profesor (cuenta bancaria, especialización).
 const Administradores = sequelize.define(
   "administradores",
   {
@@ -18,4 +23,5 @@ const Administradores = sequelize.define(
   { timestamps: false },
 );
 
+// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = Administradores;
