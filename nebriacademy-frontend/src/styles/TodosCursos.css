@@ -154,6 +154,13 @@
     gap: 25px;
 }
 
+/* Contenedor relativo de cada tarjeta (para posicionar el botón de admin) */
+.tarjeta-curso-wrapper {
+    position: relative;
+}
+
+
+
 /* RESPONSIVE Todos Cursos Grid */
 @media (max-width: 1024px) {
     .todos-cursos-grid {

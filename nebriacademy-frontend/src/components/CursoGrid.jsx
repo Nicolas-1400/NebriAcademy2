@@ -22,6 +22,7 @@ import SalirEdicion from "../assets/lapiz-cancelar3.png";
 import CorregirEjercicio2 from "../assets/editar-archivo1.png";
 import EjercicioSubido from "../assets/subir-archivo2.png";
 import SubirEjercicio from "../assets/subir-archivo.png";
+import Eliminar from "../assets/Eliminar.png";
 
 import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
@@ -425,6 +426,8 @@ function CursoGrid() {
     }
   };
 
+
+
   // Inicia la edición en línea de un comentario existente
   const startEditComment = (c) => {
     setEditingComment({ id: c.id, text: c.comentario });
@@ -532,8 +535,8 @@ function CursoGrid() {
             </p>
           </div>
         )}
-        {/* El profesor solo ve la valoración total, sin poder votar */}
-        {tipo === "profesor" && (
+        {/* El profesor o los administradores, solo ven la valoración total, sin poder votar */}
+        {(tipo === "profesor" || tipo === "administrador") && (
           <div className="curso-header-botones">
             <p>
               <strong>Valoración: {curso.valoracion || 0}</strong>
@@ -645,8 +648,8 @@ function CursoGrid() {
                     />
                   </div>
                   <div className="ejercicio-row-boton">
-                    {tipo === "profesor" ? (
-                      // El profesor puede ir a la pantalla de corrección de entregas
+                    {tipo === "profesor" || tipo === "administrador" ? (
+                      // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
                       <button
                         className="btn-corregir-ejercicio"
                         onClick={() =>
@@ -655,7 +658,7 @@ function CursoGrid() {
                           )
                         }
                       >
-                        <img src={CorregirEjercicio2} alt="Corregir" />
+                        <img src={CorregirEjercicio2} alt="Ver entregas" />
                       </button>
                     ) : (
                       // El alumno puede subir su entrega o ver el archivo ya subido y su nota
@@ -758,8 +761,17 @@ function CursoGrid() {
                   ) : (
                     <>
                       <p>{c.comentario}</p>
-                      {/* Los botones de editar/borrar solo aparecen al autor del comentario */}
-                      {user &&
+                      {/* Admin puede borrar cualquier comentario sin restricción */}
+                      {tipo === "administrador" && (
+                        <div className="comentario-acciones">
+                          <button onClick={() => deleteComment(c.id)}>
+                            Borrar
+                          </button>
+                        </div>
+                      )}
+                      {/* Los botones de editar/borrar solo aparecen al autor del comentario (no para admin) */}
+                      {tipo !== "administrador" &&
+                        user &&
                         Number(c.usuarioId) ===
                           Number(user.usuarioId || user.id) && (
                           <div className="comentario-acciones">
@@ -776,7 +788,7 @@ function CursoGrid() {
                 </div>
               ))}
             </div>
-            {/* Caja para escribir nuevos comentarios: solo visible para alumnos */}
+            {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
             {tipo === "alumno" && (
               <div className="escribir-comentario">
                 <textarea
@@ -792,9 +804,10 @@ function CursoGrid() {
         </div>
       </div>
 
-      {/* Botones flotantes: modo edición (solo profesor) y añadir contenido */}
-      {(tipo === "profesor" || tipo === "alumno") && (
+      {/* Botones flotantes: modo edición (profesor/admin) y añadir contenido (profesor/alumno, nunca admin) */}
+      {(tipo === "profesor" || tipo === "alumno" || tipo === "administrador") && (
         <div className="fixed-action-group">
+          {/* El botón de editar/borrar contenido es visible solo para profesor */}
           {tipo === "profesor" && (
             <button
               className="editarCurso"
@@ -804,57 +817,61 @@ function CursoGrid() {
               <img src={editingMode ? SalirEdicion : Lapiz} alt="Edit" />
             </button>
           )}
-          <div className="relative-container">
-            <button
-              className={`subirContenidoCurso${rotado ? " rotated" : ""}`}
-              onClick={() => {
-                setRotado((prev) => !prev);
-                if (tipo === "alumno") {
-                  // El alumno solo puede subir apuntes
-                  navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
-                    state: { tipo: "apunte", cursoId: id },
-                  });
-                } else {
-                  // El profesor abre un menú para elegir el tipo de contenido a subir
-                  setShowAddMenu(!showAddMenu);
-                }
-              }}
-              title="Añadir contenido"
-            >
-              <img src={Mas} alt="Añadir contenido" />
-            </button>
-            {showAddMenu && tipo === "profesor" && (
-              <div className="add-menu">
-                <button
-                  onClick={() =>
+
+          {/* El botón "+" de añadir contenido: visible para alumno y profesor, nunca para admin */}
+          {(tipo === "profesor" || tipo === "alumno") && (
+            <div className="relative-container">
+              <button
+                className={`subirContenidoCurso${rotado ? " rotated" : ""}`}
+                onClick={() => {
+                  setRotado((prev) => !prev);
+                  if (tipo === "alumno") {
+                    // El alumno solo puede subir apuntes
                     navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
                       state: { tipo: "apunte", cursoId: id },
-                    })
+                    });
+                  } else {
+                    // El profesor abre un menú para elegir el tipo de contenido a subir
+                    setShowAddMenu(!showAddMenu);
                   }
-                >
-                  Apunte
-                </button>
-                <button
-                  onClick={() =>
-                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
-                      state: { tipo: "video", cursoId: id },
-                    })
-                  }
-                >
-                  Video
-                </button>
-                <button
-                  onClick={() =>
-                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
-                      state: { tipo: "ejercicio", cursoId: id },
-                    })
-                  }
-                >
-                  Ejercicio
-                </button>
-              </div>
-            )}
-          </div>
+                }}
+                title="Añadir contenido"
+              >
+                <img src={Mas} alt="Añadir contenido" />
+              </button>
+              {showAddMenu && tipo === "profesor" && (
+                <div className="add-menu">
+                  <button
+                    onClick={() =>
+                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                        state: { tipo: "apunte", cursoId: id },
+                      })
+                    }
+                  >
+                    Apunte
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                        state: { tipo: "video", cursoId: id },
+                      })
+                    }
+                  >
+                    Video
+                  </button>
+                  <button
+                    onClick={() =>
+                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                        state: { tipo: "ejercicio", cursoId: id },
+                      })
+                    }
+                  >
+                    Ejercicio
+                  </button>
+                </div>
+              )}
+            </div>
+          )}
         </div>
       )}
     </div>

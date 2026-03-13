@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 09-03-2026 a las 12:12:38
+-- Tiempo de generación: 13-03-2026 a las 10:32:26
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -35,6 +35,7 @@ CREATE TABLE `administradores` (
   `apellidos` varchar(100) NOT NULL,
   `email` varchar(100) NOT NULL,
   `contrasena` varchar(255) NOT NULL,
+  `numCuentaBancaria` varchar(24) DEFAULT NULL,
   `numTelefono` varchar(30) DEFAULT NULL,
   `redes` varchar(255) DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
@@ -45,8 +46,8 @@ CREATE TABLE `administradores` (
 -- Volcado de datos para la tabla `administradores`
 --
 
-INSERT INTO `administradores` (`id`, `usuarioId`, `dni`, `nombre`, `apellidos`, `email`, `contrasena`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
-(1, 14, '00000000Z', 'Admin', 'Principal', 'admin@nebriacademy.com', 'admin123', '600000000', '@admin', 'España', 'Madrid');
+INSERT INTO `administradores` (`id`, `usuarioId`, `dni`, `nombre`, `apellidos`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
+(1, 14, '00000000Z', 'Admin', 'Principal', 'admin@nebriacademy.com', 'admin123', 'ES1285556289048346478903', '600000000', '@admin', 'España', 'Madrid');
 
 -- --------------------------------------------------------
 
@@ -324,7 +325,7 @@ CREATE TABLE `profesores` (
   `dni` varchar(20) DEFAULT NULL,
   `email` varchar(100) NOT NULL,
   `contrasena` varchar(255) NOT NULL,
-  `numCuentaBancaria` varchar(50) DEFAULT NULL,
+  `numCuentaBancaria` varchar(24) DEFAULT NULL,
   `numTelefono` varchar(30) DEFAULT NULL,
   `redes` text DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,

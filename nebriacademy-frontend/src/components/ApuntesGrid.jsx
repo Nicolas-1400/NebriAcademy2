@@ -97,9 +97,10 @@ function ApuntesGrid() {
     return "Desconocido";
   };
 
-  // Comprueba si el usuario actual es el autor del apunte para mostrar los controles de edición
+  // Comprueba si el usuario actual puede borrar el apunte: los admins pueden con cualquiera, el resto solo con los suyos
   const canEdit = (apunte) => {
     if (!usuario) return false;
+    if (tipo === "administrador") return true;
     const currentUserId = usuario.usuarioId || usuario.id;
     return Number(currentUserId) === Number(apunte.autor);
   };
@@ -287,18 +288,20 @@ function ApuntesGrid() {
                     autorNombre={resolveAutorNombre(ap.autor)}
                     isEditMode={editMode}
                   />
-                  {/* Botones de editar/borrar visibles solo en modo edición y si el usuario es el autor */}
-                  {editMode && canEdit(ap) && (
+                  {/* Botones de editar/borrar visibles en modo edición si es autor, o siempre para admin */}
+                  {(tipo === "administrador" || (editMode && canEdit(ap))) && (
                     <div className="apunte-edit-controls">
-                      <button
-                        onClick={() =>
-                          navigate(`/Home/Apuntes/EditarApunte/${ap.id}`, {
-                            state: { apunte: ap },
-                          })
-                        }
-                      >
-                        Editar
-                      </button>
+                      {tipo !== "administrador" && (
+                        <button
+                          onClick={() =>
+                            navigate(`/Home/Apuntes/EditarApunte/${ap.id}`, {
+                              state: { apunte: ap },
+                            })
+                          }
+                        >
+                          Editar
+                        </button>
+                      )}
                       <button onClick={() => handleDelete(ap.id)}>
                         Borrar
                       </button>
@@ -313,26 +316,30 @@ function ApuntesGrid() {
         </div>
       </main>
 
-      {/* Botones flotantes: activar modo edición y subir nuevo apunte */}
+      {/* Botones flotantes: activar modo edición y subir nuevo apunte (subir solo para no-admin) */}
       <div className="fixed-action-group">
-        <button
-          className="editarApuntes"
-          onClick={() => setEditMode(!editMode)}
-          title={editMode ? "Salir edición" : "Editar"}
-        >
-          <img src={editMode ? SalirEdicion : Lapiz} alt="Editar" />
-        </button>
-        <button
-          className="subirContenidoCurso"
-          onClick={() =>
-            navigate("/Home/Apuntes/AddApunte", {
-              state: { tipo: "apunte", cursoId: id || 0 },
-            })
-          }
-          title="Subir"
-        >
-          <img src={Mas} alt="Subir" />
-        </button>
+        {tipo !== "administrador" && (
+          <button
+            className="editarApuntes"
+            onClick={() => setEditMode(!editMode)}
+            title={editMode ? "Salir edición" : "Editar"}
+          >
+            <img src={editMode ? SalirEdicion : Lapiz} alt="Editar" />
+          </button>
+        )}
+        {tipo !== "administrador" && (
+          <button
+            className="subirContenidoCurso"
+            onClick={() =>
+              navigate("/Home/Apuntes/AddApunte", {
+                state: { tipo: "apunte", cursoId: id || 0 },
+              })
+            }
+            title="Subir"
+          >
+            <img src={Mas} alt="Subir" />
+          </button>
+        )}
       </div>
     </div>
   );

@@ -226,7 +226,7 @@ function Nav() {
     }
   };
 
-  // Renderiza los botones de navegación según si el usuario es alumno o profesor
+  // Renderiza los botones de navegación según si el usuario es alumno, profesor o administrador
   const renderNavButtons = () => {
     if (tipo === "profesor") {
       return (
@@ -247,6 +247,24 @@ function Nav() {
               alt="Añadir"
             />
             <h3>Añadir curso</h3>
+          </button>
+        </div>
+      );
+    }
+    if (tipo === "administrador") {
+      return (
+        <div className="contenedor-botones-nav">
+          <button className="boton-nav" onClick={() => navigate("/Home/Cursos")}>
+            Cursos
+          </button>
+          <button
+            className="boton-nav"
+            onClick={() => navigate("/Home/Profesores")}
+          >
+            Profesores
+          </button>
+          <button className="boton-nav" onClick={() => navigate("/Home/Apuntes")}>
+            Apuntes
           </button>
         </div>
       );
@@ -275,9 +293,9 @@ function Nav() {
     );
   };
 
-  // El buscador solo se muestra si el usuario es alumno
+  // El buscador solo se muestra si el usuario es administrador o alumno
   const renderSearch = () =>
-    tipo === "alumno" ? (
+    tipo === "alumno" || tipo === "administrador" ? (
       <div ref={searchRef} className="search-wrapper">
         <input
           type="search"

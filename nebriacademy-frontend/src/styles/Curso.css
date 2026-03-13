@@ -359,6 +359,19 @@
   filter: invert(0);
 }
 
+/* Variante del botón flotante para eliminar curso (admin) */
+.editarCurso--eliminar {
+  background: linear-gradient(135deg, #c0392b, #e74c3c);
+  border-color: #96281b;
+  font-size: 20px;
+}
+
+.editarCurso--eliminar:hover {
+  background: linear-gradient(135deg, #96281b, #c0392b);
+  border-color: #c0392b;
+  box-shadow: 0 0 10px rgba(192, 57, 43, 0.5);
+}
+
 .fixed-action-group {
   position: fixed;
   right: 30px;

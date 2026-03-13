@@ -14,30 +14,13 @@ function TarjetaVideoCurso({
 }) {
   // Los botones de edición solo son visibles si el usuario es profesor y el modo edición está activo
   const isProfesorEdit = tipo === "profesor" && editingMode;
+  const showDelete = isProfesorEdit || tipo === "administrador";
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div key={video.id} className="video-item">
       <div>
         <h5>{video.nombre}</h5>
-
-        {/* Controles de edición: solo visibles para el profesor en modo edición */}
-        {isProfesorEdit && (
-          <div className="edit-controls">
-            <button
-              onClick={() => handleEditNavigate("video", video)}
-              title="Editar vídeo"
-            >
-              <img src={Editar} alt="Editar" />
-            </button>
-            <button
-              onClick={() => handleDeleteContenido("video", video.id)}
-              title="Borrar vídeo"
-            >
-              <img src={Eliminar} alt="Borrar vídeo" />
-            </button>
-          </div>
-        )}
       </div>
 
       {/* Elemento de vídeo nativo del navegador que carga el archivo desde el servidor */}
@@ -48,6 +31,28 @@ function TarjetaVideoCurso({
         />
         Tu navegador no soporta el elemento <code>video</code>.
       </video>
+
+      {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
+      {(isProfesorEdit || showDelete) && (
+        <div className="edit-controls">
+          {isProfesorEdit && (
+            <button
+              onClick={() => handleEditNavigate("video", video)}
+              title="Editar vídeo"
+            >
+              <img src={Editar} alt="Editar" />
+            </button>
+          )}
+          {showDelete && (
+            <button
+              onClick={() => handleDeleteContenido("video", video.id)}
+              title="Borrar vídeo"
+            >
+              <img src={Eliminar} alt="Borrar vídeo" />
+            </button>
+          )}
+        </div>
+      )}
     </div>
   );
 }

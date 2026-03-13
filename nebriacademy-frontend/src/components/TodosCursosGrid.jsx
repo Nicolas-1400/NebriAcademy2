@@ -2,6 +2,8 @@
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
+import useAuthStore from "../store/useAuthStore";
+import Eliminar from "../assets/Eliminar.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los cursos con filtros por categoría, nivel y buscador de texto
@@ -9,6 +11,7 @@ function TodosCursosGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   // Leemos la categoría preseleccionada si venimos del HomeFeed pulsando una categoría
   const { state } = useLocation();
+  const { tipo } = useAuthStore();
   const [data, setData] = useState({
     cursos: [],
     profesores: [],
@@ -60,6 +63,22 @@ function TodosCursosGrid() {
   const getProfesorName = (pid) => {
     const p = data.profesores.find((prof) => prof.id === pid);
     return p ? `Profesor: ${p.nombre} ${p.apellidos}` : "Profesor: Desconocido";
+  };
+
+  // Elimina un curso completo con confirmación (solo admin)
+  const handleDeleteCurso = async (cursoId) => {
+    if (!window.confirm("¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.")) return;
+    try {
+      const res = await fetch(`http://localhost:3000/cursos/${cursoId}`, { method: "DELETE" });
+      if (res.ok) {
+        setData((prev) => ({ ...prev, cursos: prev.cursos.filter((c) => c.id !== cursoId) }));
+      } else {
+        alert("Error al eliminar el curso");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de red");
+    }
   };
 
   // Actualiza un único campo de los filtros sin alterar los demás
@@ -168,17 +187,20 @@ function TodosCursosGrid() {
         <h2>Cursos</h2>
         <div className="cursos-grid">
           {filteredCursos.map((c) => (
-            <TarjetaCursos
-              key={c.id}
-              name={c.nombreCurso}
-              cursoId={c.id}
-              categoria={c.categoria}
-              nivel={c.nivel}
-              descripcion={c.descripcion}
-              profesor={getProfesorName(c.profesor)}
-              valoracion={c.valoracion}
-              imagen={c.imagen}
-            />
+            <div key={c.id} className="tarjeta-curso-wrapper">
+              <TarjetaCursos
+                name={c.nombreCurso}
+                cursoId={c.id}
+                categoria={c.categoria}
+                nivel={c.nivel}
+                descripcion={c.descripcion}
+                profesor={getProfesorName(c.profesor)}
+                valoracion={c.valoracion}
+                imagen={c.imagen}
+                isAdmin={tipo === "administrador"}
+                onAdminDelete={() => handleDeleteCurso(c.id)}
+              />
+            </div>
           ))}
         </div>
       </main>

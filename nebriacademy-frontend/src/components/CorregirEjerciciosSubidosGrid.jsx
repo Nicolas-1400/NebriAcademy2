@@ -3,6 +3,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
 import flecha from "../assets/flecha-correcta.png";
+import useAuthStore from "../store/useAuthStore";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -16,6 +17,7 @@ function CorregirEjerciciosSubidosGrid() {
   const [puntuaciones, setPuntuaciones] = useState([]);
   // Objeto para guardar el valor tecleado en el input de nota de cada entrega
   const [inputScores, setInputScores] = useState({});
+  const { tipo } = useAuthStore();
   const navigate = useNavigate();
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -129,6 +131,24 @@ function CorregirEjerciciosSubidosGrid() {
     }
   };
 
+  // Función exclusiva para administradores: borrar una entrega concreta
+  const handleDeleteEntrega = async (entregaId) => {
+    if (!window.confirm("¿Seguro que deseas borrar esta entrega permanentemente?")) return;
+    try {
+      const respuesta = await fetch(`http://localhost:3000/ejerciciosalumnos/${entregaId}`, {
+        method: "DELETE",
+      });
+      if (respuesta.ok) {
+        setRegistros((prev) => prev.filter((r) => r.id !== entregaId));
+      } else {
+        alert("Error al borrar la entrega");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error de red");
+    }
+  };
+
   return (
     <div className="corregir-ejercicios-grid">
       <h3>Ejercicios subidos</h3>
@@ -145,23 +165,35 @@ function CorregirEjerciciosSubidosGrid() {
             return (
               <li className="ejercicio-contenedor" key={reg.id}>
                 <TarjetaEjercicioAlumno registro={reg} />
-                {/* Input de nota del 0 al 10 y botón para guardar */}
+                {/* Input de nota y botón de guardar (profesores), y botón de borrar (profes/admins) */}
                 <div className="calificar-container">
-                  <input
-                    type="number"
-                    min="0"
-                    max="10"
-                    className="input-nota"
-                    value={currentVal}
-                    onChange={(e) => handeScoreInput(reg.id, e.target.value)}
-                    placeholder="0-10"
-                  />
-                  <button
-                    className="btn-guardar-nota"
-                    onClick={() => handleSubmitScore(reg)}
-                  >
-                    Guardar nota
-                  </button>
+                  {tipo !== "administrador" && (
+                    <>
+                      <input
+                        type="number"
+                        min="0"
+                        max="10"
+                        className="input-nota"
+                        value={currentVal}
+                        onChange={(e) => handeScoreInput(reg.id, e.target.value)}
+                        placeholder="0-10"
+                      />
+                      <button
+                        className="btn-guardar-nota"
+                        onClick={() => handleSubmitScore(reg)}
+                      >
+                        Guardar nota
+                      </button>
+                    </>
+                  )}
+                  {(tipo === "administrador" || tipo === "profesor") && (
+                    <button
+                      className="btn-borrar-ejercicio"
+                      onClick={() => handleDeleteEntrega(reg.id)}
+                    >
+                      Borrar entrega
+                    </button>
+                  )}
                 </div>
               </li>
             );

@@ -115,6 +115,34 @@
   border-radius: 0;
 }
 
+/* Botón Eliminar Curso Admin Independiente */
+.btn-eliminar-curso-admin-standalone {
+  margin-top: 15px;
+  width: 100%;
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  padding: 10px;
+  border-radius: 8px;
+  font-weight: bold;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  transition: background-color 0.3s ease;
+}
+
+.btn-eliminar-curso-admin-standalone img {
+  width: 18px;
+  height: 18px;
+  filter: brightness(0) invert(1);
+}
+
+.btn-eliminar-curso-admin-standalone:hover {
+  background-color: #a00026;
+}
+
 /* RESPONSIVE 1024px */
 @media (max-width: 1024px) {
   .tarjeta-curso {

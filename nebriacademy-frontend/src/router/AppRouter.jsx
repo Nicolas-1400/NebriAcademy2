@@ -107,7 +107,7 @@ function AppRouter() {
         <Route
           path="/Home/Cursos"
           element={
-            <ProtectedRoute requiredTipo="alumno">
+            <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
               <TodosCursos />
             </ProtectedRoute>
           }
@@ -132,7 +132,7 @@ function AppRouter() {
         <Route
           path="/Home/Profesores"
           element={
-            <ProtectedRoute requiredTipo="alumno">
+            <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
               <TodosProfesores />
             </ProtectedRoute>
           }
@@ -140,7 +140,7 @@ function AppRouter() {
         <Route
           path="/Home/Profesores/:id"
           element={
-            <ProtectedRoute requiredTipo="alumno">
+            <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
               <InfoProfesor />
             </ProtectedRoute>
           }
@@ -216,7 +216,7 @@ function AppRouter() {
         <Route
           path="/Home/Cursos/:id/CorregirEjercicios/:id"
           element={
-            <ProtectedRoute requiredTipo="profesor">
+            <ProtectedRoute requiredTipo={["profesor", "administrador"]}>
               <CorregirEjerciciosSubidos />
             </ProtectedRoute>
           }

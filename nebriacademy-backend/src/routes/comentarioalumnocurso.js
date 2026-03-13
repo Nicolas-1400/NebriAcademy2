@@ -3,6 +3,7 @@ const express = require("express");
 const router = express.Router();
 const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
+const Administradores = require("../models/Administradores.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /comentarioalumnocurso — Devuelve todos los comentarios, opcionalmente filtrados por cursoId.
@@ -128,13 +129,19 @@ router.put("/:id", async (req, res) => {
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
 // DELETE /comentarioalumnocurso/:id — Elimina un comentario.
-// Solo puede borrarlo el mismo usuario que lo creó (misma comprobación de usuarioId).
+// Solo puede borrarlo el mismo usuario que lo creó, o un administrador.
 router.delete("/:id", async (req, res) => {
   try {
     const c = await ComentarioAlumnoCurso.findByPk(req.params.id);
     if (!c) return res.status(404).json({ error: "No encontrado" });
 
     const { profileId, tipo } = req.query;
+
+    // Los administradores pueden borrar cualquier comentario sin restricción
+    if (tipo === "administrador") {
+      await c.destroy();
+      return res.json({ mensaje: "Eliminado" });
+    }
 
     let requesterUsuarioId = null;
     if (tipo === "alumno") {

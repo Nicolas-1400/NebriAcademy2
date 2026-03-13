@@ -10,8 +10,9 @@ function ProtectedRoute({ children, requiredTipo }) {
   // Si no hay sesión activa, mandamos al login
   if (!user) return <Navigate to="/" replace />;
 
-  // Si la ruta requiere un tipo específico (ej: "profesor") y el usuario no lo tiene, redirigimos a /Home
-  if (requiredTipo && tipo !== requiredTipo)
+  // Si la ruta requiere un tipo específico (ej: "profesor" o ["alumno","administrador"]) y el usuario no lo tiene, redirigimos a /Home
+  const allowedTipos = Array.isArray(requiredTipo) ? requiredTipo : requiredTipo ? [requiredTipo] : null;
+  if (allowedTipos && !allowedTipos.includes(tipo))
     return <Navigate to="/Home" replace />;
 
   // Si todo está bien, renderizamos la página protegida

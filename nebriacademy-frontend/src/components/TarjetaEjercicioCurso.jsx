@@ -14,6 +14,7 @@ function TarjetaEjercicioCurso({
 }) {
   // Los botones de edición solo son visibles si el usuario es profesor y el modo edición está activo
   const isProfesorEdit = tipo === "profesor" && editingMode;
+  const showDelete = isProfesorEdit || tipo === "administrador";
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
@@ -30,21 +31,25 @@ function TarjetaEjercicioCurso({
         {ejercicio.descripcion && <p>{ejercicio.descripcion}</p>}
       </div>
 
-      {/* Controles de edición: solo visibles para el profesor en modo edición */}
-      {isProfesorEdit && (
+      {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
+      {(isProfesorEdit || showDelete) && (
         <div className="edit-controls">
-          <button
-            onClick={() => handleEditNavigate("ejercicio", ejercicio)}
-            title="Editar ejercicio"
-          >
-            <img src={Editar} alt="Editar" />
-          </button>
-          <button
-            onClick={() => handleDeleteContenido("ejercicio", ejercicio.id)}
-            title="Borrar ejercicio"
-          >
-            <img src={Eliminar} alt="Borrar ejercicio" />
-          </button>
+          {isProfesorEdit && (
+            <button
+              onClick={() => handleEditNavigate("ejercicio", ejercicio)}
+              title="Editar ejercicio"
+            >
+              <img src={Editar} alt="Editar" />
+            </button>
+          )}
+          {showDelete && (
+            <button
+              onClick={() => handleDeleteContenido("ejercicio", ejercicio.id)}
+              title="Borrar ejercicio"
+            >
+              <img src={Eliminar} alt="Borrar ejercicio" />
+            </button>
+          )}
         </div>
       )}
     </li>

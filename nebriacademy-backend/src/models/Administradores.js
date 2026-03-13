@@ -15,6 +15,7 @@ const Administradores = sequelize.define(
     apellidos: DataTypes.STRING,
     email: { type: DataTypes.STRING, unique: true },
     contrasena: DataTypes.STRING,
+    numCuentaBancaria: { type: DataTypes.STRING, unique: true },
     numTelefono: DataTypes.STRING,
     redes: DataTypes.STRING,
     pais: DataTypes.STRING,

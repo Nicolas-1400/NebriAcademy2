@@ -68,19 +68,18 @@
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }
-/* 
 .btn-borrar-ejercicio {
   padding: 8px;
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
-  background-color: white;
-  color: var(--rojo-nebrija);
+  background-color: var(--rojo-nebrija);
+  color: white;
   cursor: pointer;
   transition: all 0.3s ease;
 }
 
 .btn-borrar-ejercicio:hover {
-  background-color: var(--rojo-nebrija);
+  background-color: #a00026;
   color: white;
 }
 
@@ -88,4 +87,3 @@
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }
- */

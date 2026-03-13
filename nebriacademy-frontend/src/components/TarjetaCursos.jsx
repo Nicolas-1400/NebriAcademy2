@@ -26,6 +26,8 @@ function TarjetaCursos({
   imagen,
   isDeleting,
   onDelete,
+  isAdmin,
+  onAdminDelete,
 }) {
   const navigate = useNavigate();
 
@@ -74,6 +76,20 @@ function TarjetaCursos({
       <p className="p-valoracion">
         <img src={Like} alt="Valoración" /> {valoracion}
       </p>
+      {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
+      {isAdmin && (
+        <button
+          className="btn-eliminar-curso-admin-standalone"
+          onClick={(e) => {
+            e.stopPropagation();
+            if (onAdminDelete) onAdminDelete();
+          }}
+          title="Eliminar curso"
+        >
+          <img src={Eliminar} alt="Eliminar" />
+          ELIMINAR EL CURSO
+        </button>
+      )}
     </div>
   );
 }
