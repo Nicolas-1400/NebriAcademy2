@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-03-2026 a las 10:32:26
+-- Tiempo de generación: 13-03-2026 a las 11:15:03
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -83,7 +83,9 @@ INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`,
 (6, 11, 'Lucía', 'Pérez García', '11111112K', 'lucia.perez@outlook.com', 'alumno222', '4666666666666666', '601111112', '@lucia_alum', 'España', 'Valencia'),
 (7, 12, 'Pablo', 'González Sánchez', '12121212L', 'pablo.gonzalez@yahoo.com', 'alumno333', '4777777777777777', '601212121', '@pablo_alum', 'España', 'Barcelona'),
 (8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga'),
-(9, 16, 'Nico', 'Samp', '13672984F', 'nico@example.com', 'pass123', '4888888488888448', NULL, NULL, 'Francia', 'Barcelona');
+(9, 16, 'Nico', 'Samp', '13672984F', 'nico@example.com', 'pass123', '4888888488888448', '720178890', '@nico_alum', 'Francia', 'Barcelona'),
+(11, 19, NULL, NULL, NULL, 'prueba@gmail.com', 'ekHIGG5b', NULL, NULL, NULL, NULL, NULL),
+(12, 21, NULL, NULL, NULL, 'pruebaalumneb@alumnos.nebrija.es', 'ithzjixy', NULL, NULL, NULL, NULL, NULL);
 
 -- --------------------------------------------------------
 
@@ -330,7 +332,7 @@ CREATE TABLE `profesores` (
   `redes` text DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
   `localidad` varchar(50) DEFAULT NULL,
-  `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') NOT NULL,
+  `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') DEFAULT NULL,
   `imagenPerfil` varchar(50) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
@@ -344,7 +346,8 @@ INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `emai
 (3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad', NULL),
 (4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño', NULL),
 (5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing', NULL),
-(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', '', '', 'España', 'Madrid', 'Programación', 'hombre-7');
+(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', '', '', 'España', 'Madrid', 'Programación', 'hombre-7'),
+(9, 20, NULL, NULL, NULL, 'pruebaprof@gmail.com', 'wEWXt5gF', NULL, NULL, NULL, NULL, NULL, '', NULL);
 
 -- --------------------------------------------------------
 
@@ -437,7 +440,10 @@ INSERT INTO `usuarios` (`id`, `tipo`) VALUES
 (13, 'alumno'),
 (14, 'administrador'),
 (15, 'profesor'),
-(16, 'alumno');
+(16, 'alumno'),
+(19, 'alumno'),
+(20, 'profesor'),
+(21, 'alumno');
 
 -- --------------------------------------------------------
 
@@ -599,7 +605,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=11;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
@@ -653,7 +659,7 @@ ALTER TABLE `incidencias`
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- AUTO_INCREMENT de la tabla `profesorescursos`
@@ -671,7 +677,7 @@ ALTER TABLE `puntuacionesejercicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=19;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`

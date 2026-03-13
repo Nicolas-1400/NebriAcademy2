@@ -45,16 +45,55 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /alumnos/:id — Elimina el registro del alumno de la base de datos
+// DELETE /alumnos/:id — Elimina el registro del alumno de la base de datos (y su usuario asociado)
 router.delete("/:id", async (req, res) => {
   try {
-    const filas = await Alumnos.destroy({ where: { id: req.params.id } });
-    filas
-      ? res.json({ mensaje: "Eliminado" })
-      : res.status(404).json({ error: "No encontrado" });
+    const alumno = await Alumnos.findByPk(req.params.id);
+    if (!alumno) return res.status(404).json({ error: "No encontrado" });
+
+    const usuarioId = alumno.usuarioId;
+    await alumno.destroy();
+
+    // Eliminar también de la tabla base 'usuarios' si existe
+    if (usuarioId) {
+      await Usuarios.destroy({ where: { id: usuarioId } });
+    }
+
+    res.json({ mensaje: "Eliminado con éxito en cascada" });
   } catch (error) {
     console.error(error);
     res.status(500).json({ error: "Error eliminando" });
+  }
+});
+
+// ── POST ADMIN ──────────────────────────────────────────────────────────────
+// POST /alumnos/admin/crear — Crea un alumno solo con email y contraseña, ideal para cuenta incompleta (admin)
+router.post("/admin/crear", async (req, res) => {
+  try {
+    const { email, contrasena } = req.body;
+    if (!email || !contrasena) return res.status(400).json({ error: "Se requiere email y contraseña" });
+
+    const existente = await Alumnos.findOne({ where: { email } });
+    if (existente) return res.status(400).json({ error: "Email ya registrado" });
+
+    // 1. Crear usuario base
+    const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
+
+    try {
+      // 2. Crear registro de alumno con campos en blanco menos email, contrasena y el id del usuario base
+      const nuevoAlumno = await Alumnos.create({
+        usuarioId: nuevoUsuario.id,
+        email,
+        contrasena,
+      });
+      res.status(201).json({ mensaje: "Alumno creado", usuario: nuevoAlumno });
+    } catch (createError) {
+      await nuevoUsuario.destroy();
+      throw createError;
+    }
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Error creando alumno" });
   }
 });
 

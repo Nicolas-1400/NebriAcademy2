@@ -2,6 +2,7 @@
 const express = require("express");
 const router = express.Router();
 const Profesores = require("../models/Profesores.js");
+const Usuarios = require("../models/Usuarios.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /profesores — Devuelve todos los profesores registrados
@@ -49,15 +50,53 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /profesores/:id — Elimina el registro del profesor de la base de datos
+// DELETE /profesores/:id — Elimina el registro del profesor de la base de datos y su usuario base
 router.delete("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
     if (!p) return res.status(404).json({ error: "No encontrado" });
 
+    const usuarioId = p.usuarioId;
     await p.destroy();
-    res.json({ mensaje: "Eliminado" });
+    
+    // Eliminar base principal en Usuarios
+    if (usuarioId) {
+      await Usuarios.destroy({ where: { id: usuarioId } });
+    }
+
+    res.json({ mensaje: "Eliminado con éxito" });
   } catch (e) {
+    res.status(500).json({ error: "Server error" });
+  }
+});
+
+// ── POST ADMIN ──────────────────────────────────────────────────────────────
+// POST /profesores/admin/crear — Crea un profesor base (incompleto) desde admin
+router.post("/admin/crear", async (req, res) => {
+  try {
+    const { email, contrasena } = req.body;
+    if (!email || !contrasena) return res.status(400).json({ error: "Se requiere email y contraseña" });
+
+    const existente = await Profesores.findOne({ where: { email } });
+    if (existente) return res.status(400).json({ error: "Email ya registrado" });
+
+    // 1. Crear el usuario base
+    const nuevoUsuario = await Usuarios.create({ tipo: "profesor" });
+
+    try {
+      // 2. Crear profe con cuenta incompleta
+      const nuevoProfesor = await Profesores.create({
+        usuarioId: nuevoUsuario.id,
+        email,
+        contrasena,
+      });
+      res.status(201).json({ mensaje: "Profesor creado", usuario: nuevoProfesor });
+    } catch (createError) {
+      await nuevoUsuario.destroy();
+      throw createError;
+    }
+  } catch (e) {
+    console.error(e);
     res.status(500).json({ error: "Server error" });
   }
 });

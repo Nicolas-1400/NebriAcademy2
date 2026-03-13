@@ -23,6 +23,7 @@ import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
 import RegisterProfesor from "../pages/RegisterProfesor.jsx";
 import Perfil from "../pages/Perfil.jsx";
+import Cuentas from "../pages/Cuentas.jsx";
 
 // Importamos los guardas de ruta que protegen el acceso según el estado de sesión
 import ProtectedRoute from "./ProtectedRoute";
@@ -123,7 +124,7 @@ function AppRouter() {
         <Route
           path="/Home/Cursos/:id/AddContenidoCurso"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
               <AddContenidoCurso />
             </ProtectedRoute>
           }
@@ -132,7 +133,7 @@ function AppRouter() {
         <Route
           path="/Home/Profesores"
           element={
-            <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
+            <ProtectedRoute requiredTipo="alumno">
               <TodosProfesores />
             </ProtectedRoute>
           }
@@ -140,8 +141,17 @@ function AppRouter() {
         <Route
           path="/Home/Profesores/:id"
           element={
-            <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
+            <ProtectedRoute requiredTipo="alumno">
               <InfoProfesor />
+            </ProtectedRoute>
+          }
+        />
+
+        <Route
+          path="/Home/Cuentas"
+          element={
+            <ProtectedRoute requiredTipo="administrador">
+              <Cuentas />
             </ProtectedRoute>
           }
         />
@@ -157,7 +167,7 @@ function AppRouter() {
         <Route
           path="/Home/Apuntes/AddApunte"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
               <AddApunteIndividual />
             </ProtectedRoute>
           }
@@ -165,7 +175,7 @@ function AppRouter() {
         <Route
           path="/Home/Apuntes/EditarApunte/:id"
           element={
-            <ProtectedRoute>
+            <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
               <EditarApunteIndividual />
             </ProtectedRoute>
           }
