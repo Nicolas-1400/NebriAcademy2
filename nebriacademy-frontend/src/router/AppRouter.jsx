@@ -23,6 +23,9 @@ import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
 import RegisterProfesor from "../pages/RegisterProfesor.jsx";
 import Perfil from "../pages/Perfil.jsx";
+import Ayuda from "../pages/Ayuda.jsx";
+import MisTickets from "../pages/MisTickets.jsx";
+import DetalleTicket from "../pages/DetalleTicket.jsx";
 import Cuentas from "../pages/Cuentas.jsx";
 
 // Importamos los guardas de ruta que protegen el acceso según el estado de sesión
@@ -104,6 +107,30 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
+        <Route
+          path="/Home/Ayuda"
+          element={
+            <ProtectedRoute>
+              <Ayuda />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Home/MisTickets"
+          element={
+            <ProtectedRoute>
+              <MisTickets />
+            </ProtectedRoute>
+          }
+        />
+        <Route
+          path="/Home/MisTickets/:issueKey"
+          element={
+            <ProtectedRoute>
+              <DetalleTicket />
+            </ProtectedRoute>
+          }
+        />
 
         <Route
           path="/Home/Cursos"
@@ -155,7 +182,6 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
-
         <Route
           path="/Home/Apuntes"
           element={

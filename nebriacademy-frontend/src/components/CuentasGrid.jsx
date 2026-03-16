@@ -200,11 +200,11 @@ function CuentasGrid() {
 
   return (
     <div>
-      <h2>Gestión de Cuentas (Admin)</h2>
+      <h2>Gestión de cuentas de usuario</h2>
 
       {/* Bloque para crear cuentas nuevas de forma parcial */}
       <div>
-        <h3>Crear cuenta (Solo credenciales iniciales)</h3>
+        <h3>Crear cuenta</h3>
         <form onSubmit={handleCrearCuenta}>
           <input
             type="email"

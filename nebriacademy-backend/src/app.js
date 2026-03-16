@@ -1,4 +1,5 @@
 // Importamos las dependencias principales del servidor
+require("dotenv").config();
 const express = require("express");
 const cors = require("cors");
 const app = express();
@@ -18,7 +19,7 @@ const assetsRoot = path.join(
   "src",
   "assets",
 );
-const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos"];
+const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos", "Incidencias"];
 
 // Al arrancar el servidor, se crean las carpetas de assets si aún no existen
 try {
@@ -41,6 +42,10 @@ app.use(
 app.use(
   "/ejerciciosalumnos/files",
   express.static(path.join(assetsRoot, "EjerciciosAlumnos")),
+);
+app.use(
+  "/incidencias/files",
+  express.static(path.join(assetsRoot, "Incidencias")),
 );
 
 // Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL

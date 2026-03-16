@@ -233,6 +233,17 @@ function Nav() {
         <div className="contenedor-botones-nav">
           <button
             className="boton-nav"
+            onClick={() =>
+              window.open(
+                "https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list?jql=project%20%3D%20KAN%20ORDER%20BY%20created%20DESC",
+                "_blank"
+              )
+            }
+          >
+            Incidencias
+          </button>
+          <button
+            className="boton-nav"
             onClick={() => navigate("/Home/Cuentas")}
           >
             Cuentas
@@ -388,6 +399,24 @@ function Nav() {
                 }}
               >
                 Mi Perfil
+              </button>
+              <button
+                className="desplegable-item"
+                onClick={() => {
+                  navigate("/Home/Ayuda");
+                  setIsdesplegableOpen(false);
+                }}
+              >
+                Ayuda
+              </button>
+              <button
+                className="desplegable-item"
+                onClick={() => {
+                  navigate("/Home/MisTickets");
+                  setIsdesplegableOpen(false);
+                }}
+              >
+                Mis Tickets
               </button>
               <button className="desplegable-item" onClick={handleLogout}>
                 Cerrar Sesión

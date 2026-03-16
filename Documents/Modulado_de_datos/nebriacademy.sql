@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 13-03-2026 a las 11:15:03
+-- Tiempo de generación: 16-03-2026 a las 13:04:37
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -302,20 +302,6 @@ INSERT INTO `ejerciciosalumnos` (`id`, `ejercicioId`, `alumnoId`, `archivo`) VAL
 -- --------------------------------------------------------
 
 --
--- Estructura de tabla para la tabla `incidencias`
---
-
-CREATE TABLE `incidencias` (
-  `id` int(11) NOT NULL,
-  `tipo` varchar(50) NOT NULL,
-  `descripcion` text DEFAULT NULL,
-  `resuelto` tinyint(1) DEFAULT 0,
-  `usuario` int(11) NOT NULL
-) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
-
--- --------------------------------------------------------
-
---
 -- Estructura de tabla para la tabla `profesores`
 --
 
@@ -545,13 +531,6 @@ ALTER TABLE `ejerciciosalumnos`
   ADD KEY `alumnoId` (`alumnoId`);
 
 --
--- Indices de la tabla `incidencias`
---
-ALTER TABLE `incidencias`
-  ADD PRIMARY KEY (`id`),
-  ADD KEY `usuario` (`usuario`);
-
---
 -- Indices de la tabla `profesores`
 --
 ALTER TABLE `profesores`
@@ -650,12 +629,6 @@ ALTER TABLE `ejerciciosalumnos`
   MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
--- AUTO_INCREMENT de la tabla `incidencias`
---
-ALTER TABLE `incidencias`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT;
-
---
 -- AUTO_INCREMENT de la tabla `profesores`
 --
 ALTER TABLE `profesores`
@@ -748,12 +721,6 @@ ALTER TABLE `ejercicios`
 ALTER TABLE `ejerciciosalumnos`
   ADD CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`) ON DELETE CASCADE,
   ADD CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE;
-
---
--- Filtros para la tabla `incidencias`
---
-ALTER TABLE `incidencias`
-  ADD CONSTRAINT `incidencias_ibfk_1` FOREIGN KEY (`usuario`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
 
 --
 -- Filtros para la tabla `profesores`

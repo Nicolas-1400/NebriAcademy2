@@ -9,10 +9,16 @@ const sequelize = require("../database/connection");
 const Incidencias = sequelize.define(
   "incidencias",
   {
-    tipo: DataTypes.STRING,
-    descripcion: DataTypes.TEXT,
-    resuelto: DataTypes.BOOLEAN,
     usuario: DataTypes.INTEGER,
+    tipo: DataTypes.ENUM(
+      "Error", 
+      "Denuncia", 
+      "Consulta", 
+      "Sugerencia",
+    ),
+    descripcion: DataTypes.TEXT,
+    archivo: DataTypes.STRING,
+    resuelto: DataTypes.BOOLEAN,
   },
   { timestamps: false },
 );
