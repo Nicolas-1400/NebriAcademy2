@@ -13,6 +13,9 @@ function DetalleTicketGrid() {
   const [error, setError] = useState("");
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [enviandoComentario, setEnviandoComentario] = useState(false);
+  const [archivosAdjuntar, setArchivosAdjuntar] = useState([]);
+  const [subiendoAdjuntos, setSubiendoAdjuntos] = useState(false);
+  const [mensajeAdjuntos, setMensajeAdjuntos] = useState("");
 
   useEffect(() => {
     fetchTicket();
@@ -52,7 +55,6 @@ function DetalleTicketGrid() {
       });
       const data = await res.json();
       if (res.ok) {
-        // Añadimos el comentario nuevo al estado local sin recargar todo
         setTicket(prev => ({
           ...prev,
           comentarios: [...prev.comentarios, data]
@@ -66,6 +68,40 @@ function DetalleTicketGrid() {
       alert("Error de conexión con el servidor");
     } finally {
       setEnviandoComentario(false);
+    }
+  };
+
+  const handleSubirAdjuntos = async (e) => {
+    e.preventDefault();
+    if (!archivosAdjuntar || archivosAdjuntar.length === 0) return;
+    setSubiendoAdjuntos(true);
+    setMensajeAdjuntos("");
+    try {
+      const formData = new FormData();
+      for (const archivo of archivosAdjuntar) {
+        formData.append("archivos", archivo);
+      }
+      const res = await fetch(`http://localhost:3000/incidencias/ticket/${issueKey}/adjunto`, {
+        method: "POST",
+        body: formData
+      });
+      const data = await res.json();
+      if (res.ok) {
+        // Añadimos los nuevos adjuntos al estado local sin recargar
+        setTicket(prev => ({
+          ...prev,
+          adjuntos: [...(prev.adjuntos || []), ...data.adjuntos]
+        }));
+        setArchivosAdjuntar([]);
+        setMensajeAdjuntos(`${data.adjuntos.length} archivo(s) subido(s) correctamente.`);
+      } else {
+        setMensajeAdjuntos(data.error || "Error al subir los archivos");
+      }
+    } catch (err) {
+      console.error(err);
+      setMensajeAdjuntos("Error de conexión con el servidor");
+    } finally {
+      setSubiendoAdjuntos(false);
     }
   };
 
@@ -94,21 +130,40 @@ function DetalleTicketGrid() {
       <h2>Descripción</h2>
       <pre style={{ whiteSpace: "pre-wrap" }}>{ticket.descripcion}</pre>
 
-      {ticket.adjuntos && ticket.adjuntos.length > 0 && (
-        <>
-          <hr />
-          <h2>Archivos adjuntos</h2>
-          <ul>
-            {ticket.adjuntos.map((a) => (
-              <li key={a.id}>
-                <a href={a.url} target="_blank" rel="noopener noreferrer">
-                  {a.nombre}
-                </a>
-              </li>
-            ))}
-          </ul>
-        </>
+      <hr />
+
+      <h2>Archivos adjuntos ({(ticket.adjuntos || []).length})</h2>
+
+      {(ticket.adjuntos || []).length === 0 && (
+        <p>Este ticket no tiene archivos adjuntos.</p>
       )}
+
+      {(ticket.adjuntos || []).length > 0 && (
+        <ul>
+          {ticket.adjuntos.map((a) => (
+            <li key={a.id}>
+              <a href={a.url} target="_blank" rel="noopener noreferrer">
+                {a.nombre}
+              </a>
+            </li>
+          ))}
+        </ul>
+      )}
+
+      <h3>Adjuntar nuevos archivos</h3>
+      <form onSubmit={handleSubirAdjuntos}>
+        <input
+          type="file"
+          multiple
+          accept="image/*,video/*,.pdf,.doc,.docx,.txt"
+          onChange={(e) => setArchivosAdjuntar(Array.from(e.target.files))}
+        />
+        <br />
+        <button type="submit" disabled={subiendoAdjuntos || archivosAdjuntar.length === 0}>
+          {subiendoAdjuntos ? "Subiendo..." : "Subir archivos"}
+        </button>
+        {mensajeAdjuntos && <p>{mensajeAdjuntos}</p>}
+      </form>
 
       <hr />
 

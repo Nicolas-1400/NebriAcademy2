@@ -6,6 +6,7 @@ function AyudaGrid() {
   const [tipoReporte, setTipoReporte] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [archivo, setArchivo] = useState(null);
+  const [enviando, setEnviando] = useState(false);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -33,6 +34,7 @@ function AyudaGrid() {
     }
 
     try {
+      setEnviando(true);
       const res = await fetch("http://localhost:3000/incidencias", {
         method: "POST",
         body: formData,
@@ -51,6 +53,8 @@ function AyudaGrid() {
     } catch (error) {
       console.error(error);
       alert("Error de conexión con el servidor.");
+    } finally {
+      setEnviando(false);
     }
   };
 
@@ -86,14 +90,15 @@ function AyudaGrid() {
           ></textarea>
         </p>
         <p>
-          ¿Tienes alguna imagen o video? Súbelo para que podamos entender mejor el problema (Máximo 10MB):
+          ¿Tienes alguna imagen, video o documento? Adjúntalo para que podamos entender mejor el problema (Máximo 10MB):
           <input 
             type="file" 
             id="archivoIncidencia"
             onChange={(e) => setArchivo(e.target.files[0])}
           />
         </p>
-        <button type="submit">Enviar</button>
+        <button type="submit" disabled={enviando}>Enviar</button>
+        {enviando && <span>Enviando tu reporte a Jira, espera un momento...</span>}
       </form>
     </div>
   );

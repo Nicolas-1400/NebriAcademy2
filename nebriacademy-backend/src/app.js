@@ -1,9 +1,9 @@
 // Importamos las dependencias principales del servidor
-require("dotenv").config();
+const path = require("path");
+require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const path = require("path");
 const fs = require("fs");
 
 // cors permite peticiones desde el frontend (distinto puerto), express.json() procesa cuerpos JSON

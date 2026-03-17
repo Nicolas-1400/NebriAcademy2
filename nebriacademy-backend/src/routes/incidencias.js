@@ -14,13 +14,12 @@ const uploadDir = path.join(__dirname, "..", "temp_uploads");
 const upload = multer({
   storage: multer.diskStorage({
     destination: (req, file, cb) => {
-      // Creamos la carpeta justo antes de cada subida para garantizar que existe
       fs.mkdirSync(uploadDir, { recursive: true });
       cb(null, uploadDir);
     },
     filename: (req, file, cb) => cb(null, Date.now() + "-" + path.basename(file.originalname)),
   }),
-  limits: { fileSize: 10 * 1024 * 1024 }, // 10MB
+  limits: { fileSize: 10 * 1024 * 1024 },
 });
 
 // ── CONFIGURACIÓN DE JIRA ───────────────────────────────────────────────────
@@ -36,6 +35,18 @@ const getJiraHeaders = () => {
     'Accept': 'application/json',
     'Content-Type': 'application/json'
   };
+};
+
+// Normaliza un nombre para usarlo como label de Jira (sin espacios ni acentos)
+const normalizarParaLabel = (nombre) => {
+  if (!nombre) return 'anonimo';
+  return nombre
+    .normalize('NFD')
+    .replace(/[\u0300-\u036f]/g, '')  // elimina acentos
+    .replace(/[^a-zA-Z0-9\s-]/g, '') // elimina caracteres especiales
+    .trim()
+    .replace(/\s+/g, '-')             // espacios → guiones
+    .toLowerCase();
 };
 
 // Helper para crear un párrafo ADF con etiqueta en negrita + valor normal
@@ -56,6 +67,7 @@ const extraerTextoADF = (doc) => {
   }).join("\n");
 };
 
+
 // ── POST /incidencias ───────────────────────────────────────────────────────
 // Crea un nuevo ticket en Jira y le adjunta archivos si los hay
 router.post("/", upload.single("archivo"), async (req, res) => {
@@ -68,8 +80,10 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       return res.status(500).json({ error: "El backend no está configurado para conectar con Jira." });
     }
 
-    // Usamos el ID del usuario como label para poder buscar sus tickets con JQL
-    const labelUsuario = `usuario-${usuario_id}`;
+    // Usamos el nombre normalizado del usuario como label visible en Jira
+    // y también un label interno uid-{id} que usamos para buscar sus tickets con JQL
+    const labelNombre = normalizarParaLabel(usuario_nombre);
+    const labelId = `uid-${usuario_id}`;
 
     const issueData = {
       fields: {
@@ -89,7 +103,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
           ]
         },
         issuetype: { name: "Task" },
-        labels: [labelUsuario]
+        labels: [labelNombre, labelId]
       }
     };
 
@@ -137,7 +151,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 });
 
 // ── GET /incidencias/mis-tickets/:usuarioId ──────────────────────────────────
-// Devuelve todos los tickets del usuario con ese ID (busca por label en Jira)
+// Devuelve todos los tickets del usuario, buscándolos por el label uid-{id}
 router.get("/mis-tickets/:usuarioId", async (req, res) => {
   try {
     const { usuarioId } = req.params;
@@ -146,21 +160,19 @@ router.get("/mis-tickets/:usuarioId", async (req, res) => {
       return res.status(500).json({ error: "El backend no está configurado para conectar con Jira." });
     }
 
-    // Usamos IN para mayor compatibilidad con la API de Jira
-    const jql = `project = "${JIRA_PROJECT_KEY}" AND labels IN ("usuario-${usuarioId}") ORDER BY created DESC`;
+    const labelId = `uid-${usuarioId}`;
+    const jql = `project = ${JIRA_PROJECT_KEY} AND labels = "${labelId}" ORDER BY created DESC`;
 
-    console.log("Ejecutando JQL:", jql);
+    console.log("Ejecutando JQL mis-tickets:", jql);
 
-    const response = await axios.get(
-      `${JIRA_URL}/rest/api/3/search`,
+    const response = await axios.post(
+      `${JIRA_URL}/rest/api/3/search/jql`,
       {
-        headers: getJiraHeaders(),
-        params: {
-          jql,
-          fields: "summary,status,created,updated,priority,labels",
-          maxResults: 50
-        }
-      }
+        jql,
+        fields: ["summary", "status", "created", "updated", "priority"],
+        maxResults: 50
+      },
+      { headers: getJiraHeaders() }
     );
 
     const tickets = response.data.issues.map(issue => ({
@@ -180,7 +192,7 @@ router.get("/mis-tickets/:usuarioId", async (req, res) => {
       console.error("Error buscando tickets en Jira:", JSON.stringify(e.response.data, null, 2));
       return res.status(500).json({ error: "Error buscando tickets en Jira", details: e.response.data });
     }
-    console.error("Error interno mis-tickets:", e.message);
+    console.error("Error interno mis-tickets:", e.message, e.stack);
     res.status(500).json({ error: e.message });
   }
 });
@@ -191,7 +203,6 @@ router.get("/ticket/:issueKey", async (req, res) => {
   try {
     const { issueKey } = req.params;
 
-    // Obtenemos el ticket completo junto con sus comentarios y adjuntos
     const [issueRes, commentsRes] = await Promise.all([
       axios.get(
         `${JIRA_URL}/rest/api/3/issue/${issueKey}`,
@@ -240,7 +251,7 @@ router.get("/ticket/:issueKey", async (req, res) => {
       console.error("Error obteniendo ticket de Jira:", JSON.stringify(e.response.data, null, 2));
       return res.status(500).json({ error: "Error obteniendo ticket", details: e.response.data });
     }
-    console.error("Error interno:", e.message);
+    console.error("Error interno ticket:", e.message);
     res.status(500).json({ error: "Error interno obteniendo ticket" });
   }
 });
@@ -291,8 +302,57 @@ router.post("/ticket/:issueKey/comentario", async (req, res) => {
       console.error("Error añadiendo comentario en Jira:", JSON.stringify(e.response.data, null, 2));
       return res.status(500).json({ error: "Error añadiendo comentario", details: e.response.data });
     }
-    console.error("Error interno:", e.message);
+    console.error("Error interno comentario:", e.message);
     res.status(500).json({ error: "Error interno añadiendo comentario" });
+  }
+});
+
+// ── POST /incidencias/ticket/:issueKey/adjunto ───────────────────────────────
+// Sube uno o más archivos a un ticket existente en Jira
+router.post("/ticket/:issueKey/adjunto", upload.array("archivos", 5), async (req, res) => {
+  try {
+    const { issueKey } = req.params;
+    const archivos = req.files;
+
+    if (!archivos || archivos.length === 0) {
+      return res.status(400).json({ error: "No se ha enviado ningún archivo" });
+    }
+
+    const authId = Buffer.from(`${JIRA_EMAIL}:${JIRA_API_TOKEN}`).toString('base64');
+    const adjuntosSubidos = [];
+
+    for (const archivo of archivos) {
+      const form = new FormData();
+      form.append('file', fs.createReadStream(archivo.path));
+
+      const response = await axios.post(
+        `${JIRA_URL}/rest/api/3/issue/${issueKey}/attachments`,
+        form,
+        {
+          headers: {
+            'Authorization': `Basic ${authId}`,
+            'Accept': 'application/json',
+            'X-Atlassian-Token': 'no-check',
+            ...form.getHeaders()
+          }
+        }
+      );
+
+      fs.unlinkSync(archivo.path);
+      const dato = response.data[0];
+      adjuntosSubidos.push({ id: dato.id, nombre: dato.filename, url: dato.content, mimeType: dato.mimeType });
+    }
+
+    res.status(201).json({ adjuntos: adjuntosSubidos });
+
+  } catch (e) {
+    if (req.files) req.files.forEach(f => { if (fs.existsSync(f.path)) fs.unlinkSync(f.path); });
+    if (e.response) {
+      console.error("Error subiendo adjunto a Jira:", JSON.stringify(e.response.data, null, 2));
+      return res.status(500).json({ error: "Error subiendo adjunto", details: e.response.data });
+    }
+    console.error("Error interno adjunto:", e.message);
+    res.status(500).json({ error: "Error interno subiendo adjunto" });
   }
 });
 
