@@ -1,5 +1,6 @@
 import { useState } from "react";
 import useAuthStore from "../store/useAuthStore";
+import "../styles/Ayuda.css";
 
 function AyudaGrid() {
   const { user, tipo } = useAuthStore();
@@ -59,15 +60,16 @@ function AyudaGrid() {
   };
 
   return (
-    <div>
+    <div className="contenedor-ayuda">
       <h1>Solicita ayuda al equipo de soporte de Nebriacademy</h1>
       <h3>¿Necesitas ayuda con algo? 
         <br />
         Escribenos y resolveremos tu problema lo antes posible.</h3>
-      <form onSubmit={handleSubmit}>
+      <form className="form-ayuda" onSubmit={handleSubmit}>
         <p>
           Selecciona qué quieres reportar
           <select
+            className="seleccion-report"
             name="tipoReporte"
             value={tipoReporte}
             onChange={(e) => setTipoReporte(e.target.value)}
@@ -82,7 +84,9 @@ function AyudaGrid() {
         </p>
         <p>
           Describe el problema o mejora
+          <br />
           <textarea
+            className="descripcion-contenedor"
             name="descripcion"
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
@@ -92,12 +96,13 @@ function AyudaGrid() {
         <p>
           ¿Tienes alguna imagen, video o documento? Adjúntalo para que podamos entender mejor el problema (Máximo 10MB):
           <input 
+            className="seleccion-archivo"
             type="file" 
             id="archivoIncidencia"
             onChange={(e) => setArchivo(e.target.files[0])}
           />
         </p>
-        <button type="submit" disabled={enviando}>Enviar</button>
+        <button className="btn-enviar" type="submit" disabled={enviando}>Enviar</button>
         {enviando && <span>Enviando tu reporte a Jira, espera un momento...</span>}
       </form>
     </div>
