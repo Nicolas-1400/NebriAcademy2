@@ -20,6 +20,8 @@ const Alumnos = sequelize.define(
     redes: DataTypes.TEXT,
     pais: DataTypes.STRING,
     localidad: DataTypes.STRING,
+    esVinculado: { type: DataTypes.TINYINT, defaultValue: 0 },
+    profesorVinculadoId: DataTypes.INTEGER,
   },
   // timestamps: false evita que Sequelize añada columnas de fecha automáticas.
   { timestamps: false },

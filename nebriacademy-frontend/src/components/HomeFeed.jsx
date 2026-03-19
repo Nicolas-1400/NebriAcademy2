@@ -27,6 +27,7 @@ function HomeFeed() {
   const popularesSliderRef = useRef(null);
 
   const storeUser = useAuthStore((state) => state.user);
+  const storeTipo = useAuthStore((state) => state.tipo);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Sincronizamos el estado local de usuario con el store global cuando cambie
@@ -67,26 +68,33 @@ function HomeFeed() {
   }, []);
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Si el usuario es un alumno vinculado, filtra los cursos de su profesor vinculado
+  const filtrarCursosVinculado = (lista) => {
+    if (!storeUser?.esVinculado || !storeUser?.profesorVinculadoId) return lista;
+    return lista.filter((c) => c.profesor !== storeUser.profesorVinculadoId);
+  };
+
   // Filtra los cursos en los que el alumno está apuntado y los ordena por valoración
   const tusCursos = () => {
     if (!usuario) return [];
-    return cursosAlumnos
+    const lista = cursosAlumnos
       .filter((ca) => ca.alumnoId === usuario.id && ca.apuntado)
       .map((ca) => cursos.find((c) => c.id === ca.cursoId))
       .filter((c) => c)
       .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+    return filtrarCursosVinculado(lista);
   };
 
   // Ordena todos los cursos por ID descendente para mostrar los más recientes primero
   const novedades = () => {
-    return cursos.slice().sort((a, b) => b.id - a.id);
+    return filtrarCursosVinculado(cursos.slice().sort((a, b) => b.id - a.id));
   };
 
   // Ordena todos los cursos por valoración descendente
   const cursosPopulares = () => {
-    return cursos
-      .slice()
-      .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+    return filtrarCursosVinculado(
+      cursos.slice().sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0))
+    );
   };
 
   // Navega a la página de cursos con la categoría preseleccionada como filtro

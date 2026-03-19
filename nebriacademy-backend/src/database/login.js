@@ -44,10 +44,11 @@ router.post("/auth", async (req, res) => {
       });
     }
 
-    // Si no era administrador, buscamos entre los alumnos con el mismo criterio
+    // Si no era administrador, buscamos entre los alumnos con el mismo criterio.
+    // Los alumnos vinculados a un profesor (esVinculado=1) nunca pueden iniciar sesión directamente.
     const alumnos = await Alumnos.findAll();
     const alumno = alumnos.find(
-      (a) => a.email === email && a.contrasena === contrasena,
+      (a) => !a.esVinculado && a.email === email && a.contrasena === contrasena,
     );
     if (alumno) {
       return res.json({
@@ -65,6 +66,8 @@ router.post("/auth", async (req, res) => {
           redes: alumno.redes,
           pais: alumno.pais,
           localidad: alumno.localidad,
+          esVinculado: alumno.esVinculado,
+          profesorVinculadoId: alumno.profesorVinculadoId,
         },
       });
     }
@@ -92,6 +95,7 @@ router.post("/auth", async (req, res) => {
           localidad: profesor.localidad,
           especializacion: profesor.especializacion,
           imagenPerfil: profesor.imagenPerfil,
+          alumnoVinculadoId: profesor.alumnoVinculadoId,
         },
       });
     }

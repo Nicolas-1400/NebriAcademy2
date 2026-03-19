@@ -94,6 +94,15 @@ function CursoGrid() {
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
 
+        // Bloquear acceso si es un alumno vinculado intentando ver un curso de su profe
+        if (
+          user?.esVinculado &&
+          respuestaCurso.profesor === user.profesorVinculadoId
+        ) {
+          navigate("/Home", { replace: true });
+          return;
+        }
+
         // Cargamos el profesor del curso en paralelo sin bloquear el resto
         if (respuestaCurso.profesor) {
           fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)

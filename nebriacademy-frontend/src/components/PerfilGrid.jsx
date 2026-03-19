@@ -107,9 +107,9 @@ function PerfilGrid() {
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
-        <h2 className="nombrePerfil">{`${user.nombre} ${user.apellidos}`}</h2>
-        <p className="correoPerfil">{user.email}</p>
-        <p className="tipoPerfil">Alumno</p>
+        <h2 className="nombrePerfil">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
+        {!user.esVinculado && <p className="correoPerfil">{user.email}</p>}
+        <p className="tipoPerfil">{user.esVinculado ? "Alumno (cuenta vinculada)" : "Alumno"}</p>
 
         {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
         {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
@@ -145,26 +145,31 @@ function PerfilGrid() {
             />
           </div>
 
-          <div className="formulario-grupo">
-            <label htmlFor="contrasena">Contraseña:</label>
-            <input
-              type="password"
-              name="contrasena"
-              value={formData.contrasena}
-              onChange={handleChange}
-              placeholder="Dejar en blanco para no cambiar"
-            />
-          </div>
+          {/* Contraseña y tarjeta solo para alumnos normales (no vinculados) */}
+          {!user.esVinculado && (
+            <>
+              <div className="formulario-grupo">
+                <label htmlFor="contrasena">Contraseña:</label>
+                <input
+                  type="password"
+                  name="contrasena"
+                  value={formData.contrasena}
+                  onChange={handleChange}
+                  placeholder="Dejar en blanco para no cambiar"
+                />
+              </div>
 
-          <div className="formulario-grupo">
-            <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
-            <input
-              name="numeroTarjeta"
-              value={formData.numeroTarjeta}
-              onChange={handleChange}
-              placeholder="Tu número de tarjeta"
-            />
-          </div>
+              <div className="formulario-grupo">
+                <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
+                <input
+                  name="numeroTarjeta"
+                  value={formData.numeroTarjeta}
+                  onChange={handleChange}
+                  placeholder="Tu número de tarjeta"
+                />
+              </div>
+            </>
+          )}
 
           <div className="formulario-grupo">
             <label htmlFor="numTelefono">Teléfono:</label>

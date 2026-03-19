@@ -12,7 +12,7 @@ import useAuthStore from "../store/useAuthStore";
 // Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa
 function Nav() {
   const navigate = useNavigate();
-  const { user: usuario, tipo, logout: logoutStore } = useAuthStore();
+  const { user: usuario, tipo, logout: logoutStore, setUser } = useAuthStore();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   // Estado de apertura/cierre del menú desplegable de perfil, el menú hamburguesa y el buscador
@@ -122,6 +122,45 @@ function Nav() {
     navigate("/");
     setIsdesplegableOpen(false);
   };
+
+  // Alterna la sesión entre la cuenta de profesor y la de alumno vinculado
+  const handleCambiarCuenta = async () => {
+    try {
+      const body =
+        tipo === "profesor"
+          ? { profesorId: usuario.id }
+          : { alumnoId: usuario.id };
+
+      const respuesta = await fetch(
+        "http://localhost:3000/profesores/cambiar-cuenta",
+        {
+          method: "POST",
+          headers: { "Content-Type": "application/json" },
+          body: JSON.stringify(body),
+        }
+      );
+
+      if (respuesta.ok) {
+        const datos = await respuesta.json();
+        setUser(datos.usuario, datos.tipo);
+        setIsdesplegableOpen(false);
+        navigate("/Home");
+      } else {
+        console.error("Error al cambiar cuenta");
+      }
+    } catch (err) {
+      console.error("Error de conexión al cambiar cuenta:", err);
+    }
+  };
+
+  // Determina si el usuario actual tiene una cuenta vinculada y puede cambiar de modo
+  const mostrarBotonCambio =
+    tipo === "profesor"
+      ? !!usuario?.alumnoVinculadoId
+      : tipo === "alumno" && usuario?.esVinculado === 1;
+
+  const textoBtnCambio =
+    tipo === "profesor" ? "Cambiar a modo alumno" : "Cambiar a modo profesor";
 
   // Devuelve el nombre a mostrar en el buscador según el tipo de elemento
   const getDisplayName = (item, type) => {
@@ -418,6 +457,14 @@ function Nav() {
               >
                 Mis Tickets
               </button>
+              {mostrarBotonCambio && (
+                <button
+                  className="desplegable-item"
+                  onClick={handleCambiarCuenta}
+                >
+                  {textoBtnCambio}
+                </button>
+              )}
               <button className="desplegable-item" onClick={handleLogout}>
                 Cerrar Sesión
               </button>
@@ -461,6 +508,14 @@ function Nav() {
                   >
                     Mi Perfil
                   </button>
+                  {mostrarBotonCambio && (
+                    <button
+                      className="desplegable-item"
+                      onClick={handleCambiarCuenta}
+                    >
+                      {textoBtnCambio}
+                    </button>
+                  )}
                   <button className="desplegable-item" onClick={handleLogout}>
                     Cerrar Sesión
                   </button>
