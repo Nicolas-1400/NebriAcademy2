@@ -28,6 +28,7 @@ const Profesores = sequelize.define(
       "Marketing",
     ),
     imagenPerfil: DataTypes.STRING,
+    alumnoVinculadoId: DataTypes.INTEGER,
   },
   { timestamps: false },
 );

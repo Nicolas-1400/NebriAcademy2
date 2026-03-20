@@ -11,7 +11,7 @@ function TodosCursosGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   // Leemos la categoría preseleccionada si venimos del HomeFeed pulsando una categoría
   const { state } = useLocation();
-  const { tipo } = useAuthStore();
+  const { tipo, user } = useAuthStore();
   const [data, setData] = useState({
     cursos: [],
     profesores: [],
@@ -87,6 +87,10 @@ function TodosCursosGrid() {
   // Lista de cursos filtrada según los criterios activos; se recalcula solo cuando cambien datos o filtros
   const filteredCursos = useMemo(() => {
     return data.cursos.filter((c) => {
+      // Si es alumno vinculado, ocultar los cursos de su profesor vinculado
+      if (user?.esVinculado && user?.profesorVinculadoId && c.profesor === user.profesorVinculadoId)
+        return false;
+
       if (filters.category && c.categoria !== filters.category) return false;
 
       if (
@@ -105,7 +109,7 @@ function TodosCursosGrid() {
 
       return true;
     });
-  }, [data, filters]);
+  }, [data, filters, user]);
 
   if (error) return <p>{error}</p>;
 

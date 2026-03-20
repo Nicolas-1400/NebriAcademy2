@@ -45,16 +45,24 @@ router.put("/:id", async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /alumnos/:id — Elimina el registro del alumno de la base de datos (y su usuario asociado)
+// DELETE /alumnos/:id — Elimina el registro del alumno de la base de datos (y su usuario asociado).
+// Los alumnos vinculados a un profesor NO se pueden borrar de forma independiente.
 router.delete("/:id", async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
     if (!alumno) return res.status(404).json({ error: "No encontrado" });
 
+    // Bloquear borrado de alumnos vinculados a un profesor
+    if (alumno.esVinculado) {
+      return res.status(400).json({
+        error:
+          "No se puede borrar la versión alumno de un profesor de forma independiente. Borra la cuenta del profesor para eliminar ambas.",
+      });
+    }
+
     const usuarioId = alumno.usuarioId;
     await alumno.destroy();
 
-    // Eliminar también de la tabla base 'usuarios' si existe
     if (usuarioId) {
       await Usuarios.destroy({ where: { id: usuarioId } });
     }

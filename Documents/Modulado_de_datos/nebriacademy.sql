@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Servidor: 127.0.0.1
--- Tiempo de generación: 16-03-2026 a las 13:04:37
+-- Tiempo de generación: 19-03-2026 a las 11:25:39
 -- Versión del servidor: 10.4.32-MariaDB
 -- Versión de PHP: 8.2.12
 
@@ -61,31 +61,40 @@ CREATE TABLE `alumnos` (
   `nombre` varchar(50) DEFAULT NULL,
   `apellidos` varchar(100) DEFAULT NULL,
   `dni` varchar(20) DEFAULT NULL,
-  `email` varchar(100) NOT NULL,
-  `contrasena` varchar(255) NOT NULL,
+  `email` varchar(100) DEFAULT NULL,
+  `contrasena` varchar(255) DEFAULT NULL,
   `numeroTarjeta` varchar(20) DEFAULT NULL,
   `numTelefono` varchar(30) DEFAULT NULL,
   `redes` text DEFAULT NULL,
   `pais` varchar(50) DEFAULT NULL,
-  `localidad` varchar(50) DEFAULT NULL
+  `localidad` varchar(50) DEFAULT NULL,
+  `esVinculado` tinyint(1) DEFAULT 0,
+  `profesorVinculadoId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `alumnos`
 --
 
-INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numeroTarjeta`, `numTelefono`, `redes`, `pais`, `localidad`) VALUES
-(1, 6, 'Juan', 'Fernández Gómez', '66666666F', 'juan.fernandez@alumnos.nebrija.es', 'alumno123', '4111111111111111', '600666777', '@juan_alum', 'España', 'Madrid'),
-(2, 7, 'María', 'Rodríguez Díaz', '77777777G', 'maria.rodriguez@gmail.com', 'alumno456', '4222222222222222', '600777888', '@maria_alum', 'España', 'Sevilla'),
-(3, 8, 'Pedro', 'López Torres', '88888888H', 'pedro.lopez@alumnos.nebrija.es', 'alumno789', '4333333333333333', '600888999', '@pedro_alum', 'España', 'Bilbao'),
-(4, 9, 'Sofía', 'Gómez Ruiz', '99999999I', 'sofia.gomez@hotmail.com', 'alumno000', '4444444444444444', '600999000', '@sofia_alum', 'España', 'Zaragoza'),
-(5, 10, 'David', 'Hernández Martín', '10101010J', 'david.hernandez@alumnos.nebrija.es', 'alumno111', '4555555555555555', '601010101', '@david_alum', 'España', 'Granada'),
-(6, 11, 'Lucía', 'Pérez García', '11111112K', 'lucia.perez@outlook.com', 'alumno222', '4666666666666666', '601111112', '@lucia_alum', 'España', 'Valencia'),
-(7, 12, 'Pablo', 'González Sánchez', '12121212L', 'pablo.gonzalez@yahoo.com', 'alumno333', '4777777777777777', '601212121', '@pablo_alum', 'España', 'Barcelona'),
-(8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga'),
-(9, 16, 'Nico', 'Samp', '13672984F', 'nico@example.com', 'pass123', '4888888488888448', '720178890', '@nico_alum', 'Francia', 'Barcelona'),
-(11, 19, NULL, NULL, NULL, 'prueba@gmail.com', 'ekHIGG5b', NULL, NULL, NULL, NULL, NULL),
-(12, 21, NULL, NULL, NULL, 'pruebaalumneb@alumnos.nebrija.es', 'ithzjixy', NULL, NULL, NULL, NULL, NULL);
+INSERT INTO `alumnos` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numeroTarjeta`, `numTelefono`, `redes`, `pais`, `localidad`, `esVinculado`, `profesorVinculadoId`) VALUES
+(1, 6, 'Juan', 'Fernández Gómez', '66666666F', 'juan.fernandez@alumnos.nebrija.es', 'alumno123', '4111111111111111', '600666777', '@juan_alum', 'España', 'Madrid', 0, NULL),
+(2, 7, 'María', 'Rodríguez Díaz', '77777777G', 'maria.rodriguez@gmail.com', 'alumno456', '4222222222222222', '600777888', '@maria_alum', 'España', 'Sevilla', 0, NULL),
+(3, 8, 'Pedro', 'López Torres', '88888888H', 'pedro.lopez@alumnos.nebrija.es', 'alumno789', '4333333333333333', '600888999', '@pedro_alum', 'España', 'Bilbao', 0, NULL),
+(4, 9, 'Sofía', 'Gómez Ruiz', '99999999I', 'sofia.gomez@hotmail.com', 'alumno000', '4444444444444444', '600999000', '@sofia_alum', 'España', 'Zaragoza', 0, NULL),
+(5, 10, 'David', 'Hernández Martín', '10101010J', 'david.hernandez@alumnos.nebrija.es', 'alumno111', '4555555555555555', '601010101', '@david_alum', 'España', 'Granada', 0, NULL),
+(6, 11, 'Lucía', 'Pérez García', '11111112K', 'lucia.perez@outlook.com', 'alumno222', '4666666666666666', '601111112', '@lucia_alum', 'España', 'Valencia', 0, NULL),
+(7, 12, 'Pablo', 'González Sánchez', '12121212L', 'pablo.gonzalez@yahoo.com', 'alumno333', '4777777777777777', '601212121', '@pablo_alum', 'España', 'Barcelona', 0, NULL),
+(8, 13, 'Carmen', 'Díaz Navarro', '13131313M', 'carmen.diaz@alumnos.nebrija.es', 'alumno444', '4888888888888888', '601313131', '@carmen_alum', 'España', 'Málaga', 0, NULL),
+(9, 16, 'Nico', 'Samp', '13672984F', 'nico@example.com', 'pass123', '4888888488888448', '720178890', '@nico_alum', 'Francia', 'Barcelona', 0, NULL),
+(11, 19, NULL, NULL, NULL, 'prueba@gmail.com', 'ekHIGG5b', NULL, NULL, NULL, NULL, NULL, 0, NULL),
+(12, 21, NULL, NULL, NULL, 'pruebaalumneb@alumnos.nebrija.es', 'ithzjixy', NULL, NULL, NULL, NULL, NULL, 0, NULL),
+(13, 22, 'Ana', 'García López', '11111111A', NULL, NULL, NULL, '600111222', '@ana_prof', 'España', 'Madrid', 1, 1),
+(14, 23, 'Carlos', 'Martínez Ruiz', '22222222B', NULL, NULL, NULL, '600222333', '@carlos_prof', 'España', 'Barcelona', 1, 2),
+(15, 24, 'Laura', 'Sánchez Pérez', '33333333C', NULL, NULL, NULL, '600333444', '@laura_prof', 'España', 'Valencia', 1, 3),
+(16, 25, 'Miguel', 'Rodríguez Gómez', '44444444D', NULL, NULL, NULL, '600444555', '@miguel_prof', 'España', 'Sevilla', 1, 4),
+(17, 26, 'Elena', 'Fernández Torres', '55555555E', NULL, NULL, NULL, '600555666', '@elena_prof', 'España', 'Bilbao', 1, 5),
+(18, 27, 'Arturo', 'Arturez', '66666660F', NULL, NULL, NULL, '', '', 'España', 'Madrid', 1, 6),
+(19, 28, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, NULL, 1, 9);
 
 -- --------------------------------------------------------
 
@@ -109,7 +118,7 @@ CREATE TABLE `apuntes` (
 --
 
 INSERT INTO `apuntes` (`id`, `autor`, `curso`, `nombre`, `archivo`, `descripcion`, `categoria`, `valoracion`) VALUES
-(1, 15, 21, 'Fundamentos de las BDD', 'Fundamentos de Bases de Datos.pdf', 'Intruducción a las BDD, \r\nAutor: © Santiago Faci', 'BDD', 1),
+(1, 15, 21, 'Fundamentos de las BDD', 'Fundamentos de Bases de Datos.pdf', 'Introducción a las BDD, \r\nAutor: © Santiago Faci', 'BDD', 1),
 (2, 9, 21, 'Prueba alumno', 'Fundamentos de Bases de Datos.pdf', NULL, 'BDD', 0);
 
 -- --------------------------------------------------------
@@ -319,21 +328,22 @@ CREATE TABLE `profesores` (
   `pais` varchar(50) DEFAULT NULL,
   `localidad` varchar(50) DEFAULT NULL,
   `especializacion` enum('Programación','Diseño','Ciberseguridad','BDD','Marketing') DEFAULT NULL,
-  `imagenPerfil` varchar(50) DEFAULT NULL
+  `imagenPerfil` varchar(50) DEFAULT NULL,
+  `alumnoVinculadoId` int(11) DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 
 --
 -- Volcado de datos para la tabla `profesores`
 --
 
-INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`, `especializacion`, `imagenPerfil`) VALUES
-(1, 1, 'Ana', 'García López', '11111111A', 'ana.garcia@nebriacademy.com', 'prof123', 'ES1234567890123456789012', '600111222', '@ana_prof', 'España', 'Madrid', 'Programación', NULL),
-(2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD', NULL),
-(3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad', NULL),
-(4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño', NULL),
-(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing', NULL),
-(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', '', '', 'España', 'Madrid', 'Programación', 'hombre-7'),
-(9, 20, NULL, NULL, NULL, 'pruebaprof@gmail.com', 'wEWXt5gF', NULL, NULL, NULL, NULL, NULL, '', NULL);
+INSERT INTO `profesores` (`id`, `usuarioId`, `nombre`, `apellidos`, `dni`, `email`, `contrasena`, `numCuentaBancaria`, `numTelefono`, `redes`, `pais`, `localidad`, `especializacion`, `imagenPerfil`, `alumnoVinculadoId`) VALUES
+(1, 1, 'Ana', 'García López', '11111111A', 'ana.garcia@nebriacademy.com', 'prof123', 'ES1234567890123456789012', '600111222', '@ana_prof', 'España', 'Madrid', 'Programación', NULL, 13),
+(2, 2, 'Carlos', 'Martínez Ruiz', '22222222B', 'carlos.martinez@profesores.nebrija.es', 'prof456', 'ES2345678901234567890123', '600222333', '@carlos_prof', 'España', 'Barcelona', 'BDD', NULL, 14),
+(3, 3, 'Laura', 'Sánchez Pérez', '33333333C', 'laura.sanchez@gmail.com', 'prof789', 'ES3456789012345678901234', '600333444', '@laura_prof', 'España', 'Valencia', 'Ciberseguridad', NULL, 15),
+(4, 4, 'Miguel', 'Rodríguez Gómez', '44444444D', 'miguel.rodriguez@outlook.com', 'prof000', 'ES4567890123456789012345', '600444555', '@miguel_prof', 'España', 'Sevilla', 'Diseño', NULL, 16),
+(5, 5, 'Elena', 'Fernández Torres', '55555555E', 'elena.fernandez@yahoo.com', 'prof111', 'ES5678901234567890123456', '600555666', '@elena_prof', 'España', 'Bilbao', 'Marketing', NULL, 17),
+(6, 15, 'Arturo', 'Arturez', '66666666F', 'a@a.com', 'a', 'ES5678911134562390133446', '', '', 'España', 'Madrid', 'Programación', 'hombre-7', 18),
+(9, 20, NULL, NULL, NULL, 'pruebaprof@gmail.com', 'wEWXt5gF', NULL, NULL, NULL, NULL, NULL, '', NULL, 19);
 
 -- --------------------------------------------------------
 
@@ -429,7 +439,14 @@ INSERT INTO `usuarios` (`id`, `tipo`) VALUES
 (16, 'alumno'),
 (19, 'alumno'),
 (20, 'profesor'),
-(21, 'alumno');
+(21, 'alumno'),
+(22, 'alumno'),
+(23, 'alumno'),
+(24, 'alumno'),
+(25, 'alumno'),
+(26, 'alumno'),
+(27, 'alumno'),
+(28, 'alumno');
 
 -- --------------------------------------------------------
 
@@ -473,7 +490,8 @@ ALTER TABLE `alumnos`
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `dni` (`dni`),
   ADD UNIQUE KEY `numeroTarjeta` (`numeroTarjeta`),
-  ADD KEY `usuarioId` (`usuarioId`);
+  ADD KEY `usuarioId` (`usuarioId`),
+  ADD KEY `profesorVinculadoId` (`profesorVinculadoId`);
 
 --
 -- Indices de la tabla `apuntes`
@@ -538,7 +556,8 @@ ALTER TABLE `profesores`
   ADD UNIQUE KEY `email` (`email`),
   ADD UNIQUE KEY `dni` (`dni`),
   ADD UNIQUE KEY `numCuentaBancaria` (`numCuentaBancaria`),
-  ADD KEY `usuarioId` (`usuarioId`);
+  ADD KEY `usuarioId` (`usuarioId`),
+  ADD KEY `alumnoVinculadoId` (`alumnoVinculadoId`);
 
 --
 -- Indices de la tabla `profesorescursos`
@@ -584,7 +603,7 @@ ALTER TABLE `administradores`
 -- AUTO_INCREMENT de la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=13;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=20;
 
 --
 -- AUTO_INCREMENT de la tabla `apuntes`
@@ -650,7 +669,7 @@ ALTER TABLE `puntuacionesejercicios`
 -- AUTO_INCREMENT de la tabla `usuarios`
 --
 ALTER TABLE `usuarios`
-  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=22;
+  MODIFY `id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=29;
 
 --
 -- AUTO_INCREMENT de la tabla `videos`
@@ -672,7 +691,8 @@ ALTER TABLE `administradores`
 -- Filtros para la tabla `alumnos`
 --
 ALTER TABLE `alumnos`
-  ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `alumnos_ibfk_2` FOREIGN KEY (`profesorVinculadoId`) REFERENCES `profesores` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `apuntes`
@@ -726,7 +746,8 @@ ALTER TABLE `ejerciciosalumnos`
 -- Filtros para la tabla `profesores`
 --
 ALTER TABLE `profesores`
-  ADD CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE;
+  ADD CONSTRAINT `profesores_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `profesores_ibfk_2` FOREIGN KEY (`alumnoVinculadoId`) REFERENCES `alumnos` (`id`) ON DELETE SET NULL;
 
 --
 -- Filtros para la tabla `profesorescursos`
