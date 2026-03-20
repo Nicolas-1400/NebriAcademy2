@@ -1,0 +1,115 @@
+@import "./general.css";
+
+.contenedor-mis-tickets {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    padding: 20px;
+    margin: 40px;
+    background-color: white;
+    border: 2px solid var(--rojo-nebrija);
+    border-radius: 8px;
+}
+
+.contenedor-mis-tickets h1 {
+    color: var(--rojo-nebrija);
+    margin-bottom: 10px;
+    border-bottom: 2px solid var(--rojo-nebrija);
+}
+
+.subtitulo {
+    color: var(--color-primario);
+    text-align: center;
+    margin-bottom: 20px;
+}
+
+.tabla-tickets {
+    width: 100%;
+    border-collapse: collapse;
+}
+
+.titulo-columna th {
+    background-color: var(--rojo-nebrija);
+    color: white;
+    padding: 10px;
+    border-left: 1px solid white;
+}
+
+.titulo-columna th:first-child {
+    border-left: none;
+}
+
+.cuerpo-tabla td {
+    padding: 10px;
+    border: 1px solid var(--rojo-nebrija);
+}
+
+.fila-ticket:hover {
+    background-color: var(--color-hover-boton);
+    cursor: pointer;
+}
+
+.cargando {
+    padding: 8px;
+    margin: 10px;
+    background-color: rgba(128, 128, 128, 0.233);
+    border-radius: 5px;
+    color: gray;
+    font-style: italic;
+}
+
+.error {
+    padding: 8px;
+    margin: 10px;
+    background-color: rgba(255, 0, 0, 0.233);
+    border-radius: 5px;
+    color: rgb(188, 0, 0);
+    font-weight: bold;
+}
+
+.no-tickets {
+    padding: 8px;
+    margin: 10px;
+    background-color: rgba(128, 128, 128, 0.233);
+    border-radius: 5px;
+    color: gray;
+    font-style: italic;
+}
+
+/* Tipo de ticket */
+.td-resumen span.primer-palabra {
+    color: var(--rojo-nebrija);
+    font-weight: bold;
+    background-color: rgb(225, 225, 225);
+    padding: 2px 4px;
+    border-radius: 4px;
+}
+
+
+/* Estado del ticket */
+.td-estado {
+    text-align: center;
+}
+
+.estado-ticket {
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+}
+
+.estado-ticket.por-hacer {
+    background-color: #e0e0e0;
+    color: #555;
+}
+.estado-ticket.en-curso {
+    background-color: #1976d2;
+    color: white;
+}
+.estado-ticket.esperando-cliente {
+    background-color: #90caf9;
+    color: #0d47a1;
+}
+.estado-ticket.resuelto {
+    background-color: #43a047;
+    color: white;
+}

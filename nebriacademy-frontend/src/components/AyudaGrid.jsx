@@ -64,7 +64,7 @@ function AyudaGrid() {
       <h1>Solicita ayuda al equipo de soporte de Nebriacademy</h1>
       <h3>¿Necesitas ayuda con algo? 
         <br />
-        Escribenos y resolveremos tu problema lo antes posible.</h3>
+        Escríbenos y resolveremos tu problema lo antes posible.</h3>
       <form className="form-ayuda" onSubmit={handleSubmit}>
         <p>
           Selecciona qué quieres reportar
@@ -103,8 +103,8 @@ function AyudaGrid() {
           />
         </p>
         <button className="btn-enviar" type="submit" disabled={enviando}>Enviar</button>
-        {enviando && <span>Enviando tu reporte a Jira, espera un momento...</span>}
       </form>
+      {enviando && <span className="text-enviar">Enviando tu reporte a Jira, espera un momento...</span>}
     </div>
   );
 }
