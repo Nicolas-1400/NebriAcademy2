@@ -19,7 +19,7 @@ const assetsRoot = path.join(
   "src",
   "assets",
 );
-const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos", "Incidencias"];
+const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos"];
 
 // Al arrancar el servidor, se crean las carpetas de assets si aún no existen
 try {
@@ -43,10 +43,7 @@ app.use(
   "/ejerciciosalumnos/files",
   express.static(path.join(assetsRoot, "EjerciciosAlumnos")),
 );
-app.use(
-  "/incidencias/files",
-  express.static(path.join(assetsRoot, "Incidencias")),
-);
+
 
 // Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL
 app.use("/administradores", require("./routes/administradores"));
@@ -58,7 +55,7 @@ app.use("/cursosalumnos", require("./routes/cursosalumnos"));
 app.use("/comentarioalumnocurso", require("./routes/comentarioalumnocurso"));
 app.use("/ejercicios", require("./routes/ejercicios"));
 app.use("/ejerciciosalumnos", require("./routes/ejerciciosalumnos"));
-app.use("/incidencias", require("./routes/incidencias"));
+app.use("/jira", require("./routes/jira"));
 app.use("/profesores", require("./routes/profesores"));
 app.use("/profesorescursos", require("./routes/profesorescursos"));
 app.use("/puntuacionesejercicios", require("./routes/puntuacionesejercicios"));

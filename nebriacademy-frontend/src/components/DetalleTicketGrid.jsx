@@ -26,7 +26,7 @@ function DetalleTicketGrid() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`http://localhost:3000/incidencias/ticket/${issueKey}`);
+      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}`);
       const data = await res.json();
       if (res.ok) {
         setTicket(data);
@@ -46,7 +46,7 @@ function DetalleTicketGrid() {
     if (!nuevoComentario.trim()) return;
     setEnviandoComentario(true);
     try {
-      const res = await fetch(`http://localhost:3000/incidencias/ticket/${issueKey}/comentario`, {
+      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}/comentario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,7 +82,7 @@ function DetalleTicketGrid() {
       for (const archivo of archivosAdjuntar) {
         formData.append("archivos", archivo);
       }
-      const res = await fetch(`http://localhost:3000/incidencias/ticket/${issueKey}/adjunto`, {
+      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}/adjunto`, {
         method: "POST",
         body: formData
       });
@@ -106,9 +106,9 @@ function DetalleTicketGrid() {
     }
   };
 
-  const formatFecha = (iso) => {
-    if (!iso) return "—";
-    return new Date(iso).toLocaleString("es-ES");
+  const formatFecha = (fecha) => {
+    if (!fecha) return "—";
+    return new Date(fecha).toLocaleString("es-ES");
   };
 
   if (loading) return <p>Cargando ticket...</p>;
@@ -123,7 +123,7 @@ function DetalleTicketGrid() {
           onClick={() => navigate("/Home/MisTickets")}>← Volver a Mis Tickets
         </button>
 
-        <h1>{ticket.key}: {ticket.resumen}</h1>
+        <h1>{ticket.resumen}</h1>
         <div className="info-ticket">
           <p><strong>Estado: </strong><span className={
           `estado-ticket ${(() => {
@@ -141,7 +141,6 @@ function DetalleTicketGrid() {
             }
           })()}`
         }>{ticket.estado}</span></p>
-        {/* <p>Prioridad: {ticket.prioridad || "—"}</p> */}
         <p><strong>Creado: </strong>{formatFecha(ticket.creado)}</p>
         <p><strong>Última actualización: </strong>{formatFecha(ticket.actualizado)}</p>
         </div>
@@ -149,7 +148,7 @@ function DetalleTicketGrid() {
         <h2>Descripción</h2>
         <pre>{ticket.descripcion}</pre>
 
-        <h2>Archivos adjuntos {/* ({(ticket.adjuntos || []).length}) */}</h2>
+        <h2>Archivos adjuntos</h2>
 
         {(ticket.adjuntos || []).length === 0 && (
           <p className="no-tickets">Este ticket no tiene archivos adjuntos.</p>
@@ -184,20 +183,31 @@ function DetalleTicketGrid() {
         </form>
       </div>
       <div className="detalle-ticket-chat">
-        <h2>Chat {/* {ticket.comentarios.length} nº de mensajes */}</h2>
+        <h2>Chat</h2>
         <div className="chat-comentarios">
           {ticket.comentarios.length === 0 && (
             <p className="no-tickets">Aún no hay comentarios en este ticket.</p>
           )}
-          {ticket.comentarios.map((c) => (
-            <div key={c.id} className="mensaje-chat">
-              <div className="chat-header">
-                {c.autor}
-                <span className="chat-fecha">{formatFecha(c.fecha)}</span>
+          {ticket.comentarios.map((c) => {
+            // Los mensajes del alumno se guardan en Jira bajo la cuenta "nebriacademy"
+            // y llevan el prefijo "Nombre Apellido: " en el texto.
+            // Visualmente mostramos "Usted" como autor y eliminamos ese prefijo.
+            const esMio = c.autor?.toLowerCase().includes("nebriacademy");
+            const autorVisible = esMio ? "Usted" : c.autor;
+            const textoVisible = esMio
+              ? c.texto.replace(/^[^:]+:\s*/, "")
+              : c.texto;
+
+            return (
+              <div key={c.id} className="mensaje-chat">
+                <div className="chat-header">
+                  {autorVisible}
+                  <span className="chat-fecha">{formatFecha(c.fecha)}</span>
+                </div>
+                <div className="chat-texto">{textoVisible}</div>
               </div>
-              <div className="chat-texto">{c.texto}</div>
-            </div>
-          ))}
+            );
+          })}
         </div>
         <h3>Responder</h3>
         <form onSubmit={handleEnviarComentario} className="chat-form">

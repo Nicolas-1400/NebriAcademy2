@@ -6,7 +6,7 @@ import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Perfil del alumno: muestra sus datos y permite editarlos
+// Perfil del usuario (alumno/administrador): muestra sus datos y permite editarlos
 function PerfilGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
@@ -29,16 +29,16 @@ function PerfilGrid() {
   const [loading, setLoading] = useState(false);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
-  // Al montar el componente, cargamos los datos más recientes del alumno desde la API y los precargamos en el formulario
+  // Al montar el componente, cargamos los datos más recientes del usuario desde la API y los precargamos en el formulario
   useEffect(() => {
-    if (!user || tipo !== "alumno") return;
+    if (!user || (tipo !== "alumno" && tipo !== "administrador")) return;
 
-    fetch(`http://localhost:3000/usuarios/${user.id}?tipo=alumno`)
+    fetch(`http://localhost:3000/usuarios/${user.id}?tipo=${tipo}`)
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
         const datosIniciales = datos || user;
         // Actualizamos también el store global para que el Nav muestre datos frescos
-        if (datos) setUser(datos, "alumno");
+        if (datos) setUser(datos, tipo);
 
         setFormData({
           nombre: datosIniciales.nombre || "",
@@ -69,7 +69,7 @@ function PerfilGrid() {
     setLoading(true);
 
     try {
-      const payload = { ...formData, tipo: "alumno" };
+      const payload = { ...formData, tipo };
       if (!payload.contrasena) delete payload.contrasena;
 
       const respuesta = await fetch(
@@ -83,7 +83,7 @@ function PerfilGrid() {
 
       if (respuesta.ok) {
         const usuarioActualizado = await respuesta.json();
-        setUser(usuarioActualizado, "alumno");
+        setUser(usuarioActualizado, tipo);
         setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
         // El mensaje de éxito desaparece solo tras 3 segundos
@@ -109,7 +109,13 @@ function PerfilGrid() {
         <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
         <h2 className="nombrePerfil">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
         {!user.esVinculado && <p className="correoPerfil">{user.email}</p>}
-        <p className="tipoPerfil">{user.esVinculado ? "Alumno (cuenta vinculada)" : "Alumno"}</p>
+        <p className="tipoPerfil">
+          {tipo === "administrador"
+            ? "Administrador"
+            : user.esVinculado
+            ? "Alumno (cuenta vinculada)"
+            : "Alumno"}
+        </p>
 
         {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
         {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
@@ -145,8 +151,8 @@ function PerfilGrid() {
             />
           </div>
 
-          {/* Contraseña y tarjeta solo para alumnos normales (no vinculados) */}
-          {!user.esVinculado && (
+          {/* Contraseña y tarjeta solo para alumnos normales (no vinculados) y contraseña para admin */}
+          {!user.esVinculado && tipo === "alumno" && (
             <>
               <div className="formulario-grupo">
                 <label htmlFor="contrasena">Contraseña:</label>
@@ -169,6 +175,19 @@ function PerfilGrid() {
                 />
               </div>
             </>
+          )}
+
+          {tipo === "administrador" && (
+            <div className="formulario-grupo">
+              <label htmlFor="contrasena">Contraseña:</label>
+              <input
+                type="password"
+                name="contrasena"
+                value={formData.contrasena}
+                onChange={handleChange}
+                placeholder="Dejar en blanco para no cambiar"
+              />
+            </div>
           )}
 
           <div className="formulario-grupo">

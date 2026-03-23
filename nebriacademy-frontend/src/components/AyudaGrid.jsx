@@ -36,7 +36,7 @@ function AyudaGrid() {
 
     try {
       setEnviando(true);
-      const res = await fetch("http://localhost:3000/incidencias", {
+      const res = await fetch("http://localhost:3000/jira", {
         method: "POST",
         body: formData,
       });

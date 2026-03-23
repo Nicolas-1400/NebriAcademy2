@@ -20,7 +20,7 @@ function MisTicketsGrid() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`http://localhost:3000/incidencias/mis-tickets/${user.id}`);
+      const res = await fetch(`http://localhost:3000/jira/mis-tickets/${user.id}`);
       const data = await res.json();
       if (res.ok) {
         setTickets(data.tickets || []);
@@ -56,10 +56,8 @@ function MisTicketsGrid() {
         <table className="tabla-tickets">
           <thead className="titulo-columna">
             <tr>
-              <th>Ticket</th>
               <th>Asunto</th>
               <th>Estado</th>
-              {/* <th>Prioridad</th> */}
               <th>Creado</th>
               <th>Última actualización</th>
             </tr>
@@ -71,7 +69,6 @@ function MisTicketsGrid() {
                 key={t.key}
                 onClick={() => navigate(`/Home/MisTickets/${t.key}`)}
               >
-                <td>{t.key}</td>
                 <td className="td-resumen">
                   {(() => {
                     const [primera, ...resto] = t.resumen.split(" ");
@@ -100,7 +97,6 @@ function MisTicketsGrid() {
                     })()}`
                   }>{t.estado}</span>
                 </td>
-                {/* <td>{t.prioridad || "—"}</td> */}
                 <td>{formatFecha(t.creado)}</td>
                 <td>{formatFecha(t.actualizado)}</td>
               </tr>
