@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -19,7 +20,7 @@ function VerificacionProfesorGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/profesores/verificacionprofesor/auth",
+        `${API_URL}/profesores/verificacionprofesor/auth`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

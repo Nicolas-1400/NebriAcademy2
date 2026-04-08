@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -41,13 +42,13 @@ function HomeFeed() {
     setError(null);
 
     Promise.all([
-      fetch("http://localhost:3000/cursos").then((respuesta) =>
+      fetch(`${API_URL}/cursos`).then((respuesta) =>
         respuesta.json(),
       ),
-      fetch("http://localhost:3000/cursosalumnos").then((respuesta) =>
+      fetch(`${API_URL}/cursosalumnos`).then((respuesta) =>
         respuesta.json(),
       ),
-      fetch("http://localhost:3000/cursos/categorias")
+      fetch(`${API_URL}/cursos/categorias`)
         .then((respuesta) => respuesta.json())
         .catch(() => ({ categorias: [] })),
     ])

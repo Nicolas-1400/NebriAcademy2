@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
@@ -45,16 +46,16 @@ function ApuntesGrid() {
           respuestaAlumnos,
           respuestaCategorias,
         ] = await Promise.all([
-          fetch("http://localhost:3000/apuntes").then((respuesta) =>
+          fetch(`${API_URL}/apuntes`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/profesores").then((respuesta) =>
+          fetch(`${API_URL}/profesores`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/alumnos").then((respuesta) =>
+          fetch(`${API_URL}/alumnos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/apuntes/categorias").then((respuesta) =>
+          fetch(`${API_URL}/apuntes/categorias`).then((respuesta) =>
             respuesta.json().catch(() => ({ categorias: [] })),
           ),
         ]);
@@ -76,7 +77,7 @@ function ApuntesGrid() {
   // Cargamos los likes del alumno cuando el usuario esté disponible
   useEffect(() => {
     if (!usuario?.id) return;
-    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${usuario.id}`)
+    fetch(`${API_URL}/apuntesalumnos/likes?alumnoId=${usuario.id}`)
       .then((respuesta) => respuesta.json())
       .then((datos) => setLikedIds(datos.apunteIds || []))
       .catch(console.error);
@@ -138,7 +139,7 @@ function ApuntesGrid() {
   const handleToggleLike = async (apunte) => {
     if (!usuario?.id || tipo !== "alumno") return;
     try {
-      const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
+      const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -170,7 +171,7 @@ function ApuntesGrid() {
   const handleDelete = async (aid) => {
     if (!window.confirm("¿Borrar apunte?")) return;
     try {
-      await fetch(`http://localhost:3000/apuntes/${aid}`, { method: "DELETE" });
+      await fetch(`${API_URL}/apuntes/${aid}`, { method: "DELETE" });
       setData((prev) => ({
         ...prev,
         apuntes: prev.apuntes.filter((a) => a.id !== aid),

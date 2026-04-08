@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -41,7 +42,7 @@ function EditarContenidoCursoGrid() {
 
     try {
       const endpoint = getEndpoint();
-      const url = `http://localhost:3000/${endpoint}/${item.id}`;
+      const url = `${API_URL}/${endpoint}/${item.id}`;
 
       let respuesta;
       if (newFile) {
@@ -89,7 +90,7 @@ function EditarContenidoCursoGrid() {
           <strong>Archivo actual:</strong>{" "}
           {item.archivo ? (
             <a
-              href={`http://localhost:3000/${getEndpoint()}/files/${item.archivo}`}
+              href={`${API_URL}/${getEndpoint()}/files/${item.archivo}`}
               target="_blank"
               rel="noreferrer"
             >

@@ -1,11 +1,18 @@
 // Usamos Sequelize como ORM para conectar con la base de datos MySQL
 const { Sequelize } = require("sequelize");
 
-// Creamos la instancia de conexión con el nombre de la BDD, usuario y contraseña
-const sequelize = new Sequelize("nebriacademy", "root", "", {
-  host: "localhost",
-  dialect: "mysql",
-});
+// En producción (Railway) se usan variables de entorno DB_*.
+// En local se mantienen los valores por defecto (root / sin contraseña / localhost).
+const sequelize = new Sequelize(
+  process.env.DB_NAME || "nebriacademy",
+  process.env.DB_USER || "root",
+  process.env.DB_PASSWORD || "",
+  {
+    host: process.env.DB_HOST || "localhost",
+    port: process.env.DB_PORT || 3306,
+    dialect: "mysql",
+  }
+);
 
 // Verificamos que la conexión es correcta al arrancar la aplicación
 sequelize

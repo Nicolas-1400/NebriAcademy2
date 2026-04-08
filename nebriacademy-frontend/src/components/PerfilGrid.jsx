@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -33,7 +34,7 @@ function PerfilGrid() {
   useEffect(() => {
     if (!user || (tipo !== "alumno" && tipo !== "administrador")) return;
 
-    fetch(`http://localhost:3000/usuarios/${user.id}?tipo=${tipo}`)
+    fetch(`${API_URL}/usuarios/${user.id}?tipo=${tipo}`)
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
       .then((datos) => {
         const datosIniciales = datos || user;
@@ -73,7 +74,7 @@ function PerfilGrid() {
       if (!payload.contrasena) delete payload.contrasena;
 
       const respuesta = await fetch(
-        `http://localhost:3000/usuarios/${user.id}`,
+        `${API_URL}/usuarios/${user.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },

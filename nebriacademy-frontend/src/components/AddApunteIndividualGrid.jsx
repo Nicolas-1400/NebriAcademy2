@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useState, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -22,7 +23,7 @@ function AddApunteIndividualGrid() {
 
   // Cargamos las categorías disponibles al montar el componente para rellenar el selector
   useEffect(() => {
-    fetch("http://localhost:3000/apuntes/categorias")
+    fetch(`${API_URL}/apuntes/categorias`)
       .then((respuesta) => respuesta.json())
       .then((datos) =>
         setCategorias(Array.isArray(datos.categorias) ? datos.categorias : []),
@@ -53,7 +54,7 @@ function AddApunteIndividualGrid() {
         form.append("tipo", tipo);
       }
 
-      const respuesta = await fetch("http://localhost:3000/apuntes", {
+      const respuesta = await fetch(`${API_URL}/apuntes`, {
         method: "POST",
         body: form,
       });

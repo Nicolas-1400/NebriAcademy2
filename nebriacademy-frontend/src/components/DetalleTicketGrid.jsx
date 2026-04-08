@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -26,7 +27,7 @@ function DetalleTicketGrid() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}`);
+      const res = await fetch(`${API_URL}/jira/ticket/${issueKey}`);
       const data = await res.json();
       if (res.ok) {
         setTicket(data);
@@ -46,7 +47,7 @@ function DetalleTicketGrid() {
     if (!nuevoComentario.trim()) return;
     setEnviandoComentario(true);
     try {
-      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}/comentario`, {
+      const res = await fetch(`${API_URL}/jira/ticket/${issueKey}/comentario`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -82,7 +83,7 @@ function DetalleTicketGrid() {
       for (const archivo of archivosAdjuntar) {
         formData.append("archivos", archivo);
       }
-      const res = await fetch(`http://localhost:3000/jira/ticket/${issueKey}/adjunto`, {
+      const res = await fetch(`${API_URL}/jira/ticket/${issueKey}/adjunto`, {
         method: "POST",
         body: formData
       });

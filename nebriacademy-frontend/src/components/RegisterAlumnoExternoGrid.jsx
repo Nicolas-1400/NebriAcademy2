@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 
@@ -35,7 +36,7 @@ function RegisterAlumnoExternoGrid() {
 
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/alumnos/registerAlumnoExterno/auth",
+        `${API_URL}/alumnos/registerAlumnoExterno/auth`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },

@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
@@ -22,7 +23,7 @@ function TarjetaEjercicioCurso({
       <div className="item-main">
         {/* El nombre del ejercicio abre directamente el archivo en una nueva pestaña */}
         <a
-          href={`http://localhost:3000/ejercicios/files/${ejercicio.archivo}`}
+          href={`${API_URL}/ejercicios/files/${ejercicio.archivo}`}
           target="_blank"
           rel="noreferrer"
         >

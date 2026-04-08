@@ -1,3 +1,5 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra la entrega de un alumno (su archivo subido) en la página de corrección de ejercicios
 function TarjetaEjercicioAlumno({ registro }) {
@@ -20,7 +22,7 @@ function TarjetaEjercicioAlumno({ registro }) {
       <div className="item-main">
         {/* El nombre del archivo enlaza directamente a la entrega del alumno */}
         <a
-          href={`http://localhost:3000/ejerciciosalumnos/files/${archivo}`}
+          href={`${API_URL}/ejerciciosalumnos/files/${archivo}`}
           target="_blank"
           rel="noreferrer"
         >

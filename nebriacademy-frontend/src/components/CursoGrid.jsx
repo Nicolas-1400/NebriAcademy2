@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
@@ -89,7 +90,7 @@ function CursoGrid() {
     const fetchAll = async () => {
       try {
         const respuestaCurso = await fetch(
-          `http://localhost:3000/cursos/${id}`,
+          `${API_URL}/cursos/${id}`,
         ).then((respuesta) => (respuesta.ok ? respuesta.json() : null));
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
@@ -105,7 +106,7 @@ function CursoGrid() {
 
         // Cargamos el profesor del curso en paralelo sin bloquear el resto
         if (respuestaCurso.profesor) {
-          fetch(`http://localhost:3000/profesores/${respuestaCurso.profesor}`)
+          fetch(`${API_URL}/profesores/${respuestaCurso.profesor}`)
             .then((respuesta) => respuesta.json())
             .then(setProfesor)
             .catch(console.warn);
@@ -118,17 +119,17 @@ function CursoGrid() {
           datosProfes,
           datosAlumnos,
         ] = await Promise.all([
-          fetch("http://localhost:3000/videos").then((respuesta) =>
+          fetch(`${API_URL}/videos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/apuntes").then((respuesta) =>
+          fetch(`${API_URL}/apuntes`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/ejercicios").then((respuesta) =>
+          fetch(`${API_URL}/ejercicios`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/profesores").then((r) => r.json()),
-          fetch("http://localhost:3000/alumnos").then((r) => r.json()),
+          fetch(`${API_URL}/profesores`).then((r) => r.json()),
+          fetch(`${API_URL}/alumnos`).then((r) => r.json()),
         ]);
 
         // Resuelve el nombre completo del autor de un apunte buscando entre alumnos y profesores
@@ -161,7 +162,7 @@ function CursoGrid() {
           ejercicios: filterById(datosEjercicios.Ejercicios),
         });
 
-        fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
+        fetch(`${API_URL}/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
       } catch (e) {
@@ -180,7 +181,7 @@ function CursoGrid() {
     const fetchUserData = async () => {
       try {
         const respuestaRegistro = await fetch(
-          `http://localhost:3000/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
+          `${API_URL}/cursosalumnos/registro?cursoId=${id}&alumnoId=${user.id}`,
         ).then((respuesta) => respuesta.json());
 
         // Normalizamos los booleanos que MySQL puede devolver como 0/1 o "0"/"1"
@@ -200,14 +201,14 @@ function CursoGrid() {
         const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
           [
             fetch(
-              `http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`,
+              `${API_URL}/apuntesalumnos/likes?alumnoId=${user.id}`,
             )
               .then((r) => r.json())
               .catch(() => ({ apunteIds: [] })),
-            fetch(`http://localhost:3000/ejerciciosalumnos`)
+            fetch(`${API_URL}/ejerciciosalumnos`)
               .then((r) => r.json())
               .catch(() => ({ registros: [] })),
-            fetch(`http://localhost:3000/puntuacionesejercicios`)
+            fetch(`${API_URL}/puntuacionesejercicios`)
               .then((r) => r.json())
               .catch(() => ({ PuntuacionesEjercicios: [] })),
           ],
@@ -244,7 +245,7 @@ function CursoGrid() {
           : type === "apunte"
             ? "apuntes"
             : "ejercicios";
-      await fetch(`http://localhost:3000/${endpoint}/${itemId}`, {
+      await fetch(`${API_URL}/${endpoint}/${itemId}`, {
         method: "DELETE",
       });
 
@@ -277,12 +278,12 @@ function CursoGrid() {
       let body = { cursoId: id, alumnoId: user.id };
 
       if (action === "valoracion") {
-        url = "http://localhost:3000/cursosalumnos/vote";
+        url = `${API_URL}/cursosalumnos/vote`;
         body.vote = value;
       } else if (action === "favorito") {
-        url = "http://localhost:3000/cursosalumnos/toggle-fav";
+        url = `${API_URL}/cursosalumnos/toggle-fav`;
       } else if (action === "apuntado") {
-        url = "http://localhost:3000/cursosalumnos/toggle-apuntado";
+        url = `${API_URL}/cursosalumnos/toggle-apuntado`;
       } else {
         console.error("Acción no reconocida:", action);
         return;
@@ -329,7 +330,7 @@ function CursoGrid() {
   const handleToggleApunteLike = async (apunte) => {
     if (!user?.id || tipo !== "alumno") return;
     try {
-      const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
+      const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
@@ -365,7 +366,7 @@ function CursoGrid() {
       form.append("ejercicioId", ejercicioId);
       form.append("profileId", user.id);
 
-      const respuesta = await fetch("http://localhost:3000/ejerciciosalumnos", {
+      const respuesta = await fetch(`${API_URL}/ejerciciosalumnos`, {
         method: "POST",
         body: form,
       });
@@ -393,7 +394,7 @@ function CursoGrid() {
     if (!commentText.trim()) return;
     try {
       const respuesta = await fetch(
-        "http://localhost:3000/comentarioalumnocurso",
+        `${API_URL}/comentarioalumnocurso`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -408,7 +409,7 @@ function CursoGrid() {
       if (respuesta.ok) {
         setCommentText("");
         // Recargamos la lista para mostrar el nuevo comentario con nombre del autor
-        fetch(`http://localhost:3000/comentarioalumnocurso?cursoId=${id}`)
+        fetch(`${API_URL}/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
       } else {
@@ -423,7 +424,7 @@ function CursoGrid() {
   const deleteComment = async (cid) => {
     if (!window.confirm("Borrar comentario?")) return;
     try {
-      const url = `http://localhost:3000/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}`;
+      const url = `${API_URL}/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}`;
       const res = await fetch(url, { method: "DELETE" });
       if (res.ok) {
         setComentarios((prev) => prev.filter((c) => c.id !== cid));
@@ -451,7 +452,7 @@ function CursoGrid() {
     if (!editingComment.text.trim()) return;
     try {
       const res = await fetch(
-        `http://localhost:3000/comentarioalumnocurso/${editingComment.id}`,
+        `${API_URL}/comentarioalumnocurso/${editingComment.id}`,
         {
           method: "PUT",
           headers: { "Content-Type": "application/json" },
@@ -684,7 +685,7 @@ function CursoGrid() {
                               {entrega ? (
                                 // Si ya entregó, mostramos un enlace al archivo subido
                                 <a
-                                  href={`http://localhost:3000/ejerciciosalumnos/files/${entrega.archivo}`}
+                                  href={`${API_URL}/ejerciciosalumnos/files/${entrega.archivo}`}
                                   target="_blank"
                                   rel="noreferrer"
                                   className="btn-ejercicio-subido"

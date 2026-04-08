@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState, useRef, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
@@ -47,19 +48,19 @@ function MiEspacioGrid() {
           respuestaAlumnos,
           respuestaProfesores,
         ] = await Promise.all([
-          fetch("http://localhost:3000/cursos").then((respuesta) =>
+          fetch(`${API_URL}/cursos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/cursosalumnos").then((respuesta) =>
+          fetch(`${API_URL}/cursosalumnos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/apuntes").then((respuesta) =>
+          fetch(`${API_URL}/apuntes`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/alumnos").then((respuesta) =>
+          fetch(`${API_URL}/alumnos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch("http://localhost:3000/profesores").then((respuesta) =>
+          fetch(`${API_URL}/profesores`).then((respuesta) =>
             respuesta.json(),
           ),
         ]);
@@ -84,7 +85,7 @@ function MiEspacioGrid() {
   // Cargamos los likes del alumno cuando el usuario esté disponible
   useEffect(() => {
     if (!user) return;
-    fetch(`http://localhost:3000/apuntesalumnos/likes?alumnoId=${user.id}`)
+    fetch(`${API_URL}/apuntesalumnos/likes?alumnoId=${user.id}`)
       .then((respuesta) => respuesta.json())
       .then((datos) => setLikedApuntes(datos.apunteIds || []))
       .catch(console.error);
@@ -144,7 +145,7 @@ function MiEspacioGrid() {
   const handleToggleLike = async (apunte) => {
     if (!user) return;
     try {
-      const res = await fetch("http://localhost:3000/apuntesalumnos/vote", {
+      const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

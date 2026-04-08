@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
@@ -24,13 +25,13 @@ function CorregirEjerciciosSubidosGrid() {
   // Al montar, cargamos en paralelo las entregas, los alumnos y las puntuaciones existentes
   useEffect(() => {
     Promise.all([
-      fetch("http://localhost:3000/ejerciciosalumnos").then((respuesta) =>
+      fetch(`${API_URL}/ejerciciosalumnos`).then((respuesta) =>
         respuesta.json(),
       ),
-      fetch("http://localhost:3000/alumnos").then((respuesta) =>
+      fetch(`${API_URL}/alumnos`).then((respuesta) =>
         respuesta.json(),
       ),
-      fetch("http://localhost:3000/puntuacionesejercicios").then((respuesta) =>
+      fetch(`${API_URL}/puntuacionesejercicios`).then((respuesta) =>
         respuesta.json(),
       ),
     ])
@@ -100,8 +101,8 @@ function CorregirEjerciciosSubidosGrid() {
 
     const existing = getExistingScore(reg.id, reg.alumnoId);
     const url = existing
-      ? `http://localhost:3000/puntuacionesejercicios/${existing.id}`
-      : "http://localhost:3000/puntuacionesejercicios";
+      ? `${API_URL}/puntuacionesejercicios/${existing.id}`
+      : `${API_URL}/puntuacionesejercicios`;
 
     const method = existing ? "PUT" : "POST";
     const body = existing
@@ -135,7 +136,7 @@ function CorregirEjerciciosSubidosGrid() {
   const handleDeleteEntrega = async (entregaId) => {
     if (!window.confirm("¿Seguro que deseas borrar esta entrega permanentemente?")) return;
     try {
-      const respuesta = await fetch(`http://localhost:3000/ejerciciosalumnos/${entregaId}`, {
+      const respuesta = await fetch(`${API_URL}/ejerciciosalumnos/${entregaId}`, {
         method: "DELETE",
       });
       if (respuesta.ok) {

@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import { useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import "../styles/Ayuda.css";
@@ -36,7 +37,7 @@ function AyudaGrid() {
 
     try {
       setEnviando(true);
-      const res = await fetch("http://localhost:3000/jira", {
+      const res = await fetch(`${API_URL}/jira`, {
         method: "POST",
         body: formData,
       });

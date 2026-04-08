@@ -1,3 +1,4 @@
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -20,7 +21,7 @@ function MisTicketsGrid() {
     setLoading(true);
     setError("");
     try {
-      const res = await fetch(`http://localhost:3000/jira/mis-tickets/${user.id}`);
+      const res = await fetch(`${API_URL}/jira/mis-tickets/${user.id}`);
       const data = await res.json();
       if (res.ok) {
         setTickets(data.tickets || []);

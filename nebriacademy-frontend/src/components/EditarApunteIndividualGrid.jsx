@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -31,7 +32,7 @@ function EditarApunteIndividualGrid() {
     setError(null);
 
     try {
-      const url = `http://localhost:3000/apuntes/${apunte.id}`;
+      const url = `${API_URL}/apuntes/${apunte.id}`;
 
       let respuesta;
       if (newFile) {
@@ -78,7 +79,7 @@ function EditarApunteIndividualGrid() {
           <strong>Archivo actual:</strong>{" "}
           {apunte.archivo ? (
             <a
-              href={`http://localhost:3000/apuntes/files/${apunte.archivo}`}
+              href={`${API_URL}/apuntes/files/${apunte.archivo}`}
               target="_blank"
               rel="noreferrer"
             >

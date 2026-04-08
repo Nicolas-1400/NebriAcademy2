@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
 
@@ -16,7 +17,7 @@ function TodosProfesoresGrid() {
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Al montar el componente, cargamos todos los profesores
   useEffect(() => {
-    fetch("http://localhost:3000/profesores")
+    fetch(`${API_URL}/profesores`)
       .then((respuesta) => respuesta.json())
       .then((datos) => {
         setProfesores(Array.isArray(datos.Profesores) ? datos.Profesores : []);

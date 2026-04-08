@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 
@@ -20,7 +21,7 @@ function TarjetaApunte({
       <div className="item-main">
         {/* El nombre del apunte abre directamente el archivo en una nueva pestaña */}
         <a
-          href={`http://localhost:3000/apuntes/files/${apunte.archivo}`}
+          href={`${API_URL}/apuntes/files/${apunte.archivo}`}
           target="_blank"
           rel="noreferrer"
         >

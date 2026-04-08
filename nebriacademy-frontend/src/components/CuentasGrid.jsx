@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 
@@ -24,8 +25,8 @@ function CuentasGrid() {
     setLoading(true);
     try {
       const [resAlumnos, resProfesores] = await Promise.all([
-        fetch("http://localhost:3000/alumnos"),
-        fetch("http://localhost:3000/profesores"),
+        fetch(`${API_URL}/alumnos`),
+        fetch(`${API_URL}/profesores`),
       ]);
 
       const dataAlumnos = await resAlumnos.json();
@@ -73,8 +74,8 @@ function CuentasGrid() {
 
     const endpoint =
       rol === "alumno"
-        ? "http://localhost:3000/alumnos/admin/crear"
-        : "http://localhost:3000/profesores/admin/crear";
+        ? `${API_URL}/alumnos/admin/crear`
+        : `${API_URL}/profesores/admin/crear`;
 
     try {
       const respuesta = await fetch(endpoint, {
@@ -118,8 +119,8 @@ function CuentasGrid() {
 
     const endpoint =
       rolCuenta === "alumno"
-        ? `http://localhost:3000/alumnos/${cuentaId}`
-        : `http://localhost:3000/profesores/${cuentaId}`;
+        ? `${API_URL}/alumnos/${cuentaId}`
+        : `${API_URL}/profesores/${cuentaId}`;
 
     try {
       const respuesta = await fetch(endpoint, { method: "DELETE" });
@@ -158,8 +159,8 @@ function CuentasGrid() {
   const handleUpdateDato = async (cuentaId, rolCuenta, campo, nuevoValor) => {
     const endpoint =
       rolCuenta === "alumno"
-        ? `http://localhost:3000/alumnos/${cuentaId}`
-        : `http://localhost:3000/profesores/${cuentaId}`;
+        ? `${API_URL}/alumnos/${cuentaId}`
+        : `${API_URL}/profesores/${cuentaId}`;
 
     try {
       const res = await fetch(endpoint, {

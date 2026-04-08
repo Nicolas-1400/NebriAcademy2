@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
 
@@ -26,7 +27,7 @@ function TarjetaVideoCurso({
       {/* Elemento de vídeo nativo del navegador que carga el archivo desde el servidor */}
       <video controls>
         <source
-          src={`http://localhost:3000/videos/files/${video.archivo}`}
+          src={`${API_URL}/videos/files/${video.archivo}`}
           type="video/mp4"
         />
         Tu navegador no soporta el elemento <code>video</code>.

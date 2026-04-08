@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import TarjetaCursos from "./TarjetaCursos";
@@ -28,7 +29,7 @@ function HomeProfesorGrid() {
   // Obtiene todos los cursos y filtra solo los que pertenecen al profesor logueado
   const fetchCursosProfesor = async (profesorId) => {
     try {
-      const respuesta = await fetch("http://localhost:3000/cursos");
+      const respuesta = await fetch(`${API_URL}/cursos`);
       const datos = await respuesta.json();
 
       const todos = datos.Cursos || [];
@@ -53,7 +54,7 @@ function HomeProfesorGrid() {
     }
 
     try {
-      const res = await fetch(`http://localhost:3000/cursos/${cursoId}`, {
+      const res = await fetch(`${API_URL}/cursos/${cursoId}`, {
         method: "DELETE",
       });
       if (res.ok) {

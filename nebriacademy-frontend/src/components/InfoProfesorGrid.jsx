@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
@@ -27,11 +28,11 @@ function InfoProfesorGrid() {
     const fetchData = async () => {
       try {
         const [respuestaProfesor, respuestaCursos] = await Promise.all([
-          fetch(`http://localhost:3000/profesores/${id}`).then((respuesta) => {
+          fetch(`${API_URL}/profesores/${id}`).then((respuesta) => {
             if (!respuesta.ok) throw new Error("Error al obtener profesor");
             return respuesta.json();
           }),
-          fetch("http://localhost:3000/cursos").then((respuesta) =>
+          fetch(`${API_URL}/cursos`).then((respuesta) =>
             respuesta.json(),
           ),
         ]);

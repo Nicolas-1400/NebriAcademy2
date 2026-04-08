@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
@@ -35,13 +36,13 @@ function TodosCursosGrid() {
       try {
         const [respuestaCursos, respuestaProfesores, respuestaCategorias] =
           await Promise.all([
-            fetch("http://localhost:3000/cursos").then((respuesta) =>
+            fetch(`${API_URL}/cursos`).then((respuesta) =>
               respuesta.json(),
             ),
-            fetch("http://localhost:3000/profesores").then((respuesta) =>
+            fetch(`${API_URL}/profesores`).then((respuesta) =>
               respuesta.json(),
             ),
-            fetch("http://localhost:3000/cursos/categorias").then((respuesta) =>
+            fetch(`${API_URL}/cursos/categorias`).then((respuesta) =>
               respuesta.json().catch(() => ({ categorias: [] })),
             ),
           ]);
@@ -69,7 +70,7 @@ function TodosCursosGrid() {
   const handleDeleteCurso = async (cursoId) => {
     if (!window.confirm("¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.")) return;
     try {
-      const res = await fetch(`http://localhost:3000/cursos/${cursoId}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/cursos/${cursoId}`, { method: "DELETE" });
       if (res.ok) {
         setData((prev) => ({ ...prev, cursos: prev.cursos.filter((c) => c.id !== cursoId) }));
       } else {

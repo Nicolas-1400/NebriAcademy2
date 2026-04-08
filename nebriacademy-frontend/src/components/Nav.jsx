@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/nebriLogo.png";
@@ -40,21 +41,21 @@ function Nav() {
   // Al montar el componente, cargamos todos los datos necesarios para el buscador en caché
   useEffect(() => {
     const endpoints = [
-      { key: "cursos", url: "http://localhost:3000/cursos", listKey: "Cursos" },
+      { key: "cursos", url: `${API_URL}/cursos`, listKey: "Cursos" },
       {
         key: "apuntes",
-        url: "http://localhost:3000/apuntes",
+        url: `${API_URL}/apuntes`,
         listKey: "Apuntes",
       },
-      { key: "videos", url: "http://localhost:3000/videos", listKey: "Videos" },
+      { key: "videos", url: `${API_URL}/videos`, listKey: "Videos" },
       {
         key: "ejercicios",
-        url: "http://localhost:3000/ejercicios",
+        url: `${API_URL}/ejercicios`,
         listKey: "Ejercicios",
       },
       {
         key: "profesores",
-        url: "http://localhost:3000/profesores",
+        url: `${API_URL}/profesores`,
         listKey: "Profesores",
       },
     ];
@@ -132,7 +133,7 @@ function Nav() {
           : { alumnoId: usuario.id };
 
       const respuesta = await fetch(
-        "http://localhost:3000/profesores/cambiar-cuenta",
+        `${API_URL}/profesores/cambiar-cuenta`,
         {
           method: "POST",
           headers: { "Content-Type": "application/json" },
@@ -238,7 +239,7 @@ function Nav() {
     setIsSearchOpen(false);
     setIsMenuOpen(false);
 
-    const baseUrl = "http://localhost:3000";
+    const baseUrl = API_URL;
     if (s.type === "Curso") navigate(`/Home/Cursos/${s.id}`);
     else if (s.type === "Profesor") navigate(`/Home/Profesores/${s.id}`);
     else {

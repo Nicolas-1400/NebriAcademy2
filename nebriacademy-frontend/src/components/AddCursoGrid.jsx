@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
@@ -51,7 +52,7 @@ function AddCursoGrid() {
     Object.keys(metadata).forEach((key) => form.append(key, metadata[key]));
 
     try {
-      const respuesta = await fetch(`http://localhost:3000/${endpoint}`, {
+      const respuesta = await fetch(`${API_URL}/${endpoint}`, {
         method: "POST",
         body: form,
       });
@@ -87,7 +88,7 @@ function AddCursoGrid() {
       const profesorId = usuarioStore?.id;
 
       // Primero creamos el curso para obtener su ID
-      const respuestaCurso = await fetch("http://localhost:3000/cursos/add", {
+      const respuestaCurso = await fetch(`${API_URL}/cursos/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({

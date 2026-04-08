@@ -1,4 +1,5 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { API_URL } from "../config/api";
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
@@ -22,7 +23,7 @@ function LoginGrid() {
     setError("");
 
     try {
-      const respuesta = await fetch("http://localhost:3000/login/auth", {
+      const respuesta = await fetch(`${API_URL}/login/auth`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({ email, contrasena }),
