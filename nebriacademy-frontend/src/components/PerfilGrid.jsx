@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
-import ImagenPerfil from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfil from "../assets/ImagenPerfilUsuario.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Perfil del usuario (alumno/administrador): muestra sus datos y permite editarlos

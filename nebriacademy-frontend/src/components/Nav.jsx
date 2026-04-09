@@ -3,7 +3,7 @@ import { API_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/nebriLogo.png";
-import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 import ImagenBotonMas from "../assets/botonMas.png";
 import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";

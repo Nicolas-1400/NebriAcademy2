@@ -3,7 +3,7 @@ import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
-import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 import TarjetaCursoPequena from "./TarjetaCursoPequena";
 

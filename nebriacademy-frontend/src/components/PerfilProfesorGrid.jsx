@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
-import ImagenPerfilDefault from "../assets/imagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
 import TarjetaImagenPerfil, { PERFILES } from "./TarjetaImagenPerfil";
 import "../styles/TarjetaImagenPerfil.css";
 
