@@ -5,7 +5,7 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Formulario para que cualquier usuario (alumno o profesor) pueda subir un nuevo apunte
+// Formulario para que cualquier usuario (alumno o profesor) pueda subir un nuevo apunte.
 function AddApunteIndividualGrid() {
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
