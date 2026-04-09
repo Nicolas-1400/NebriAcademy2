@@ -1,16 +1,21 @@
-// Usamos Sequelize como ORM para conectar con la base de datos MySQL
+// Usamos Sequelize como ORM para conectar con la base de datos MySQL.
+// Las credenciales se leen siempre desde las variables de entorno definidas en .env.
 const { Sequelize } = require("sequelize");
 
-// En producción (Railway) se usan variables de entorno DB_*.
-// En local se mantienen los valores por defecto (root / sin contraseña / localhost).
 const sequelize = new Sequelize(
-  process.env.DB_NAME || "nebriacademy",
-  process.env.DB_USER || "root",
-  process.env.DB_PASSWORD || "",
+  process.env.DB_NAME,
+  process.env.DB_USER,
+  process.env.DB_PASSWORD,
   {
-    host: process.env.DB_HOST || "localhost",
-    port: process.env.DB_PORT || 3306,
+    host: process.env.DB_HOST,
+    port: process.env.DB_PORT,
     dialect: "mysql",
+    // SSL obligatorio para conectar con Aiven
+    dialectOptions: {
+      ssl: {
+        rejectUnauthorized: false,
+      },
+    },
   }
 );
 
