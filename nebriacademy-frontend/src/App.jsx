@@ -1,4 +1,5 @@
 import AppRouter from "./router/AppRouter.jsx";
+import { Analytics } from "@vercel/analytics/react";
 
 import "./styles/general.css";
 import "./styles/Header.css";
@@ -24,7 +25,10 @@ import "./styles/NotFound.css";
 import "./styles/TarjetaApunte.css";
 
 function App() {
-  return <AppRouter />;
+  return <>
+    <Analytics />
+    <AppRouter />
+  </>;
 }
 
 export default App;
