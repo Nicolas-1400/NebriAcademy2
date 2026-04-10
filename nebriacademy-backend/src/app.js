@@ -62,6 +62,7 @@ app.use("/puntuacionesejercicios", require("./routes/puntuacionesejercicios"));
 app.use("/usuarios", require("./routes/usuarios"));
 app.use("/login", require("./database/login"));
 app.use("/videos", require("./routes/videos"));
+app.use("/notificaciones", require("./routes/notificaciones"));
 
 // Middleware global de errores: si cualquier ruta falla de forma inesperada, devuelve un 500 en lugar de romper el servidor
 app.use((err, req, res, next) => {

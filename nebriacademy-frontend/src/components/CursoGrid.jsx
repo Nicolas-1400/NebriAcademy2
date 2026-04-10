@@ -489,6 +489,11 @@ function CursoGrid() {
   const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
   const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
 
+  const puedeVerContenido =
+    tipo === "profesor" ||
+    tipo === "administrador" ||
+    (tipo === "alumno" && registroUser?.apuntado);
+
   return (
     <div className="curso-grid">
       {/* Cabecera del curso: imagen de fondo, título, categoría, nivel y controles del alumno */}
@@ -560,27 +565,29 @@ function CursoGrid() {
         <div className="contenido-curso">
           <h3>Contenido del curso</h3>
 
-          <h4>Vídeos</h4>
-          {contenidos.videos.length > 0 ? (
-            <div className="videos-list">
-              {contenidos.videos.map((v) => (
-                <TarjetaVideoCurso
-                  key={v.id}
-                  video={v}
-                  tipo={tipo}
-                  editingMode={editingMode}
-                  handleEditNavigate={(t, i) =>
-                    navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
-                      state: { tipo: t, item: i, cursoId: id },
-                    })
-                  }
-                  handleDeleteContenido={handleDeleteItem}
-                />
-              ))}
-            </div>
-          ) : (
-            <p className="sin-contenido">No hay vídeos.</p>
-          )}
+          {puedeVerContenido ? (
+            <>
+              <h4>Vídeos</h4>
+              {contenidos.videos.length > 0 ? (
+                <div className="videos-list">
+                  {contenidos.videos.map((v) => (
+                    <TarjetaVideoCurso
+                      key={v.id}
+                      video={v}
+                      tipo={tipo}
+                      editingMode={editingMode}
+                      handleEditNavigate={(t, i) =>
+                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                          state: { tipo: t, item: i, cursoId: id },
+                        })
+                      }
+                      handleDeleteContenido={handleDeleteItem}
+                    />
+                  ))}
+                </div>
+              ) : (
+                <p className="sin-contenido">No hay vídeos.</p>
+              )}
 
           <h4>Apuntes</h4>
           {/* Los apuntes se dividen en dos columnas: del profesor y de los alumnos */}
@@ -730,6 +737,12 @@ function CursoGrid() {
             </div>
           ) : (
             <p className="sin-contenido">No hay ejercicios.</p>
+          )}
+            </>
+          ) : (
+            <div className="mensaje-no-apuntado">
+              <p>Debes apuntarte al curso para acceder a sus contenidos.</p>
+            </div>
           )}
         </div>
 

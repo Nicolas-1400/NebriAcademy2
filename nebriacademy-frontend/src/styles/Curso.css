@@ -576,7 +576,7 @@
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────
-   11. MENSAJE SIN CONTENIDO (vacío)
+   11. MENSAJES SIN CONTENIDO Y NO APUNTADO
    ───────────────────────────────────────────────────────────────────────────── */
 
 .sin-contenido {
@@ -587,6 +587,18 @@
   padding: 30px;
   background-color: #f9f9f9;
   border-radius: 8px;
+}
+
+.mensaje-no-apuntado {
+  font-size: 16px;
+  color: var(--rojo-nebrija);
+  font-weight: 600;
+  text-align: center;
+  padding: 40px 20px;
+  background-color: rgba(194, 0, 47, 0.05);
+  border: 2px dashed var(--rojo-nebrija);
+  border-radius: 8px;
+  margin-top: 20px;
 }
 
 /* ─────────────────────────────────────────────────────────────────────────────

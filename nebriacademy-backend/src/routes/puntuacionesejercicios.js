@@ -2,6 +2,10 @@
 const express = require("express");
 const router = express.Router();
 const PuntuacionesEjercicios = require("../models/PuntuacionesEjercicios.js");
+const Alumnos = require("../models/Alumnos.js");
+const Ejercicios = require("../models/Ejercicios.js");
+const EjerciciosAlumnos = require("../models/EjerciciosAlumnos.js");
+const Notificaciones = require("../models/Notificaciones.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /puntuacionesejercicios — Devuelve todas las puntuaciones registradas
@@ -32,6 +36,29 @@ router.get("/:id", async (req, res) => {
 router.post("/", async (req, res) => {
   try {
     const created = await PuntuacionesEjercicios.create(req.body);
+
+    // --- NOTIFICACIONES ---
+    try {
+      if (req.body.alumnoId && req.body.ejercicioId) {
+        const al = await Alumnos.findByPk(req.body.alumnoId);
+        // req.body.ejercicioId is actually the ID of the EjerciciosAlumnos (Entrega) record based on frontend usage
+        const entrega = await EjerciciosAlumnos.findByPk(req.body.ejercicioId);
+        
+        if (al && entrega) {
+          const ej = await Ejercicios.findByPk(entrega.ejercicioId);
+          if (ej) {
+            await Notificaciones.create({
+              usuarioId: al.usuarioId,
+              tipoUsuario: "alumno",
+              mensaje: `Se ha corregido tu respuesta del ejercicio ${ej.nombre}`,
+              enlace: `/Home/Cursos/${ej.curso}`
+            });
+          }
+        }
+      }
+    } catch (errNoti) {
+      console.error("Error notificaciones puntuacion POST:", errNoti);
+    }
     res.status(201).json(created);
   } catch (e) {
     res.status(500).json({ error: "Server error" });
@@ -46,6 +73,30 @@ router.put("/:id", async (req, res) => {
     if (!p) return res.status(404).json({ error: "No encontrado" });
 
     const updated = await p.update(req.body);
+
+    // --- NOTIFICACIONES ---
+    try {
+      if (p.alumnoId && p.ejercicioId) {
+        const al = await Alumnos.findByPk(p.alumnoId);
+        // p.ejercicioId is the ID of the Entrega
+        const entrega = await EjerciciosAlumnos.findByPk(p.ejercicioId);
+        
+        if (al && entrega) {
+          const ej = await Ejercicios.findByPk(entrega.ejercicioId);
+          if (ej) {
+            await Notificaciones.create({
+              usuarioId: al.usuarioId,
+              tipoUsuario: "alumno",
+              mensaje: `Se ha actualizado la corrección de tu respuesta del ejercicio ${ej.nombre}`,
+              enlace: `/Home/Cursos/${ej.curso}`
+            });
+          }
+        }
+      }
+    } catch (errNoti) {
+      console.error("Error notificaciones puntuacion PUT:", errNoti);
+    }
+
     res.json(updated);
   } catch (e) {
     res.status(500).json({ error: "Server error" });

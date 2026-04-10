@@ -7,6 +7,10 @@ const fs = require("fs");
 
 const Videos = require("../models/Videos.js");
 const Profesores = require("../models/Profesores.js");
+const Alumnos = require("../models/Alumnos.js");
+const Cursos = require("../models/Cursos.js");
+const CursosAlumnos = require("../models/CursosAlumnos.js");
+const Notificaciones = require("../models/Notificaciones.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
 // Carpeta donde se guardan localmente los archivos de vídeo subidos
@@ -75,6 +79,29 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       archivo: req.file.filename,
       valoracion: 0,
     });
+
+    // --- NOTIFICACIONES ---
+    try {
+      if (curso) {
+        const c = await Cursos.findByPk(curso);
+        const apuntados = await CursosAlumnos.findAll({ where: { cursoId: curso, apuntado: true } });
+        const notificaciones = [];
+        for (const ap of apuntados) {
+          const al = await Alumnos.findByPk(ap.alumnoId);
+          if (al) {
+            notificaciones.push({
+              usuarioId: al.usuarioId,
+              tipoUsuario: "alumno",
+              mensaje: `Nuevo vídeo subido en el curso ${c ? c.nombreCurso : 'seleccionado'}`,
+              enlace: `/Home/Cursos/${curso}`
+            });
+          }
+        }
+        if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+      }
+    } catch (errNoti) {
+      console.error("Error creando notificaciones (videos):", errNoti);
+    }
 
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (e) {

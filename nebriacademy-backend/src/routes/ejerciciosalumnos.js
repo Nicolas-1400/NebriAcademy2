@@ -8,6 +8,9 @@ const fs = require("fs");
 const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
 const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
+const Profesores = require("../models/Profesores");
+const ProfesoresCursos = require("../models/ProfesoresCursos");
+const Notificaciones = require("../models/Notificaciones");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
 // Carpeta donde se guardan localmente las entregas de ejercicios que suben los alumnos
@@ -65,6 +68,28 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       alumnoId: profileId,
       archivo: req.file ? req.file.filename : null,
     });
+
+    // --- NOTIFICACIONES ---
+    try {
+      if (validEjercicio.curso) {
+        const arrProfesores = await ProfesoresCursos.findAll({ where: { cursoId: validEjercicio.curso } });
+        const notificaciones = [];
+        for (const pc of arrProfesores) {
+          const p = await Profesores.findByPk(pc.profesorId);
+          if (p) {
+            notificaciones.push({
+              usuarioId: p.usuarioId,
+              tipoUsuario: "profesor",
+              mensaje: `El alumno ${validAlumno.nombre} ha subido una respuesta al ejercicio ${validEjercicio.nombre}`,
+              enlace: `/Home/CorregirEjerciciosSubidos/${ejercicioId}` // Suponiendo esta es la navegacion
+            });
+          }
+        }
+        if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+      }
+    } catch (errNoti) {
+      console.error("Error creando notificaciones (ejerciciosalumnos):", errNoti);
+    }
 
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {

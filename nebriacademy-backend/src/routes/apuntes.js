@@ -10,6 +10,9 @@ const Administradores = require("../models/Administradores.js");
 const Profesores = require("../models/Profesores.js");
 const Alumnos = require("../models/Alumnos.js");
 const Cursos = require("../models/Cursos.js");
+const Notificaciones = require("../models/Notificaciones.js");
+const CursosAlumnos = require("../models/CursosAlumnos.js");
+const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
 // Carpeta donde se guardan localmente los archivos de apuntes subidos
@@ -107,7 +110,6 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Categoría requerida si no hay curso" });
 
-    // Creamos el registro del apunte en la BDD con el archivo ya guardado en disco
     const nuevo = await Apuntes.create({
       autor: autorFinal,
       curso: cursoId || null,
@@ -117,6 +119,47 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       valoracion: 0,
       nombre: nombre || req.file.originalname,
     });
+
+    // --- NOTIFICACIONES ---
+    try {
+      if (cursoId) {
+        const c = await Cursos.findByPk(cursoId);
+        if (tipo === "profesor" || tipo === "administrador") {
+          const apuntados = await CursosAlumnos.findAll({ where: { cursoId, apuntado: true } });
+          const notificaciones = [];
+          for (const ap of apuntados) {
+            const al = await Alumnos.findByPk(ap.alumnoId);
+            if (al) {
+              notificaciones.push({
+                usuarioId: al.usuarioId,
+                tipoUsuario: "alumno",
+                mensaje: `Nuevo apunte subido en el curso ${c ? c.nombreCurso : 'seleccionado'}`,
+                enlace: `/Home/Cursos/${cursoId}`
+              });
+            }
+          }
+          if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+        } else if (tipo === "alumno") {
+          const arrProfesores = await ProfesoresCursos.findAll({ where: { cursoId } });
+          const notificaciones = [];
+          for (const pc of arrProfesores) {
+            const p = await Profesores.findByPk(pc.profesorId);
+            if (p) {
+              const u = await Alumnos.findByPk(profileId);
+              notificaciones.push({
+                usuarioId: p.usuarioId,
+                tipoUsuario: "profesor",
+                mensaje: `El alumno ${u ? u.nombre : 'Anónimo'} ha subido un apunte al curso ${c ? c.nombreCurso : 'seleccionado'}`,
+                enlace: `/Home/Cursos/${cursoId}`
+              });
+            }
+          }
+          if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+        }
+      }
+    } catch (errNoti) {
+      console.error("Error creando notificaciones (apuntes):", errNoti);
+    }
 
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
   } catch (error) {

@@ -6,6 +6,8 @@ const path = require("path");
 const fs = require("fs");
 const axios = require("axios");
 const FormData = require("form-data");
+const Administradores = require("../models/Administradores.js");
+const Notificaciones = require("../models/Notificaciones.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
 // Carpeta temporal para guardar los archivos antes de enviarlos a Jira
@@ -135,6 +137,20 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       );
 
       fs.unlinkSync(req.file.path);
+    }
+
+    // --- NOTIFICACIONES ---
+    try {
+      const admins = await Administradores.findAll();
+      const notificaciones = admins.map(a => ({
+        usuarioId: a.usuarioId,
+        tipoUsuario: "administrador",
+        mensaje: `Nuevo ticket de soporte en Jira de ${usuario_nombre || 'Anónimo'}`,
+        enlace: `https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list`
+      }));
+      if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+    } catch (errNoti) {
+      console.error("Error creando notificaciones (jira):", errNoti);
     }
 
     res.status(201).json({ mensaje: "Ticket creado en Jira", ticket: issueKey });

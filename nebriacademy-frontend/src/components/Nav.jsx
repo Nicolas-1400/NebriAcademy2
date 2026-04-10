@@ -8,6 +8,8 @@ import { PERFILES } from "./TarjetaImagenPerfil";
 import ImagenBotonMas from "../assets/botonMas.png";
 import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";
 import useAuthStore from "../store/useAuthStore";
+import CampanaPendiente from "../assets/Campana-pendiente.png";
+import CampanaCheck from "../assets/Campana-check.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa
@@ -25,10 +27,13 @@ function Nav() {
   const desplegableRef = useRef(null);
   const menuRef = useRef(null);
   const searchRef = useRef(null);
+  const notificacionesRef = useRef(null);
 
   // Estado del buscador: texto introducido, lista de sugerencias y caché de datos de la API
   const [query, setQuery] = useState("");
   const [suggestions, setSuggestions] = useState([]);
+  const [notificaciones, setNotificaciones] = useState([]);
+  const [isNotificacionesOpen, setIsNotificacionesOpen] = useState(false);
   const [dataCache, setDataCache] = useState({
     cursos: [],
     apuntes: [],
@@ -79,6 +84,18 @@ function Nav() {
     });
   }, []);
 
+  // Carga de notificaciones al montar y cuando cambie el usuario
+  useEffect(() => {
+    if (usuario && usuario.usuarioId) {
+      fetch(`${API_URL}/notificaciones/${usuario.usuarioId}?tipo=${tipo}`)
+        .then(res => res.json())
+        .then(data => {
+          if (Array.isArray(data)) setNotificaciones(data);
+        })
+        .catch(err => console.error("Error fetching notificaciones", err));
+    }
+  }, [usuario, tipo]);
+
   // Cierra el desplegable de perfil, el buscador o el menú hamburguesa si se hace clic fuera de ellos
   useEffect(() => {
     const handleClickOutside = (event) => {
@@ -97,6 +114,13 @@ function Nav() {
         !event.target.closest(".menu-hamburguesa-btn")
       ) {
         setIsMenuOpen(false);
+      }
+      if (
+        notificacionesRef.current &&
+        !notificacionesRef.current.contains(event.target) &&
+        !event.target.closest(".campana-boton")
+      ) {
+        setIsNotificacionesOpen(false);
       }
     };
 
@@ -122,6 +146,7 @@ function Nav() {
     logoutStore();
     navigate("/");
     setIsdesplegableOpen(false);
+    setIsNotificacionesOpen(false);
   };
 
   // Alterna la sesión entre la cuenta de profesor y la de alumno vinculado
@@ -145,6 +170,7 @@ function Nav() {
         const datos = await respuesta.json();
         setUser(datos.usuario, datos.tipo);
         setIsdesplegableOpen(false);
+        setIsNotificacionesOpen(false);
         navigate("/Home");
       } else {
         console.error("Error al cambiar cuenta");
@@ -266,6 +292,24 @@ function Nav() {
     }
   };
 
+  // Callback al clicar en una notificación
+  const handleNotificacionClick = async (noti) => {
+    try {
+      await fetch(`${API_URL}/notificaciones/${noti.id}/vista`, { method: "PUT" });
+      setNotificaciones(prev => prev.filter(n => n.id !== noti.id));
+      setIsNotificacionesOpen(false);
+      if (noti.enlace) {
+        if (noti.enlace.startsWith("http")) {
+          window.open(noti.enlace, "_blank");
+        } else {
+          navigate(noti.enlace);
+        }
+      }
+    } catch (e) {
+      console.error("Error al marcar como vista la notificacion", e);
+    }
+  };
+
   // Renderiza los botones de navegación según si el usuario es alumno, profesor o administrador
   const renderNavButtons = () => {
     if (tipo === "administrador") {
@@ -360,7 +404,11 @@ function Nav() {
           placeholder="Buscar..."
           value={query}
           onChange={handleQueryChange}
-          onFocus={() => suggestions.length > 0 && setIsSearchOpen(true)}
+          onFocus={() => {
+            if (suggestions.length > 0) setIsSearchOpen(true);
+            setIsNotificacionesOpen(false);
+            setIsdesplegableOpen(false);
+          }}
         />
         {isSearchOpen && suggestions.length > 0 && (
           <ul className="sugerencias-busqueda-contenedor">
@@ -394,7 +442,11 @@ function Nav() {
       {/* Botón hamburguesa: solo visible en pantallas pequeñas */}
       <button
         className="menu-hamburguesa-btn"
-        onClick={() => setIsMenuOpen(!isMenuOpen)}
+        onClick={() => {
+          setIsMenuOpen(!isMenuOpen);
+          setIsNotificacionesOpen(false);
+          setIsdesplegableOpen(false);
+        }}
       >
         <img
           src={ImagenMenuHamburguesa}
@@ -408,11 +460,71 @@ function Nav() {
         {renderNavButtons()}
         {renderSearch()}
 
+        {/* Campanita Notificaciones */}
+        {usuario && (
+          <div className="perfil-desplegable-container" ref={notificacionesRef}>
+            <button
+              className="campana-boton perfil-button"
+              onClick={() => {
+                setIsNotificacionesOpen(!isNotificacionesOpen);
+                setIsdesplegableOpen(false);
+                setIsSearchOpen(false);
+                setIsMenuOpen(false);
+              }}
+            >
+              <img
+                src={notificaciones.length > 0 ? CampanaPendiente : CampanaCheck}
+                alt="Notificaciones"
+                className="perfil-nav"
+              />
+            </button>
+
+            {isNotificacionesOpen && (
+              <div>
+                {notificaciones.length === 0 ? (
+                  <p>No hay notificaciones</p>
+                ) : (
+                  <>
+                    {notificaciones.length > 4 && (
+                      <div>
+                        {notificaciones.map((noti) => (
+                          <button
+                            key={noti.id}
+                            onClick={() => handleNotificacionClick(noti)}
+                          >
+                            <div>{noti.mensaje}</div>
+                            <small>{new Date(noti.fecha).toLocaleDateString()}</small>
+                          </button>
+                        ))}
+                      </div>
+                    )}
+                    {notificaciones.length <= 4 && (
+                      notificaciones.map((noti) => (
+                        <button
+                          key={noti.id}
+                          onClick={() => handleNotificacionClick(noti)}
+                        >
+                          <div>{noti.mensaje}</div>
+                          <small>{new Date(noti.fecha).toLocaleDateString()}</small>
+                        </button>
+                      ))
+                    )}
+                  </>
+                )}
+              </div>
+            )}
+          </div>
+        )}
+
         {/* Botón de perfil con desplegable para ver datos, ir al perfil o cerrar sesión */}
         <div className="perfil-desplegable-container" ref={desplegableRef}>
           <button
             className="perfil-button"
-            onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
+            onClick={() => {
+              setIsdesplegableOpen(!isdesplegableOpen);
+              setIsNotificacionesOpen(false);
+              setIsSearchOpen(false);
+            }}
           >
             <img
               className="perfil-nav"
@@ -481,7 +593,10 @@ function Nav() {
             <div className="perfil-desplegable-container" ref={desplegableRef}>
               <button
                 className="perfil-button"
-                onClick={() => setIsdesplegableOpen(!isdesplegableOpen)}
+                onClick={() => {
+                  setIsdesplegableOpen(!isdesplegableOpen);
+                  setIsNotificacionesOpen(false);
+                }}
               >
                 <img
                   className="perfil-nav"
