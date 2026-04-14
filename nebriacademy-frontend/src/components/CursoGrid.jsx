@@ -89,9 +89,9 @@ function CursoGrid() {
 
     const fetchAll = async () => {
       try {
-        const respuestaCurso = await fetch(
-          `${API_URL}/cursos/${id}`,
-        ).then((respuesta) => (respuesta.ok ? respuesta.json() : null));
+        const respuestaCurso = await fetch(`${API_URL}/cursos/${id}`).then(
+          (respuesta) => (respuesta.ok ? respuesta.json() : null),
+        );
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
 
@@ -119,15 +119,9 @@ function CursoGrid() {
           datosProfes,
           datosAlumnos,
         ] = await Promise.all([
-          fetch(`${API_URL}/videos`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/apuntes`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/ejercicios`).then((respuesta) =>
-            respuesta.json(),
-          ),
+          fetch(`${API_URL}/videos`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/apuntes`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/ejercicios`).then((respuesta) => respuesta.json()),
           fetch(`${API_URL}/profesores`).then((r) => r.json()),
           fetch(`${API_URL}/alumnos`).then((r) => r.json()),
         ]);
@@ -200,9 +194,7 @@ function CursoGrid() {
 
         const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
           [
-            fetch(
-              `${API_URL}/apuntesalumnos/likes?alumnoId=${user.id}`,
-            )
+            fetch(`${API_URL}/apuntesalumnos/likes?alumnoId=${user.id}`)
               .then((r) => r.json())
               .catch(() => ({ apunteIds: [] })),
             fetch(`${API_URL}/ejerciciosalumnos`)
@@ -393,19 +385,16 @@ function CursoGrid() {
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
     try {
-      const respuesta = await fetch(
-        `${API_URL}/comentarioalumnocurso`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify({
-            cursoId: id,
-            profileId: user.id,
-            tipo: tipo,
-            comentario: commentText,
-          }),
-        },
-      );
+      const respuesta = await fetch(`${API_URL}/comentarioalumnocurso`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          cursoId: id,
+          profileId: user.id,
+          tipo: tipo,
+          comentario: commentText,
+        }),
+      });
       if (respuesta.ok) {
         setCommentText("");
         // Recargamos la lista para mostrar el nuevo comentario con nombre del autor
@@ -435,8 +424,6 @@ function CursoGrid() {
       console.error(e);
     }
   };
-
-
 
   // Inicia la edición en línea de un comentario existente
   const startEditComment = (c) => {
@@ -589,155 +576,167 @@ function CursoGrid() {
                 <p className="sin-contenido">No hay vídeos.</p>
               )}
 
-          <h4>Apuntes</h4>
-          {/* Los apuntes se dividen en dos columnas: del profesor y de los alumnos */}
-          <div className="apuntes-columns-wrapper">
-            <div className="profesor-apuntes">
-              <h5>Apuntes profesor</h5>
-              {profApuntes.length > 0 ? (
-                <ul className="apuntes-list">
-                  {profApuntes.map((a) => (
-                    <TarjetaApunteCurso
-                      key={a.id}
-                      apunte={a}
-                      usuario={user}
-                      likedIds={likedApuntes}
-                      tipo={tipo}
-                      editingMode={editingMode}
-                      handleEditNavigate={(t, i) =>
-                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
-                          state: { tipo: t, item: i, cursoId: id },
-                        })
-                      }
-                      handleDeleteContenido={handleDeleteItem}
-                      onToggleLike={handleToggleApunteLike}
-                    />
-                  ))}
-                </ul>
-              ) : (
-                <p className="sin-contenido">Sin apuntes.</p>
-              )}
-            </div>
-            <div className="alumnos-apuntes">
-              <h5>Apuntes alumnos</h5>
-              {alumnApuntes.length > 0 ? (
-                <ul className="apuntes-list">
-                  {alumnApuntes.map((a) => (
-                    <TarjetaApunteCurso
-                      key={a.id}
-                      apunte={a}
-                      usuario={user}
-                      likedIds={likedApuntes}
-                      tipo={tipo}
-                      editingMode={editingMode}
-                      handleEditNavigate={(t, i) =>
-                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
-                          state: { tipo: t, item: i, cursoId: id },
-                        })
-                      }
-                      handleDeleteContenido={handleDeleteItem}
-                      onToggleLike={handleToggleApunteLike}
-                    />
-                  ))}
-                </ul>
-              ) : (
-                <p className="sin-contenido">Sin apuntes.</p>
-              )}
-            </div>
-          </div>
-
-          <h4>Ejercicios</h4>
-          {contenidos.ejercicios.length > 0 ? (
-            <div className="ejercicios-list">
-              {contenidos.ejercicios.map((e) => (
-                <div key={e.id} className="ejercicio-row">
-                  <div className="ejercicio-row-main">
-                    <TarjetaEjercicioCurso
-                      ejercicio={e}
-                      tipo={tipo}
-                      editingMode={editingMode}
-                      handleEditNavigate={(t, i) =>
-                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
-                          state: { tipo: t, item: i, cursoId: id },
-                        })
-                      }
-                      handleDeleteContenido={handleDeleteItem}
-                    />
-                  </div>
-                  <div className="ejercicio-row-boton">
-                    {tipo === "profesor" || tipo === "administrador" ? (
-                      // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
-                      <button
-                        className="btn-corregir-ejercicio"
-                        onClick={() =>
-                          navigate(
-                            `/Home/Cursos/${id}/CorregirEjercicios/${e.id}`,
-                          )
-                        }
-                      >
-                        <img src={CorregirEjercicio2} alt="Ver entregas" />
-                      </button>
-                    ) : (
-                      // El alumno puede subir su entrega o ver el archivo ya subido y su nota
-                      <div>
-                        {(() => {
-                          const entrega = uploadedEjercicios.find(
-                            (ej) => ej.ejercicioId === e.id,
-                          );
-                          const puntuacion = puntuacionesEjercicios.find(
-                            (p) => p.ejercicioId === e.id,
-                          );
-                          return (
-                            <>
-                              {entrega ? (
-                                // Si ya entregó, mostramos un enlace al archivo subido
-                                <a
-                                  href={`${API_URL}/ejerciciosalumnos/files/${entrega.archivo}`}
-                                  target="_blank"
-                                  rel="noreferrer"
-                                  className="btn-ejercicio-subido"
-                                >
-                                  <img
-                                    src={EjercicioSubido}
-                                    alt="Ver ejercicio"
-                                  />
-                                </a>
-                              ) : (
-                                // Si no ha entregado, mostramos el input de subida disfrazado de botón
-                                <label className="btn-subir-ejercicio">
-                                  <input
-                                    type="file"
-                                    className="file-input-hidden"
-                                    onChange={(ev) =>
-                                      ev.target.files?.[0] &&
-                                      uploadEjercicio(ev.target.files[0], e.id)
-                                    }
-                                  />
-                                  <img
-                                    src={SubirEjercicio}
-                                    alt="Subir"
-                                    className="img-subir-ejercicio"
-                                  />
-                                </label>
-                              )}
-                              {/* Si el profesor ya puso nota, se muestra debajo del ejercicio */}
-                              {puntuacion && (
-                                <div className="puntuacion-ejercicio">
-                                  <p>Nota: {puntuacion.puntuacion}</p>
-                                </div>
-                              )}
-                            </>
-                          );
-                        })()}
-                      </div>
-                    )}
-                  </div>
+              <h4>Apuntes</h4>
+              {/* Los apuntes se dividen en dos columnas: del profesor y de los alumnos */}
+              <div className="apuntes-columns-wrapper">
+                <div className="profesor-apuntes">
+                  <h5>Apuntes profesor</h5>
+                  {profApuntes.length > 0 ? (
+                    <ul className="apuntes-list">
+                      {profApuntes.map((a) => (
+                        <TarjetaApunteCurso
+                          key={a.id}
+                          apunte={a}
+                          usuario={user}
+                          likedIds={likedApuntes}
+                          tipo={tipo}
+                          editingMode={editingMode}
+                          handleEditNavigate={(t, i) =>
+                            navigate(
+                              `/Home/Cursos/${id}/EditarContenidoCurso`,
+                              {
+                                state: { tipo: t, item: i, cursoId: id },
+                              },
+                            )
+                          }
+                          handleDeleteContenido={handleDeleteItem}
+                          onToggleLike={handleToggleApunteLike}
+                        />
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="sin-contenido">Sin apuntes.</p>
+                  )}
                 </div>
-              ))}
-            </div>
-          ) : (
-            <p className="sin-contenido">No hay ejercicios.</p>
-          )}
+                <div className="alumnos-apuntes">
+                  <h5>Apuntes alumnos</h5>
+                  {alumnApuntes.length > 0 ? (
+                    <ul className="apuntes-list">
+                      {alumnApuntes.map((a) => (
+                        <TarjetaApunteCurso
+                          key={a.id}
+                          apunte={a}
+                          usuario={user}
+                          likedIds={likedApuntes}
+                          tipo={tipo}
+                          editingMode={editingMode}
+                          handleEditNavigate={(t, i) =>
+                            navigate(
+                              `/Home/Cursos/${id}/EditarContenidoCurso`,
+                              {
+                                state: { tipo: t, item: i, cursoId: id },
+                              },
+                            )
+                          }
+                          handleDeleteContenido={handleDeleteItem}
+                          onToggleLike={handleToggleApunteLike}
+                        />
+                      ))}
+                    </ul>
+                  ) : (
+                    <p className="sin-contenido">Sin apuntes.</p>
+                  )}
+                </div>
+              </div>
+
+              <h4>Ejercicios</h4>
+              {contenidos.ejercicios.length > 0 ? (
+                <div className="ejercicios-list">
+                  {contenidos.ejercicios.map((e) => (
+                    <div key={e.id} className="ejercicio-row">
+                      <div className="ejercicio-row-main">
+                        <TarjetaEjercicioCurso
+                          ejercicio={e}
+                          tipo={tipo}
+                          editingMode={editingMode}
+                          handleEditNavigate={(t, i) =>
+                            navigate(
+                              `/Home/Cursos/${id}/EditarContenidoCurso`,
+                              {
+                                state: { tipo: t, item: i, cursoId: id },
+                              },
+                            )
+                          }
+                          handleDeleteContenido={handleDeleteItem}
+                        />
+                      </div>
+                      <div className="ejercicio-row-boton">
+                        {tipo === "profesor" || tipo === "administrador" ? (
+                          // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
+                          <button
+                            className="btn-corregir-ejercicio"
+                            onClick={() =>
+                              navigate(
+                                `/Home/Cursos/${id}/CorregirEjercicios/${e.id}`,
+                              )
+                            }
+                          >
+                            <img src={CorregirEjercicio2} alt="Ver entregas" />
+                          </button>
+                        ) : (
+                          // El alumno puede subir su entrega o ver el archivo ya subido y su nota
+                          <div>
+                            {(() => {
+                              const entrega = uploadedEjercicios.find(
+                                (ej) => ej.ejercicioId === e.id,
+                              );
+                              const puntuacion = puntuacionesEjercicios.find(
+                                (p) => p.ejercicioId === e.id,
+                              );
+                              return (
+                                <>
+                                  {entrega ? (
+                                    // Si ya entregó, mostramos un enlace al archivo subido
+                                    <a
+                                      href={`${API_URL}/ejerciciosalumnos/files/${entrega.archivo}`}
+                                      target="_blank"
+                                      rel="noreferrer"
+                                      className="btn-ejercicio-subido"
+                                    >
+                                      <img
+                                        src={EjercicioSubido}
+                                        alt="Ver ejercicio"
+                                      />
+                                    </a>
+                                  ) : (
+                                    // Si no ha entregado, mostramos el input de subida disfrazado de botón
+                                    <label className="btn-subir-ejercicio">
+                                      <input
+                                        type="file"
+                                        className="file-input-hidden"
+                                        onChange={(ev) =>
+                                          ev.target.files?.[0] &&
+                                          uploadEjercicio(
+                                            ev.target.files[0],
+                                            e.id,
+                                          )
+                                        }
+                                      />
+                                      <img
+                                        src={SubirEjercicio}
+                                        alt="Subir"
+                                        className="img-subir-ejercicio"
+                                      />
+                                    </label>
+                                  )}
+                                  {/* Si el profesor ya puso nota, se muestra debajo del ejercicio */}
+                                  {puntuacion && (
+                                    <div className="puntuacion-ejercicio">
+                                      <p>Nota: {puntuacion.puntuacion}</p>
+                                    </div>
+                                  )}
+                                </>
+                              );
+                            })()}
+                          </div>
+                        )}
+                      </div>
+                    </div>
+                  ))}
+                </div>
+              ) : (
+                <p className="sin-contenido">No hay ejercicios.</p>
+              )}
             </>
           ) : (
             <div className="mensaje-no-apuntado">
@@ -828,7 +827,9 @@ function CursoGrid() {
       </div>
 
       {/* Botones flotantes: modo edición (profesor/admin) y añadir contenido (profesor/alumno, nunca admin) */}
-      {(tipo === "profesor" || tipo === "alumno" || tipo === "administrador") && (
+      {(tipo === "profesor" ||
+        tipo === "alumno" ||
+        tipo === "administrador") && (
         <div className="fixed-action-group">
           {/* El botón de editar/borrar contenido es visible solo para profesor */}
           {tipo === "profesor" && (

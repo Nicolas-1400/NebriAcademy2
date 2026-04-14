@@ -88,11 +88,11 @@ function Nav() {
   useEffect(() => {
     if (usuario && usuario.usuarioId) {
       fetch(`${API_URL}/notificaciones/${usuario.usuarioId}?tipo=${tipo}`)
-        .then(res => res.json())
-        .then(data => {
+        .then((res) => res.json())
+        .then((data) => {
           if (Array.isArray(data)) setNotificaciones(data);
         })
-        .catch(err => console.error("Error fetching notificaciones", err));
+        .catch((err) => console.error("Error fetching notificaciones", err));
     }
   }, [usuario, tipo]);
 
@@ -157,14 +157,11 @@ function Nav() {
           ? { profesorId: usuario.id }
           : { alumnoId: usuario.id };
 
-      const respuesta = await fetch(
-        `${API_URL}/profesores/cambiar-cuenta`,
-        {
-          method: "POST",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(body),
-        }
-      );
+      const respuesta = await fetch(`${API_URL}/profesores/cambiar-cuenta`, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
 
       if (respuesta.ok) {
         const datos = await respuesta.json();
@@ -295,9 +292,8 @@ function Nav() {
   // Callback al clicar en una notificación
   const handleNotificacionClick = async (noti) => {
     try {
-      await fetch(`${API_URL}/notificaciones/${noti.id}/vista`, { method: "PUT" });
-      setNotificaciones(prev => prev.filter(n => n.id !== noti.id));
-      setIsNotificacionesOpen(false);
+      await fetch(`${API_URL}/notificaciones/${noti.id}`, { method: "DELETE" });
+      setNotificaciones((prev) => prev.filter((n) => n.id !== noti.id));
       if (noti.enlace) {
         if (noti.enlace.startsWith("http")) {
           window.open(noti.enlace, "_blank");
@@ -320,7 +316,7 @@ function Nav() {
             onClick={() =>
               window.open(
                 "https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list?jql=project%20%3D%20KAN%20ORDER%20BY%20created%20DESC",
-                "_blank"
+                "_blank",
               )
             }
           >
@@ -473,7 +469,9 @@ function Nav() {
               }}
             >
               <img
-                src={notificaciones.length > 0 ? CampanaPendiente : CampanaCheck}
+                src={
+                  notificaciones.length > 0 ? CampanaPendiente : CampanaCheck
+                }
                 alt="Notificaciones"
                 className="perfil-nav"
               />
@@ -493,22 +491,25 @@ function Nav() {
                             onClick={() => handleNotificacionClick(noti)}
                           >
                             <div>{noti.mensaje}</div>
-                            <small>{new Date(noti.fecha).toLocaleDateString()}</small>
+                            <small>
+                              {new Date(noti.fecha).toLocaleDateString()}
+                            </small>
                           </button>
                         ))}
                       </div>
                     )}
-                    {notificaciones.length <= 4 && (
+                    {notificaciones.length <= 4 &&
                       notificaciones.map((noti) => (
                         <button
                           key={noti.id}
                           onClick={() => handleNotificacionClick(noti)}
                         >
                           <div>{noti.mensaje}</div>
-                          <small>{new Date(noti.fecha).toLocaleDateString()}</small>
+                          <small>
+                            {new Date(noti.fecha).toLocaleDateString()}
+                          </small>
                         </button>
-                      ))
-                    )}
+                      ))}
                   </>
                 )}
               </div>

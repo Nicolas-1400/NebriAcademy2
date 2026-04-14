@@ -104,13 +104,13 @@ router.post("/toggle-fav", async (req, res) => {
       return res.status(400).json({ error: "Faltan datos" });
 
     // Si no existe el registro aún, lo creamos directamente con favorito: true
-    const [registro] = await CursosAlumnos.findOrCreate({
+    const [registro, created] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: { favorito: true },
     });
 
     // Si ya existía, invertimos el estado actual del favorito
-    if (!registro.isNewRecord)
+    if (!created)
       await registro.update({ favorito: !registro.favorito });
 
     res.json(registro);
@@ -127,13 +127,13 @@ router.post("/toggle-apuntado", async (req, res) => {
       return res.status(400).json({ error: "Faltan datos" });
 
     // Si no existe el registro aún, lo creamos directamente con apuntado: true
-    const [registro] = await CursosAlumnos.findOrCreate({
+    const [registro, created] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: { apuntado: true },
     });
 
     // Si ya existía, invertimos el estado de inscripción
-    if (!registro.isNewRecord)
+    if (!created)
       await registro.update({ apuntado: !registro.apuntado });
 
     res.json(registro);
@@ -149,12 +149,12 @@ router.post("/comment", async (req, res) => {
     if (!cursoId || !alumnoId)
       return res.status(400).json({ error: "Faltan datos" });
 
-    const [registro] = await CursosAlumnos.findOrCreate({
+    const [registro, created] = await CursosAlumnos.findOrCreate({
       where: { cursoId, alumnoId },
       defaults: { comentario: comentario || null },
     });
 
-    if (!registro.isNewRecord) {
+    if (!created) {
       // Limitamos el comentario a 500 caracteres para evitar entradas demasiado largas
       await registro.update({
         comentario: comentario ? String(comentario).slice(0, 500) : null,

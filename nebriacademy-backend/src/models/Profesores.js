@@ -22,10 +22,13 @@ const Profesores = sequelize.define(
     // ENUM: solo acepta uno de estos valores concretos
     especializacion: DataTypes.ENUM(
       "Programación",
-      "Diseño",
-      "Ciberseguridad",
       "BDD",
+      "Ciberseguridad",
+      "Diseño y UX",
+      "Inteligencia Artificial",
       "Marketing",
+      "Desarrollo",
+      "Data Science",
     ),
     imagenPerfil: DataTypes.STRING,
     alumnoVinculadoId: DataTypes.INTEGER,

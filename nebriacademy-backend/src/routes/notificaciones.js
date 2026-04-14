@@ -32,9 +32,9 @@ router.get("/:usuarioId", async (req, res) => {
   }
 });
 
-// ── PUT ─────────────────────────────────────────────────────────────────────
-// Marcar una notificación como vista
-router.put("/:id/vista", async (req, res) => {
+// ── DELETE ──────────────────────────────────────────────────────────────────
+// Borrar una notificación al marcarla como vista
+router.delete("/:id", async (req, res) => {
   try {
     const { id } = req.params;
     
@@ -43,11 +43,11 @@ router.put("/:id/vista", async (req, res) => {
       return res.status(404).json({ error: "Notificación no encontrada" });
     }
 
-    await notificacion.update({ vista: true });
+    await notificacion.destroy();
     
-    res.json({ mensaje: "Notificación marcada como vista", notificacion });
+    res.json({ mensaje: "Notificación eliminada permanentemente" });
   } catch (error) {
-    console.error("Error actualizando notificación:", error);
+    console.error("Error eliminando notificación:", error);
     res.status(500).json({ error: "Error interno del servidor" });
   }
 });
