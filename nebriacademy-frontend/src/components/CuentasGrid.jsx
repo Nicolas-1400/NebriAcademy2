@@ -2,7 +2,7 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
-
+import "../styles/Cuentas.css"
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function CuentasGrid() {
   const { tipo } = useAuthStore();
@@ -232,13 +232,13 @@ function CuentasGrid() {
   };
 
   return (
-    <div>
+    <div className="contenedor-cuentas">
       <h2>Gestión de cuentas de usuario</h2>
 
       {/* Bloque para crear cuentas nuevas de forma parcial */}
-      <div>
+      <div className="contenedor-nuevas-cuentas">
         <h3>Crear cuenta</h3>
-        <form onSubmit={handleCrearCuenta}>
+        <form className="nuevas-form" onSubmit={handleCrearCuenta}>
           <input
             type="email"
             placeholder="Email"
@@ -250,15 +250,15 @@ function CuentasGrid() {
             <option value="alumno">Alumno</option>
             <option value="profesor">Profesor</option>
           </select>
-          <button type="submit">Crear cuenta</button>
+          <button className="btn-cuentas btn-crear" type="submit">Crear cuenta</button>
         </form>
       </div>
 
       {loading ? (
-        <p>Cargando cuentas...</p>
+        <p className="mensaje-cargando">Cargando cuentas...</p>
       ) : (
-        <div>
-          {/* ── TABLA ALUMNOS NORMALES ── */}
+        <div className="">
+          {/* ── TABLA ALUMNOS BÁSICOS ── */}
           <h3>Alumnos</h3>
           <table>
             <thead>
