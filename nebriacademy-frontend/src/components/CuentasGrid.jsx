@@ -69,6 +69,9 @@ function CuentasGrid() {
   const handleCrearCuenta = async (e) => {
     e.preventDefault();
     if (!email) return alert("Email obligatorio");
+    if (rol === "alumno" && !email.endsWith("@alumnos.nebrija.es")) {
+      return alert("El email del alumno debe acabar en @alumnos.nebrija.es");
+    }
 
     const contrasenaGenerada = generarContrasena();
 
@@ -379,43 +382,6 @@ function CuentasGrid() {
             </tbody>
           </table>
 
-          {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
-          <h3>Cuentas alumno de profesores</h3>
-          <table>
-            <thead>
-              <tr>
-                <th>Profesor vinculado</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>DNI</th>
-                <th>Nº Teléfono</th>
-                <th>Redes</th>
-                <th>País</th>
-                <th>Localidad</th>
-              </tr>
-            </thead>
-            <tbody>
-              {alumnosVinculados.length === 0 ? (
-                <tr>
-                  <td colSpan={8}>No hay cuentas de alumno vinculadas</td>
-                </tr>
-              ) : (
-                alumnosVinculados.map((c) => (
-                  <tr key={`alumno-vinculado-${c.id}`}>
-                    <td>{getNombreProfesor(c)}</td>
-                    <td>{c.nombre || ""}</td>
-                    <td>{c.apellidos || ""}</td>
-                    <td>{c.dni || ""}</td>
-                    <td>{c.numTelefono || ""}</td>
-                    <td>{c.redes || ""}</td>
-                    <td>{c.pais || ""}</td>
-                    <td>{c.localidad || ""}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-
           {/* ── TABLA PROFESORES ── */}
           <h3>Profesores</h3>
           <table>
@@ -554,6 +520,43 @@ function CuentasGrid() {
                   </td>
                 </tr>
               ))}
+            </tbody>
+          </table>
+
+           {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
+          <h3>Cuentas alumno de profesores</h3>
+          <table>
+            <thead>
+              <tr>
+                <th>Profesor vinculado</th>
+                <th>Nombre</th>
+                <th>Apellidos</th>
+                <th>DNI</th>
+                <th>Nº Teléfono</th>
+                <th>Redes</th>
+                <th>País</th>
+                <th>Localidad</th>
+              </tr>
+            </thead>
+            <tbody>
+              {alumnosVinculados.length === 0 ? (
+                <tr>
+                  <td colSpan={8}>No hay cuentas de alumno vinculadas</td>
+                </tr>
+              ) : (
+                alumnosVinculados.map((c) => (
+                  <tr key={`alumno-vinculado-${c.id}`}>
+                    <td>{getNombreProfesor(c)}</td>
+                    <td>{c.nombre || ""}</td>
+                    <td>{c.apellidos || ""}</td>
+                    <td>{c.dni || ""}</td>
+                    <td>{c.numTelefono || ""}</td>
+                    <td>{c.redes || ""}</td>
+                    <td>{c.pais || ""}</td>
+                    <td>{c.localidad || ""}</td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
         </div>
