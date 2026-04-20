@@ -14,6 +14,17 @@ function CuentasGrid() {
   const [email, setEmail] = useState("");
   const [rol, setRol] = useState("alumno");
 
+  // Estado para el buscador
+  const [filtros, setFiltros] = useState({
+    nombre: '',
+    apellidos: '',
+    email: '',
+    dni: '',
+    numTelefono: '',
+    pais: '',
+    localidad: ''
+  });
+
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
     if (tipo !== "administrador") return;
@@ -218,14 +229,42 @@ function CuentasGrid() {
     return <p>Acceso denegado.</p>;
   }
 
-  // Separar alumnos normales, alumnos vinculados y profesores
-  const alumnosNormales = cuentas.filter(
+  // Separar alumnos básicos, alumnos vinculados y profesores
+  const alumnosBasicos = cuentas.filter(
     (c) => c.rol === "alumno" && !c.esVinculado,
   );
   const alumnosVinculados = cuentas.filter(
     (c) => c.rol === "alumno" && c.esVinculado,
   );
   const profesores = cuentas.filter((c) => c.rol === "profesor");
+
+  // Filtrar por términos de búsqueda
+  const filteredAlumnosBasicos = alumnosBasicos.filter((c) =>
+    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
+    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
+    (!filtros.email || (c.email || '').toLowerCase().includes(filtros.email.toLowerCase())) &&
+    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
+    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
+    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
+    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
+  );
+  const filteredProfesores = profesores.filter((c) =>
+    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
+    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
+    (!filtros.email || (c.email || '').toLowerCase().includes(filtros.email.toLowerCase())) &&
+    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
+    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
+    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
+    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
+  );
+  const filteredAlumnosVinculados = alumnosVinculados.filter((c) =>
+    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
+    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
+    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
+    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
+    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
+    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
+  );
 
   // Obtiene el nombre del profesor al que pertenece un alumno vinculado
   const getNombreProfesor = (alumno) => {
@@ -256,15 +295,75 @@ function CuentasGrid() {
           <button className="btn-cuentas btn-crear" type="submit">Crear cuenta</button>
         </form>
       </div>
+      {/* Buscador*/}
+      <div className="contenedor-nuevas-cuentas">
+        <h3>Filtros de búsqueda</h3>
+        <form className="nuevas-form">
+          <input
+            type="text"
+            placeholder="Nombre"
+            value={filtros.nombre}
+            onChange={(e) => setFiltros({ ...filtros, nombre: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Apellidos"
+            value={filtros.apellidos}
+            onChange={(e) => setFiltros({ ...filtros, apellidos: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Email"
+            value={filtros.email}
+            onChange={(e) => setFiltros({ ...filtros, email: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="DNI"
+            value={filtros.dni}
+            onChange={(e) => setFiltros({ ...filtros, dni: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Nº Teléfono"
+            value={filtros.numTelefono}
+            onChange={(e) => setFiltros({ ...filtros, numTelefono: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="País"
+            value={filtros.pais}
+            onChange={(e) => setFiltros({ ...filtros, pais: e.target.value })}
+          />
+          <input
+            type="text"
+            placeholder="Localidad"
+            value={filtros.localidad}
+            onChange={(e) => setFiltros({ ...filtros, localidad: e.target.value })}
+          />
+          <button type="button" className="btn-cuentas btn-crear" onClick={() => setFiltros({
+            nombre: '',
+            apellidos: '',
+            email: '',
+            dni: '',
+            numTelefono: '',
+            pais: '',
+            localidad: ''
+          })}>
+            Limpiar filtros
+          </button>
+        </form>
+      </div>
 
       {loading ? (
         <p className="mensaje-cargando">Cargando cuentas...</p>
       ) : (
-        <div className="">
+        <div className="contenedor-alumnos">
           {/* ── TABLA ALUMNOS BÁSICOS ── */}
           <h3>Alumnos</h3>
-          <table>
-            <thead>
+          <div className="tabla-contenedor">
+            <table className="tabla t-alumnos-basicos">
+            <thead className="head-tabla">
               <tr>
                 <th>Nombre</th>
                 <th>Apellidos</th>
@@ -279,9 +378,14 @@ function CuentasGrid() {
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {alumnosNormales.map((c) => (
-                <tr key={`alumno-${c.id}`}>
+            <tbody className="contenido-tabla">
+              {filteredAlumnosBasicos.length === 0 ? (
+                <tr>
+                  <td colSpan={11}>No hay alumnos que coincidan con los filtros</td>
+                </tr>
+              ) : (
+                filteredAlumnosBasicos.map((c) => (
+                  <tr key={`alumno-${c.id}`}>
                   <td
                     contentEditable
                     suppressContentEditableWarning
@@ -378,14 +482,17 @@ function CuentasGrid() {
                     </button>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
+          </div>
 
           {/* ── TABLA PROFESORES ── */}
           <h3>Profesores</h3>
-          <table>
-            <thead>
+          <div className="tabla-contenedor">
+            <table className="tabla t-profesores">
+            <thead className="head-tabla">
               <tr>
                 <th>Nombre</th>
                 <th>Apellidos</th>
@@ -402,9 +509,14 @@ function CuentasGrid() {
                 <th>Acciones</th>
               </tr>
             </thead>
-            <tbody>
-              {profesores.map((c) => (
-                <tr key={`profesor-${c.id}`}>
+            <tbody className="contenido-tabla">
+              {filteredProfesores.length === 0 ? (
+                <tr>
+                  <td colSpan={13}>No hay profesores que coincidan con los filtros</td>
+                </tr>
+              ) : (
+                filteredProfesores.map((c) => (
+                  <tr key={`profesor-${c.id}`}>
                   <td
                     contentEditable
                     suppressContentEditableWarning
@@ -519,14 +631,17 @@ function CuentasGrid() {
                     </button>
                   </td>
                 </tr>
-              ))}
+                ))
+              )}
             </tbody>
           </table>
+          </div>
 
            {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
           <h3>Cuentas alumno de profesores</h3>
-          <table>
-            <thead>
+          <div className="tabla-contenedor">
+            <table className="tabla t-alumnos-vinculados">
+            <thead className="head-tabla">
               <tr>
                 <th>Profesor vinculado</th>
                 <th>Nombre</th>
@@ -538,13 +653,13 @@ function CuentasGrid() {
                 <th>Localidad</th>
               </tr>
             </thead>
-            <tbody>
-              {alumnosVinculados.length === 0 ? (
+            <tbody className="contenido-tabla">
+              {filteredAlumnosVinculados.length === 0 ? (
                 <tr>
-                  <td colSpan={8}>No hay cuentas de alumno vinculadas</td>
+                  <td colSpan={8}>No hay alumnos vinculados que coincidan con los filtros</td>
                 </tr>
               ) : (
-                alumnosVinculados.map((c) => (
+                filteredAlumnosVinculados.map((c) => (
                   <tr key={`alumno-vinculado-${c.id}`}>
                     <td>{getNombreProfesor(c)}</td>
                     <td>{c.nombre || ""}</td>
@@ -559,6 +674,7 @@ function CuentasGrid() {
               )}
             </tbody>
           </table>
+          </div>
         </div>
       )}
     </div>
