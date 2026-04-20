@@ -194,7 +194,9 @@ function DetalleTicketGrid() {
             // y llevan el prefijo "Nombre Apellido: " en el texto.
             // Visualmente mostramos "Usted" como autor y eliminamos ese prefijo.
             const esMio = c.autor?.toLowerCase().includes("nebriacademy");
-            const autorVisible = esMio ? "Usted" : c.autor;
+            const autorVisible = esMio
+              ? (user ? `${user.nombre || ""} ${user.apellidos || ""}`.trim() : "Usted")
+              : c.autor;
             const textoVisible = esMio
               ? c.texto.replace(/^[^:]+:\s*/, "")
               : c.texto;
