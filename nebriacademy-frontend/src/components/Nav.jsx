@@ -306,6 +306,20 @@ function Nav() {
     }
   };
 
+  // Función para limpiar todas las notificaciones
+  const handleLimpiarNotificaciones = async () => {
+    try {
+      await Promise.all(
+        notificaciones.map((noti) =>
+          fetch(`${API_URL}/notificaciones/${noti.id}`, { method: "DELETE" })
+        )
+      );
+      setNotificaciones([]);
+    } catch (e) {
+      console.error("Error al limpiar notificaciones", e);
+    }
+  };
+
   // Renderiza los botones de navegación según si el usuario es alumno, profesor o administrador
   const renderNavButtons = () => {
     if (tipo === "administrador") {
@@ -458,9 +472,9 @@ function Nav() {
 
         {/* Campanita Notificaciones */}
         {usuario && (
-          <div className="perfil-desplegable-container" ref={notificacionesRef}>
+          <div className="notif-desplegable-container" ref={notificacionesRef}>
             <button
-              className="campana-boton perfil-button"
+              className="bell-btn" /* perfil-button" */
               onClick={() => {
                 setIsNotificacionesOpen(!isNotificacionesOpen);
                 setIsdesplegableOpen(false);
@@ -473,25 +487,26 @@ function Nav() {
                   notificaciones.length > 0 ? CampanaPendiente : CampanaCheck
                 }
                 alt="Notificaciones"
-                className="perfil-nav"
+                className="bell-img"
               />
             </button>
 
             {isNotificacionesOpen && (
-              <div>
+              <div className="notif-desplegable-menu">
                 {notificaciones.length === 0 ? (
-                  <p>No hay notificaciones</p>
+                  <p className="no-notif">No hay notificaciones</p>
                 ) : (
                   <>
                     {notificaciones.length > 4 && (
-                      <div>
+                      <div className="notif-cont">
                         {notificaciones.map((noti) => (
                           <button
+                            className="single-notif"
                             key={noti.id}
                             onClick={() => handleNotificacionClick(noti)}
                           >
-                            <div>{noti.mensaje}</div>
-                            <small>
+                            <div className="notif-msg">{noti.mensaje}</div>
+                            <small className="msg-date">
                               {new Date(noti.fecha).toLocaleDateString()}
                             </small>
                           </button>
@@ -501,15 +516,22 @@ function Nav() {
                     {notificaciones.length <= 4 &&
                       notificaciones.map((noti) => (
                         <button
+                          className="single-notif"
                           key={noti.id}
                           onClick={() => handleNotificacionClick(noti)}
                         >
-                          <div>{noti.mensaje}</div>
-                          <small>
+                          <div className="notif-msg">{noti.mensaje}</div>
+                          <small className="msg-date">
                             {new Date(noti.fecha).toLocaleDateString()}
                           </small>
                         </button>
                       ))}
+                    <button
+                      className="notif-clean-btn"
+                      onClick={handleLimpiarNotificaciones}
+                    >
+                      Limpiar notificaciones
+                    </button>
                   </>
                 )}
               </div>
