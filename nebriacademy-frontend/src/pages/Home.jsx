@@ -1,21 +1,15 @@
 import Nav from "../components/Nav";
 import Footer from "../components/Footer";
-import HomeFeed from "../components/HomeFeed";
-import HomeProfesorGrid from "../components/HomeProfesorGrid";
-import useAuthStore from "../store/useAuthStore";
+import Home from "../components/Home";
 
-function Home() {
+function HomePage() {
   return (
     <div>
       <Nav />
-      {useAuthStore((state) => state.tipo) === "profesor" ? (
-        <HomeProfesorGrid />
-      ) : (
-        <HomeFeed />
-      )}
+      <Home />
       <Footer />
     </div>
   );
 }
 
-export default Home;
+export default HomePage;
