@@ -79,11 +79,11 @@ function EditarApunteIndividualGrid() {
           <strong>Archivo actual:</strong>{" "}
           {apunte.archivo ? (
             <a
-              href={`${API_URL}/apuntes/files/${apunte.archivo}`}
+              href={apunte.archivo}
               target="_blank"
               rel="noreferrer"
             >
-              {apunte.archivo}
+              Ver archivo actual
             </a>
           ) : (
             "Sin archivo"

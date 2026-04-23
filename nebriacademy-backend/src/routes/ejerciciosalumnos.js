@@ -2,9 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const streamifier = require("streamifier");
 
+const cloudinary = require("./cloudinary");
 const EjerciciosAlumnos = require("../models/EjerciciosAlumnos");
 const Ejercicios = require("../models/Ejercicios");
 const Alumnos = require("../models/Alumnos");
@@ -13,22 +13,38 @@ const ProfesoresCursos = require("../models/ProfesoresCursos");
 const Notificaciones = require("../models/Notificaciones");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
-// Carpeta donde se guardan localmente las entregas de ejercicios que suben los alumnos
-const uploadDir = path.join(
-  __dirname,
-  "../../../nebriacademy-frontend/src/assets/EjerciciosAlumnos",
-);
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Configuramos multer para guardar el archivo en uploadDir conservando el nombre original
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
-  }),
-});
+// ── HELPER ──────────────────────────────────────────────────────────────────
+function uploadToCloudinary(buffer, options) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+}
+
+function extractPublicId(url) {
+  try {
+    const parts = url.split('/');
+    const uploadIdx = parts.indexOf('upload');
+    const afterUpload = parts.slice(uploadIdx + 2);
+    return afterUpload.join('/');
+  } catch {
+    return null;
+  }
+}
+
+// Extrae el resource_type real de la URL de Cloudinary para borrados correctos
+function getResourceTypeFromUrl(url) {
+  if (url.includes('/image/upload/')) return 'image';
+  if (url.includes('/video/upload/')) return 'video';
+  return 'raw';
+}
 
 // ── GET ─────────────────────────────────────────────────────────────────────
-// GET /ejerciciosalumnos — Devuelve todos los registros de entregas de alumnos
 router.get("/", async (req, res) => {
   try {
     const all = await EjerciciosAlumnos.findAll();
@@ -38,7 +54,6 @@ router.get("/", async (req, res) => {
   }
 });
 
-// GET /ejerciciosalumnos/:id — Devuelve una entrega concreta por su ID
 router.get("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
@@ -49,12 +64,10 @@ router.get("/:id", async (req, res) => {
 });
 
 // ── POST ────────────────────────────────────────────────────────────────────
-// POST /ejerciciosalumnos — Registra la entrega de un alumno para un ejercicio concreto
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     const { ejercicioId, profileId } = req.body;
 
-    // Verificamos que tanto el ejercicio como el alumno existen en la BDD antes de crear el registro
     const validEjercicio = await Ejercicios.findByPk(ejercicioId);
     const validAlumno = await Alumnos.findByPk(profileId);
 
@@ -62,11 +75,24 @@ router.post("/", upload.single("archivo"), async (req, res) => {
       return res.status(400).json({ error: "Ejercicio o Alumno inválido" });
     }
 
-    // Creamos el registro de la entrega, asociando el alumno al ejercicio con el archivo subido
+    let archivoUrl = null;
+
+    if (req.file) {
+      const baseName = req.file.originalname
+        .replace(/\.[^.]+$/, "")
+        .replace(/[^a-zA-Z0-9._-]/g, "_");
+      const cloudResult = await uploadToCloudinary(req.file.buffer, {
+        folder: "nebriacademy/ejerciciosalumnos",
+        resource_type: "auto",
+        public_id: `entrega_${Date.now()}_${baseName}`,
+      });
+      archivoUrl = cloudResult.secure_url;
+    }
+
     const nuevo = await EjerciciosAlumnos.create({
       ejercicioId,
       alumnoId: profileId,
-      archivo: req.file ? req.file.filename : null,
+      archivo: archivoUrl,
     });
 
     // --- NOTIFICACIONES ---
@@ -81,7 +107,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
               usuarioId: p.usuarioId,
               tipoUsuario: "profesor",
               mensaje: `El alumno ${validAlumno.nombre} ha subido una respuesta al ejercicio ${validEjercicio.nombre}`,
-              enlace: `/Home/CorregirEjerciciosSubidos/${ejercicioId}` // Suponiendo esta es la navegacion
+              enlace: `/Home/CorregirEjerciciosSubidos/${ejercicioId}`
             });
           }
         }
@@ -99,14 +125,33 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 });
 
 // ── PUT ─────────────────────────────────────────────────────────────────────
-// PUT /ejerciciosalumnos/:id — Actualiza una entrega. Si llega un archivo nuevo, también se actualiza
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
     const updates = { ...req.body };
-    if (req.file) updates.archivo = req.file.filename;
+
+    if (req.file) {
+      if (r.archivo && r.archivo.includes('cloudinary.com')) {
+        try {
+          const resourceType = getResourceTypeFromUrl(r.archivo);
+          const pid = extractPublicId(r.archivo);
+          if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+        } catch (e) {
+          console.warn('No se pudo borrar entrega anterior de Cloudinary:', e.message);
+        }
+      }
+      const baseName = req.file.originalname
+        .replace(/\.[^.]+$/, "")
+        .replace(/[^a-zA-Z0-9._-]/g, "_");
+      const cloudResult = await uploadToCloudinary(req.file.buffer, {
+        folder: "nebriacademy/ejerciciosalumnos",
+        resource_type: "auto",
+        public_id: `entrega_${Date.now()}_${baseName}`,
+      });
+      updates.archivo = cloudResult.secure_url;
+    }
 
     const updated = await r.update(updates);
     res.json(updated);
@@ -116,16 +161,19 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /ejerciciosalumnos/:id — Elimina la entrega de la BDD y borra también el archivo local del disco
 router.delete("/:id", async (req, res) => {
   try {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
-    // Intentamos borrar el fichero local; si no existe, ignoramos el error
-    if (r.archivo) {
-      const p = path.join(uploadDir, r.archivo);
-      fs.promises.unlink(p).catch(() => {});
+    if (r.archivo && r.archivo.includes('cloudinary.com')) {
+      try {
+        const resourceType = getResourceTypeFromUrl(r.archivo);
+        const pid = extractPublicId(r.archivo);
+        if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+      } catch (e) {
+        console.warn('No se pudo borrar entrega de Cloudinary:', e.message);
+      }
     }
 
     await r.destroy();
@@ -135,5 +183,4 @@ router.delete("/:id", async (req, res) => {
   }
 });
 
-// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;

@@ -688,7 +688,7 @@ function CursoGrid() {
                                   {entrega ? (
                                     // Si ya entregó, mostramos un enlace al archivo subido
                                     <a
-                                      href={`${API_URL}/ejerciciosalumnos/files/${entrega.archivo}`}
+                                      href={entrega.archivo}
                                       target="_blank"
                                       rel="noreferrer"
                                       className="btn-ejercicio-subido"

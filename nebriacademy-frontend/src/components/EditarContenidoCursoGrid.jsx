@@ -90,11 +90,11 @@ function EditarContenidoCursoGrid() {
           <strong>Archivo actual:</strong>{" "}
           {item.archivo ? (
             <a
-              href={`${API_URL}/${getEndpoint()}/files/${item.archivo}`}
+              href={item.archivo}
               target="_blank"
               rel="noreferrer"
             >
-              {item.archivo}
+              Ver archivo actual
             </a>
           ) : (
             "Sin archivo"
