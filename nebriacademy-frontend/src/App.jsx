@@ -13,13 +13,12 @@ import "./styles/TodosCursos.css";
 import "./styles/Politicas.css";
 import "./styles/Curso.css";
 import "./styles/AddContenidoCurso.css";
-import "./styles/HomeFeed.css";
+import "./styles/Home.css";
 import "./styles/Apuntes.css";
 import "./styles/TarjetaCursoPequena.css";
 import "./styles/TarjetaProfesor.css";
 import "./styles/TodosProfesores.css";
 import "./styles/MiEspacio.css";
-import "./styles/HomeProfesor.css";
 import "./styles/NotFound.css";
 import "./styles/TarjetaApunte.css";
 
