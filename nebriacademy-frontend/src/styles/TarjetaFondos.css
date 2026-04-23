@@ -43,3 +43,10 @@
   box-shadow: 0 0 0 2px rgba(211, 47, 47, 0.2);
   transform: scale(1.05);
 }
+
+.anadir-image {
+  width: 57%;
+  height: 100%;
+  margin-left: 15px;
+}
+

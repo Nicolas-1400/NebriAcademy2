@@ -9,6 +9,7 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
+import Añadirfondo from "../assets/agregar.png";
 import "../styles/TarjetaFondos.css";
 
 // ── CONSTANTES ─────────────────────────────────────────────────────────────
@@ -57,6 +58,13 @@ function TarjetaFondos({ selectedImage, onSelect }) {
             <img src={IMAGES[key]} alt={key} />
           </div>
         ))}
+        {/* Imagen personalizada */}
+        {/* <div
+          className="fondo-item anadir-image"
+          onClick={() => onSelect("Añadirfondo")}
+        >
+          <img src={Añadirfondo} alt="Añadirfondo" />
+        </div> */}
       </div>
     </div>
   );

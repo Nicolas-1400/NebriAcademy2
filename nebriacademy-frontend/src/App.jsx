@@ -4,7 +4,6 @@ import { Analytics } from "@vercel/analytics/react";
 import "./styles/general.css";
 import "./styles/Header.css";
 import "./styles/Nav.css";
-import "./styles/NavProfesor.css";
 import "./styles/AddCurso.css";
 import "./styles/Footer.css";
 import "./styles/Login.css";

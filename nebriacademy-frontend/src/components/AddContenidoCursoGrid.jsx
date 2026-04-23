@@ -125,13 +125,29 @@ function AddContenidoCursoGrid() {
         )}
 
         <div className="form-group">
-          <label>Archivo</label>
-          <input
-            className="input-area"
-            type="file"
-            onChange={(e) => setFile(e.target.files?.[0] || null)}
-            required
-          />
+          {tipo === "video" ? (
+            <>
+              <label>Archivo (se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm)</label>
+              <input
+                className="input-area"
+                type="file"
+                accept=".mp4, .mov, .avi, .mkv, .wmv, .webm"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                required
+              />
+            </>
+          ) : (
+            <>
+              <label>Archivo (se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar)</label>
+              <input
+                className="input-area"
+                type="file"
+                accept=".txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip, .rar"
+                onChange={(e) => setFile(e.target.files?.[0] || null)}
+                required
+              />
+            </>
+          )}
         </div>
 
         {/* La categoría viene del curso y no es editable por el usuario */}

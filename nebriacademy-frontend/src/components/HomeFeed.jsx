@@ -28,7 +28,6 @@ function HomeFeed() {
   const popularesSliderRef = useRef(null);
 
   const storeUser = useAuthStore((state) => state.user);
-  const storeTipo = useAuthStore((state) => state.tipo);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Sincronizamos el estado local de usuario con el store global cuando cambie
