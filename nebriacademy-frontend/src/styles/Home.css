@@ -34,8 +34,14 @@
   gap: 50px;
   padding: 20px;
   border-radius: 20px;
-  border: 2px solid var(--rojo-nebrija);
-  background: white;
+   border: 2px solid var(--rojo-nebrija);
+  background: white; /*
+  background: linear-gradient(
+    45deg,
+    rgb(220, 0, 0),
+    rgb(255, 196, 196),
+    rgb(220, 0, 0)
+  ); */
 }
 
 .home-section-carousel {
@@ -55,23 +61,42 @@
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
   width: fit-content;
-  box-shadow: 5px 5px 3px rgba(0, 0, 0, 0.3);
+  box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
 .home-carousel-container {
   display: flex;
   align-items: center;
   gap: 10px;
-  overflow: hidden;
+  /* overflow: hidden; */
 }
 
 .home-carousel {
   flex: 1;
   min-width: 0;
-  background-color: var(--rojo-nebrija);
+  background-color: var(--color-hover-boton); /*rosa*/
+  /* background-color: #dbd5d5; // gris */
+  border: 2px solid var(--rojo-nebrija);
   border-radius: 10px;
-  padding: 20px;
+  padding: 15px;
   box-shadow: 5px 5px 3px black;
+  overflow: hidden;
+}
+.slick-track {
+  margin: 0;
+  display: flex !important;
+}
+
+/* Estilos para los slides individuales */
+.slick-slide {
+  display: flex !important;
+  width: auto !important;
+  min-width: 320px !important;
+}
+
+.slick-slide > div {
+  display: flex;
+  width: 100%;
 }
 
 /* Botones de navegación del carousel */
@@ -243,6 +268,14 @@
     font-size: 20px;
   }
 
+  .slick-slide {
+    min-width: 270px !important;
+  }
+
+  .slick-track {
+    gap: 6px !important;
+  }
+
   .home-categorias-buttons {
     gap: 12px;
   }
@@ -277,8 +310,15 @@
     font-size: 18px;
   }
 
+  .slick-slide {
+    min-width: 220px !important;
+  }
+
+  .slick-track {
+    gap: 5px !important;
+  }
+
   .home-carousel {
-    gap: 15px;
   }
 
   .home-categorias-buttons {
@@ -315,8 +355,28 @@
     font-size: 16px;
   }
 
+  .slick-slide {
+    min-width: 180px !important;
+  }
+
+  .slick-track {
+    gap: 3px !important;
+  }
+
   .home-carousel {
-    gap: 12px;
+    padding: 12px;
+  }
+
+  .home-carousel-container {
+    gap: 8px;
+  }
+
+  .carousel-btn {
+    width: 35px;
+    height: 35px;
+    min-width: 35px;
+    min-height: 35px;
+    font-size: 18px;
   }
 
   .home-categorias-buttons {

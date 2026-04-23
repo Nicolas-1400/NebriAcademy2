@@ -133,21 +133,16 @@ function Home() {
       const t = setTimeout(() => {
         [novedadesSliderRef, tusCursosSliderRef, popularesSliderRef].forEach(
           (ref) => {
-            ref?.current?.innerSlider?.onWindowResized?.();
+            if (ref?.current?.innerSlider) {
+              // Forzar recalcular el ancho y breakpoints
+              ref.current.innerSlider.handleWindowResize?.();
+            }
             try {
               ref?.current?.slickGoTo(0);
-            } catch (e) {} /*¿Por qué está ese try/catch vacío?
-
-Al intentar llamar a ref.current.slickGoTo(0), es posible que el componente interno del carrusel aún no esté completamente inicializado o renderizado en el DOM (incluso con el retraso de 120ms). Si slickGoTo da un error (por ejemplo, porque intenta acceder a propiedades que son undefined o null en ese milisegundo exacto), la aplicación entera de React podría romperse ("crashear") mostrando una pantalla blanca.
-
-Al envolverlo en un bloque try/catch y dejar el catch vacío:
-
-Intenta ejecutarlo: Le dice al código "intenta reiniciar el slider a la posición 0".
-Si falla, no hagas nada: Si ocurre algún error en ese intento, el código lo ignora silenciosamente (catch (e) {}) en lugar de arrojar una excepción y romper la página.
-En resumen: es una medida de seguridad para evitar que la aplicación falle al intentar forzar al carrusel a colocarse en la posición inicial (slide 0) si por alguna razón no está listo para recibir la instrucción. */
+            } catch (e) {}
           },
         );
-      }, 120);
+      }, 100);
       return () => clearTimeout(t);
     }
   }, [loading, cursos]);
@@ -181,6 +176,7 @@ En resumen: es una medida de seguridad para evitar que la aplicación falle al i
   // Configuración de slider
   const settingsSlider = {
     dots: false,
+    arrows: false,
     infinite: true,
     speed: 500,
     slidesToShow: 4,
@@ -188,6 +184,7 @@ En resumen: es una medida de seguridad para evitar que la aplicación falle al i
     responsive: [
       { breakpoint: 1024, settings: { slidesToShow: 3 } },
       { breakpoint: 768, settings: { slidesToShow: 2 } },
+      { breakpoint: 480, settings: { slidesToShow: 1 } },
     ],
   };
 
