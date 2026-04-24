@@ -127,7 +127,7 @@ function AddContenidoCursoGrid() {
         <div className="form-group">
           {tipo === "video" ? (
             <>
-              <label>Archivo (se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm)</label>
+              <label>Archivo (se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm) (máximo 20 MB)</label>
               <input
                 className="input-area"
                 type="file"
@@ -138,7 +138,7 @@ function AddContenidoCursoGrid() {
             </>
           ) : (
             <>
-              <label>Archivo (se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar)</label>
+              <label>Archivo (se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar) (máximo 20 MB)</label>
               <input
                 className="input-area"
                 type="file"

@@ -108,7 +108,7 @@ function EditarApunteIndividualGrid() {
         </div>
 
         <div className="form-group">
-          <label>Cambiar archivo (opcional)</label>
+          <label>Cambiar archivo (opcional) (máximo 20 MB)</label>
           <input
             className="input-area"
             type="file"

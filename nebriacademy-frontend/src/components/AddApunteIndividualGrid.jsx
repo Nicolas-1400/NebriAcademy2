@@ -100,7 +100,7 @@ function AddApunteIndividualGrid() {
         </div>
 
         <div className="form-group">
-          <label>Archivo</label>
+          <label>Archivo (máximo 20 MB)</label>
           <input
             className="input-area"
             type="file"

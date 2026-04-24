@@ -18,7 +18,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // ── HELPER ──────────────────────────────────────────────────────────────────
 function uploadToCloudinary(buffer, options) {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+    const stream = cloudinary.uploader.upload_chunked_stream(options, (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
@@ -26,12 +26,13 @@ function uploadToCloudinary(buffer, options) {
   });
 }
 
-function extractPublicId(url) {
+function extractPublicId(url, resourceType) {
   try {
     const parts = url.split('/');
     const uploadIdx = parts.indexOf('upload');
     const afterUpload = parts.slice(uploadIdx + 2);
-    return afterUpload.join('/');
+    const publicIdWithExt = afterUpload.join('/');
+    return resourceType === 'raw' ? publicIdWithExt : publicIdWithExt.replace(/\.[^/.]+$/, "");
   } catch {
     return null;
   }
@@ -86,7 +87,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     const cloudResult = await uploadToCloudinary(req.file.buffer, {
       folder: "nebriacademy/ejercicios",
       resource_type: "auto",
-      public_id: `ejercicio_${Date.now()}_${baseName}`,
+      public_id: baseName,
     });
 
     const nuevo = await Ejercicios.create({
@@ -139,7 +140,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
       if (ej.archivo && ej.archivo.includes('cloudinary.com')) {
         try {
           const resourceType = getResourceTypeFromUrl(ej.archivo);
-          const pid = extractPublicId(ej.archivo);
+          const pid = extractPublicId(ej.archivo, resourceType);
           if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
         } catch (e) {
           console.warn('No se pudo borrar ejercicio anterior de Cloudinary:', e.message);
@@ -151,7 +152,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
       const cloudResult = await uploadToCloudinary(req.file.buffer, {
         folder: "nebriacademy/ejercicios",
         resource_type: "auto",
-        public_id: `ejercicio_${Date.now()}_${baseName}`,
+        public_id: baseName,
       });
       updates.archivo = cloudResult.secure_url;
     }
@@ -172,7 +173,7 @@ router.delete("/:id", async (req, res) => {
     if (ej.archivo && ej.archivo.includes('cloudinary.com')) {
       try {
         const resourceType = getResourceTypeFromUrl(ej.archivo);
-        const pid = extractPublicId(ej.archivo);
+        const pid = extractPublicId(ej.archivo, resourceType);
         if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
       } catch (e) {
         console.warn('No se pudo borrar ejercicio de Cloudinary:', e.message);

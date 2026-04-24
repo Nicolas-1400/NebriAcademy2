@@ -266,7 +266,7 @@ function AddCursoGrid() {
                   />
                 </div>
                 <div className="formulario-grupo">
-                  <label>Archivo (.pdf, .doc, .docx, .ppt, .pptx)</label>
+                  <label>Archivo (.pdf, .doc, .docx, .ppt, .pptx) (máximo 20 MB)</label>
                   <input
                     type="file"
                     ref={fileInputRef}
@@ -297,7 +297,7 @@ function AddCursoGrid() {
                   />
                 </div>
                 <div className="formulario-grupo">
-                  <label>Archivo (Video)</label>
+                  <label>Archivo (Video) (máximo 20 MB)</label>
                   <input
                     type="file"
                     ref={fileVideoInputRef}
@@ -319,7 +319,7 @@ function AddCursoGrid() {
                   />
                 </div>
                 <div className="formulario-grupo">
-                  <label>Archivo (.zip, .pdf...)</label>
+                  <label>Archivo (.zip, .pdf...) (máximo 20 MB)</label>
                   <input
                     type="file"
                     ref={fileEjercicioInputRef}

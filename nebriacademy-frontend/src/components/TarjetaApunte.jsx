@@ -1,6 +1,3 @@
-import { Link } from "react-router-dom";
-import "../styles/Tarjetas.css";
-import LikeIcon from "../assets/me-gusta.png";
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 

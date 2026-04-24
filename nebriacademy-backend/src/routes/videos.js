@@ -19,7 +19,7 @@ const upload = multer({ storage: multer.memoryStorage() });
 // ── HELPER ──────────────────────────────────────────────────────────────────
 function uploadToCloudinary(buffer, options) {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+    const stream = cloudinary.uploader.upload_chunked_stream(options, (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
@@ -79,10 +79,14 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     if (!profesorId)
       return res.status(400).json({ error: "Profesor no identificado o no autorizado" });
 
+    const baseName = req.file.originalname
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9._-]/g, "_");
+      
     const cloudResult = await uploadToCloudinary(req.file.buffer, {
       folder: "nebriacademy/videos",
       resource_type: "video",
-      public_id: `video_${Date.now()}_${req.file.originalname.replace(/\s+/g, "_")}`,
+      public_id: baseName,
     });
 
     const nuevo = await Videos.create({
@@ -140,10 +144,14 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
           console.warn("No se pudo borrar video anterior de Cloudinary:", e.message);
         }
       }
+      const baseName = req.file.originalname
+        .replace(/\.[^.]+$/, "")
+        .replace(/[^a-zA-Z0-9._-]/g, "_");
+        
       const cloudResult = await uploadToCloudinary(req.file.buffer, {
         folder: "nebriacademy/videos",
         resource_type: "video",
-        public_id: `video_${Date.now()}_${req.file.originalname.replace(/\s+/g, "_")}`,
+        public_id: baseName,
       });
       updates.archivo = cloudResult.secure_url;
     }

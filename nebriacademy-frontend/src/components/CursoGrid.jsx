@@ -130,11 +130,11 @@ function CursoGrid() {
         const resolveName = (id) => {
           const aid = Number(id);
           const alum = (datosAlumnos.Alumnos || []).find(
-            (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
+            (a) => Number(a.usuarioId) === aid,
           );
           if (alum) return `${alum.nombre} ${alum.apellidos}`;
           const prof = (datosProfes.Profesores || []).find(
-            (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
+            (p) => Number(p.usuarioId) === aid,
           );
           if (prof) return `${prof.nombre} ${prof.apellidos}`;
           return "Autor no encontrado";

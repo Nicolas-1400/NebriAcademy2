@@ -131,11 +131,11 @@ function MiEspacioGrid() {
     const aid = Number(autorId);
     if (!aid) return "";
     const alum = data.alumnos.find(
-      (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
+      (a) => Number(a.usuarioId) === aid,
     );
     if (alum) return `${alum.nombre} ${alum.apellidos}`;
     const prof = data.profesores.find(
-      (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
+      (p) => Number(p.usuarioId) === aid,
     );
     if (prof) return `${prof.nombre} ${prof.apellidos}`;
     return "Autor no encontrado";

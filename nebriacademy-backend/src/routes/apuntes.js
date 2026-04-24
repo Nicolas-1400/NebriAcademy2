@@ -22,12 +22,31 @@ const upload = multer({ storage: multer.memoryStorage() });
 // Devuelve una Promise con el resultado de Cloudinary (secure_url, public_id...)
 function uploadToCloudinary(buffer, options) {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_stream(options, (error, result) => {
+    const stream = cloudinary.uploader.upload_chunked_stream(options, (error, result) => {
       if (error) return reject(error);
       resolve(result);
     });
     streamifier.createReadStream(buffer).pipe(stream);
   });
+}
+
+function extractPublicId(url, resourceType) {
+  try {
+    const parts = url.split('/');
+    const uploadIdx = parts.indexOf('upload');
+    const afterUpload = parts.slice(uploadIdx + 2);
+    const publicIdWithExt = afterUpload.join('/');
+    return resourceType === 'raw' ? publicIdWithExt : publicIdWithExt.replace(/\.[^/.]+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+// Extrae el resource_type real de la URL de Cloudinary para borrados correctos
+function getResourceTypeFromUrl(url) {
+  if (url.includes('/image/upload/')) return 'image';
+  if (url.includes('/video/upload/')) return 'video';
+  return 'raw';
 }
 
 // ── GET ─────────────────────────────────────────────────────────────────────
@@ -118,7 +137,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     const cloudResult = await uploadToCloudinary(req.file.buffer, {
       folder: "nebriacademy/apuntes",
       resource_type: "auto",
-      public_id: `apunte_${Date.now()}_${baseName}`,
+      public_id: baseName,
     });
 
     const nuevo = await Apuntes.create({
@@ -194,7 +213,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
       if (apunte.archivo && apunte.archivo.includes('cloudinary.com')) {
         try {
           const resourceType = getResourceTypeFromUrl(apunte.archivo);
-          const pid = extractPublicId(apunte.archivo);
+          const pid = extractPublicId(apunte.archivo, resourceType);
           if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
         } catch (e) {
           console.warn('No se pudo borrar asset anterior de Cloudinary:', e.message);
@@ -207,7 +226,7 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
       const cloudResult2 = await uploadToCloudinary(req.file.buffer, {
         folder: 'nebriacademy/apuntes',
         resource_type: 'auto',
-        public_id: `apunte_${Date.now()}_${baseName}`,
+        public_id: baseName,
       });
       updates.archivo = cloudResult2.secure_url;
     }
@@ -230,7 +249,7 @@ router.delete("/:id", async (req, res) => {
     if (apunte.archivo && apunte.archivo.includes('cloudinary.com')) {
       try {
         const resourceType = getResourceTypeFromUrl(apunte.archivo);
-        const pid = extractPublicId(apunte.archivo);
+        const pid = extractPublicId(apunte.archivo, resourceType);
         if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
       } catch (e) {
         console.warn('No se pudo borrar asset de Cloudinary:', e.message);
