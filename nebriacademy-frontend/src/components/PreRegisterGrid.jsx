@@ -28,7 +28,7 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-estudiante-no"
-          onClick={() => navigate("/Register/RegisterAlumnoExterno")}
+          onClick={() => navigate("/Register/alumnoexterno")}
         >
           <img src={individuo} alt="Individuo" />
           <h3>No</h3>

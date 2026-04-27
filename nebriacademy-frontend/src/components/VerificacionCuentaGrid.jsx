@@ -33,7 +33,7 @@ function VerificacionCuentaGrid({ tipo }) {
       if (respuesta.ok) {
         // Guardamos el email en sessionStorage para que el guarda de ruta lo encuentre en el siguiente paso
         sessionStorage.setItem("verifiedStudentEmail", email);
-        navigate("/Register/RegisterAlumnoNebrija", { state: { email } });
+        navigate("/Register/alumnonebrija", { state: { email } });
       } else {
         setError(datos.error || "Error en la verificación");
       }
@@ -58,7 +58,7 @@ function VerificacionCuentaGrid({ tipo }) {
       if (respuesta.ok) {
         // Guardamos el email en sessionStorage para que el guarda de ruta lo encuentre en el siguiente paso
         sessionStorage.setItem("verifiedProfessorEmail", email);
-        navigate("/Register/RegisterProfesor", { state: { email } });
+        navigate("/Register/profesor", { state: { email } });
       } else {
         setError(datos.error || "Error en la verificación");
       }

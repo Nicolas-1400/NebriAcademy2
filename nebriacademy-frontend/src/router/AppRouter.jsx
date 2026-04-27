@@ -18,9 +18,7 @@ import AddApunteIndividual from "../pages/AddApunteIndividual.jsx";
 import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
 import PreRegister from "../pages/PreRegister.jsx";
 import Verificacion from "../pages/Verificacion.jsx";
-import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
-import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
-import RegisterProfesor from "../pages/RegisterProfesor.jsx";
+import Register from "../pages/Register.jsx";
 import Perfil from "../pages/Perfil.jsx";
 import Ayuda from "../pages/Ayuda.jsx";
 import MisTickets from "../pages/MisTickets.jsx";
@@ -29,8 +27,6 @@ import Cuentas from "../pages/Cuentas.jsx";
 import Politicas from "../pages/Politicas.jsx";
 
 import ProtectedRoute from "./ProtectedRoute";
-import ProtectedVerificationRoute from "./ProtectedVerificationRoute.jsx";
-import ProtectedVerificationProfesorRoute from "./ProtectedVerificationProfesorRoute.jsx";
 
 function AppRouter() {
   return (
@@ -40,33 +36,14 @@ function AppRouter() {
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
 
+        {/* Flujo de registro genérico según tipo de usuario */}
         <Route
-          path="/Register/RegisterAlumnoExterno"
-          element={<RegisterAlumnoExterno />}
+          path="/Register/:tipo"
+          element={<Register />}
         />
-
-        {/* Flujo de registro para alumnos de Nebrija: verificación → formulario de registro */}
         <Route
           path="/Register/Verificacion/:tipo"
           element={<Verificacion />}
-        />
-        <Route
-          path="/Register/RegisterAlumnoNebrija"
-          element={
-            // ProtectedVerificationRoute impide acceder al registro sin haber verificado el email primero
-            <ProtectedVerificationRoute>
-              <RegisterAlumnoNebrija />
-            </ProtectedVerificationRoute>
-          }
-        />
-        <Route
-          path="/Register/RegisterProfesor"
-          element={
-            // ProtectedVerificationProfesorRoute impide acceder sin haber verificado el email de profesor
-            <ProtectedVerificationProfesorRoute>
-              <RegisterProfesor />
-            </ProtectedVerificationProfesorRoute>
-          }
         />
 
         {/* Ruta no encontrada: si ninguna ruta coincide, mostramos la página 404 */}
