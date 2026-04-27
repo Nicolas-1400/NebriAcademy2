@@ -11,7 +11,7 @@ function ProtectedVerificationProfesorRoute({ children }) {
 
   // Si no hay ninguno de los dos, el usuario no ha pasado por verificación: lo redirigimos
   if (!verifiedEmail && !stateEmail) {
-    return <Navigate to="/Register/VerificacionProfesor" replace />;
+    return <Navigate to="/Register/Verificacion/profesor" replace />;
   }
 
   return children;

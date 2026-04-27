@@ -18,7 +18,7 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-estudiante-si"
-          onClick={() => navigate("/Register/VerificacionAlumnoNebrija")}
+          onClick={() => navigate("/Register/Verificacion/alumnonebrija")}
         >
           <img src={familiaNebrija} alt="Familia Nebrija" />
           <h3>Si</h3>
@@ -42,7 +42,7 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-profesor"
-          onClick={() => navigate("/Register/VerificacionProfesor")}
+          onClick={() => navigate("/Register/Verificacion/profesor")}
         >
           <img src={profesor} alt="Profesor" />
           <p>Soy profesor</p>

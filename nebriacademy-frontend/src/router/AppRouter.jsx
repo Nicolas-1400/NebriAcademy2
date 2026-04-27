@@ -17,8 +17,7 @@ import Apuntes from "../pages/Apuntes.jsx";
 import AddApunteIndividual from "../pages/AddApunteIndividual.jsx";
 import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
 import PreRegister from "../pages/PreRegister.jsx";
-import VerificacionAlumnoNebrija from "../pages/VerificacionAlumnoNebrija.jsx";
-import VerificacionProfesor from "../pages/VerificacionProfesor.jsx";
+import Verificacion from "../pages/Verificacion.jsx";
 import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
 import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
 import RegisterProfesor from "../pages/RegisterProfesor.jsx";
@@ -48,8 +47,8 @@ function AppRouter() {
 
         {/* Flujo de registro para alumnos de Nebrija: verificación → formulario de registro */}
         <Route
-          path="/Register/VerificacionAlumnoNebrija"
-          element={<VerificacionAlumnoNebrija />}
+          path="/Register/Verificacion/:tipo"
+          element={<Verificacion />}
         />
         <Route
           path="/Register/RegisterAlumnoNebrija"
@@ -59,12 +58,6 @@ function AppRouter() {
               <RegisterAlumnoNebrija />
             </ProtectedVerificationRoute>
           }
-        />
-
-        {/* Flujo de registro para profesores: verificación → formulario de registro */}
-        <Route
-          path="/Register/VerificacionProfesor"
-          element={<VerificacionProfesor />}
         />
         <Route
           path="/Register/RegisterProfesor"
