@@ -27,14 +27,11 @@ import Ayuda from "../pages/Ayuda.jsx";
 import MisTickets from "../pages/MisTickets.jsx";
 import DetalleTicket from "../pages/DetalleTicket.jsx";
 import Cuentas from "../pages/Cuentas.jsx";
+import Politicas from "../pages/Politicas.jsx";
 
-// Importamos los guardas de ruta que protegen el acceso según el estado de sesión
 import ProtectedRoute from "./ProtectedRoute";
 import ProtectedVerificationRoute from "./ProtectedVerificationRoute.jsx";
 import ProtectedVerificationProfesorRoute from "./ProtectedVerificationProfesorRoute.jsx";
-import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
-import NotaLegal from "../pages/NotaLegal.jsx";
-import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
 
 function AppRouter() {
   return (
@@ -206,28 +203,11 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/Home/PoliticaDePrivacidad"
+          path="/Home/Politicas/:tipo"
           element={
             <ProtectedRoute>
-              <PoliticaDePrivacidad />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Home/NotaLegal"
-          element={
-            <ProtectedRoute>
-              <NotaLegal />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Home/PoliticaDeCookies"
-          element={
-            <ProtectedRoute>
-              <PoliticaDeCookies />
+              <Politicas />
             </ProtectedRoute>
           }
         />
