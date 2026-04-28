@@ -851,7 +851,7 @@ function CursoGrid() {
                   setRotado((prev) => !prev);
                   if (tipo === "alumno") {
                     // El alumno solo puede subir apuntes
-                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                    navigate(`/Home/AddContenido/curso/${id}`, {
                       state: { tipo: "apunte", cursoId: id },
                     });
                   } else {
@@ -867,7 +867,7 @@ function CursoGrid() {
                 <div className="add-menu">
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "apunte", cursoId: id },
                       })
                     }
@@ -876,7 +876,7 @@ function CursoGrid() {
                   </button>
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "video", cursoId: id },
                       })
                     }
@@ -885,7 +885,7 @@ function CursoGrid() {
                   </button>
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "ejercicio", cursoId: id },
                       })
                     }

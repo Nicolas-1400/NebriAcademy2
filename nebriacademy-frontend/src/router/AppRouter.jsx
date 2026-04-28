@@ -8,13 +8,12 @@ import MiEspacio from "../pages/MiEspacio.jsx";
 import TodosCursos from "../pages/TodosCursos.jsx";
 import Curso from "../pages/Curso.jsx";
 import AddCurso from "../pages/AddCurso.jsx";
-import AddContenidoCurso from "../pages/AddContenidoCurso.jsx";
+import AddContenido from "../pages/AddContenido.jsx";
 import EditarContenidoCurso from "../pages/EditarContenidoCurso.jsx";
 import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
 import TodosProfesores from "../pages/TodosProfesores.jsx";
 import InfoProfesor from "../pages/InfoProfesor.jsx";
 import Apuntes from "../pages/Apuntes.jsx";
-import AddApunteIndividual from "../pages/AddApunteIndividual.jsx";
 import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
 import PreRegister from "../pages/PreRegister.jsx";
 import Verificacion from "../pages/Verificacion.jsx";
@@ -116,10 +115,10 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Cursos/:id/AddContenidoCurso"
+          path="/Home/AddContenido/:tipo/:id?"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <AddContenidoCurso />
+              <AddContenido />
             </ProtectedRoute>
           }
         />
@@ -154,14 +153,6 @@ function AppRouter() {
           element={
             <ProtectedRoute>
               <Apuntes />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Home/Apuntes/AddApunte"
-          element={
-            <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <AddApunteIndividual />
             </ProtectedRoute>
           }
         />

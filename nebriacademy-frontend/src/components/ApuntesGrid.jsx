@@ -332,7 +332,7 @@ function ApuntesGrid() {
           <button
             className="subirContenidoCurso"
             onClick={() =>
-              navigate("/Home/Apuntes/AddApunte", {
+              navigate("/Home/AddContenido/individual", {
                 state: { tipo: "apunte", cursoId: id || 0 },
               })
             }
