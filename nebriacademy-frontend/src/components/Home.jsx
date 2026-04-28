@@ -7,7 +7,7 @@ import CardSlider from "./CardSlider";
 import TarjetaCursos from "./TarjetaCursos";
 import Eliminar from "../assets/Eliminar.png";
 import SliderComponent from "./SliderComponent";
-import "../styles/Home.css";
+import "../styles/HomeEspacio.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function Home() {
@@ -141,7 +141,7 @@ function Home() {
   // ── RENDER ───────────────────────────────────────────────────────────────────
   if (loading) {
     return (
-      <div className="home-container">
+      <div className="page-container">
         <p>Cargando contenido...</p>
       </div>
     );
@@ -149,15 +149,15 @@ function Home() {
 
   if (error) {
     return (
-      <div className="home-container">
+      <div className="page-container">
         <p>{error}</p>
       </div>
     );
   }
 
   return (
-    <div className="home-container">
-      <div className="home-header-container">
+    <div className="page-container">
+      <div className="page-header-container">
         <h1>
           Bienvenido/a:{" "}
           {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
@@ -180,9 +180,9 @@ function Home() {
 
       {/* VISTA ALUMNO */}
       {isEstudiante ? (
-        <div className="home-sections">
+        <div className="page-sections">
           {/* Sección Novedades */}
-          <div className="home-section-carousel">
+          <div className="section-carousel">
             <h2>Novedades</h2>
             <SliderComponent>
               {novedades().length > 0 ? (
@@ -203,7 +203,7 @@ function Home() {
           </div>
 
           {/* Sección Tus cursos */}
-          <div className="home-section-carousel">
+          <div className="section-carousel">
             <h2>Tus cursos</h2>
             <SliderComponent>
               {tusCursos().length > 0 ? (
@@ -226,13 +226,13 @@ function Home() {
           </div>
 
           {/* Sección Categorías */}
-          <div className="home-section-categorias">
+          <div className="section-categories">
             <h2>Categorías</h2>
-            <div className="home-categorias-buttons">
+            <div className="category-buttons">
               {categorias.map((categoria) => (
                 <button
                   key={categoria}
-                  className="categoria-btn"
+                  className="category-btn"
                   onClick={() => handleCategoryClick(categoria)}
                 >
                   {categoria}
@@ -242,7 +242,7 @@ function Home() {
           </div>
 
           {/* Sección Cursos populares */}
-          <div className="home-section-carousel">
+          <div className="section-carousel">
             <h2>Cursos populares</h2>
             <SliderComponent>
               {cursosPopulares().length > 0 ? (
@@ -264,11 +264,11 @@ function Home() {
         </div>
       ) : (
         /* VISTA PROFESOR */
-        <div className="home-grid-profesor">
+        <div className="page-grid-professor">
           <h2>Tus cursos</h2>
-          <div className="home-grid-cursos">
+          <div className="grid-courses">
             {misCursos().length === 0 ? (
-              <p className="home-mensaje-vacio">
+              <p className="message-empty">
                 No tienes cursos asignados todavía.
               </p>
             ) : (

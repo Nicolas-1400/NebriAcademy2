@@ -65,6 +65,78 @@
   height: 16px;
 }
 
+.card.card-apunte {
+  min-height: 320px;
+}
+
+.card-slider-description,
+.card-slider-author,
+.card-slider-category {
+  margin: 0;
+  color: #555;
+}
+
+.card-slider-description {
+  font-size: 0.95rem;
+  line-height: 1.4;
+  min-height: 3.2rem;
+}
+
+.card-slider-author {
+  font-size: 0.9rem;
+  font-weight: 600;
+}
+
+.card-slider-category {
+  display: inline-block;
+  padding: 0.35rem 0.8rem;
+  border-radius: 999px;
+  background-color: rgba(194, 0, 47, 0.1);
+  color: var(--rojo-nebrija);
+  font-size: 0.85rem;
+  font-weight: 700;
+  width: fit-content;
+}
+
+.card-slider-footer {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}
+
+.card-slider-file {
+  color: var(--rojo-nebrija);
+  text-decoration: none;
+  font-weight: 600;
+  transition: color 0.2s ease;
+}
+
+.card-slider-file:hover {
+  color: #93001e;
+}
+
+.card-slider-like-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  background: transparent;
+  border: none;
+  cursor: pointer;
+  color: #444;
+  font-weight: 600;
+}
+
+.card-slider-like-button img {
+  width: 18px;
+  height: 18px;
+}
+
+.card-slider-like-button.liked {
+  color: var(--rojo-nebrija);
+}
+
 @media (max-width: 1200px) {
   .card.card-slider {
     flex: 0 0 calc(25% - 1rem);

@@ -1,12 +1,9 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../config/api";
-import { useEffect, useState, useRef, useMemo } from "react";
+import { useEffect, useState, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
 import CardSlider from "./CardSlider";
-import TarjetaApunte from "./TarjetaApunte";
-import Slider from "react-slick";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import SliderComponent from "./SliderComponent";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Espacio personal del alumno: muestra cursos en progreso, favoritos y apuntes propios y guardados
@@ -26,14 +23,6 @@ function MiEspacioGrid() {
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
-
-  // Referencias a cada slider para controlarlos con los botones de flecha
-  const sliders = {
-    proceso: useRef(null),
-    favCursos: useRef(null),
-    misApuntes: useRef(null),
-    favApuntes: useRef(null),
-  };
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Al montar el componente, cargamos todos los datos necesarios en paralelo
@@ -175,132 +164,63 @@ function MiEspacioGrid() {
     }
   };
 
-  // Mueve el slider indicado hacia la izquierda o derecha
-  const slide = (ref, dir) => {
-    if (ref.current)
-      dir === "left" ? ref.current.slickPrev() : ref.current.slickNext();
-  };
-
-  // Cuando los datos terminan de cargar, reiniciamos los sliders al primer elemento
-  useEffect(() => {
-    if (!loading) {
-      setTimeout(
-        () => Object.values(sliders).forEach((r) => r.current?.slickGoTo(0)),
-        100,
-      );
-    }
-  }, [loading, data]);
-
   if (loading)
     return (
-      <div className="MiEspacio">
+      <div className="page-container">
         <p>Cargando espacio personal...</p>
       </div>
     );
   if (error)
     return (
-      <div className="MiEspacio">
+      <div className="page-container">
         <p>{error}</p>
       </div>
     );
 
-  // Configuración del carrusel: 4 elementos visibles por defecto, menos en pantallas pequeñas
-  const sliderSettings = {
-    dots: false,
-    infinite: false,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-    ],
-  };
-
-  // Renderiza una sección genérica con título, carrusel y botones de navegación.
-  // Si son cursos muestra TarjetaCursoPequena; si son apuntes, TarjetaApunte.
-  const renderSection = (title, items, sliderRef, type) => (
-    <div className={`MiEspacio-seccion-${type}`}>
+  // Renderiza una sección genérica con título y carrusel.
+  const renderSection = (title, items, type) => (
+    <div className={`section-carousel section-${type}`}>
       <h2>{title}</h2>
-      <div className="MiEspacio-carousel-container">
-        <button
-          className="carousel-btn carousel-btn-left"
-          onClick={() => slide(sliderRef, "left")}
-        >
-          ‹
-        </button>
-        <Slider
-          ref={sliderRef}
-          {...sliderSettings}
-          className={`MiEspacio-${type}-carousel`}
-        >
-          {items.length > 0 ? (
-            items.map((item) =>
-              type.includes("cursos") ? (
-                <CardSlider
-                  key={item.id}
-                  name={item.nombreCurso}
-                  cursoId={item.id}
-                  nivel={item.nivel}
-                  valoracion={item.valoracion || 0}
-                  imagen={item.imagen}
-                />
-              ) : (
-                <div key={item.id} className="apuntes-slide apuntes-list">
-                  <ul>
-                    <TarjetaApunte
-                      apunte={item}
-                      usuario={user}
-                      likedIds={likedApuntes}
-                      onToggleLike={handleToggleLike}
-                      autorNombre={resolveAutorName(item.autor)}
-                    />
-                  </ul>
-                </div>
-              ),
-            )
-          ) : (
-            <p className="mensaje-vacio">No hay elementos.</p>
-          )}
-        </Slider>
-        <button
-          className="carousel-btn carousel-btn-right"
-          onClick={() => slide(sliderRef, "right")}
-        >
-          ›
-        </button>
-      </div>
+      <SliderComponent>
+        {items.length > 0 ? (
+          items.map((item) =>
+            type.includes("cursos") ? (
+              <CardSlider
+                key={item.id}
+                name={item.nombreCurso}
+                cursoId={item.id}
+                nivel={item.nivel}
+                valoracion={item.valoracion || 0}
+                imagen={item.imagen}
+              />
+            ) : (
+              <CardSlider
+                key={item.id}
+                type="apunte"
+                apunte={item}
+                likedIds={likedApuntes}
+                onToggleLike={handleToggleLike}
+                autorNombre={resolveAutorName(item.autor)}
+              />
+            ),
+          )
+        ) : (
+          <p className="mensaje-vacio">No hay elementos.</p>
+        )}
+      </SliderComponent>
     </div>
   );
 
   return (
-    <div className="MiEspacio">
-      <h1>Tu espacio {user ? `${user.nombre} ${user.apellidos}` : ""}</h1>
-      <div className="MiEspacio-secciones">
-        {renderSection(
-          "Cursos en proceso",
-          cursosEnProceso,
-          sliders.proceso,
-          "cursos-proceso",
-        )}
-        {renderSection(
-          "Cursos favoritos",
-          cursosFavoritos,
-          sliders.favCursos,
-          "cursos-favoritos",
-        )}
-        {renderSection(
-          "Tus apuntes",
-          misApuntes,
-          sliders.misApuntes,
-          "tus-apuntes",
-        )}
-        {renderSection(
-          "Apuntes favoritos",
-          apuntesFavoritos,
-          sliders.favApuntes,
-          "apuntes-guardados",
-        )}
+    <div className="page-container">
+      <div className="page-header-container">
+        <h1>Tu espacio {user ? `${user.nombre} ${user.apellidos}` : ""}</h1>
+      </div>
+      <div className="page-sections">
+        {renderSection("Cursos en proceso", cursosEnProceso, "cursos-proceso")}
+        {renderSection("Cursos favoritos", cursosFavoritos, "cursos-favoritos")}
+        {renderSection("Tus apuntes", misApuntes, "tus-apuntes")}
+        {renderSection("Apuntes favoritos", apuntesFavoritos, "apuntes-guardados")}
       </div>
     </div>
   );
