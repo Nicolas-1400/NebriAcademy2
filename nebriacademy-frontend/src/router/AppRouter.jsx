@@ -8,33 +8,24 @@ import MiEspacio from "../pages/MiEspacio.jsx";
 import TodosCursos from "../pages/TodosCursos.jsx";
 import Curso from "../pages/Curso.jsx";
 import AddCurso from "../pages/AddCurso.jsx";
-import AddContenidoCurso from "../pages/AddContenidoCurso.jsx";
+import AddContenido from "../pages/AddContenido.jsx";
 import EditarContenidoCurso from "../pages/EditarContenidoCurso.jsx";
 import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
 import TodosProfesores from "../pages/TodosProfesores.jsx";
 import InfoProfesor from "../pages/InfoProfesor.jsx";
 import Apuntes from "../pages/Apuntes.jsx";
-import AddApunteIndividual from "../pages/AddApunteIndividual.jsx";
 import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
 import PreRegister from "../pages/PreRegister.jsx";
-import VerificacionAlumnoNebrija from "../pages/VerificacionAlumnoNebrija.jsx";
-import VerificacionProfesor from "../pages/VerificacionProfesor.jsx";
-import RegisterAlumnoNebrija from "../pages/RegisterAlumnoNebrija.jsx";
-import RegisterAlumnoExterno from "../pages/RegisterAlumnoExterno.jsx";
-import RegisterProfesor from "../pages/RegisterProfesor.jsx";
+import Verificacion from "../pages/Verificacion.jsx";
+import Register from "../pages/Register.jsx";
 import Perfil from "../pages/Perfil.jsx";
 import Ayuda from "../pages/Ayuda.jsx";
 import MisTickets from "../pages/MisTickets.jsx";
 import DetalleTicket from "../pages/DetalleTicket.jsx";
 import Cuentas from "../pages/Cuentas.jsx";
+import Politicas from "../pages/Politicas.jsx";
 
-// Importamos los guardas de ruta que protegen el acceso según el estado de sesión
 import ProtectedRoute from "./ProtectedRoute";
-import ProtectedVerificationRoute from "./ProtectedVerificationRoute.jsx";
-import ProtectedVerificationProfesorRoute from "./ProtectedVerificationProfesorRoute.jsx";
-import PoliticaDePrivacidad from "../pages/PoliticaDePrivacidad.jsx";
-import NotaLegal from "../pages/NotaLegal.jsx";
-import PoliticaDeCookies from "../pages/PoliticaDeCookies.jsx";
 
 function AppRouter() {
   return (
@@ -44,39 +35,14 @@ function AppRouter() {
         <Route path="/" element={<Login />} />
         <Route path="/PreRegister" element={<PreRegister />} />
 
+        {/* Flujo de registro genérico según tipo de usuario */}
         <Route
-          path="/Register/RegisterAlumnoExterno"
-          element={<RegisterAlumnoExterno />}
-        />
-
-        {/* Flujo de registro para alumnos de Nebrija: verificación → formulario de registro */}
-        <Route
-          path="/Register/VerificacionAlumnoNebrija"
-          element={<VerificacionAlumnoNebrija />}
+          path="/Register/:tipo"
+          element={<Register />}
         />
         <Route
-          path="/Register/RegisterAlumnoNebrija"
-          element={
-            // ProtectedVerificationRoute impide acceder al registro sin haber verificado el email primero
-            <ProtectedVerificationRoute>
-              <RegisterAlumnoNebrija />
-            </ProtectedVerificationRoute>
-          }
-        />
-
-        {/* Flujo de registro para profesores: verificación → formulario de registro */}
-        <Route
-          path="/Register/VerificacionProfesor"
-          element={<VerificacionProfesor />}
-        />
-        <Route
-          path="/Register/RegisterProfesor"
-          element={
-            // ProtectedVerificationProfesorRoute impide acceder sin haber verificado el email de profesor
-            <ProtectedVerificationProfesorRoute>
-              <RegisterProfesor />
-            </ProtectedVerificationProfesorRoute>
-          }
+          path="/Register/Verificacion/:tipo"
+          element={<Verificacion />}
         />
 
         {/* Ruta no encontrada: si ninguna ruta coincide, mostramos la página 404 */}
@@ -149,10 +115,10 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Cursos/:id/AddContenidoCurso"
+          path="/Home/AddContenido/:tipo/:id?"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <AddContenidoCurso />
+              <AddContenido />
             </ProtectedRoute>
           }
         />
@@ -191,14 +157,6 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Apuntes/AddApunte"
-          element={
-            <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <AddApunteIndividual />
-            </ProtectedRoute>
-          }
-        />
-        <Route
           path="/Home/Apuntes/EditarApunte/:id"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
@@ -206,28 +164,11 @@ function AppRouter() {
             </ProtectedRoute>
           }
         />
-
         <Route
-          path="/Home/PoliticaDePrivacidad"
+          path="/Home/Politicas/:tipo"
           element={
             <ProtectedRoute>
-              <PoliticaDePrivacidad />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Home/NotaLegal"
-          element={
-            <ProtectedRoute>
-              <NotaLegal />
-            </ProtectedRoute>
-          }
-        />
-        <Route
-          path="/Home/PoliticaDeCookies"
-          element={
-            <ProtectedRoute>
-              <PoliticaDeCookies />
+              <Politicas />
             </ProtectedRoute>
           }
         />

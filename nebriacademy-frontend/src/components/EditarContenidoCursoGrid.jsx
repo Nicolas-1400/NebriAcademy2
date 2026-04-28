@@ -90,11 +90,11 @@ function EditarContenidoCursoGrid() {
           <strong>Archivo actual:</strong>{" "}
           {item.archivo ? (
             <a
-              href={`${API_URL}/${getEndpoint()}/files/${item.archivo}`}
+              href={item.archivo}
               target="_blank"
               rel="noreferrer"
             >
-              {item.archivo}
+              Ver archivo actual
             </a>
           ) : (
             "Sin archivo"
@@ -122,7 +122,7 @@ function EditarContenidoCursoGrid() {
         )}
 
         <div className="form-group">
-          <label>Cambiar archivo (opcional)</label>
+          <label>Cambiar archivo (opcional) (máximo 20 MB)</label>
           <input
             className="input-area"
             type="file"

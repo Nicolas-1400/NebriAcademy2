@@ -4,45 +4,13 @@ require("dotenv").config({ path: path.join(__dirname, "../.env") });
 const express = require("express");
 const cors = require("cors");
 const app = express();
-const fs = require("fs");
 
 // cors permite peticiones desde el frontend (distinto puerto), express.json() procesa cuerpos JSON
 app.use(cors());
 app.use(express.json());
 
-// Ruta base donde se guardan físicamente los archivos subidos (apuntes, vídeos, ejercicios...)
-const assetsRoot = path.join(
-  __dirname,
-  "..",
-  "..",
-  "nebriacademy-frontend",
-  "src",
-  "assets",
-);
-const assetsDirs = ["Apuntes", "Videos", "Ejercicios", "EjerciciosAlumnos"];
-
-// Al arrancar el servidor, se crean las carpetas de assets si aún no existen
-try {
-  if (!fs.existsSync(assetsRoot)) fs.mkdirSync(assetsRoot, { recursive: true });
-  for (const d of assetsDirs) {
-    const dirPath = path.join(assetsRoot, d);
-    if (!fs.existsSync(dirPath)) fs.mkdirSync(dirPath, { recursive: true });
-  }
-} catch (e) {
-  console.error("Error creando carpetas de assets:", e);
-}
-
-// Exponemos cada carpeta de assets como una URL pública para que el frontend pueda descargar los archivos
-app.use("/apuntes/files", express.static(path.join(assetsRoot, "Apuntes")));
-app.use("/videos/files", express.static(path.join(assetsRoot, "Videos")));
-app.use(
-  "/ejercicios/files",
-  express.static(path.join(assetsRoot, "Ejercicios")),
-);
-app.use(
-  "/ejerciciosalumnos/files",
-  express.static(path.join(assetsRoot, "EjerciciosAlumnos")),
-);
+// Los archivos (apuntes, vídeos, ejercicios) se almacenan en Cloudinary.
+// Ya no se necesitan carpetas locales ni rutas express.static para servirlos.
 
 
 // Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL

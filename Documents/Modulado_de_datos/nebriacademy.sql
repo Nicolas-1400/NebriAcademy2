@@ -14,7 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-
 --
 -- Table structure for table `administradores`
 --
@@ -83,7 +82,7 @@ CREATE TABLE `alumnos` (
   KEY `profesorVinculadoId` (`profesorVinculadoId`),
   CONSTRAINT `alumnos_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `alumnos_ibfk_2` FOREIGN KEY (`profesorVinculadoId`) REFERENCES `profesores` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=34 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=36 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -92,7 +91,7 @@ CREATE TABLE `alumnos` (
 
 LOCK TABLES `alumnos` WRITE;
 /*!40000 ALTER TABLE `alumnos` DISABLE KEYS */;
-INSERT INTO `alumnos` VALUES (1,6,'Juan','Fernández Gómez','66666666F','juan.fernandez@alumnos.nebrija.es','alumno123','4111111111111111','600666777','@juan_alum','España','Madrid',0,NULL),(2,7,'María','Rodríguez Díaz','77777777G','maria.rodriguez@gmail.com','alumno456','4222222222222222','600777888','@maria_alum','España','Sevilla',0,NULL),(3,8,'Pedro','López Torres','88888888H','pedro.lopez@alumnos.nebrija.es','alumno789','4333333333333333','600888999','@pedro_alum','España','Bilbao',0,NULL),(4,9,'Sofía','Gómez Ruiz','99999999I','sofia.gomez@hotmail.com','alumno000','4444444444444444','600999000','@sofia_alum','España','Zaragoza',0,NULL),(5,10,'David','Hernández Martín','10101010J','david.hernandez@alumnos.nebrija.es','alumno111','4555555555555555','601010101','@david_alum','España','Granada',0,NULL),(6,11,'Lucía','Pérez García','11111112K','lucia.perez@outlook.com','alumno222','4666666666666666','601111112','@lucia_alum','España','Valencia',0,NULL),(7,12,'Pablo','González Sánchez','12121212L','pablo.gonzalez@yahoo.com','alumno333','4777777777777777','601212121','@pablo_alum','España','Barcelona',0,NULL),(8,13,'Carmen','Díaz Navarro','13131313M','carmen.diaz@alumnos.nebrija.es','alumno444','4888888888888888','601313131','@carmen_alum','España','Málaga',0,NULL),(9,16,'Nico','Samp','13672984F','nico@example.com','pass123','4888888488888448','720178890','@nico_alum','Francia','Barcelona',0,NULL),(13,22,'Ana','García López','11111111A',NULL,NULL,NULL,'600111222','@ana_prof','España','Madrid',1,1),(14,23,'Carlos','Martínez Ruiz','22222222B',NULL,NULL,NULL,'600222333','@carlos_prof','España','Barcelona',1,2),(15,24,'Laura','Sánchez Pérez','33333333C',NULL,NULL,NULL,'600333444','@laura_prof','España','Valencia',1,3),(16,25,'Miguel','Rodríguez Gómez','44444444D',NULL,NULL,NULL,'600444555','@miguel_prof','España','Sevilla',1,4),(17,26,'Elena','Fernández Torres','55555555E',NULL,NULL,NULL,'600555666','@elena_prof','España','Bilbao',1,5),(18,27,'Arturo','Arturez','66666660F',NULL,NULL,NULL,'','','España','Madrid',1,6),(19,28,'Luis','Martínez Soto','20202020L','luis.martinez@alumnos.nebrija.es','alumno555','4999999999999999','601234567','@luis_alum','España','Madrid',0,NULL),(20,29,'Sara','Gómez Navarro','21212121M','sara.gomez@gmail.com','alumno666','5000000000000000','601345678','@sara_alum','España','Sevilla',0,NULL),(21,30,'Miguel','Pérez López','22222223N','miguel.perez@alumnos.nebrija.es','alumno777','5111111111111111','601456789','@miguel_alum','España','Barcelona',0,NULL),(22,31,'Elena','Rodríguez Sánchez','23232323O','elena.rodriguez@hotmail.com','alumno888','5222222222222222','601567890','@elena_alum','España','Valencia',0,NULL),(23,32,'Javier','Fernández Díaz','24242424P','javier.fernandez@alumnos.nebrija.es','alumno999','5333333333333333','601678901','@javier_alum','España','Granada',0,NULL),(24,33,'Laura','Sánchez Ruiz','25252525Q','laura.sanchez@yahoo.com','alumno000','5444444444444444','601789012','@laura_alum','España','Bilbao',0,NULL),(25,34,'Carlos','García Martín','26262626R','carlos.garcia@alumnos.nebrija.es','alumno111','5555555555555555','601890123','@carlos_alum','España','Zaragoza',0,NULL),(26,35,'Isabel','López Torres','27272727S','isabel.lopez@outlook.com','alumno222','5666666666666666','601901234','@isabel_alum','España','Málaga',0,NULL),(27,36,'Pablo','Hernández Gómez','28282828T','pablo.hernandez@alumnos.nebrija.es','alumno333','5777777777777777','602012345','@pablo_alum','España','Madrid',0,NULL),(28,37,'Carmen','Díaz Pérez','29292929U','carmen.diaz@gmail.com','alumno444','5888888888888888','602123456','@carmen_alum','España','Sevilla',0,NULL),(29,38,'Raquel','López Vega','77000001G',NULL,NULL,NULL,'601111223','@raquel_prof','España','Madrid',1,7),(30,39,'Diego','Morales Ruiz','88000002H',NULL,NULL,NULL,'601222334','@diego_prof','España','Barcelona',1,8),(31,40,'Isabel','Torres Martín','99000003I',NULL,NULL,NULL,'601333445','@isabel_prof','España','Valencia',1,NULL),(32,41,'Javier','Ruiz Gómez','10100004J',NULL,NULL,NULL,'601444556','@javier_prof','España','Sevilla',1,NULL),(33,42,'Paula','Navarro Sánchez','11100005K',NULL,NULL,NULL,'601555667','@paula_prof','España','Bilbao',1,NULL);
+INSERT INTO `alumnos` VALUES (1,6,'Juan','Fernández Gómez','66666666F','juan.fernandez@alumnos.nebrija.es','alumno123','4111111111111111','600666777','@juan_alum','España','Madrid',0,NULL),(2,7,'María','Rodríguez Díaz','77777777G','maria.rodriguez@gmail.com','alumno456','4222222222222222','600777888','@maria_alum','España','Sevilla',0,NULL),(3,8,'Pedro','López Torres','88888888H','pedro.lopez@alumnos.nebrija.es','alumno789','4333333333333333','600888999','@pedro_alum','España','Bilbao',0,NULL),(4,9,'Sofía','Gómez Ruiz','99999999I','sofia.gomez@hotmail.com','alumno000','4444444444444444','600999000','@sofia_alum','España','Zaragoza',0,NULL),(5,10,'David','Hernández Martín','10101010J','david.hernandez@alumnos.nebrija.es','alumno111','4555555555555555','601010101','@david_alum','España','Granada',0,NULL),(6,11,'Lucía','Pérez García','11111112K','lucia.perez@outlook.com','alumno222','4666666666666666','601111112','@lucia_alum','España','Valencia',0,NULL),(7,12,'Pablo','González Sánchez','12121212L','pablo.gonzalez@yahoo.com','alumno333','4777777777777777','601212121','@pablo_alum','España','Barcelona',0,NULL),(8,13,'Carmen','Díaz Navarro','13131313M','carmen.diaz@alumnos.nebrija.es','alumno444','4888888888888888','601313131','@carmen_alum','España','Málaga',0,NULL),(9,16,'Nico','Samp','13672984F','nico@example.com','pass123','4888888488888448','720178890','@nico_alum','Francia','Barcelona',0,NULL),(13,22,'Ana','García López','11111111A',NULL,NULL,NULL,'600111222','@ana_prof','España','Madrid',1,1),(14,23,'Carlos','Martínez Ruiz','22222222B',NULL,NULL,NULL,'600222333','@carlos_prof','España','Barcelona',1,2),(15,24,'Laura','Sánchez Pérez','33333333C',NULL,NULL,NULL,'600333444','@laura_prof','España','Valencia',1,3),(16,25,'Miguel','Rodríguez Gómez','44444444D',NULL,NULL,NULL,'600444555','@miguel_prof','España','Sevilla',1,4),(17,26,'Elena','Fernández Torres','55555555E',NULL,NULL,NULL,'600555666','@elena_prof','España','Bilbao',1,5),(18,27,'Arturo','Arturez','66666660F',NULL,NULL,NULL,'','','España','Madrid',1,6),(19,28,'Luis','Martínez Soto','20202020L','luis.martinez@alumnos.nebrija.es','alumno555','4999999999999999','601234567','@luis_alum','España','Madrid',0,NULL),(20,29,'Sara','Gómez Navarro','21212121M','sara.gomez@gmail.com','alumno666','5000000000000000','601345678','@sara_alum','España','Sevilla',0,NULL),(21,30,'Miguel','Pérez López','22222223N','miguel.perez@alumnos.nebrija.es','alumno777','5111111111111111','601456789','@miguel_alum','España','Barcelona',0,NULL),(22,31,'Elena','Rodríguez Sánchez','23232323O','elena.rodriguez@hotmail.com','alumno888','5222222222222222','601567890','@elena_alum','España','Valencia',0,NULL),(23,32,'Javier','Fernández Díaz','24242424P','javier.fernandez@alumnos.nebrija.es','alumno999','5333333333333333','601678901','@javier_alum','España','Granada',0,NULL),(24,33,'Laura','Sánchez Ruiz','25252525Q','laura.sanchez@yahoo.com','alumno000','5444444444444444','601789012','@laura_alum','España','Bilbao',0,NULL),(25,34,'Carlos','García Martín','26262626R','carlos.garcia@alumnos.nebrija.es','alumno111','5555555555555555','601890123','@carlos_alum','España','Zaragoza',0,NULL),(26,35,'Isabel','López Torres','27272727S','isabel.lopez@outlook.com','alumno222','5666666666666666','601901234','@isabel_alum','España','Málaga',0,NULL),(27,36,'Pablo','Hernández Gómez','28282828T','pablo.hernandez@alumnos.nebrija.es','alumno333','5777777777777777','602012345','@pablo_alum','España','Madrid',0,NULL),(28,37,'Carmen','Díaz Pérez','29292929U','carmen.diaz@gmail.com','alumno444','5888888888888888','602123456','@carmen_alum','España','Sevilla',0,NULL),(29,38,'Raquel','López Vega','77000001G',NULL,NULL,NULL,'601111223','@raquel_prof','España','Madrid',1,7),(30,39,'Diego','Morales Ruiz','88000002H',NULL,NULL,NULL,'601222334','@diego_prof','España','Barcelona',1,8);
 /*!40000 ALTER TABLE `alumnos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -117,7 +116,7 @@ CREATE TABLE `apuntes` (
   KEY `curso` (`curso`),
   CONSTRAINT `apuntes_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `apuntes_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE SET NULL
-) ENGINE=InnoDB AUTO_INCREMENT=9 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=24 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -126,7 +125,7 @@ CREATE TABLE `apuntes` (
 
 LOCK TABLES `apuntes` WRITE;
 /*!40000 ALTER TABLE `apuntes` DISABLE KEYS */;
-INSERT INTO `apuntes` VALUES (1,1,1,'Fundamentos de las BDD','Fundamentos de Bases de Datos.pdf','Introducción a las BDD, \r\nAutor: © Santiago Faci','BDD',1),(2,9,1,'Prueba alumno','Fundamentos de Bases de Datos.pdf',NULL,'BDD',0),(8,1,1,'hola','PROPUESTA UNIFICADA WEB GRADOS ONLINE.pdf','aaa','BDD',0);
+INSERT INTO `apuntes` VALUES (20,15,16,'Prueba','https://res.cloudinary.com/dge59jbqb/image/upload/v1777017423/nebriacademy/apuntes/5.2_-_Pinia_con_TypeScript.pdf','Hola','Inteligencia Artificial',0),(21,16,16,'Prueba 2','https://res.cloudinary.com/dge59jbqb/image/upload/v1777017631/nebriacademy/apuntes/5.3_-_Mejores_pr__cticas_y_patrones_de_dise__o.pdf','fafaf','Inteligencia Artificial',0),(22,16,16,'Ola','https://res.cloudinary.com/dge59jbqb/image/upload/v1777017423/nebriacademy/apuntes/5.2_-_Pinia_con_TypeScript.pdf','adfa','Inteligencia Artificial',0),(23,15,16,'vcxzv','https://res.cloudinary.com/dge59jbqb/image/upload/v1777017423/nebriacademy/apuntes/5.2_-_Pinia_con_TypeScript.pdf','vczxcvz','Inteligencia Artificial',0);
 /*!40000 ALTER TABLE `apuntes` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -147,7 +146,7 @@ CREATE TABLE `apuntesalumnos` (
   KEY `apunteId` (`apunteId`),
   CONSTRAINT `apuntesalumnos_ibfk_1` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `apuntesalumnos_ibfk_2` FOREIGN KEY (`apunteId`) REFERENCES `apuntes` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=13 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=20 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -156,7 +155,6 @@ CREATE TABLE `apuntesalumnos` (
 
 LOCK TABLES `apuntesalumnos` WRITE;
 /*!40000 ALTER TABLE `apuntesalumnos` DISABLE KEYS */;
-INSERT INTO `apuntesalumnos` VALUES (1,9,1,1),(2,6,1,NULL),(3,6,2,NULL),(4,19,1,1),(5,20,1,1),(6,21,2,1),(7,22,8,0),(8,23,1,1),(9,24,2,1),(10,25,1,1),(11,26,2,1),(12,27,8,1);
 /*!40000 ALTER TABLE `apuntesalumnos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -177,7 +175,7 @@ CREATE TABLE `comentarioalumnocurso` (
   KEY `cursoId` (`cursoId`),
   CONSTRAINT `comentarioalumnocurso_ibfk_1` FOREIGN KEY (`usuarioId`) REFERENCES `usuarios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `comentarioalumnocurso_ibfk_2` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=40 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=41 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -186,7 +184,7 @@ CREATE TABLE `comentarioalumnocurso` (
 
 LOCK TABLES `comentarioalumnocurso` WRITE;
 /*!40000 ALTER TABLE `comentarioalumnocurso` DISABLE KEYS */;
-INSERT INTO `comentarioalumnocurso` VALUES (25,6,1,'Excelente curso para empezar desde cero.'),(26,7,1,'Muy bien explicado el profesor, ritmo perfecto.'),(27,8,2,'Me encantó la parte de asincronía y promesas.'),(28,10,4,'SQL nunca fue tan fácil de entender.'),(29,12,7,'Conceptos claros y ejemplos muy prácticos.'),(30,22,10,'Figma es una herramienta increíble, gracias.'),(31,24,13,'Estrategias claras y aplicables a mi negocio.'),(32,26,16,'La IA está de moda y este curso la explica genial.'),(33,28,19,'Base sólida para luego saltar a frameworks.'),(34,30,22,'Data Science es el futuro, buenísimo el contenido.'),(35,9,5,'El modelado de datos cambió mi forma de trabajar.'),(36,11,17,'Machine learning explicado paso a paso, sin rodeos.'),(37,13,20,'SEO práctico y directo al grano. Lo recomiendo.'),(38,15,23,'Pandas imprescindible para análisis de datos.'),(39,17,24,'Spark potente, curso muy completo y actualizado.');
+INSERT INTO `comentarioalumnocurso` VALUES (25,6,1,'Excelente curso para empezar desde cero.'),(26,7,1,'Muy bien explicado el profesor, ritmo perfecto.'),(27,8,2,'Me encantó la parte de asincronía y promesas.'),(28,10,4,'SQL nunca fue tan fácil de entender.'),(29,12,7,'Conceptos claros y ejemplos muy prácticos.'),(30,22,10,'Figma es una herramienta increíble, gracias.'),(31,24,13,'Estrategias claras y aplicables a mi negocio.'),(32,26,16,'La IA está de moda y este curso la explica genial.'),(33,28,19,'Base sólida para luego saltar a frameworks.'),(34,30,22,'Data Science es el futuro, buenísimo el contenido.'),(35,9,5,'El modelado de datos cambió mi forma de trabajar.'),(36,11,17,'Machine learning explicado paso a paso, sin rodeos.'),(37,13,20,'SEO práctico y directo al grano. Lo recomiendo.'),(38,15,23,'Pandas imprescindible para análisis de datos.'),(39,17,24,'Spark potente, curso muy completo y actualizado.'),(40,16,16,'Buenos días');
 /*!40000 ALTER TABLE `comentarioalumnocurso` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -218,7 +216,7 @@ CREATE TABLE `cursos` (
 
 LOCK TABLES `cursos` WRITE;
 /*!40000 ALTER TABLE `cursos` DISABLE KEYS */;
-INSERT INTO `cursos` VALUES (1,'Python desde Cero','Programación',1,'Básico',0,'Aprende Python desde cero. Curso ideal para iniciarse.','Foto1'),(2,'JavaScript Moderno','Programación',1,'Intermedio',0,'ES6+, asincronía y patrones de diseño.','Foto2'),(3,'Arquitectura de Software','Programación',1,'Avanzado',0,'Microservicios y patrones avanzados.','Foto3'),(4,'SQL Fundamentos','BDD',2,'Básico',0,'Consultas básicas y diseño relacional.','Foto4'),(5,'Modelado de Bases de Datos','BDD',2,'Intermedio',0,'Normalización y diagramas ER avanzados.','Foto5'),(6,'Optimización y Tuning','BDD',2,'Avanzado',0,'Indexación y rendimiento en motores SQL.','Foto6'),(7,'Fundamentos de Ciberseguridad','Ciberseguridad',3,'Básico',0,'Conceptos esenciales de seguridad informática.','Foto7'),(8,'Seguridad en Redes','Ciberseguridad',3,'Intermedio',0,'Firewalls, VPNs y análisis de tráfico.','Foto8'),(9,'Hacking Ético Avanzado','Ciberseguridad',3,'Avanzado',0,'Pentesting profesional y explotación controlada.','Foto9'),(10,'Introducción al Diseño UI','Diseño y UX',4,'Básico',0,'Principios de diseño visual y tipografía.','Foto10'),(11,'Prototipado con Figma','Diseño y UX',4,'Intermedio',0,'Creación de wireframes y prototipos interactivos.','Foto1'),(12,'UX Research Avanzado','Diseño y UX',4,'Avanzado',0,'Tests de usabilidad, métricas y psicología del usuario.','Foto2'),(13,'Marketing Digital Básico','Marketing',5,'Básico',0,'Estrategias online, funnels y redes sociales.','Foto3'),(14,'SEO y SEM Intermedio','Marketing',5,'Intermedio',0,'Posicionamiento orgánico y campañas pagadas.','Foto4'),(15,'Growth Hacking y Analítica','Marketing',5,'Avanzado',0,'Métricas clave, A/B testing y experimentación.','Foto5'),(16,'IA para Principiantes','Inteligencia Artificial',6,'Básico',0,'Conceptos básicos de IA, ML y ética.','Foto6'),(17,'Machine Learning Práctico','Inteligencia Artificial',6,'Intermedio',0,'Scikit-learn, pipelines y evaluación de modelos.','Foto7'),(18,'Deep Learning y Redes Neuronales','Inteligencia Artificial',6,'Avanzado',0,'TensorFlow, CNNs y arquitecturas profundas.','Foto8'),(19,'HTML/CSS/JS Esencial','Desarrollo',7,'Básico',0,'Maquetación web semántica y DOM básico.','Foto9'),(20,'Frameworks Frontend','Desarrollo',7,'Intermedio',0,'React, Vue y herramientas de desarrollo modernas.','Foto10'),(21,'Desarrollo Full Stack MERN','Desarrollo',7,'Avanzado',0,'MongoDB, Express, React y Node.js integrados.','Foto1'),(22,'Introducción a Data Science','Data Science',8,'Básico',0,'Análisis exploratorio y estadística aplicada.','Foto2'),(23,'Análisis con Python y Pandas','Data Science',8,'Intermedio',0,'Manipulación, limpieza y visualización de datos.','Foto3'),(24,'Big Data y Spark','Data Science',8,'Avanzado',0,'Procesamiento distribuido y entornos Hadoop/Spark.','Foto4');
+INSERT INTO `cursos` VALUES (1,'Python desde Cero','Programación',1,'Básico',0,'Aprende Python desde cero. Curso ideal para iniciarse.','Foto1'),(2,'JavaScript Moderno','Programación',1,'Intermedio',0,'ES6+, asincronía y patrones de diseño.','Foto2'),(3,'Arquitectura de Software','Programación',1,'Avanzado',0,'Microservicios y patrones avanzados.','Foto3'),(4,'SQL Fundamentos','BDD',2,'Básico',0,'Consultas básicas y diseño relacional.','Foto4'),(5,'Modelado de Bases de Datos','BDD',2,'Intermedio',0,'Normalización y diagramas ER avanzados.','Foto5'),(6,'Optimización y Tuning','BDD',2,'Avanzado',0,'Indexación y rendimiento en motores SQL.','Foto6'),(7,'Fundamentos de Ciberseguridad','Ciberseguridad',3,'Básico',0,'Conceptos esenciales de seguridad informática.','Foto7'),(8,'Seguridad en Redes','Ciberseguridad',3,'Intermedio',0,'Firewalls, VPNs y análisis de tráfico.','Foto8'),(9,'Hacking Ético Avanzado','Ciberseguridad',3,'Avanzado',0,'Pentesting profesional y explotación controlada.','Foto9'),(10,'Introducción al Diseño UI','Diseño y UX',4,'Básico',0,'Principios de diseño visual y tipografía.','Foto10'),(11,'Prototipado con Figma','Diseño y UX',4,'Intermedio',0,'Creación de wireframes y prototipos interactivos.','Foto1'),(12,'UX Research Avanzado','Diseño y UX',4,'Avanzado',0,'Tests de usabilidad, métricas y psicología del usuario.','Foto2'),(13,'Marketing Digital Básico','Marketing',5,'Básico',0,'Estrategias online, funnels y redes sociales.','Foto3'),(14,'SEO y SEM Intermedio','Marketing',5,'Intermedio',0,'Posicionamiento orgánico y campañas pagadas.','Foto4'),(15,'Growth Hacking y Analítica','Marketing',5,'Avanzado',0,'Métricas clave, A/B testing y experimentación.','Foto5'),(16,'IA para Principiantes','Inteligencia Artificial',6,'Básico',1,'Conceptos básicos de IA, ML y ética.','Foto6'),(17,'Machine Learning Práctico','Inteligencia Artificial',6,'Intermedio',0,'Scikit-learn, pipelines y evaluación de modelos.','Foto7'),(18,'Deep Learning y Redes Neuronales','Inteligencia Artificial',6,'Avanzado',0,'TensorFlow, CNNs y arquitecturas profundas.','Foto8'),(19,'HTML/CSS/JS Esencial','Desarrollo',7,'Básico',0,'Maquetación web semántica y DOM básico.','Foto9'),(20,'Frameworks Frontend','Desarrollo',7,'Intermedio',0,'React, Vue y herramientas de desarrollo modernas.','Foto10'),(21,'Desarrollo Full Stack MERN','Desarrollo',7,'Avanzado',1,'MongoDB, Express, React y Node.js integrados.','Foto1'),(22,'Introducción a Data Science','Data Science',8,'Básico',1,'Análisis exploratorio y estadística aplicada.','Foto2'),(23,'Análisis con Python y Pandas','Data Science',8,'Intermedio',1,'Manipulación, limpieza y visualización de datos.','Foto3'),(24,'Big Data y Spark','Data Science',8,'Avanzado',0,'Procesamiento distribuido y entornos Hadoop/Spark.','Foto4');
 /*!40000 ALTER TABLE `cursos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -241,7 +239,7 @@ CREATE TABLE `cursosalumnos` (
   KEY `alumnoId` (`alumnoId`),
   CONSTRAINT `cursosalumnos_ibfk_1` FOREIGN KEY (`cursoId`) REFERENCES `cursos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `cursosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=231 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=243 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -250,7 +248,7 @@ CREATE TABLE `cursosalumnos` (
 
 LOCK TABLES `cursosalumnos` WRITE;
 /*!40000 ALTER TABLE `cursosalumnos` DISABLE KEYS */;
-INSERT INTO `cursosalumnos` VALUES (182,1,1,1,1,NULL),(183,1,2,0,1,NULL),(184,2,3,1,1,1),(185,2,4,0,1,NULL),(186,3,5,1,1,NULL),(187,3,6,0,1,0),(188,4,7,1,1,NULL),(189,4,8,0,1,NULL),(190,5,9,1,1,1),(191,5,13,0,1,NULL),(192,6,14,1,1,NULL),(193,6,15,0,1,1),(194,7,16,1,1,NULL),(195,7,17,0,1,NULL),(196,8,18,1,1,0),(197,8,19,0,1,NULL),(198,9,20,1,1,NULL),(199,9,21,0,1,1),(200,10,22,1,1,NULL),(201,10,23,0,1,NULL),(202,11,24,1,1,1),(203,11,25,0,1,NULL),(204,12,26,1,1,NULL),(205,12,27,0,1,0),(206,13,28,1,1,NULL),(207,13,29,0,1,NULL),(208,14,30,1,1,1),(209,14,31,0,1,NULL),(210,15,32,1,1,NULL),(211,15,33,0,1,NULL),(212,16,1,1,1,0),(213,16,2,0,1,NULL),(214,17,3,1,1,NULL),(215,17,4,0,1,1),(216,18,5,1,1,NULL),(217,18,6,0,1,NULL),(218,19,7,1,1,1),(219,19,8,0,1,NULL),(220,20,9,1,1,NULL),(221,20,13,0,1,0),(222,21,14,1,1,NULL),(223,21,15,0,1,NULL),(224,22,16,1,1,1),(225,22,17,0,1,NULL),(226,23,18,1,1,NULL),(227,23,19,0,1,NULL),(228,24,20,1,1,0),(229,24,21,0,1,1),(230,1,9,NULL,1,NULL);
+INSERT INTO `cursosalumnos` VALUES (182,1,1,1,1,NULL),(183,1,2,0,1,NULL),(184,2,3,1,1,1),(185,2,4,0,1,NULL),(186,3,5,1,1,NULL),(187,3,6,0,1,0),(188,4,7,1,1,NULL),(189,4,8,0,1,NULL),(190,5,9,1,1,1),(191,5,13,0,1,NULL),(192,6,14,1,1,NULL),(193,6,15,0,1,1),(194,7,16,1,1,NULL),(195,7,17,0,1,NULL),(196,8,18,1,1,0),(197,8,19,0,1,NULL),(198,9,20,1,1,NULL),(199,9,21,0,1,1),(200,10,22,1,1,NULL),(201,10,23,0,1,NULL),(202,11,24,1,1,1),(203,11,25,0,1,NULL),(204,12,26,1,1,NULL),(205,12,27,0,1,0),(206,13,28,1,1,NULL),(207,13,29,0,1,NULL),(208,14,30,1,1,1),(212,16,1,1,1,0),(213,16,2,0,1,NULL),(214,17,3,1,1,NULL),(215,17,4,0,1,1),(216,18,5,1,1,NULL),(217,18,6,0,1,NULL),(218,19,7,1,1,1),(219,19,8,0,1,NULL),(220,20,9,1,1,NULL),(221,20,13,0,1,0),(222,21,14,1,1,NULL),(223,21,15,0,1,NULL),(224,22,16,1,1,1),(225,22,17,0,1,NULL),(226,23,18,0,1,1),(227,23,19,0,1,NULL),(228,24,20,1,1,0),(229,24,21,0,1,1),(230,1,9,NULL,1,NULL),(231,16,9,1,1,1),(232,17,9,NULL,1,NULL),(233,1,18,NULL,1,NULL),(234,1,18,1,NULL,NULL),(235,24,18,1,NULL,NULL),(236,24,18,NULL,1,NULL),(237,22,18,1,1,1),(238,21,18,NULL,1,1),(239,21,18,1,NULL,NULL),(240,21,9,NULL,0,NULL),(241,22,9,NULL,0,NULL),(242,18,9,NULL,1,NULL);
 /*!40000 ALTER TABLE `cursosalumnos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -273,7 +271,7 @@ CREATE TABLE `ejercicios` (
   KEY `curso` (`curso`),
   CONSTRAINT `ejercicios_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ejercicios_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=6 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=16 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -282,7 +280,6 @@ CREATE TABLE `ejercicios` (
 
 LOCK TABLES `ejercicios` WRITE;
 /*!40000 ALTER TABLE `ejercicios` DISABLE KEYS */;
-INSERT INTO `ejercicios` VALUES (1,6,1,'Ejercicio_0','Actividad_0_a.pdf','Ejercicio para que useis lo aprendido en el curso');
 /*!40000 ALTER TABLE `ejercicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -303,7 +300,7 @@ CREATE TABLE `ejerciciosalumnos` (
   KEY `alumnoId` (`alumnoId`),
   CONSTRAINT `ejerciciosalumnos_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejercicios` (`id`) ON DELETE CASCADE,
   CONSTRAINT `ejerciciosalumnos_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -312,7 +309,6 @@ CREATE TABLE `ejerciciosalumnos` (
 
 LOCK TABLES `ejerciciosalumnos` WRITE;
 /*!40000 ALTER TABLE `ejerciciosalumnos` DISABLE KEYS */;
-INSERT INTO `ejerciciosalumnos` VALUES (1,1,9,'Actividad 3 - Power BI.pdf');
 /*!40000 ALTER TABLE `ejerciciosalumnos` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -332,7 +328,7 @@ CREATE TABLE `notificaciones` (
   `vista` tinyint(1) DEFAULT '0',
   `fecha` datetime DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=18 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=96 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_0900_ai_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -341,6 +337,7 @@ CREATE TABLE `notificaciones` (
 
 LOCK TABLES `notificaciones` WRITE;
 /*!40000 ALTER TABLE `notificaciones` DISABLE KEYS */;
+INSERT INTO `notificaciones` VALUES (20,7,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:07:18'),(24,9,NULL,'Tienes 5 respuesta(s) nueva(s) en tu ticket KAN-16','/Home/MisTickets/KAN-16',0,'2026-04-22 08:30:25'),(26,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:30:49'),(29,7,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:31:10'),(32,7,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:32:13'),(36,14,'administrador','Nuevo ticket de soporte en Jira de Juan Fernández Gómez','https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list',0,'2026-04-22 08:32:50'),(38,1,NULL,'Tienes 1 respuesta(s) nueva(s) en tu ticket KAN-17','/Home/MisTickets/KAN-17',0,'2026-04-22 08:33:47'),(43,7,'alumno','Nuevo vídeo subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:35:22'),(46,7,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-22 08:35:52'),(48,1,'alumno','Tienes 3 respuesta(s) nueva(s) en tu ticket KAN-17','/Home/MisTickets/KAN-17',0,'2026-04-22 08:39:42'),(49,1,'alumno','Tienes 1 respuesta(s) nueva(s) en tu ticket KAN-17','/Home/MisTickets/KAN-17',0,'2026-04-22 08:43:42'),(50,14,'administrador','Nuevo ticket de soporte en Jira de Juan Fernández Gómez','https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list',0,'2026-04-22 08:44:17'),(51,10,'alumno','Nuevo apunte subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:06:08'),(52,11,'alumno','Nuevo apunte subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:06:08'),(53,10,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:10:56'),(54,11,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:10:56'),(55,10,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:16:43'),(56,11,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:16:43'),(57,10,'alumno','Nuevo vídeo subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:17:48'),(58,11,'alumno','Nuevo vídeo subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:17:48'),(59,10,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:33:02'),(60,11,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:33:02'),(61,10,'alumno','Nuevo apunte subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:33:54'),(62,11,'alumno','Nuevo apunte subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:33:54'),(63,10,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:37:42'),(64,11,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:37:42'),(65,10,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:43:20'),(66,11,'alumno','Nuevo ejercicio subido en el curso Deep Learning y Redes Neuronales','/Home/Cursos/18',0,'2026-04-23 09:43:20'),(67,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:39:01'),(68,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:39:01'),(70,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:40:31'),(71,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:40:31'),(73,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:41:24'),(74,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:41:24'),(76,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:57:05'),(77,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:57:05'),(79,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:58:39'),(80,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:58:39'),(82,6,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:59:04'),(83,7,'alumno','Nuevo ejercicio subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 07:59:04'),(85,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:00:07'),(86,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:00:07'),(88,15,'profesor','El alumno Nico ha subido un apunte al curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:00:32'),(89,15,'profesor','El alumno Nico ha subido un apunte al curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:01:35'),(90,6,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:02:28'),(91,7,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:02:28'),(92,16,'alumno','Nuevo apunte subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:02:28'),(93,6,'alumno','Nuevo vídeo subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:04:41'),(94,7,'alumno','Nuevo vídeo subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:04:41'),(95,16,'alumno','Nuevo vídeo subido en el curso IA para Principiantes','/Home/Cursos/16',0,'2026-04-24 08:04:41');
 /*!40000 ALTER TABLE `notificaciones` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -434,7 +431,7 @@ CREATE TABLE `puntuacionesejercicios` (
   KEY `alumnoId` (`alumnoId`),
   CONSTRAINT `puntuacionesejercicios_ibfk_1` FOREIGN KEY (`ejercicioId`) REFERENCES `ejerciciosalumnos` (`id`) ON DELETE CASCADE,
   CONSTRAINT `puntuacionesejercicios_ibfk_2` FOREIGN KEY (`alumnoId`) REFERENCES `alumnos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=8 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -443,7 +440,6 @@ CREATE TABLE `puntuacionesejercicios` (
 
 LOCK TABLES `puntuacionesejercicios` WRITE;
 /*!40000 ALTER TABLE `puntuacionesejercicios` DISABLE KEYS */;
-INSERT INTO `puntuacionesejercicios` VALUES (1,1,9,9);
 /*!40000 ALTER TABLE `puntuacionesejercicios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -458,7 +454,7 @@ CREATE TABLE `usuarios` (
   `id` int NOT NULL AUTO_INCREMENT,
   `tipo` enum('alumno','profesor','administrador') CHARACTER SET utf8mb4 COLLATE utf8mb4_general_ci NOT NULL,
   PRIMARY KEY (`id`)
-) ENGINE=InnoDB AUTO_INCREMENT=43 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=45 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -467,7 +463,7 @@ CREATE TABLE `usuarios` (
 
 LOCK TABLES `usuarios` WRITE;
 /*!40000 ALTER TABLE `usuarios` DISABLE KEYS */;
-INSERT INTO `usuarios` VALUES (1,'profesor'),(2,'profesor'),(3,'profesor'),(4,'profesor'),(5,'profesor'),(6,'alumno'),(7,'alumno'),(8,'alumno'),(9,'alumno'),(10,'alumno'),(11,'alumno'),(12,'alumno'),(13,'alumno'),(14,'administrador'),(15,'profesor'),(16,'alumno'),(22,'alumno'),(23,'alumno'),(24,'alumno'),(25,'alumno'),(26,'alumno'),(27,'alumno'),(28,'alumno'),(29,'alumno'),(30,'alumno'),(31,'alumno'),(32,'alumno'),(33,'alumno'),(34,'alumno'),(35,'alumno'),(36,'alumno'),(37,'alumno'),(38,'profesor'),(39,'profesor'),(40,'profesor'),(41,'profesor'),(42,'profesor');
+INSERT INTO `usuarios` VALUES (1,'profesor'),(2,'profesor'),(3,'profesor'),(4,'profesor'),(5,'profesor'),(6,'alumno'),(7,'alumno'),(8,'alumno'),(9,'alumno'),(10,'alumno'),(11,'alumno'),(12,'alumno'),(13,'alumno'),(14,'administrador'),(15,'profesor'),(16,'alumno'),(22,'alumno'),(23,'alumno'),(24,'alumno'),(25,'alumno'),(26,'alumno'),(27,'alumno'),(28,'alumno'),(29,'alumno'),(30,'alumno'),(31,'alumno'),(32,'alumno'),(33,'alumno'),(34,'alumno'),(35,'alumno'),(36,'alumno'),(37,'alumno'),(38,'profesor'),(39,'profesor');
 /*!40000 ALTER TABLE `usuarios` ENABLE KEYS */;
 UNLOCK TABLES;
 
@@ -489,7 +485,7 @@ CREATE TABLE `videos` (
   KEY `curso` (`curso`),
   CONSTRAINT `videos_ibfk_1` FOREIGN KEY (`autor`) REFERENCES `profesores` (`id`) ON DELETE CASCADE,
   CONSTRAINT `videos_ibfk_2` FOREIGN KEY (`curso`) REFERENCES `cursos` (`id`) ON DELETE CASCADE
-) ENGINE=InnoDB AUTO_INCREMENT=2 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+) ENGINE=InnoDB AUTO_INCREMENT=5 DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
 /*!40101 SET character_set_client = @saved_cs_client */;
 
 --
@@ -498,7 +494,7 @@ CREATE TABLE `videos` (
 
 LOCK TABLES `videos` WRITE;
 /*!40000 ALTER TABLE `videos` DISABLE KEYS */;
-INSERT INTO `videos` VALUES (1,1,1,'Video python','PixVerse_V5.6_Image_Text_720P_Un_profesor_dand.mp4');
+INSERT INTO `videos` VALUES (4,6,16,'Video prueba','https://res.cloudinary.com/dge59jbqb/video/upload/v1777017879/nebriacademy/videos/WhatsApp_Video_2025-11-25_at_13.42.22.mp4');
 /*!40000 ALTER TABLE `videos` ENABLE KEYS */;
 UNLOCK TABLES;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
@@ -511,4 +507,4 @@ UNLOCK TABLES;
 /*!40101 SET COLLATION_CONNECTION=@OLD_COLLATION_CONNECTION */;
 /*!40111 SET SQL_NOTES=@OLD_SQL_NOTES */;
 
--- Dump completed on 2026-04-14 11:32:27
+-- Dump completed on 2026-04-24 12:34:56

@@ -1,7 +1,5 @@
 /* Estilos comunes para páginas de políticas */
-.PoliticaDeCookiesGrid,
-.NotaLegalGrid,
-.PoliticaDePrivacidadGrid {
+.PoliticasGrid {
 	max-width: 900px;
 	margin: 40px auto;
 	padding: 24px;
@@ -13,115 +11,83 @@
 	line-height: 1.6;
 }
 
-.PoliticaDeCookiesGrid h1,
-.NotaLegalGrid h1,
-.PoliticaDePrivacidadGrid h1 {
+.PoliticasGrid h1 {
 	font-size: 28px;
 	margin-bottom: 12px;
 	color: #0f172a;
 }
 
-.PoliticaDeCookiesGrid h2,
-.NotaLegalGrid h2,
-.PoliticaDePrivacidadGrid h2 {
+.PoliticasGrid h2 {
 	font-size: 18px;
 	margin-top: 20px;
 	margin-bottom: 8px;
 	color: #0b1220;
 }
 
-.PoliticaDeCookiesGrid p,
-.NotaLegalGrid p,
-.PoliticaDePrivacidadGrid p {
+.PoliticasGrid p {
 	margin: 10px 0;
 	font-size: 15px;
 }
 
-.PoliticaDeCookiesGrid ul,
-.NotaLegalGrid ul,
-.PoliticaDePrivacidadGrid ul {
+.PoliticasGrid ul {
 	margin: 8px 0 16px 20px;
 	padding: 0;
 }
 
-.PoliticaDeCookiesGrid li,
-.NotaLegalGrid li,
-.PoliticaDePrivacidadGrid li {
+.PoliticasGrid li {
 	margin-bottom: 6px;
 }
 
-.PoliticaDeCookiesGrid a,
-.NotaLegalGrid a,
-.PoliticaDePrivacidadGrid a {
+.PoliticasGrid a {
 	color: #0b5fff;
 	text-decoration: underline;
 }
 
 /* Responsive 1024px */
 @media (max-width: 1024px) {
-	.PoliticaDeCookiesGrid,
-	.NotaLegalGrid,
-	.PoliticaDePrivacidadGrid {
+	.PoliticasGrid {
 		margin: 30px auto;
 		padding: 20px;
 		border-radius: 8px;
 	}
-	.PoliticaDeCookiesGrid h1,
-	.NotaLegalGrid h1,
-	.PoliticaDePrivacidadGrid h1 {
+	.PoliticasGrid h1 {
 		font-size: 26px;
 		margin-bottom: 14px;
 	}
-	.PoliticaDeCookiesGrid h2,
-	.NotaLegalGrid h2,
-	.PoliticaDePrivacidadGrid h2 {
+	.PoliticasGrid h2 {
 		font-size: 17px;
 		margin-top: 18px;
 		margin-bottom: 10px;
 	}
-	.PoliticaDeCookiesGrid p,
-	.NotaLegalGrid p,
-	.PoliticaDePrivacidadGrid p {
+	.PoliticasGrid p {
 		font-size: 14px;
 	}
 }
 
 /* Responsive 768px */
 @media (max-width: 768px) {
-	.PoliticaDeCookiesGrid,
-	.NotaLegalGrid,
-	.PoliticaDePrivacidadGrid {
+	.PoliticasGrid {
 		margin: 20px;
 		padding: 18px;
 		border-radius: 6px;
 	}
-	.PoliticaDeCookiesGrid h1,
-	.NotaLegalGrid h1,
-	.PoliticaDePrivacidadGrid h1 {
+	.PoliticasGrid h1 {
 		font-size: 22px;
 		margin-bottom: 12px;
 	}
-	.PoliticaDeCookiesGrid h2,
-	.NotaLegalGrid h2,
-	.PoliticaDePrivacidadGrid h2 {
+	.PoliticasGrid h2 {
 		font-size: 16px;
 		margin-top: 16px;
 		margin-bottom: 8px;
 	}
-	.PoliticaDeCookiesGrid p,
-	.NotaLegalGrid p,
-	.PoliticaDePrivacidadGrid p {
+	.PoliticasGrid p {
 		font-size: 14px;
 		margin: 8px 0;
 	}
-	.PoliticaDeCookiesGrid ul,
-	.NotaLegalGrid ul,
-	.PoliticaDePrivacidadGrid ul {
+	.PoliticasGrid ul {
 		margin: 8px 0 12px 16px;
 	}
-	.PoliticaDeCookiesGrid li,
-	.NotaLegalGrid li,
-	.PoliticaDePrivacidadGrid li {
+	.PoliticasGrid li {
 		margin-bottom: 4px;
 		font-size: 13px;
 	}
@@ -129,16 +95,12 @@
 
 /* Responsive mobile (640px) */
 @media (max-width: 640px) {
-	.PoliticaDeCookiesGrid,
-	.NotaLegalGrid,
-	.PoliticaDePrivacidadGrid {
+	.PoliticasGrid {
 		margin: 15px;
 		padding: 14px;
 		border-radius: 5px;
 	}
-	.PoliticaDeCookiesGrid h1,
-	.NotaLegalGrid h1,
-	.PoliticaDePrivacidadGrid h1 {
+	.PoliticasGrid h1 {
 		font-size: 20px;
 	}
 }

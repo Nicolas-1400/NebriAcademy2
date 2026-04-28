@@ -130,11 +130,11 @@ function CursoGrid() {
         const resolveName = (id) => {
           const aid = Number(id);
           const alum = (datosAlumnos.Alumnos || []).find(
-            (a) => Number(a.usuarioId) === aid || Number(a.id) === aid,
+            (a) => Number(a.usuarioId) === aid,
           );
           if (alum) return `${alum.nombre} ${alum.apellidos}`;
           const prof = (datosProfes.Profesores || []).find(
-            (p) => Number(p.usuarioId) === aid || Number(p.id) === aid,
+            (p) => Number(p.usuarioId) === aid,
           );
           if (prof) return `${prof.nombre} ${prof.apellidos}`;
           return "Autor no encontrado";
@@ -688,7 +688,7 @@ function CursoGrid() {
                                   {entrega ? (
                                     // Si ya entregó, mostramos un enlace al archivo subido
                                     <a
-                                      href={`${API_URL}/ejerciciosalumnos/files/${entrega.archivo}`}
+                                      href={entrega.archivo}
                                       target="_blank"
                                       rel="noreferrer"
                                       className="btn-ejercicio-subido"
@@ -851,7 +851,7 @@ function CursoGrid() {
                   setRotado((prev) => !prev);
                   if (tipo === "alumno") {
                     // El alumno solo puede subir apuntes
-                    navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                    navigate(`/Home/AddContenido/curso/${id}`, {
                       state: { tipo: "apunte", cursoId: id },
                     });
                   } else {
@@ -867,7 +867,7 @@ function CursoGrid() {
                 <div className="add-menu">
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "apunte", cursoId: id },
                       })
                     }
@@ -876,7 +876,7 @@ function CursoGrid() {
                   </button>
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "video", cursoId: id },
                       })
                     }
@@ -885,7 +885,7 @@ function CursoGrid() {
                   </button>
                   <button
                     onClick={() =>
-                      navigate(`/Home/Cursos/${id}/AddContenidoCurso`, {
+                      navigate(`/Home/AddContenido/curso/${id}`, {
                         state: { tipo: "ejercicio", cursoId: id },
                       })
                     }

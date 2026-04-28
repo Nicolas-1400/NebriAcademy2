@@ -2,9 +2,9 @@
 const express = require("express");
 const router = express.Router();
 const multer = require("multer");
-const path = require("path");
-const fs = require("fs");
+const streamifier = require("streamifier");
 
+const cloudinary = require("./cloudinary");
 const Apuntes = require("../models/Apuntes.js");
 const Administradores = require("../models/Administradores.js");
 const Profesores = require("../models/Profesores.js");
@@ -15,19 +15,39 @@ const CursosAlumnos = require("../models/CursosAlumnos.js");
 const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
 // ── CONFIGURACIÓN (multer) ──────────────────────────────────────────────────
-// Carpeta donde se guardan localmente los archivos de apuntes subidos
-const uploadDir = path.join(
-  __dirname,
-  "../../../nebriacademy-frontend/src/assets/Apuntes",
-);
+// Usamos memoryStorage: el archivo queda en RAM y lo subimos directamente a Cloudinary
+const upload = multer({ storage: multer.memoryStorage() });
 
-// Configuramos multer para que guarde el archivo en uploadDir conservando el nombre original
-const upload = multer({
-  storage: multer.diskStorage({
-    destination: uploadDir,
-    filename: (req, file, cb) => cb(null, path.basename(file.originalname)),
-  }),
-});
+// ── HELPER: subir buffer a Cloudinary ────────────────────────────────────────
+// Devuelve una Promise con el resultado de Cloudinary (secure_url, public_id...)
+function uploadToCloudinary(buffer, options) {
+  return new Promise((resolve, reject) => {
+    const stream = cloudinary.uploader.upload_chunked_stream(options, (error, result) => {
+      if (error) return reject(error);
+      resolve(result);
+    });
+    streamifier.createReadStream(buffer).pipe(stream);
+  });
+}
+
+function extractPublicId(url, resourceType) {
+  try {
+    const parts = url.split('/');
+    const uploadIdx = parts.indexOf('upload');
+    const afterUpload = parts.slice(uploadIdx + 2);
+    const publicIdWithExt = afterUpload.join('/');
+    return resourceType === 'raw' ? publicIdWithExt : publicIdWithExt.replace(/\.[^/.]+$/, "");
+  } catch {
+    return null;
+  }
+}
+
+// Extrae el resource_type real de la URL de Cloudinary para borrados correctos
+function getResourceTypeFromUrl(url) {
+  if (url.includes('/image/upload/')) return 'image';
+  if (url.includes('/video/upload/')) return 'video';
+  return 'raw';
+}
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /apuntes — Devuelve todos los apuntes registrados
@@ -64,8 +84,7 @@ router.get("/:id", async (req, res) => {
 });
 
 // ── POST ────────────────────────────────────────────────────────────────────
-// POST /apuntes — Sube un nuevo apunte. Requiere un archivo adjunto (PDF u otro).
-// Detecta si quien sube es alumno o profesor para asignar el autor correcto.
+// POST /apuntes — Sube un nuevo apunte a Cloudinary y registra la URL en la BDD.
 router.post("/", upload.single("archivo"), async (req, res) => {
   try {
     if (!req.file) return res.status(400).json({ error: "Archivo requerido" });
@@ -110,11 +129,23 @@ router.post("/", upload.single("archivo"), async (req, res) => {
         .status(400)
         .json({ error: "Categoría requerida si no hay curso" });
 
+    // Subimos con resource_type "auto" para que Cloudinary detecte correctamente el tipo
+    // (PDF → image, ZIP → raw, etc.) y sirva el archivo con los headers correctos
+    const baseName = req.file.originalname
+      .replace(/\.[^.]+$/, "")
+      .replace(/[^a-zA-Z0-9._-]/g, "_");
+    const cloudResult = await uploadToCloudinary(req.file.buffer, {
+      folder: "nebriacademy/apuntes",
+      resource_type: "auto",
+      public_id: baseName,
+    });
+
     const nuevo = await Apuntes.create({
       autor: autorFinal,
       curso: cursoId || null,
       categoria,
-      archivo: req.file.filename,
+      // Guardamos la URL pública de Cloudinary en lugar del nombre de archivo local
+      archivo: cloudResult.secure_url,
       descripcion,
       valoracion: 0,
       nombre: nombre || req.file.originalname,
@@ -169,14 +200,36 @@ router.post("/", upload.single("archivo"), async (req, res) => {
 });
 
 // ── PUT ─────────────────────────────────────────────────────────────────────
-// PUT /apuntes/:id — Actualiza los datos de un apunte. Si se adjunta un archivo nuevo, también se actualiza
+// PUT /apuntes/:id — Actualiza los datos de un apunte. Si se adjunta un archivo nuevo,
+// se sube a Cloudinary y se borra el anterior de Cloudinary.
 router.put("/:id", upload.single("archivo"), async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
     const updates = { ...req.body };
-    if (req.file) updates.archivo = req.file.filename;
+
+    if (req.file) {
+      if (apunte.archivo && apunte.archivo.includes('cloudinary.com')) {
+        try {
+          const resourceType = getResourceTypeFromUrl(apunte.archivo);
+          const pid = extractPublicId(apunte.archivo, resourceType);
+          if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+        } catch (e) {
+          console.warn('No se pudo borrar asset anterior de Cloudinary:', e.message);
+        }
+      }
+
+      const baseName = req.file.originalname
+        .replace(/\.[^.]+$/, "")
+        .replace(/[^a-zA-Z0-9._-]/g, "_");
+      const cloudResult2 = await uploadToCloudinary(req.file.buffer, {
+        folder: 'nebriacademy/apuntes',
+        resource_type: 'auto',
+        public_id: baseName,
+      });
+      updates.archivo = cloudResult2.secure_url;
+    }
 
     const actualizado = await apunte.update(updates);
     res.json(actualizado);
@@ -187,20 +240,20 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
 });
 
 // ── DELETE ──────────────────────────────────────────────────────────────────
-// DELETE /apuntes/:id — Elimina el apunte de la BDD y borra también el archivo físico del disco
+// DELETE /apuntes/:id — Elimina el apunte de la BDD y borra también el asset de Cloudinary
 router.delete("/:id", async (req, res) => {
   try {
     const apunte = await Apuntes.findByPk(req.params.id);
     if (!apunte) return res.status(404).json({ error: "No encontrado" });
 
-    // Intentamos borrar el fichero del disco; si no existe, ignoramos el error
-    if (apunte.archivo) {
-      const filePath = path.join(uploadDir, apunte.archivo);
-      fs.promises
-        .unlink(filePath)
-        .catch((e) =>
-          console.warn("No se pudo borrar archivo físico:", e.message),
-        );
+    if (apunte.archivo && apunte.archivo.includes('cloudinary.com')) {
+      try {
+        const resourceType = getResourceTypeFromUrl(apunte.archivo);
+        const pid = extractPublicId(apunte.archivo, resourceType);
+        if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+      } catch (e) {
+        console.warn('No se pudo borrar asset de Cloudinary:', e.message);
+      }
     }
 
     await apunte.destroy();

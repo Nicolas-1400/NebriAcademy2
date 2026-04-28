@@ -1,9 +1,9 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../config/api";
 import MeGusta from "../assets/me-gusta.png";
 import MeGustaMarcado from "../assets/me-gusta-marcado.png";
 import Editar from "../assets/lapiz.png";
 import Eliminar from "../assets/Eliminar.png";
+
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra un apunte dentro de la vista de un curso concreto.
@@ -27,12 +27,7 @@ function TarjetaApunteCurso({
   return (
     <div key={apunte.id} className="item-row">
       <div className="item-main">
-        {/* El nombre del apunte abre directamente el archivo en una nueva pestaña */}
-        <a
-          href={`${API_URL}/apuntes/files/${apunte.archivo}`}
-          target="_blank"
-          rel="noreferrer"
-        >
+        <a href={apunte.archivo} target="_blank" rel="noreferrer">
           {apunte.nombre || apunte.archivo}
         </a>
         {apunte.descripcion && <p>{apunte.descripcion}</p>}

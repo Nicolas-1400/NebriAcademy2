@@ -262,16 +262,12 @@ function Nav() {
     setIsSearchOpen(false);
     setIsMenuOpen(false);
 
-    const baseUrl = API_URL;
-    if (s.type === "Curso") navigate(`/Home/Cursos/${s.id}`);
-    else if (s.type === "Profesor") navigate(`/Home/Profesores/${s.id}`);
-    else {
-      // Para vídeos, apuntes y ejercicios: si tienen archivo lo abrimos en nueva pestaña; si no, navegamos
-      const folderMap = {
-        Video: "videos",
-        Apunte: "apuntes",
-        Ejercicio: "ejercicios",
-      };
+    if (s.type === "Curso") {
+      navigate(`/Home/Cursos/${s.id}`);
+    } else if (s.type === "Profesor") {
+      navigate(`/Home/Profesores/${s.id}`);
+    } else {
+      // Para vídeos, apuntes y ejercicios: s.archivo es la URL de Cloudinary
       const routeMap = {
         Video: "Videos",
         Apunte: "Apuntes",
@@ -279,10 +275,8 @@ function Nav() {
       };
 
       if (s.archivo) {
-        window.open(
-          `${baseUrl}/${folderMap[s.type]}/files/${s.archivo}`,
-          "_blank",
-        );
+        // URL completa de Cloudinary → abrimos directamente en nueva pestaña
+        window.open(s.archivo, "_blank");
       } else {
         navigate(`/Home/${routeMap[s.type]}/${s.id}`);
       }
