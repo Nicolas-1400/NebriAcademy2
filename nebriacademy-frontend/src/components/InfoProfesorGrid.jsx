@@ -5,7 +5,7 @@ import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
 import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
-import TarjetaCursoPequena from "./TarjetaCursoPequena";
+import CardSlider from "./CardSlider";
 
 import "../styles/InfoProfesor.css";
 
@@ -64,7 +64,7 @@ function InfoProfesorGrid() {
         {cursos.length > 0 ? (
           <div className="cursos-profesor">
             {cursos.map((c) => (
-              <TarjetaCursoPequena
+              <CardSlider
                 key={c.id}
                 name={c.nombreCurso}
                 cursoId={c.id}

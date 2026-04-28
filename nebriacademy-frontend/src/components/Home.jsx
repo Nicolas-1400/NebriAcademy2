@@ -1,17 +1,15 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../config/api";
-import { useEffect, useState, useRef } from "react";
+import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import TarjetaCursoPequena from "./TarjetaCursoPequena";
+import CardSlider from "./CardSlider";
 import TarjetaCursos from "./TarjetaCursos";
-import Slider from "react-slick";
 import Eliminar from "../assets/Eliminar.png";
-import "slick-carousel/slick/slick.css";
-import "slick-carousel/slick/slick-theme.css";
+import SliderComponent from "./SliderComponent";
+import "../styles/Home.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Componente Home unificado para alumnos y profesores
 function Home() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [usuario, setUsuario] = useState(null);
@@ -25,11 +23,6 @@ function Home() {
   const navigate = useNavigate();
   const storeUser = useAuthStore((state) => state.user);
   const tipoUsuario = useAuthStore((state) => state.tipo);
-
-  // Referencias a sliders para navegación manual
-  const novedadesSliderRef = useRef(null);
-  const tusCursosSliderRef = useRef(null);
-  const popularesSliderRef = useRef(null);
 
   // Detectar si es alumno o profesor (usar el tipo del store que es la autoridad)
   const isEstudiante = tipoUsuario === "alumno";
@@ -119,34 +112,6 @@ function Home() {
     navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
   };
 
-  // Controlar slider
-  const handleSliderArrow = (sliderRef, direction) => {
-    if (!sliderRef.current) return;
-    direction === "left"
-      ? sliderRef.current.slickPrev()
-      : sliderRef.current.slickNext();
-  };
-
-  // Refrescar sliders al cargar
-  useEffect(() => {
-    if (!loading) {
-      const t = setTimeout(() => {
-        [novedadesSliderRef, tusCursosSliderRef, popularesSliderRef].forEach(
-          (ref) => {
-            if (ref?.current?.innerSlider) {
-              // Forzar recalcular el ancho y breakpoints
-              ref.current.innerSlider.handleWindowResize?.();
-            }
-            try {
-              ref?.current?.slickGoTo(0);
-            } catch (e) {}
-          },
-        );
-      }, 100);
-      return () => clearTimeout(t);
-    }
-  }, [loading, cursos]);
-
   // Eliminar curso (profesor)
   const handleDeleteCurso = async (cursoId, e) => {
     e.stopPropagation();
@@ -171,21 +136,6 @@ function Home() {
       console.error(error);
       alert("Error de conexión");
     }
-  };
-
-  // Configuración de slider
-  const settingsSlider = {
-    dots: false,
-    arrows: false,
-    infinite: true,
-    speed: 500,
-    slidesToShow: 4,
-    slidesToScroll: 1,
-    responsive: [
-      { breakpoint: 1024, settings: { slidesToShow: 3 } },
-      { breakpoint: 768, settings: { slidesToShow: 2 } },
-      { breakpoint: 480, settings: { slidesToShow: 1 } },
-    ],
   };
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
@@ -234,85 +184,45 @@ function Home() {
           {/* Sección Novedades */}
           <div className="home-section-carousel">
             <h2>Novedades</h2>
-            <div className="home-carousel-container">
-              <button
-                className="carousel-btn carousel-btn-left"
-                onClick={() => handleSliderArrow(novedadesSliderRef, "left")}
-                aria-label="Anterior"
-              >
-                ‹
-              </button>
-              <Slider
-                ref={novedadesSliderRef}
-                {...settingsSlider}
-                className="home-carousel"
-              >
-                {novedades().length > 0 ? (
-                  novedades().map((curso) => (
-                    <TarjetaCursoPequena
-                      key={curso.id}
-                      name={curso.nombreCurso}
-                      cursoId={curso.id}
-                      nivel={curso.nivel}
-                      valoracion={curso.valoracion || 0}
-                      imagen={curso.imagen}
-                    />
-                  ))
-                ) : (
-                  <p className="mensaje-vacio">No hay cursos disponibles</p>
-                )}
-              </Slider>
-              <button
-                className="carousel-btn carousel-btn-right"
-                onClick={() => handleSliderArrow(novedadesSliderRef, "right")}
-                aria-label="Siguiente"
-              >
-                ›
-              </button>
-            </div>
+            <SliderComponent>
+              {novedades().length > 0 ? (
+                novedades().map((curso) => (
+                  <CardSlider
+                    key={curso.id}
+                    name={curso.nombreCurso}
+                    cursoId={curso.id}
+                    nivel={curso.nivel}
+                    valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
+                  />
+                ))
+              ) : (
+                <p className="mensaje-vacio">No hay cursos disponibles</p>
+              )}
+            </SliderComponent>
           </div>
 
           {/* Sección Tus cursos */}
           <div className="home-section-carousel">
             <h2>Tus cursos</h2>
-            <div className="home-carousel-container">
-              <button
-                className="carousel-btn carousel-btn-left"
-                onClick={() => handleSliderArrow(tusCursosSliderRef, "left")}
-                aria-label="Anterior"
-              >
-                ‹
-              </button>
-              <Slider
-                ref={tusCursosSliderRef}
-                {...settingsSlider}
-                className="home-carousel"
-              >
-                {tusCursos().length > 0 ? (
-                  tusCursos().map((curso) => (
-                    <TarjetaCursoPequena
-                      key={curso.id}
-                      name={curso.nombreCurso}
-                      cursoId={curso.id}
-                      nivel={curso.nivel}
-                      valoracion={curso.valoracion || 0}
-                      imagen={curso.imagen}
-                    />
-                  ))
-                ) : (
-                  <p className="mensaje-vacio">
-                    No estás apuntado a ningún curso aún
-                  </p>
-                )}
-              </Slider>
-              <button
-                className="carousel-btn carousel-btn-right"
-                onClick={() => handleSliderArrow(tusCursosSliderRef, "right")}
-                aria-label="Siguiente"
-              >
-                ›
-              </button>
-            </div>
+            <SliderComponent>
+              {tusCursos().length > 0 ? (
+                tusCursos().map((curso) => (
+                  <CardSlider
+                    key={curso.id}
+                    name={curso.nombreCurso}
+                    cursoId={curso.id}
+                    nivel={curso.nivel}
+                    valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
+                  />
+                ))
+              ) : (
+                <p className="mensaje-vacio">
+                  No estás apuntado a ningún curso aún
+                </p>
+              )}
+            </SliderComponent>
           </div>
 
           {/* Sección Categorías */}
@@ -334,42 +244,22 @@ function Home() {
           {/* Sección Cursos populares */}
           <div className="home-section-carousel">
             <h2>Cursos populares</h2>
-            <div className="home-carousel-container">
-              <button
-                className="carousel-btn carousel-btn-left"
-                onClick={() => handleSliderArrow(popularesSliderRef, "left")}
-                aria-label="Anterior"
-              >
-                ‹
-              </button>
-              <Slider
-                ref={popularesSliderRef}
-                {...settingsSlider}
-                className="home-carousel"
-              >
-                {cursosPopulares().length > 0 ? (
-                  cursosPopulares().map((curso) => (
-                    <TarjetaCursoPequena
-                      key={curso.id}
-                      name={curso.nombreCurso}
-                      cursoId={curso.id}
-                      nivel={curso.nivel}
-                      valoracion={curso.valoracion || 0}
-                      imagen={curso.imagen}
-                    />
-                  ))
-                ) : (
-                  <p className="mensaje-vacio">No hay cursos disponibles</p>
-                )}
-              </Slider>
-              <button
-                className="carousel-btn carousel-btn-right"
-                onClick={() => handleSliderArrow(popularesSliderRef, "right")}
-                aria-label="Siguiente"
-              >
-                ›
-              </button>
-            </div>
+            <SliderComponent>
+              {cursosPopulares().length > 0 ? (
+                cursosPopulares().map((curso) => (
+                  <CardSlider
+                    key={curso.id}
+                    name={curso.nombreCurso}
+                    cursoId={curso.id}
+                    nivel={curso.nivel}
+                    valoracion={curso.valoracion || 0}
+                    imagen={curso.imagen}
+                  />
+                ))
+              ) : (
+                <p className="mensaje-vacio">No hay cursos disponibles</p>
+              )}
+            </SliderComponent>
           </div>
         </div>
       ) : (

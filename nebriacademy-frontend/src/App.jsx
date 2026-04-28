@@ -15,7 +15,6 @@ import "./styles/Curso.css";
 import "./styles/AddContenidoCurso.css";
 import "./styles/Home.css";
 import "./styles/Apuntes.css";
-import "./styles/TarjetaCursoPequena.css";
 import "./styles/TarjetaProfesor.css";
 import "./styles/TodosProfesores.css";
 import "./styles/MiEspacio.css";

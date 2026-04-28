@@ -35,13 +35,7 @@
   padding: 20px;
   border-radius: 20px;
    border: 2px solid var(--rojo-nebrija);
-  background: white; /*
-  background: linear-gradient(
-    45deg,
-    rgb(220, 0, 0),
-    rgb(255, 196, 196),
-    rgb(220, 0, 0)
-  ); */
+  background: white; 
 }
 
 .home-section-carousel {
@@ -64,79 +58,6 @@
   box-shadow: 2px 2px 5px rgba(0, 0, 0, 0.3);
 }
 
-.home-carousel-container {
-  display: flex;
-  align-items: center;
-  gap: 10px;
-  /* overflow: hidden; */
-}
-
-.home-carousel {
-  flex: 1;
-  min-width: 0;
-  background-color: var(--color-hover-boton); /*rosa*/
-  /* background-color: #dbd5d5; // gris */
-  border: 2px solid var(--rojo-nebrija);
-  border-radius: 10px;
-  padding: 15px;
-  box-shadow: 5px 5px 3px black;
-  overflow: hidden;
-}
-.slick-track {
-  margin: 0;
-  display: flex !important;
-}
-
-/* Estilos para los slides individuales */
-.slick-slide {
-  display: flex !important;
-  width: auto !important;
-  min-width: 320px !important;
-}
-
-.slick-slide > div {
-  display: flex;
-  width: 100%;
-}
-
-/* Botones de navegación del carousel */
-.carousel-btn {
-  background-color: var(--rojo-nebrija);
-  color: white;
-  border: none;
-  border-radius: 50%;
-  width: 40px;
-  height: 40px;
-  min-width: 40px;
-  min-height: 40px;
-  font-size: 20px;
-  cursor: pointer;
-  z-index: 10;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  transition: all 0.3s ease;
-  box-shadow: 0 2px 8px rgba(194, 0, 47, 0.3);
-  flex-shrink: 0;
-}
-
-.carousel-btn:hover {
-  background-color: #a00038;
-  box-shadow: 0 4px 12px rgba(194, 0, 47, 0.5);
-  transform: scale(1.1);
-}
-
-.carousel-btn:active {
-  transform: scale(0.95);
-}
-
-.carousel-btn-left {
-  order: -1;
-}
-
-.carousel-btn-right {
-  order: 1;
-}
 
 /* Mensaje vacío */
 .mensaje-vacio {
@@ -318,9 +239,6 @@
     gap: 5px !important;
   }
 
-  .home-carousel {
-  }
-
   .home-categorias-buttons {
     gap: 10px;
   }
@@ -363,21 +281,6 @@
     gap: 3px !important;
   }
 
-  .home-carousel {
-    padding: 12px;
-  }
-
-  .home-carousel-container {
-    gap: 8px;
-  }
-
-  .carousel-btn {
-    width: 35px;
-    height: 35px;
-    min-width: 35px;
-    min-height: 35px;
-    font-size: 18px;
-  }
 
   .home-categorias-buttons {
     gap: 8px;

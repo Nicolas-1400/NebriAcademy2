@@ -1,0 +1,83 @@
+@import "./general.css";
+
+.slider-component {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  width: 100%;
+}
+
+.carousel {
+  width: 100%;
+  overflow-x: auto;
+  display: flex;
+  gap: 1em;
+  scroll-behavior: smooth;
+  scroll-snap-type: x mandatory;
+  -webkit-overflow-scrolling: touch;
+}
+
+.carousel::-webkit-scrollbar {
+  display: none;
+}
+
+.carousel-btn {
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  border-radius: 50%;
+  width: 40px;
+  height: 40px;
+  font-size: 1.25rem;
+  cursor: pointer;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  transition: all 0.3s ease;
+  box-shadow: 0 2px 8px rgba(194, 0, 47, 0.3);
+  flex-shrink: 0;
+}
+
+.carousel-btn:hover {
+  background-color: #a00038;
+  transform: scale(1.05);
+}
+
+.carousel-btn:active {
+  transform: scale(0.95);
+}
+
+.carousel-btn:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
+}
+
+.carousel-btn-left {
+  order: -1;
+}
+
+.carousel-btn-right {
+  order: 1;
+}
+
+.card {
+  scroll-snap-align: start;
+  flex: 0 0 20em;
+  aspect-ratio: 5 / 3;
+  background-color: var(--rojo-nebrija);
+  padding: 1em;
+  border-radius: 1em;
+  text-align: center;
+  align-content: center;
+}
+
+@media (max-width: 500px) {
+  .card {
+    flex: 0 0 100%;
+  }
+}
+
+
+
+

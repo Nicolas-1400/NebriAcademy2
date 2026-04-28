@@ -2,7 +2,7 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState, useRef, useMemo } from "react";
 import useAuthStore from "../store/useAuthStore";
-import TarjetaCursoPequena from "./TarjetaCursoPequena";
+import CardSlider from "./CardSlider";
 import TarjetaApunte from "./TarjetaApunte";
 import Slider from "react-slick";
 import "slick-carousel/slick/slick.css";
@@ -237,7 +237,7 @@ function MiEspacioGrid() {
           {items.length > 0 ? (
             items.map((item) =>
               type.includes("cursos") ? (
-                <TarjetaCursoPequena
+                <CardSlider
                   key={item.id}
                   name={item.nombreCurso}
                   cursoId={item.id}
