@@ -56,7 +56,11 @@ function CardSlider({
           <div className="card-slider-footer">
             <a
               className="card-slider-file"
-              href={`${API_URL}/apuntes/files/${apunte.archivo}`}
+              href={
+                apunte.archivo?.startsWith("http")
+                  ? apunte.archivo
+                  : `${API_URL}/apuntes/files/${apunte.archivo}`
+              }
               target="_blank"
               rel="noreferrer"
             >
