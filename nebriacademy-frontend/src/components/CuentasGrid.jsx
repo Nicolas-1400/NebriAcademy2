@@ -2,6 +2,7 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
+import CuentasTable from "./CuentasTable";
 import "../styles/Cuentas.css"
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function CuentasGrid() {
@@ -238,40 +239,21 @@ function CuentasGrid() {
   );
   const profesores = cuentas.filter((c) => c.rol === "profesor");
 
-  // Filtrar por términos de búsqueda
-  const filteredAlumnosBasicos = alumnosBasicos.filter((c) =>
-    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
-    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
-    (!filtros.email || (c.email || '').toLowerCase().includes(filtros.email.toLowerCase())) &&
-    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
-    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
-    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
-    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
-  );
-  const filteredProfesores = profesores.filter((c) =>
-    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
-    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
-    (!filtros.email || (c.email || '').toLowerCase().includes(filtros.email.toLowerCase())) &&
-    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
-    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
-    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
-    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
-  );
-  const filteredAlumnosVinculados = alumnosVinculados.filter((c) =>
-    (!filtros.nombre || (c.nombre || '').toLowerCase().includes(filtros.nombre.toLowerCase())) &&
-    (!filtros.apellidos || (c.apellidos || '').toLowerCase().includes(filtros.apellidos.toLowerCase())) &&
-    (!filtros.dni || (c.dni || '').toLowerCase().includes(filtros.dni.toLowerCase())) &&
-    (!filtros.numTelefono || (c.numTelefono || '').toLowerCase().includes(filtros.numTelefono.toLowerCase())) &&
-    (!filtros.pais || (c.pais || '').toLowerCase().includes(filtros.pais.toLowerCase())) &&
-    (!filtros.localidad || (c.localidad || '').toLowerCase().includes(filtros.localidad.toLowerCase()))
-  );
-
   // Obtiene el nombre del profesor al que pertenece un alumno vinculado
   const getNombreProfesor = (alumno) => {
     const prof = profesores.find((p) => p.id === alumno.profesorVinculadoId);
     if (!prof) return `ID ${alumno.profesorVinculadoId || "?"}`;
     return `${prof.nombre || ""} ${prof.apellidos || ""}`.trim() || prof.email;
   };
+
+  const headersAlumnos = ["Nombre", "Apellidos", "Email", "Contraseña", "DNI", "Nº Tarjeta", "Nº Teléfono", "Redes", "País", "Localidad", "Acciones"];
+  const keysAlumnos = ["nombre", "apellidos", "email", "contrasena", "dni", "numeroTarjeta", "numTelefono", "redes", "pais", "localidad"];
+
+  const headersProfesores = ["Nombre", "Apellidos", "Email", "Contraseña", "DNI", "Cuenta Bancaria", "Nº Teléfono", "Redes", "País", "Localidad", "Especialización", "Imagen Perfil", "Acciones"];
+  const keysProfesores = ["nombre", "apellidos", "email", "contrasena", "dni", "numCuentaBancaria", "numTelefono", "redes", "pais", "localidad", "especializacion", "imagenPerfil"];
+
+  const headersVinculados = ["Profesor vinculado", "Nombre", "Apellidos", "DNI", "Nº Teléfono", "Redes", "País", "Localidad"];
+  const keysVinculados = ["nombre", "apellidos", "dni", "numTelefono", "redes", "pais", "localidad"];
 
   return (
     <div className="contenedor-cuentas">
@@ -360,321 +342,42 @@ function CuentasGrid() {
       ) : (
         <div className="contenedor-alumnos">
           {/* ── TABLA ALUMNOS BÁSICOS ── */}
-          <h3>Alumnos</h3>
-          <div className="tabla-contenedor">
-            <table className="tabla t-alumnos-basicos">
-            <thead className="head-tabla">
-              <tr>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Email</th>
-                <th>Contraseña</th>
-                <th>DNI</th>
-                <th>Nº Tarjeta</th>
-                <th>Nº Teléfono</th>
-                <th>Redes</th>
-                <th>País</th>
-                <th>Localidad</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="contenido-tabla">
-              {filteredAlumnosBasicos.length === 0 ? (
-                <tr>
-                  <td colSpan={11}>No hay alumnos que coincidan con los filtros</td>
-                </tr>
-              ) : (
-                filteredAlumnosBasicos.map((c) => (
-                  <tr key={`alumno-${c.id}`}>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "nombre", c.nombre)
-                    }
-                  >
-                    {c.nombre || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "apellidos", c.apellidos)
-                    }
-                  >
-                    {c.apellidos || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "email", c.email)
-                    }
-                  >
-                    {c.email || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "contrasena", c.contrasena)
-                    }
-                  >
-                    {c.contrasena || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "dni", c.dni)
-                    }
-                  >
-                    {c.dni || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "numeroTarjeta", c.numeroTarjeta)
-                    }
-                  >
-                    {c.numeroTarjeta || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "numTelefono", c.numTelefono)
-                    }
-                  >
-                    {c.numTelefono || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "redes", c.redes)
-                    }
-                  >
-                    {c.redes || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "pais", c.pais)
-                    }
-                  >
-                    {c.pais || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "alumno", "localidad", c.localidad)
-                    }
-                  >
-                    {c.localidad || ""}
-                  </td>
-                  <td>
-                    <button onClick={() => handleBorrarCuenta(c.id, "alumno", c.esVinculado)}>
-                      Borrar
-                    </button>
-                  </td>
-                </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          </div>
+          <CuentasTable 
+            title="Alumnos"
+            data={alumnosBasicos}
+            filtros={filtros}
+            headers={headersAlumnos}
+            columnKeys={keysAlumnos}
+            rol="alumno"
+            onBlur={handleBlur}
+            onDelete={handleBorrarCuenta}
+            className="t-alumnos-basicos"
+          />
 
           {/* ── TABLA PROFESORES ── */}
-          <h3>Profesores</h3>
-          <div className="tabla-contenedor">
-            <table className="tabla t-profesores">
-            <thead className="head-tabla">
-              <tr>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>Email</th>
-                <th>Contraseña</th>
-                <th>DNI</th>
-                <th>Cuenta Bancaria</th>
-                <th>Nº Teléfono</th>
-                <th>Redes</th>
-                <th>País</th>
-                <th>Localidad</th>
-                <th>Especialización</th>
-                <th>Imagen Perfil</th>
-                <th>Acciones</th>
-              </tr>
-            </thead>
-            <tbody className="contenido-tabla">
-              {filteredProfesores.length === 0 ? (
-                <tr>
-                  <td colSpan={13}>No hay profesores que coincidan con los filtros</td>
-                </tr>
-              ) : (
-                filteredProfesores.map((c) => (
-                  <tr key={`profesor-${c.id}`}>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "nombre", c.nombre)
-                    }
-                  >
-                    {c.nombre || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "apellidos", c.apellidos)
-                    }
-                  >
-                    {c.apellidos || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "email", c.email)
-                    }
-                  >
-                    {c.email || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "contrasena", c.contrasena)
-                    }
-                  >
-                    {c.contrasena || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "dni", c.dni)
-                    }
-                  >
-                    {c.dni || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "numCuentaBancaria", c.numCuentaBancaria)
-                    }
-                  >
-                    {c.numCuentaBancaria || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "numTelefono", c.numTelefono)
-                    }
-                  >
-                    {c.numTelefono || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "redes", c.redes)
-                    }
-                  >
-                    {c.redes || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "pais", c.pais)
-                    }
-                  >
-                    {c.pais || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "localidad", c.localidad)
-                    }
-                  >
-                    {c.localidad || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "especializacion", c.especializacion)
-                    }
-                  >
-                    {c.especializacion || ""}
-                  </td>
-                  <td
-                    contentEditable
-                    suppressContentEditableWarning
-                    onBlur={(e) =>
-                      handleBlur(e, c.id, "profesor", "imagenPerfil", c.imagenPerfil)
-                    }
-                  >
-                    {c.imagenPerfil || ""}
-                  </td>
-                  <td>
-                    <button onClick={() => handleBorrarCuenta(c.id, "profesor", false)}>
-                      Borrar
-                    </button>
-                  </td>
-                </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          </div>
+          <CuentasTable 
+            title="Profesores"
+            data={profesores}
+            filtros={filtros}
+            headers={headersProfesores}
+            columnKeys={keysProfesores}
+            rol="profesor"
+            onBlur={handleBlur}
+            onDelete={handleBorrarCuenta}
+            className="t-profesores"
+          />
 
            {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
-          <h3>Cuentas alumno de profesores</h3>
-          <div className="tabla-contenedor">
-            <table className="tabla t-alumnos-vinculados">
-            <thead className="head-tabla">
-              <tr>
-                <th>Profesor vinculado</th>
-                <th>Nombre</th>
-                <th>Apellidos</th>
-                <th>DNI</th>
-                <th>Nº Teléfono</th>
-                <th>Redes</th>
-                <th>País</th>
-                <th>Localidad</th>
-              </tr>
-            </thead>
-            <tbody className="contenido-tabla">
-              {filteredAlumnosVinculados.length === 0 ? (
-                <tr>
-                  <td colSpan={8}>No hay alumnos vinculados que coincidan con los filtros</td>
-                </tr>
-              ) : (
-                filteredAlumnosVinculados.map((c) => (
-                  <tr key={`alumno-vinculado-${c.id}`}>
-                    <td>{getNombreProfesor(c)}</td>
-                    <td>{c.nombre || ""}</td>
-                    <td>{c.apellidos || ""}</td>
-                    <td>{c.dni || ""}</td>
-                    <td>{c.numTelefono || ""}</td>
-                    <td>{c.redes || ""}</td>
-                    <td>{c.pais || ""}</td>
-                    <td>{c.localidad || ""}</td>
-                  </tr>
-                ))
-              )}
-            </tbody>
-          </table>
-          </div>
+          <CuentasTable 
+            title="Cuentas alumno de profesores"
+            data={alumnosVinculados}
+            filtros={filtros}
+            headers={headersVinculados}
+            columnKeys={keysVinculados}
+            rol="alumno-vinculado"
+            getExtraCol={getNombreProfesor}
+            className="t-alumnos-vinculados"
+          />
         </div>
       )}
     </div>
