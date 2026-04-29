@@ -11,8 +11,8 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
-import MeGusta from "../assets/me-gusta.png";
-import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import MeGusta from "../assets/Iconos/me-gusta.png";
+import MeGustaMarcado from "../assets/Iconos/me-gusta-marcado.png";
 
 const IMAGES_MAP = {
   Foto1,

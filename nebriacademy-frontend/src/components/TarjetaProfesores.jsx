@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
-import ImagenDefault from "../assets/individuo.png";
+import ImagenDefault from "../assets/Iconos/individuo.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────

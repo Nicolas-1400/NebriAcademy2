@@ -3,7 +3,7 @@ import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
-import flecha from "../assets/flecha-correcta.png";
+import flecha from "../assets/Iconos/flecha-correcta.png";
 import useAuthStore from "../store/useAuthStore";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 

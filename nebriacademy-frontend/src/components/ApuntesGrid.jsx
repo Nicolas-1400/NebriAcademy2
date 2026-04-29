@@ -2,9 +2,9 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import Mas from "../assets/mas.png";
-import Lapiz from "../assets/lapiz.png";
-import SalirEdicion from "../assets/lapiz-cancelar3.png";
+import Mas from "../assets/Iconos/mas.png";
+import Lapiz from "../assets/Iconos/lapiz.png";
+import SalirEdicion from "../assets/Iconos/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from "../store/useAuthStore";
 

@@ -10,8 +10,8 @@ import Foto7 from "../assets/ImagenesCursos/Foto7.jpg";
 import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
-import Like from "../assets/me-gusta-marcado.png";
-import Eliminar from "../assets/Eliminar.png";
+import Like from "../assets/Iconos/me-gusta-marcado.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta de presentación de un curso: imagen, título, categoría, nivel, descripción y valoración

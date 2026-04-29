@@ -3,7 +3,7 @@ import { API_URL } from "../config/api";
 import { useState, useRef } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import flecha from "../assets/flecha-correcta.png";
+import flecha from "../assets/Iconos/flecha-correcta.png";
 import TarjetaFondos from "./TarjetaFondos";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────

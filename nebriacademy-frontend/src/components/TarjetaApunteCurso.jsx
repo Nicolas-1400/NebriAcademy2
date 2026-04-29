@@ -1,8 +1,8 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import MeGusta from "../assets/me-gusta.png";
-import MeGustaMarcado from "../assets/me-gusta-marcado.png";
-import Editar from "../assets/lapiz.png";
-import Eliminar from "../assets/Eliminar.png";
+import MeGusta from "../assets/Iconos/me-gusta.png";
+import MeGustaMarcado from "../assets/Iconos/me-gusta-marcado.png";
+import Editar from "../assets/Iconos/lapiz.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────

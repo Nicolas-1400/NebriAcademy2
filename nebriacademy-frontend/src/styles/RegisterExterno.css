@@ -6,7 +6,7 @@
   display: flex;
   justify-content: space-around;
   min-height: 615px;
-  background-image: url("../assets/FondoLogin.png");
+  background-image: url("../assets/Fondos/FondoLogin.png");
   background-color: #fdfefe;
   background-size: 105%;
   background-position: right center;
@@ -252,7 +252,7 @@ option {
 
 @media (max-width: 768px) {
   .register-grid-externo {
-    background-image: url("../assets/FondoLogin_rotado.png");
+    background-image: url("../assets/Fondos/FondoLogin_rotado.png");
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;

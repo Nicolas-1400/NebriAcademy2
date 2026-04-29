@@ -15,15 +15,15 @@ import Foto8 from "../assets/ImagenesCursos/Foto8.jpg";
 import Foto9 from "../assets/ImagenesCursos/Foto9.jpg";
 import Foto10 from "../assets/ImagenesCursos/Foto10.jpg";
 
-import Flecha from "../assets/flecha-correcta.png";
-import FlechaMarcada from "../assets/flecha-correcta-marcada.png";
-import Mas from "../assets/mas.png";
-import Lapiz from "../assets/lapiz.png";
-import SalirEdicion from "../assets/lapiz-cancelar3.png";
-import CorregirEjercicio2 from "../assets/editar-archivo1.png";
-import EjercicioSubido from "../assets/subir-archivo2.png";
-import SubirEjercicio from "../assets/subir-archivo.png";
-import Eliminar from "../assets/Eliminar.png";
+import Flecha from "../assets/Iconos/flecha-correcta.png";
+import FlechaMarcada from "../assets/Iconos/flecha-correcta-marcada.png";
+import Mas from "../assets/Iconos/mas.png";
+import Lapiz from "../assets/Iconos/lapiz.png";
+import SalirEdicion from "../assets/Iconos/lapiz-cancelar3.png";
+import CorregirEjercicio2 from "../assets/Iconos/editar-archivo1.png";
+import EjercicioSubido from "../assets/Iconos/subir-archivo2.png";
+import SubirEjercicio from "../assets/Iconos/subir-archivo.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 import TarjetaApunteCurso from "./TarjetaApunteCurso";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
