@@ -4,25 +4,30 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import flecha from "../assets/flecha-correcta.png";
-import ImagenPerfil from "../assets/ImagenPerfilUsuario.png";
+import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
+import TarjetaImagenPerfil, { PERFILES } from "./TarjetaImagenPerfil";
+import "../styles/TarjetaImagenPerfil.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Perfil del usuario (alumno/administrador): muestra sus datos y permite editarlos
+// Perfil del usuario (alumno/administrador/profesor): muestra sus datos y permite editarlos
 function PerfilGrid() {
   const navigate = useNavigate();
   const { user, setUser, tipo } = useAuthStore();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
-  // Estado del formulario de edición
+  // Estado del formulario de edición (contiene campos de todos los tipos de usuario)
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
     contrasena: "",
-    numeroTarjeta: "",
+    numeroTarjeta: "", // Solo Alumno
+    numCuentaBancaria: "", // Solo Profesor
     numTelefono: "",
     redes: "",
     pais: "",
     localidad: "",
+    especializacion: "", // Solo Profesor
+    imagenPerfil: "", // Solo Profesor
   });
 
   const [mensajeExito, setMensajeExito] = useState("");
@@ -32,7 +37,7 @@ function PerfilGrid() {
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Al montar el componente, cargamos los datos más recientes del usuario desde la API y los precargamos en el formulario
   useEffect(() => {
-    if (!user || (tipo !== "alumno" && tipo !== "administrador")) return;
+    if (!user) return;
 
     fetch(`${API_URL}/usuarios/${user.id}?tipo=${tipo}`)
       .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
@@ -46,10 +51,13 @@ function PerfilGrid() {
           apellidos: datosIniciales.apellidos || "",
           contrasena: "",
           numeroTarjeta: datosIniciales.numeroTarjeta || "",
+          numCuentaBancaria: datosIniciales.numCuentaBancaria || "",
           numTelefono: datosIniciales.numTelefono || "",
           redes: datosIniciales.redes || "",
           pais: datosIniciales.pais || "",
           localidad: datosIniciales.localidad || "",
+          especializacion: datosIniciales.especializacion || "",
+          imagenPerfil: datosIniciales.imagenPerfil || "",
         });
       })
       .catch((error) => console.error("Error cargando perfil:", error));
@@ -62,6 +70,11 @@ function PerfilGrid() {
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Actualiza la imagen de perfil seleccionada (solo para profesores)
+  const handleImageSelect = (nombreImagen) => {
+    setFormData((prev) => ({ ...prev, imagenPerfil: nombreImagen }));
+  };
+
   // Envía los cambios al backend. Si la contraseña está vacía, no se incluye en el payload(subida).
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -72,6 +85,14 @@ function PerfilGrid() {
     try {
       const payload = { ...formData, tipo };
       if (!payload.contrasena) delete payload.contrasena;
+
+      // Limpiamos campos que no corresponden al tipo para evitar ruidos en BD (opcional)
+      if (tipo !== "alumno") delete payload.numeroTarjeta;
+      if (tipo !== "profesor") {
+        delete payload.numCuentaBancaria;
+        delete payload.especializacion;
+        delete payload.imagenPerfil;
+      }
 
       const respuesta = await fetch(
         `${API_URL}/usuarios/${user.id}`,
@@ -102,22 +123,33 @@ function PerfilGrid() {
 
   if (!user) return <p>Cargando perfil...</p>;
 
+  // Determinamos qué imagen mostrar en el panel izquierdo
+  const imagenMostrar =
+    tipo === "profesor" && formData.imagenPerfil && PERFILES[formData.imagenPerfil]
+      ? PERFILES[formData.imagenPerfil]
+      : ImagenPerfilDefault;
+
   return (
     <div className="perfil">
-      {/* Panel izquierdo: datos de solo lectura del alumno */}
+      {/* Panel izquierdo: datos de solo lectura */}
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
-        <img className="imagenPerfil" src={ImagenPerfil} alt="Perfil Usuario" />
+        <img className="imagenPerfil" src={imagenMostrar} alt="Perfil Usuario" />
         <h2 className="nombrePerfil">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
         {!user.esVinculado && <p className="correoPerfil">{user.email}</p>}
         <p className="tipoPerfil">
           {tipo === "administrador"
             ? "Administrador"
+            : tipo === "profesor"
+            ? "Profesor"
             : user.esVinculado
             ? "Alumno (cuenta vinculada)"
             : "Alumno"}
         </p>
 
+        {tipo === "profesor" && user.especializacion && (
+          <p className="especializacionPerfil">📚 {user.especializacion}</p>
+        )}
         {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
         {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
         {user.localidad && (
@@ -131,125 +163,35 @@ function PerfilGrid() {
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
 
-        <form onSubmit={handleSubmit}>
-          <div className="formulario-grupo">
-            <label htmlFor="nombre">Nombre:</label>
-            <input
-              name="nombre"
-              value={formData.nombre}
-              onChange={handleChange}
-              placeholder="Tu nombre"
-            />
-          </div>
-
-          <div className="formulario-grupo">
-            <label htmlFor="apellidos">Apellidos:</label>
-            <input
-              name="apellidos"
-              value={formData.apellidos}
-              onChange={handleChange}
-              placeholder="Tus apellidos"
-            />
-          </div>
-
-          {/* Contraseña y tarjeta solo para alumnos normales (no vinculados) y contraseña para admin */}
-          {!user.esVinculado && tipo === "alumno" && (
-            <>
-              <div className="formulario-grupo">
-                <label htmlFor="contrasena">Contraseña:</label>
-                <input
-                  type="password"
-                  name="contrasena"
-                  value={formData.contrasena}
-                  onChange={handleChange}
-                  placeholder="Dejar en blanco para no cambiar"
+        <form onSubmit={handleSubmit} className={tipo === "profesor" ? "formulario-profesor" : ""}>
+          {/* Si es profesor, usamos el layout de dos columnas para el avatar */}
+          {tipo === "profesor" ? (
+            <div className="seccion-superior-form">
+              <div className="columna-imagen">
+                <label className="label-seccion">Imagen de Perfil:</label>
+                <TarjetaImagenPerfil
+                  imagenSeleccionada={formData.imagenPerfil}
+                  onSelect={handleImageSelect}
                 />
               </div>
 
-              <div className="formulario-grupo">
-                <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
-                <input
-                  name="numeroTarjeta"
-                  value={formData.numeroTarjeta}
-                  onChange={handleChange}
-                  placeholder="Tu número de tarjeta"
+              <div className="columna-datos">
+                <FormularioCampos 
+                  formData={formData} 
+                  handleChange={handleChange} 
+                  tipo={tipo} 
+                  user={user} 
                 />
               </div>
-            </>
-          )}
-
-          {tipo === "administrador" && (
-            <div className="formulario-grupo">
-              <label htmlFor="contrasena">Contraseña:</label>
-              <input
-                type="password"
-                name="contrasena"
-                value={formData.contrasena}
-                onChange={handleChange}
-                placeholder="Dejar en blanco para no cambiar"
-              />
             </div>
+          ) : (
+            <FormularioCampos 
+              formData={formData} 
+              handleChange={handleChange} 
+              tipo={tipo} 
+              user={user} 
+            />
           )}
-
-          <div className="formulario-grupo">
-            <label htmlFor="numTelefono">Teléfono:</label>
-            <input
-              type="tel"
-              name="numTelefono"
-              value={formData.numTelefono}
-              onChange={handleChange}
-              placeholder="Tu teléfono"
-            />
-          </div>
-
-          <div className="formulario-grupo">
-            <label htmlFor="redes">Redes Sociales:</label>
-            <input
-              name="redes"
-              value={formData.redes}
-              onChange={handleChange}
-              placeholder="@usuario"
-            />
-          </div>
-
-          <div className="formulario-grupo">
-            <label htmlFor="pais">País:</label>
-            <select name="pais" value={formData.pais} onChange={handleChange}>
-              <option value="" disabled>
-                Seleccione un país
-              </option>
-              <option value="España">España</option>
-              <option value="México">México</option>
-              <option value="Colombia">Colombia</option>
-              <option value="Argentina">Argentina</option>
-              <option value="Chile">Chile</option>
-              <option value="Perú">Perú</option>
-              <option value="Estados Unidos">Estados Unidos</option>
-              <option value="Reino Unido">Reino Unido</option>
-              <option value="Alemania">Alemania</option>
-              <option value="Francia">Francia</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
-
-          <div className="formulario-grupo">
-            <label htmlFor="localidad">Localidad:</label>
-            <select
-              name="localidad"
-              value={formData.localidad}
-              onChange={handleChange}
-            >
-              <option value="" disabled>
-                Seleccione una localidad
-              </option>
-              <option value="Madrid">Madrid</option>
-              <option value="Barcelona">Barcelona</option>
-              <option value="Valencia">Valencia</option>
-              <option value="Sevilla">Sevilla</option>
-              <option value="Bilbao">Bilbao</option>
-              <option value="Otro">Otro</option>
-            </select>
-          </div>
 
           <button
             type="submit"
@@ -273,4 +215,141 @@ function PerfilGrid() {
   );
 }
 
+// Subcomponente para renderizar los campos del formulario de forma limpia
+function FormularioCampos({ formData, handleChange, tipo, user }) {
+  return (
+    <>
+      <div className="formulario-grupo">
+        <label htmlFor="nombre">Nombre:</label>
+        <input
+          name="nombre"
+          value={formData.nombre}
+          onChange={handleChange}
+          placeholder="Tu nombre"
+        />
+      </div>
+
+      <div className="formulario-grupo">
+        <label htmlFor="apellidos">Apellidos:</label>
+        <input
+          name="apellidos"
+          value={formData.apellidos}
+          onChange={handleChange}
+          placeholder="Tus apellidos"
+        />
+      </div>
+
+      {/* Contraseña: solo para alumnos no vinculados, profesores o administradores */}
+      {(!user.esVinculado || tipo !== "alumno") && (
+        <div className="formulario-grupo">
+          <label htmlFor="contrasena">Contraseña:</label>
+          <input
+            type="password"
+            name="contrasena"
+            value={formData.contrasena}
+            onChange={handleChange}
+            placeholder="Dejar en blanco para no cambiar"
+          />
+        </div>
+      )}
+
+      {/* Campos específicos según el tipo */}
+      {tipo === "alumno" && !user.esVinculado && (
+        <div className="formulario-grupo">
+          <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
+          <input
+            name="numeroTarjeta"
+            value={formData.numeroTarjeta}
+            onChange={handleChange}
+            placeholder="Tu número de tarjeta"
+          />
+        </div>
+      )}
+
+      {tipo === "profesor" && (
+        <>
+          <div className="formulario-grupo">
+            <label htmlFor="numCuentaBancaria">Cuenta Bancaria:</label>
+            <input
+              name="numCuentaBancaria"
+              value={formData.numCuentaBancaria}
+              onChange={handleChange}
+              placeholder="Tu cuenta bancaria"
+            />
+          </div>
+
+          <div className="formulario-grupo">
+            <label htmlFor="especializacion">Especialización:</label>
+            <select
+              name="especializacion"
+              value={formData.especializacion}
+              onChange={handleChange}
+            >
+              <option value="" disabled>Seleccione una especialización</option>
+              <option value="Programacion">Programación</option>
+              <option value="Diseño">Diseño</option>
+              <option value="Ciberseguridad">Ciberseguridad</option>
+              <option value="BDD">Base de datos</option>
+              <option value="Marketing">Marketing</option>
+            </select>
+          </div>
+        </>
+      )}
+
+      <div className="formulario-grupo">
+        <label htmlFor="numTelefono">Teléfono:</label>
+        <input
+          type="tel"
+          name="numTelefono"
+          value={formData.numTelefono}
+          onChange={handleChange}
+          placeholder="Tu teléfono"
+        />
+      </div>
+
+      <div className="formulario-grupo">
+        <label htmlFor="redes">Redes Sociales:</label>
+        <input
+          name="redes"
+          value={formData.redes}
+          onChange={handleChange}
+          placeholder="@usuario"
+        />
+      </div>
+
+      <div className="formulario-grupo">
+        <label htmlFor="pais">País:</label>
+        <select name="pais" value={formData.pais} onChange={handleChange}>
+          <option value="" disabled>Seleccione un país</option>
+          <option value="España">España</option>
+          <option value="México">México</option>
+          <option value="Colombia">Colombia</option>
+          <option value="Argentina">Argentina</option>
+          <option value="Chile">Chile</option>
+          <option value="Perú">Perú</option>
+          <option value="Estados Unidos">Estados Unidos</option>
+          <option value="Reino Unido">Reino Unido</option>
+          <option value="Alemania">Alemania</option>
+          <option value="Francia">Francia</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+
+      <div className="formulario-grupo">
+        <label htmlFor="localidad">Localidad:</label>
+        <select name="localidad" value={formData.localidad} onChange={handleChange}>
+          <option value="" disabled>Seleccione una localidad</option>
+          <option value="Madrid">Madrid</option>
+          <option value="Barcelona">Barcelona</option>
+          <option value="Valencia">Valencia</option>
+          <option value="Sevilla">Sevilla</option>
+          <option value="Bilbao">Bilbao</option>
+          <option value="Otro">Otro</option>
+        </select>
+      </div>
+    </>
+  );
+}
+
 export default PerfilGrid;
+

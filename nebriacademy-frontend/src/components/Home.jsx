@@ -24,8 +24,10 @@ function Home() {
   const storeUser = useAuthStore((state) => state.user);
   const tipoUsuario = useAuthStore((state) => state.tipo);
 
-  // Detectar si es alumno o profesor (usar el tipo del store que es la autoridad)
+  // Identificación de roles
   const isEstudiante = tipoUsuario === "alumno";
+  const isAdmin = tipoUsuario === "administrador";
+  const isProfesor = tipoUsuario === "profesor";
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Sincronizar usuario del store
@@ -45,11 +47,14 @@ function Home() {
         );
         setCursos(datosCursos.Cursos || []);
 
-        if (isEstudiante) {
-          const datosCursosAlumnos = await fetch(
-            `${API_URL}/cursosalumnos`,
-          ).then((r) => r.json());
-          setCursosAlumnos(datosCursosAlumnos.CursosAlumnos || []);
+        // Tanto alumnos como administradores necesitan categorías y (opcionalmente) cursos matriculados
+        if (isEstudiante || isAdmin) {
+          if (isEstudiante) {
+            const datosCursosAlumnos = await fetch(
+              `${API_URL}/cursosalumnos`,
+            ).then((r) => r.json());
+            setCursosAlumnos(datosCursosAlumnos.CursosAlumnos || []);
+          }
 
           const datosCategorias = await fetch(`${API_URL}/cursos/categorias`)
             .then((r) => r.json())
@@ -69,7 +74,7 @@ function Home() {
     };
 
     fetchData();
-  }, [isEstudiante]);
+  }, [isEstudiante, isAdmin]);
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Filtrar cursos para alumnos vinculados
@@ -90,12 +95,12 @@ function Home() {
     return filtrarCursosVinculado(lista);
   };
 
-  // [ALUMNO] Ordenar por ID descendente (novedades)
+  // [ALUMNO/ADMIN] Ordenar por ID descendente (novedades)
   const novedades = () => {
     return filtrarCursosVinculado(cursos.slice().sort((a, b) => b.id - a.id));
   };
 
-  // [ALUMNO] Ordenar por valoración (populares)
+  // [ALUMNO/ADMIN] Ordenar por valoración (populares)
   const cursosPopulares = () => {
     return filtrarCursosVinculado(
       cursos.slice().sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0)),
@@ -163,7 +168,7 @@ function Home() {
           {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
         </h1>
         {/* Botón de eliminar solo para profesores */}
-        {!isEstudiante && (
+        {isProfesor && (
           <button
             onClick={() => setIsDeleting(!isDeleting)}
             className="btn-delete-mode"
@@ -178,8 +183,8 @@ function Home() {
         )}
       </div>
 
-      {/* VISTA ALUMNO */}
-      {isEstudiante ? (
+      {/* VISTA ALUMNO / ADMINISTRADOR */}
+      {isEstudiante || isAdmin ? (
         <div className="page-sections">
           {/* Sección Novedades */}
           <div className="section-carousel">
@@ -202,28 +207,30 @@ function Home() {
             </SliderComponent>
           </div>
 
-          {/* Sección Tus cursos */}
-          <div className="section-carousel">
-            <h2>Tus cursos</h2>
-            <SliderComponent>
-              {tusCursos().length > 0 ? (
-                tusCursos().map((curso) => (
-                  <CardSlider
-                    key={curso.id}
-                    name={curso.nombreCurso}
-                    cursoId={curso.id}
-                    nivel={curso.nivel}
-                    valoracion={curso.valoracion || 0}
-                    imagen={curso.imagen}
-                  />
-                ))
-              ) : (
-                <p className="mensaje-vacio">
-                  No estás apuntado a ningún curso aún
-                </p>
-              )}
-            </SliderComponent>
-          </div>
+          {/* Sección Tus cursos (Solo para Alumnos) */}
+          {isEstudiante && (
+            <div className="section-carousel">
+              <h2>Tus cursos</h2>
+              <SliderComponent>
+                {tusCursos().length > 0 ? (
+                  tusCursos().map((curso) => (
+                    <CardSlider
+                      key={curso.id}
+                      name={curso.nombreCurso}
+                      cursoId={curso.id}
+                      nivel={curso.nivel}
+                      valoracion={curso.valoracion || 0}
+                      imagen={curso.imagen}
+                    />
+                  ))
+                ) : (
+                  <p className="mensaje-vacio">
+                    No estás apuntado a ningún curso aún
+                  </p>
+                )}
+              </SliderComponent>
+            </div>
+          )}
 
           {/* Sección Categorías */}
           <div className="section-categories">
@@ -297,4 +304,6 @@ function Home() {
   );
 }
 
+
 export default Home;
+
