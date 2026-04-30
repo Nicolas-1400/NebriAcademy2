@@ -9,12 +9,12 @@ import TodosCursos from "../pages/TodosCursos.jsx";
 import Curso from "../pages/Curso.jsx";
 import AddCurso from "../pages/AddCurso.jsx";
 import AddContenido from "../pages/AddContenido.jsx";
-import EditarContenidoCurso from "../pages/EditarContenidoCurso.jsx";
+import EditarContenido from "../pages/EditarContenido.jsx";
 import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
 import TodosProfesores from "../pages/TodosProfesores.jsx";
 import InfoProfesor from "../pages/InfoProfesor.jsx";
 import Apuntes from "../pages/Apuntes.jsx";
-import EditarApunteIndividual from "../pages/EditarApunteIndividual.jsx";
+
 import PreRegister from "../pages/PreRegister.jsx";
 import Verificacion from "../pages/Verificacion.jsx";
 import Register from "../pages/Register.jsx";
@@ -160,7 +160,7 @@ function AppRouter() {
           path="/Home/Apuntes/EditarApunte/:id"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <EditarApunteIndividual />
+              <EditarContenido />
             </ProtectedRoute>
           }
         />
@@ -183,10 +183,10 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Cursos/:id/EditarContenidoCurso"
+          path="/Home/Cursos/:id/EditarContenido"
           element={
             <ProtectedRoute requiredTipo="profesor">
-              <EditarContenidoCurso />
+              <EditarContenido />
             </ProtectedRoute>
           }
         />

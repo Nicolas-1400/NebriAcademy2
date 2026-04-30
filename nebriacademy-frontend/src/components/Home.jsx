@@ -5,7 +5,7 @@ import useAuthStore from "../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import CardSlider from "./CardSlider";
 import TarjetaCursos from "./TarjetaCursos";
-import Eliminar from "../assets/Eliminar.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 import SliderComponent from "./SliderComponent";
 import "../styles/HomeEspacio.css";
 

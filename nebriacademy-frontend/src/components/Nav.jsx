@@ -2,14 +2,14 @@
 import { API_URL } from "../config/api";
 import { useNavigate } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import Logo from "../assets/nebriLogo.png";
-import ImagenPerfilDefault from "../assets/ImagenPerfilUsuario.png";
+import Logo from "../assets/Iconos/nebriLogo.png";
+import ImagenPerfilDefault from "../assets/Iconos/ImagenPerfilUsuario.png";
 import { PERFILES } from "./TarjetaImagenPerfil";
-import ImagenBotonMas from "../assets/botonMas.png";
-import ImagenMenuHamburguesa from "../assets/menuHamburguesa.png";
+import ImagenBotonMas from "../assets/Iconos/botonMas.png";
+import ImagenMenuHamburguesa from "../assets/Iconos/menuHamburguesa.png";
 import useAuthStore from "../store/useAuthStore";
-import CampanaPendiente from "../assets/Campana-pendiente.png";
-import CampanaCheck from "../assets/Campana-check.png";
+import CampanaPendiente from "../assets/Iconos/Campana-pendiente.png";
+import CampanaCheck from "../assets/Iconos/Campana-check.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa

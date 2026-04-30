@@ -4,7 +4,7 @@ import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 import useAuthStore from "../store/useAuthStore";
-import Eliminar from "../assets/Eliminar.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los cursos con filtros por categoría, nivel y buscador de texto

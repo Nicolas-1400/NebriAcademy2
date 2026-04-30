@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import Editar from "../assets/lapiz.png";
-import Eliminar from "../assets/Eliminar.png";
+import Editar from "../assets/Iconos/lapiz.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra un ejercicio dentro de la vista de un curso.

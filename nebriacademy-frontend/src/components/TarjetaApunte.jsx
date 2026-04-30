@@ -1,5 +1,5 @@
-import MeGusta from "../assets/me-gusta.png";
-import MeGustaMarcado from "../assets/me-gusta-marcado.png";
+import MeGusta from "../assets/Iconos/me-gusta.png";
+import MeGustaMarcado from "../assets/Iconos/me-gusta-marcado.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra un apunte individual en la página global de Apuntes
