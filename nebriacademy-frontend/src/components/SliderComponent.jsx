@@ -59,8 +59,10 @@ const SliderComponent = ({ children }) => {
         ‹
       </button>
 
-      <div ref={sliderRef} className="carousel">
-        {children}
+      <div className={`carousel-wrapper${canScrollRight ? " fade-right" : ""}`}>
+        <div ref={sliderRef} className="carousel">
+          {children}
+        </div>
       </div>
 
       <button
