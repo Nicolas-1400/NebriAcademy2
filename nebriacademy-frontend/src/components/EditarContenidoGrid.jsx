@@ -4,27 +4,40 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Formulario para editar un apunte existente. Los datos del apunte llegan en el state de navegación.
-function EditarApunteIndividualGrid() {
+// Formulario genérico para editar vídeos, apuntes o ejercicios de un curso.
+// El tipo de contenido y los datos actuales llegan en el state de navegación.
+function EditarContenidoGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
-  const { apunte } = state || {};
+  const { tipo, item, cursoId } = state || {};
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
-  // Precargamos los campos con los datos actuales del apunte
-  const [nombre, setNombre] = useState(apunte?.nombre || "");
-  const [descripcion, setDescripcion] = useState(apunte?.descripcion || "");
+  // Precargamos los campos con los valores actuales del contenido
+  const [nombre, setNombre] = useState(item?.nombre || "");
+  const [descripcion, setDescripcion] = useState(item?.descripcion || "");
   // El archivo es opcional: si no se selecciona uno nuevo, se mantiene el actual
   const [newFile, setNewFile] = useState(null);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
-  // Si llegamos a esta página sin datos del apunte, redirigimos a la lista de apuntes
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Si llegamos sin datos del contenido, redirigimos
   useEffect(() => {
-    if (!apunte) {
-      navigate("/Home/Apuntes");
+    if (!tipo || !item) {
+      if (cursoId) {
+        navigate(`/Home/Cursos/${cursoId}`);
+      } else {
+        navigate("/Home/Apuntes");
+      }
     }
-  }, [apunte, navigate]);
+  }, [tipo, item, navigate, cursoId]);
+
+  // Determina el endpoint de la API según el tipo de contenido que se está editando
+  const getEndpoint = () => {
+    if (tipo === "video") return "videos";
+    if (tipo === "apunte") return "apuntes";
+    return "ejercicios";
+  };
 
   // Envía los cambios al backend: con FormData si hay nuevo archivo, o con JSON si no
   const handleSave = async () => {
@@ -32,20 +45,22 @@ function EditarApunteIndividualGrid() {
     setError(null);
 
     try {
-      const url = `${API_URL}/apuntes/${apunte.id}`;
+      const endpoint = getEndpoint();
+      const url = `${API_URL}/${endpoint}/${item.id}`;
 
       let respuesta;
       if (newFile) {
         // Si se seleccionó un archivo nuevo, enviamos todo como FormData (multipart)
         const form = new FormData();
         form.append("nombre", nombre);
-        form.append("descripcion", descripcion);
+        if (tipo !== "video") form.append("descripcion", descripcion);
         form.append("archivo", newFile);
 
         respuesta = await fetch(url, { method: "PUT", body: form });
       } else {
         // Si no hay archivo nuevo, enviamos solo texto como JSON
-        const body = { nombre, descripcion };
+        const body = { nombre };
+        if (tipo !== "video") body.descripcion = descripcion;
 
         respuesta = await fetch(url, {
           method: "PUT",
@@ -56,10 +71,14 @@ function EditarApunteIndividualGrid() {
 
       if (!respuesta.ok) {
         const datos = await respuesta.json();
-        throw new Error(datos.error || "Error actualizando apunte");
+        throw new Error(datos.error || "Error actualizando contenido");
       }
 
-      navigate("/Home/Apuntes");
+      if (cursoId) {
+        navigate(`/Home/Cursos/${cursoId}`);
+      } else {
+        navigate("/Home/Apuntes");
+      }
     } catch (error) {
       console.error(error);
       setError(error.message || "Error al guardar cambios");
@@ -68,18 +87,18 @@ function EditarApunteIndividualGrid() {
     }
   };
 
-  if (!apunte) return <p>Cargando...</p>;
+  if (!item) return <p>Cargando...</p>;
 
   return (
     <div className="editar-curso-container">
-      <h2>Editar Apunte</h2>
+      <h2>Editar {tipo}</h2>
       <div className="add-contenido-form">
         {/* Enlace al archivo actual para que el usuario pueda verlo antes de reemplazarlo */}
         <p>
           <strong>Archivo actual:</strong>{" "}
-          {apunte.archivo ? (
+          {item.archivo ? (
             <a
-              href={apunte.archivo}
+              href={item.archivo}
               target="_blank"
               rel="noreferrer"
             >
@@ -99,13 +118,16 @@ function EditarApunteIndividualGrid() {
           />
         </div>
 
-        <div className="form-group">
-          <label>Descripción</label>
-          <textarea
-            value={descripcion}
-            onChange={(e) => setDescripcion(e.target.value)}
-          />
-        </div>
+        {/* El campo descripción no aplica a los vídeos */}
+        {tipo !== "video" && (
+          <div className="form-group">
+            <label>Descripción</label>
+            <textarea
+              value={descripcion}
+              onChange={(e) => setDescripcion(e.target.value)}
+            />
+          </div>
+        )}
 
         <div className="form-group">
           <label>Cambiar archivo (opcional) (máximo 20 MB)</label>
@@ -127,7 +149,13 @@ function EditarApunteIndividualGrid() {
           </button>
           <button
             className="btn-cancel"
-            onClick={() => navigate("/Home/Apuntes")}
+            onClick={() => {
+              if (cursoId) {
+                navigate(`/Home/Cursos/${cursoId}`);
+              } else {
+                navigate("/Home/Apuntes");
+              }
+            }}
           >
             Cancelar
           </button>
@@ -137,4 +165,4 @@ function EditarApunteIndividualGrid() {
   );
 }
 
-export default EditarApunteIndividualGrid;
+export default EditarContenidoGrid;

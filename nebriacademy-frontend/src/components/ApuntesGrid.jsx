@@ -296,7 +296,7 @@ function ApuntesGrid() {
                         <button
                           onClick={() =>
                             navigate(`/Home/Apuntes/EditarApunte/${ap.id}`, {
-                              state: { apunte: ap },
+                              state: { tipo: "apunte", item: ap },
                             })
                           }
                         >

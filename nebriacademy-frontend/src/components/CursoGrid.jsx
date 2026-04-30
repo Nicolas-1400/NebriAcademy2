@@ -63,6 +63,9 @@ function CursoGrid() {
   const [commentText, setCommentText] = useState("");
   // editingComment guarda el ID y texto del comentario que se está editando en línea
   const [editingComment, setEditingComment] = useState({ id: null, text: "" });
+  // Estado para la edición de la descripción del curso
+  const [editingDescription, setEditingDescription] = useState(false);
+  const [descriptionText, setDescriptionText] = useState("");
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
   // Mapa de nombre → imagen importada para resolver la portada del curso desde la BDD
@@ -94,6 +97,7 @@ function CursoGrid() {
         );
         if (!respuestaCurso) throw new Error("Curso no encontrado");
         setCurso(respuestaCurso);
+        setDescriptionText(respuestaCurso.descripcion || "");
 
         // Bloquear acceso si es un alumno vinculado intentando ver un curso de su profe
         if (
@@ -251,15 +255,10 @@ function CursoGrid() {
     }
   };
 
-  // Comprueba si el autor de un apunte es el profesor del curso
+  // Comprueba si el autor de un apunte es el profesor del curso usando exclusivamente el usuarioId
   const isProfesorApunte = (apunte) => {
     const auth = String(apunte?.autor || apunte?.usuarioId || "");
-    if (curso?.profesor && auth === String(curso.profesor)) return true;
-    if (
-      profesor &&
-      (auth === String(profesor.id) || auth === String(profesor.usuarioId))
-    )
-      return true;
+    if (profesor && auth === String(profesor.usuarioId)) return true;
     return false;
   };
 
@@ -434,6 +433,34 @@ function CursoGrid() {
     setEditingComment({ id: null, text: "" });
   };
 
+  // Guarda la nueva descripción del curso en el backend
+  const handleSaveDescription = async () => {
+    if (!descriptionText.trim()) return;
+    try {
+      const res = await fetch(`${API_URL}/cursos/${id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          nombreCurso: curso.nombreCurso,
+          descripcion: descriptionText,
+          categoria: curso.categoria,
+          nivel: curso.nivel,
+          imagen: curso.imagen,
+        }),
+      });
+
+      if (res.ok) {
+        setCurso({ ...curso, descripcion: descriptionText });
+        setEditingDescription(false);
+      } else {
+        alert("Error al actualizar la descripción");
+      }
+    } catch (e) {
+      console.error(e);
+      alert("Error de red al actualizar descripción");
+    }
+  };
+
   // Guarda el texto editado del comentario en el backend y actualiza el estado local
   const saveEditComment = async () => {
     if (!editingComment.text.trim()) return;
@@ -472,9 +499,13 @@ function CursoGrid() {
   if (!curso) return <p>Cargando curso...</p>;
   if (error) return <p className="error">{error}</p>;
 
-  // Separamos los apuntes del profesor de los de los alumnos para mostrarlos en columnas distintas
-  const profApuntes = contenidos.apuntes.filter(isProfesorApunte);
-  const alumnApuntes = contenidos.apuntes.filter((a) => !isProfesorApunte(a));
+  // Separamos los apuntes del profesor de los de los alumnos para mostrarlos en columnas distintas y los ordenamos por likes
+  const profApuntes = contenidos.apuntes
+    .filter(isProfesorApunte)
+    .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+  const alumnApuntes = contenidos.apuntes
+    .filter((a) => !isProfesorApunte(a))
+    .sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
 
   const puedeVerContenido =
     tipo === "profesor" ||
@@ -564,7 +595,7 @@ function CursoGrid() {
                       tipo={tipo}
                       editingMode={editingMode}
                       handleEditNavigate={(t, i) =>
-                        navigate(`/Home/Cursos/${id}/EditarContenidoCurso`, {
+                        navigate(`/Home/Cursos/${id}/EditarContenido`, {
                           state: { tipo: t, item: i, cursoId: id },
                         })
                       }
@@ -592,12 +623,9 @@ function CursoGrid() {
                           tipo={tipo}
                           editingMode={editingMode}
                           handleEditNavigate={(t, i) =>
-                            navigate(
-                              `/Home/Cursos/${id}/EditarContenidoCurso`,
-                              {
-                                state: { tipo: t, item: i, cursoId: id },
-                              },
-                            )
+                            navigate(`/Home/Cursos/${id}/EditarContenido`, {
+                              state: { tipo: t, item: i, cursoId: id },
+                            })
                           }
                           handleDeleteContenido={handleDeleteItem}
                           onToggleLike={handleToggleApunteLike}
@@ -620,13 +648,11 @@ function CursoGrid() {
                           likedIds={likedApuntes}
                           tipo={tipo}
                           editingMode={editingMode}
+                          allowEdit={false}
                           handleEditNavigate={(t, i) =>
-                            navigate(
-                              `/Home/Cursos/${id}/EditarContenidoCurso`,
-                              {
-                                state: { tipo: t, item: i, cursoId: id },
-                              },
-                            )
+                            navigate(`/Home/Cursos/${id}/EditarContenido`, {
+                              state: { tipo: t, item: i, cursoId: id },
+                            })
                           }
                           handleDeleteContenido={handleDeleteItem}
                           onToggleLike={handleToggleApunteLike}
@@ -650,12 +676,9 @@ function CursoGrid() {
                           tipo={tipo}
                           editingMode={editingMode}
                           handleEditNavigate={(t, i) =>
-                            navigate(
-                              `/Home/Cursos/${id}/EditarContenidoCurso`,
-                              {
-                                state: { tipo: t, item: i, cursoId: id },
-                              },
-                            )
+                            navigate(`/Home/Cursos/${id}/EditarContenido`, {
+                              state: { tipo: t, item: i, cursoId: id },
+                            })
                           }
                           handleDeleteContenido={handleDeleteItem}
                         />
@@ -749,13 +772,60 @@ function CursoGrid() {
         <div className="curso-detalles">
           <div className="detalles-profesor">
             <p>Profesor</p>
-            {profesor
-              ? `${profesor.nombre} ${profesor.apellidos}`
-              : "Desconocido"}
+            {profesor ? (
+              tipo === "alumno" ? (
+                <span
+                  className="link-profesor"
+                  onClick={() => navigate(`/Home/Profesores/${profesor.id}`)}
+                >
+                  {profesor.nombre} {profesor.apellidos}
+                </span>
+              ) : (
+                `${profesor.nombre} ${profesor.apellidos}`
+              )
+            ) : (
+              "Desconocido"
+            )}
           </div>
           <div className="detalles-descripcion">
             <p>Descripción</p>
-            {curso.descripcion}
+            {editingDescription ? (
+              <div className="edit-description-box">
+                <textarea
+                  value={descriptionText}
+                  onChange={(e) => setDescriptionText(e.target.value)}
+                  rows={5}
+                />
+                <div className="edit-description-actions">
+                  <button onClick={handleSaveDescription}>Guardar</button>
+                  <button
+                    onClick={() => {
+                      setDescriptionText(curso.descripcion);
+                      setEditingDescription(false);
+                    }}
+                  >
+                    Cancelar
+                  </button>
+                </div>
+              </div>
+            ) : (
+              <>
+                {curso.descripcion}
+                <br />
+                {/* Botón Editar solo visible si es profesor y está en editingMode */}
+                {tipo === "profesor" && editingMode && (
+                  <button
+                    onClick={() => {
+                      setDescriptionText(curso.descripcion);
+                      setEditingDescription(true);
+                    }}
+                    className="btn-editar-descripcion"
+                  >
+                    Editar
+                  </button>
+                )}
+              </>
+            )}
           </div>
           <div className="detalles-comentarios">
             <p>Comentarios</p>
@@ -783,28 +853,30 @@ function CursoGrid() {
                   ) : (
                     <>
                       <p>{c.comentario}</p>
-                      {/* Admin puede borrar cualquier comentario sin restricción */}
-                      {tipo === "administrador" && (
+                      {/* Botones para el autor del comentario (excepto admin) */}
+                      {tipo !== "administrador" &&
+                      user &&
+                      Number(c.usuarioId) ===
+                        Number(user.usuarioId || user.id) ? (
                         <div className="comentario-acciones">
+                          <button onClick={() => startEditComment(c)}>
+                            Editar
+                          </button>
                           <button onClick={() => deleteComment(c.id)}>
                             Borrar
                           </button>
                         </div>
-                      )}
-                      {/* Los botones de editar/borrar solo aparecen al autor del comentario (no para admin) */}
-                      {tipo !== "administrador" &&
-                        user &&
-                        Number(c.usuarioId) ===
-                          Number(user.usuarioId || user.id) && (
+                      ) : (
+                        /* Admin o Profesor en modo edición pueden borrar cualquier comentario */
+                        (tipo === "administrador" ||
+                          (tipo === "profesor" && editingMode)) && (
                           <div className="comentario-acciones">
-                            <button onClick={() => startEditComment(c)}>
-                              Editar
-                            </button>
                             <button onClick={() => deleteComment(c.id)}>
                               Borrar
                             </button>
                           </div>
-                        )}
+                        )
+                      )}
                     </>
                   )}
                 </div>

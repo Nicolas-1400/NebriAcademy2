@@ -459,6 +459,12 @@
   gap: 20px;
 }
 
+.curso-grid .apuntes-list {
+  max-height: 400px;
+  overflow-y: auto;
+  padding-right: 5px;
+}
+
 /* Wrapper para dos columnas de apuntes: profesor (izquierda) y alumnos (derecha) */
 .apuntes-columns-wrapper {
   display: flex;
@@ -647,6 +653,18 @@
   border-top: 5px solid var(--rojo-nebrija);
 }
 
+.link-profesor {
+  color: var(--rojo-nebrija);
+  cursor: pointer;
+  font-weight: 600;
+  transition: all 0.3s ease;
+}
+
+.link-profesor:hover {
+  color: var(--color-secundario);
+  text-decoration: none;
+}
+
 .detalles-comentarios {
   border-top: 5px solid var(--rojo-nebrija);
   flex: 1;
@@ -657,6 +675,61 @@
 .detalles-comentarios p:first-child {
   margin-bottom: 15px;
 }
+/* ─────────────────────────────────────────────────────────────────────────────
+   13.5. SECCIÓN DE DETALLES DESCRIPCIÓN (acciones)
+   ───────────────────────────────────────────────────────────────────────────── */
+
+.edit-description-box {
+  display: flex;
+  flex-direction: column;
+  gap: 12px;
+  margin-top: 10px;
+}
+
+.edit-description-box textarea {
+  width: 100%;
+  padding: 12px;
+  border: 2px solid #ddd;
+  border-radius: 6px;
+  font-family: inherit;
+  font-size: inherit;
+  color: inherit;
+  resize: vertical;
+  min-height: 100px;
+  transition: all 0.3s ease;
+}
+
+.edit-description-box textarea:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 0 3px rgba(194, 0, 47, 0.1);
+}
+
+.edit-description-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.edit-description-actions button,
+.btn-editar-descripcion {
+  padding: 6px 12px;
+  font-weight: 600;
+  font-size: 13px;
+  border: 2px solid var(--rojo-nebrija);
+  border-radius: 5px;
+  background-color: transparent;
+  color: var(--rojo-nebrija);
+  cursor: pointer;
+  transition: all 0.3s ease;
+  margin-top: 10px;
+}
+
+.edit-description-actions button:hover,
+.btn-editar-descripcion:hover {
+  background-color: var(--rojo-nebrija);
+  color: white;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    14. SECCIÓN DE DETALLES COMENTARIOS (acciones-general)
    ───────────────────────────────────────────────────────────────────────────── */
@@ -703,6 +776,12 @@
   margin-bottom: 20px;
   padding-bottom: 20px;
   border-bottom: 1px solid #e0e0e0;
+}
+
+.curso-grid .comentarios-existentes {
+  max-height: 1000px;
+  overflow-y: auto;
+  padding-right: 5px;
 }
 
 .comentario-item button {

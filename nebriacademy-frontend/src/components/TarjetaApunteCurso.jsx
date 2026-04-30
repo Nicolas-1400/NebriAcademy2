@@ -17,11 +17,13 @@ function TarjetaApunteCurso({
   editingMode,
   handleEditNavigate,
   handleDeleteContenido,
+  allowEdit = true,
 }) {
   const isLiked = likedIds.includes(apunte.id);
-  // Los botones de edición solo son visibles si el usuario es profesor y el modo edición está activo
-  const isProfesorEdit = tipo === "profesor" && editingMode;
-  const showDelete = isProfesorEdit || tipo === "administrador";
+  // El botón de editar se muestra si es profesor en modo edición y se permite editar (apuntes propios)
+  const showEdit = tipo === "profesor" && editingMode && allowEdit;
+  // El botón de borrar se muestra si es profesor en modo edición o si es admin
+  const showDelete = (tipo === "profesor" && editingMode) || tipo === "administrador";
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
@@ -34,10 +36,10 @@ function TarjetaApunteCurso({
         <p className="apunte-autor">{apunte.nombreAutor || apunte.autor}</p>
       </div>
 
-      {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
-      {(isProfesorEdit || showDelete) && (
+      {/* Controles de edición: editar solo profesor si está permitido, borrar profesor/admin */}
+      {(showEdit || showDelete) && (
         <div className="edit-controls">
-          {isProfesorEdit && (
+          {showEdit && (
             <button
               onClick={() => handleEditNavigate("apunte", apunte)}
               title="Editar apunte"
