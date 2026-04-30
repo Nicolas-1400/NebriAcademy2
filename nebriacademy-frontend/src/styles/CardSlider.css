@@ -18,8 +18,7 @@
 }
 
 .card.card-slider:hover {
-  transform: scale(0.98);
-  box-shadow: 0 12px 24px rgba(0, 0, 0, 0.14);
+  box-shadow: 0 12px 24px rgba(136, 4, 4, 0.603);
 }
 
 .card-slider-img {
@@ -67,6 +66,26 @@
 
 .card.card-apunte {
   min-height: 320px;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  cursor: default;
+}
+
+.card-apunte-label {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #888;
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
+.card-apunte-title {
+  font-size: 1.1rem;
+  color: var(--rojo-nebrija);
+  font-weight: 700;
+  margin: 0;
+  line-height: 1.25;
 }
 
 .card-slider-description,
@@ -77,14 +96,15 @@
 }
 
 .card-slider-description {
-  font-size: 0.95rem;
+  font-size: 0.85rem;
   line-height: 1.4;
   min-height: 3.2rem;
 }
 
 .card-slider-author {
   font-size: 0.9rem;
-  font-weight: 600;
+  font-weight: 500;
+  color: #888;
 }
 
 .card-slider-category {
@@ -96,6 +116,18 @@
   font-size: 0.85rem;
   font-weight: 700;
   width: fit-content;
+  margin: 0;
+}
+
+.card-slider-category-btn {
+  border: none;
+  cursor: pointer;
+  transition: background-color 0.2s ease, transform 0.15s ease;
+}
+
+.card-slider-category-btn:hover {
+  background-color: rgba(194, 0, 47, 0.22);
+  transform: scale(1.04);
 }
 
 .card-slider-footer {
@@ -104,6 +136,8 @@
   align-items: center;
   gap: 0.5rem;
   margin-top: 0.75rem;
+  padding-top: 0.5rem;
+  border-top: 1px solid rgba(194, 0, 47, 0.12);
 }
 
 .card-slider-file {

@@ -47,34 +47,45 @@ function CardSlider({
     return (
       <div className="card card-slider card-apunte">
         <div className="card-slider-content">
-          <h3>{apunte.nombre}</h3>
+          <span className="card-apunte-label">Apunte:</span>
+          <h3 className="card-apunte-title">{apunte.nombre}</h3>
+          <p className="card-slider-author">{autorNombre || apunte.autor}</p>
+          <button
+            type="button"
+            className="card-slider-category card-slider-category-btn"
+            onClick={(e) => {
+              e.stopPropagation();
+              navigate(`/Home/Apuntes?categoria=${encodeURIComponent(apunte.categoria)}`);
+            }}
+          >
+            {apunte.categoria}
+          </button>
+          <hr />
           {apunte.descripcion && (
             <p className="card-slider-description">{apunte.descripcion}</p>
           )}
-          <p className="card-slider-author">{autorNombre || apunte.autor}</p>
-          <p className="card-slider-category">{apunte.categoria}</p>
-          <div className="card-slider-footer">
-            <a
-              className="card-slider-file"
-              href={
-                apunte.archivo?.startsWith("http")
-                  ? apunte.archivo
-                  : `${API_URL}/apuntes/files/${apunte.archivo}`
-              }
-              target="_blank"
-              rel="noreferrer"
-            >
-              Abrir apunte
-            </a>
-            <button
-              type="button"
-              className={`card-slider-like-button ${isLiked ? "liked" : ""}`}
-              onClick={() => onToggleLike?.(apunte)}
-            >
-              <img src={isLiked ? MeGustaMarcado : MeGusta} alt="Like" />
-              <span>{apunte.valoracion || 0}</span>
-            </button>
-          </div>
+        </div>
+        <div className="card-slider-footer">
+          <a
+            className="card-slider-file"
+            href={
+              apunte.archivo?.startsWith("http")
+                ? apunte.archivo
+                : `${API_URL}/apuntes/files/${apunte.archivo}`
+            }
+            target="_blank"
+            rel="noreferrer"
+          >
+            Abrir apunte
+          </a>
+          <button
+            type="button"
+            className={`card-slider-like-button ${isLiked ? "liked" : ""}`}
+            onClick={() => onToggleLike?.(apunte)}
+          >
+            <img src={isLiked ? MeGustaMarcado : MeGusta} alt="Like" />
+            <span>{apunte.valoracion || 0}</span>
+          </button>
         </div>
       </div>
     );

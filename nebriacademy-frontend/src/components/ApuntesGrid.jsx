@@ -1,7 +1,7 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
-import { useNavigate, useParams } from "react-router-dom";
+import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import Mas from "../assets/mas.png";
 import Lapiz from "../assets/lapiz.png";
 import SalirEdicion from "../assets/lapiz-cancelar3.png";
@@ -34,6 +34,17 @@ function ApuntesGrid() {
   });
   // En modo edición se muestran los botones de editar/borrar en cada apunte propio
   const [editMode, setEditMode] = useState(false);
+  const [searchParams] = useSearchParams();
+
+  // Si se llega desde el slider con ?categoria=X, pre-seleccionamos ese filtro
+  useEffect(() => {
+    const categoriaParam = searchParams.get("categoria");
+    if (categoriaParam) {
+      setFilters((prev) => ({ ...prev, category: categoriaParam }));
+    }
+  // Solo al montar (primera vez que se resuelven los searchParams)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Al montar el componente, cargamos apuntes, profesores, alumnos y categorías en paralelo
