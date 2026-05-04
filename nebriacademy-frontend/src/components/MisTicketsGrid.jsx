@@ -46,11 +46,11 @@ function MisTicketsGrid() {
       <h1>Mis Tickets</h1>
       <p className="subtitulo">Aquí puedes ver todos los reportes que has enviado al equipo de soporte.</p>
 
-      {loading && <p className="cargando">Cargando tickets...</p>}
+      {loading && <p className="mensaje-cargando">Cargando tickets...</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && tickets.length === 0 && (
-        <p className="no-tickets">No has enviado ningún ticket todavía.</p>
+        <p className="mensaje-vacio">No se han encontrado tickets reportados.</p>
       )}
 
       {!loading && tickets.length > 0 && (

@@ -43,8 +43,8 @@ function CuentasTable({
           <tbody className="contenido-tabla">
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={headers.length}>
-                  No hay {title.toLowerCase()} que coincidan con los filtros
+                <td colSpan={headers.length} className="mensaje-vacio-tabla">
+                  No se han encontrado {title.toLowerCase()} que coincidan con la búsqueda.
                 </td>
               </tr>
             ) : (

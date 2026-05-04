@@ -167,7 +167,7 @@ function MiEspacioGrid() {
   if (loading)
     return (
       <div className="page-container">
-        <p>Cargando espacio personal...</p>
+        <p className="mensaje-cargando">Cargando tu espacio personal...</p>
       </div>
     );
   if (error)
@@ -205,7 +205,7 @@ function MiEspacioGrid() {
             ),
           )
         ) : (
-          <p className="mensaje-vacio">No hay elementos.</p>
+          <p className="mensaje-vacio">No hay {title.toLowerCase()} registrados.</p>
         )}
       </SliderComponent>
     </div>

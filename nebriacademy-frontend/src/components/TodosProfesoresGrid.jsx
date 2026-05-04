@@ -9,6 +9,7 @@ import SearchSidebar from "./SearchSidebar";
 function TodosProfesoresGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [profesores, setProfesores] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Estado del buscador por nombre y del filtro por especialización
@@ -26,7 +27,8 @@ function TodosProfesoresGrid() {
       .catch((error) => {
         console.error("Error:", error);
         setError("Error cargando profesores");
-      });
+      })
+      .finally(() => setLoading(false));
   }, []);
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
@@ -85,7 +87,9 @@ function TodosProfesoresGrid() {
       {/* Grid principal con las tarjetas de los profesores filtrados */}
       <div className="profesores-grid">
         <h2>Profesores</h2>
-        {filteredProfesores.length > 0 ? (
+        {loading ? (
+          <p className="mensaje-cargando">Cargando profesores...</p>
+        ) : filteredProfesores.length > 0 ? (
           <div className="profesores-contenedor">
             {filteredProfesores.map((p) => (
               <TarjetaProfesores
@@ -99,7 +103,7 @@ function TodosProfesoresGrid() {
             ))}
           </div>
         ) : (
-          <p className="mensaje-vacio">No se encontraron profesores.</p>
+          <p className="mensaje-vacio">No se han encontrado profesores.</p>
         )}
       </div>
     </div>

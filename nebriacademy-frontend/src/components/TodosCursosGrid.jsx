@@ -23,6 +23,7 @@ function TodosCursosGrid() {
     profesores: [],
     categorias: [],
   });
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Estado de los filtros: categoría, nivel y buscador de texto
@@ -60,6 +61,8 @@ function TodosCursosGrid() {
       } catch (error) {
         console.error(error);
         setError("Error al cargar los cursos");
+      } finally {
+        setLoading(false);
       }
     };
     cargarDatos();
@@ -157,24 +160,30 @@ function TodosCursosGrid() {
       {/* Grid principal con las tarjetas de los cursos filtrados */}
       <main className="cursos-contenedor">
         <h2>Cursos</h2>
-        <div className="cursos-grid">
-          {filteredCursos.map((c) => (
-            <div key={c.id} className="tarjeta-curso-wrapper">
-              <TarjetaCursos
-                name={c.nombreCurso}
-                cursoId={c.id}
-                categoria={c.categoria}
-                nivel={c.nivel}
-                descripcion={c.descripcion}
-                profesor={getProfesorName(c.profesor)}
-                valoracion={c.valoracion}
-                imagen={c.imagen}
-                isAdmin={tipo === "administrador"}
-                onAdminDelete={() => handleDeleteCurso(c.id)}
-              />
-            </div>
-          ))}
-        </div>
+        {loading ? (
+          <p className="mensaje-cargando">Cargando cursos...</p>
+        ) : filteredCursos.length > 0 ? (
+          <div className="cursos-grid">
+            {filteredCursos.map((c) => (
+              <div key={c.id} className="tarjeta-curso-wrapper">
+                <TarjetaCursos
+                  name={c.nombreCurso}
+                  cursoId={c.id}
+                  categoria={c.categoria}
+                  nivel={c.nivel}
+                  descripcion={c.descripcion}
+                  profesor={getProfesorName(c.profesor)}
+                  valoracion={c.valoracion}
+                  imagen={c.imagen}
+                  isAdmin={tipo === "administrador"}
+                  onAdminDelete={() => handleDeleteCurso(c.id)}
+                />
+              </div>
+            ))}
+          </div>
+        ) : (
+          <p className="mensaje-vacio">No se han encontrado cursos.</p>
+        )}
       </main>
     </div>
   );

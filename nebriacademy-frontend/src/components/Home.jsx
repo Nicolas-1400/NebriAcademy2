@@ -150,7 +150,7 @@ function Home() {
   if (loading) {
     return (
       <div className="page-container">
-        <p>Cargando contenido...</p>
+        <p className="mensaje-cargando">Cargando tu espacio...</p>
       </div>
     );
   }
@@ -205,7 +205,7 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="mensaje-vacio">No hay cursos disponibles</p>
+                <p className="mensaje-vacio">No se han encontrado cursos en esta sección.</p>
               )}
             </SliderComponent>
           </div>
@@ -228,7 +228,7 @@ function Home() {
                   ))
                 ) : (
                   <p className="mensaje-vacio">
-                    No estás apuntado a ningún curso aún
+                    Aún no estás apuntado a ningún curso. ¡Explora el catálogo!
                   </p>
                 )}
               </SliderComponent>
@@ -267,7 +267,7 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="mensaje-vacio">No hay cursos disponibles</p>
+                <p className="mensaje-vacio">No se han encontrado cursos en esta sección.</p>
               )}
             </SliderComponent>
           </div>
@@ -278,8 +278,8 @@ function Home() {
           <h2>Tus cursos</h2>
           <div className="grid-courses">
             {misCursos().length === 0 ? (
-              <p className="message-empty">
-                No tienes cursos asignados todavía.
+              <p className="mensaje-vacio">
+                Aún no has creado ningún curso.
               </p>
             ) : (
               misCursos().map((c) => (

@@ -29,6 +29,7 @@ function ApuntesGrid() {
   });
   // IDs de apuntes a los que el usuario ha dado like
   const [likedIds, setLikedIds] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // Estado de los filtros: categoría, buscador de texto y modo de vista
@@ -85,6 +86,8 @@ function ApuntesGrid() {
       } catch (error) {
         console.error(error);
         setError("Error cargando apuntes.");
+      } finally {
+        setLoading(false);
       }
     };
     cargarDatos();
@@ -250,7 +253,9 @@ function ApuntesGrid() {
       <main className="apuntes-contenedor">
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
-          {processedApuntes.length > 0 ? (
+          {loading ? (
+            <p className="mensaje-cargando">Cargando apuntes...</p>
+          ) : processedApuntes.length > 0 ? (
             <ul className="apuntes-list">
               {processedApuntes.map((ap) => (
                 <li key={ap.id} className="apunte-item">
@@ -285,7 +290,7 @@ function ApuntesGrid() {
               ))}
             </ul>
           ) : (
-            <p className="no-apuntes">No se encontraron apuntes.</p>
+            <p className="mensaje-vacio">No se han encontrado apuntes.</p>
           )}
         </div>
       </main>

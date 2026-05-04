@@ -19,16 +19,17 @@
 .profesores-grid {
   flex: 1;
   min-width: 0;
-  background-color: rgba(255, 224, 224, 0.745);
+  background-color: rgba(255, 224, 224, 0.9);
+  padding: 25px;
   border-radius: 10px;
 }
 
 .profesores-grid h2 {
-  margin: 0 20px;
-  font-size: 28px;
-  color: black;
-  padding: 10px 15px;
+  color: #333;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
   border-bottom: 5px solid var(--rojo-nebrija);
+  font-size: 28px;
   font-weight: 700;
 }
 
@@ -37,7 +38,7 @@
   gap: 20px;
   flex-wrap: wrap;
   justify-content: center;
-  padding: 20px;
+  padding: 0;
 }
 
 .profesores-contenedor .tarjeta-profesor {
@@ -75,14 +76,10 @@
     padding: 35px 20px;
   }
 
-  .profesores-grid h2 {
-    font-size: 26px;
-    margin-bottom: 15px;
-  }
 
   .profesores-contenedor {
     gap: 18px;
-    padding: 18px;
+    padding: 0;
   }
 
   .profesores-contenedor .tarjeta-profesor {
@@ -102,9 +99,9 @@
     width: 100%;
   }
 
-  .TodosProfesoresGrid h2 {
+  .profesores-grid h2 {
     font-size: 22px;
-    margin-bottom: 18px;
+    margin-bottom: 20px;
   }
 
   .profesores-contenedor .tarjeta-profesor {
@@ -124,7 +121,7 @@
     max-width: 420px;
   }
 
-  .TodosProfesoresGrid h2 {
+  .profesores-grid h2 {
     font-size: 20px;
   }
 }

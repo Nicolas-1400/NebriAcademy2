@@ -18,6 +18,7 @@ function InfoProfesorGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [profesor, setProfesor] = useState(null);
   const [cursos, setCursos] = useState([]);
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -48,6 +49,8 @@ function InfoProfesorGrid() {
       } catch (error) {
         console.error("Error cargando datos del profesor:", error);
         setError("No se pudo cargar la información del profesor");
+      } finally {
+        setLoading(false);
       }
     };
 
@@ -55,6 +58,7 @@ function InfoProfesorGrid() {
   }, [id]);
 
   if (error) return <p className="error-msg">{error}</p>;
+  if (loading) return <p className="mensaje-cargando">Cargando perfil del profesor...</p>;
 
   return (
     <div className="profesor-contenedor-principal">
@@ -75,7 +79,7 @@ function InfoProfesorGrid() {
             ))}
           </div>
         ) : (
-          <p>Este profesor no tiene cursos publicados.</p>
+          <p className="mensaje-vacio">Este profesor aún no tiene cursos publicados.</p>
         )}
 
         <button className="boton-go-back" onClick={() => navigate(-1)}>
