@@ -1,27 +1,23 @@
 @import "./general.css";
 @import "./TarjetaCurso.css";
 
-/* TODOS CURSOS GRID */
+/* APUNTES GRID */
 .apuntes-grid {
   display: flex;
   gap: 30px;
   padding: 40px;
   min-height: calc(100vh - 250px);
+  align-items: flex-start;
   background-image: url("../assets/Fondos/fondo-apuntes.png");
   background-position: center;
 }
 
-/* BUSCADOR */
-
-.buscador-sidebar-apuntes {
-  width: 25%;
-  background-color: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.445);
-  height: fit-content;
-  top: 20px;
+/* El sidebar (SearchSidebar) en esta página */
+.apuntes-grid > .search-sidebar {
+  width: 250px;
+  flex-shrink: 0;
 }
+
 
 .formulario-busqueda {
   display: flex;
@@ -210,27 +206,6 @@
   .apuntes-grid {
     gap: 15px;
     padding: 20px;
-    flex-direction: row;
-  }
-
-  .buscador-sidebar-apuntes {
-    max-width: 25%;
-    position: static;
-    padding: 20px;
-  }
-
-  .categorias-sidebar h3 {
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-
-  .categorias-sidebar ul {
-    gap: 8px;
-  }
-
-  .categorias-sidebar button {
-    font-size: 12px;
-    padding: 6px 10px;
   }
 
   .apuntes-contenedor {
@@ -242,42 +217,16 @@
   }
 }
 
-/* RESPONSIVE Apuntes 768px */
+/* RESPONSIVE Apuntes 768px — sidebar sube al top */
 @media (max-width: 768px) {
   .apuntes-grid {
+    flex-direction: column;
     gap: 15px;
-    padding: 20px;
-    flex-direction: row;
+    padding: 15px;
   }
 
-  .buscador-sidebar-apuntes {
-    min-width: 35%;
-    position: static;
-    padding: 20px;
-  }
-
-  .formulario-busqueda {
-    gap: 8px;
-    margin-bottom: 20px;
-  }
-
-  .formulario-busqueda input {
-    padding: 10px;
-    font-size: 13px;
-  }
-
-  .categorias-sidebar h3 {
-    font-size: 16px;
-    margin-bottom: 12px;
-  }
-
-  .categorias-sidebar ul {
-    gap: 8px;
-  }
-
-  .categorias-sidebar a {
-    font-size: 13px;
-    padding: 6px 10px;
+  .apuntes-grid > .search-sidebar {
+    width: 100%;
   }
 
   .apuntes-contenedor {
@@ -288,10 +237,12 @@
     font-size: 22px;
     margin-bottom: 20px;
   }
+
   .fixed-action-group button {
     width: 50px;
     height: 50px;
   }
+
   .fixed-action-group button img {
     width: 20px;
   }
@@ -300,21 +251,7 @@
 /* RESPONSIVE Apuntes 450px */
 @media (max-width: 450px) {
   .apuntes-grid {
-    padding: 15px;
-  }
-
-  .buscador-sidebar-apuntes {
-    padding: 15px;
-  }
-
-  .categorias-sidebar h3 {
-    font-size: 14px;
-    margin-bottom: 12px;
-  }
-
-  .categorias-sidebar button {
-    font-size: 12px;
-    padding: 6px 10px;
+    padding: 10px;
   }
 
   .apuntes-contenedor h2 {
@@ -325,6 +262,7 @@
     width: 30px;
     height: 30px;
   }
+
   .fixed-action-group button img {
     width: 16px;
   }

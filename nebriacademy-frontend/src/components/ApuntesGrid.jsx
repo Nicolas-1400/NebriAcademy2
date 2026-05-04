@@ -6,6 +6,7 @@ import Mas from "../assets/Iconos/mas.png";
 import Lapiz from "../assets/Iconos/lapiz.png";
 import SalirEdicion from "../assets/Iconos/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
+import SearchSidebar from "./SearchSidebar";
 import useAuthStore from "../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -196,93 +197,47 @@ function ApuntesGrid() {
   const updateFilter = (field, val) =>
     setFilters((prev) => ({ ...prev, [field]: val }));
 
+  // ── Configuración del SearchSidebar ──────────────────────────────────────
+  const viewModeOptions = [
+    { label: "Todos", value: "all" },
+    { label: "Mis apuntes", value: "misApuntes" },
+    { label: "Populares", value: "popular" },
+    { label: "Novedades", value: "novedades" },
+    ...(tipo === "alumno" ? [{ label: "Favoritos", value: "favoritos" }] : []),
+  ];
+
+  const filterGroups = [
+    {
+      label: "Categorías",
+      key: "category",
+      options: [
+        { label: "Todas", value: "" },
+        ...data.categorias.map((cat) => ({ label: cat, value: cat })),
+      ],
+    },
+    {
+      label: "Filtrar",
+      key: "viewMode",
+      options: viewModeOptions,
+    },
+  ];
+
   if (error) return <p>{error}</p>;
 
   return (
     <div className="apuntes-grid">
       {/* Sidebar lateral con buscador, filtros de categoría, modos de vista y botón de limpiar */}
-      <aside className="buscador-sidebar-apuntes">
-        <div className="formulario-busqueda">
-          <input
-            type="search"
-            placeholder="Buscar..."
-            value={filters.searchTerm}
-            onChange={(e) => updateFilter("searchTerm", e.target.value)}
-          />
-        </div>
-
-        <div className="categorias-sidebar">
-          <h3>Categorías</h3>
-          <ul>
-            <li>
-              <button
-                onClick={() => updateFilter("category", "")}
-                className={!filters.category ? "activo" : ""}
-              >
-                Todas
-              </button>
-            </li>
-            {data.categorias.map((cat) => (
-              <li key={cat}>
-                <button
-                  onClick={() => updateFilter("category", cat)}
-                  className={filters.category === cat ? "activo" : ""}
-                >
-                  {cat}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <hr className="separador-sidebar" />
-          <ul>
-            <li>
-              <button
-                onClick={() => updateFilter("viewMode", "misApuntes")}
-                className={filters.viewMode === "misApuntes" ? "activo" : ""}
-              >
-                Mis apuntes
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => updateFilter("viewMode", "popular")}
-                className={filters.viewMode === "popular" ? "activo" : ""}
-              >
-                Populares
-              </button>
-            </li>
-            <li>
-              <button
-                onClick={() => updateFilter("viewMode", "novedades")}
-                className={filters.viewMode === "novedades" ? "activo" : ""}
-              >
-                Novedades
-              </button>
-            </li>
-            {/* El modo "Favoritos" solo está disponible para alumnos */}
-            {tipo === "alumno" && (
-              <li>
-                <button
-                  onClick={() => updateFilter("viewMode", "favoritos")}
-                  className={filters.viewMode === "favoritos" ? "activo" : ""}
-                >
-                  Favoritos
-                </button>
-              </li>
-            )}
-          </ul>
-          <hr className="separador-sidebar" />
-          <div className="limpiar-filtros">
-            <button
-              onClick={() =>
-                setFilters({ category: "", searchTerm: "", viewMode: "all" })
-              }
-            >
-              Limpiar filtros
-            </button>
-          </div>
-        </div>
-      </aside>
+      <SearchSidebar
+        searchTerm={filters.searchTerm}
+        onSearchChange={(v) => updateFilter("searchTerm", v)}
+        searchPlaceholder="Buscar..."
+        filterGroups={filterGroups}
+        activeFilters={{ category: filters.category, viewMode: filters.viewMode }}
+        onFilterChange={updateFilter}
+        onClearAll={() =>
+          setFilters({ category: "", searchTerm: "", viewMode: "all" })
+        }
+      />
 
       {/* Grid principal con la lista de apuntes filtrados */}
       <main className="apuntes-contenedor">
