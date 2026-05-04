@@ -1,13 +1,7 @@
-/* BUSCADOR */
-.buscador-sidebar-profesores {
-  width: 25%;
-  background-color: white;
-  padding: 25px;
-  border-radius: 10px;
-  box-shadow: 0 5px 15px rgba(0, 0, 0, 0.445);
-  height: fit-content;
-  top: 20px;
-  word-break: break-all;
+/* El sidebar (SearchSidebar) en esta página */
+.TodosProfesoresGrid > .search-sidebar {
+  width: 250px;
+  flex-shrink: 0;
 }
 
 /* PROFESORES */
@@ -16,6 +10,7 @@
   gap: 30px;
   padding: 40px;
   min-height: calc(100vh - 250px);
+  align-items: flex-start;
   background-image: url("../assets/Fondos/fondo-clase.jpg");
   background-size: cover;
   background-position: center;
@@ -93,10 +88,16 @@
   }
 }
 
-/* RESPONSIVE 768px */
+/* RESPONSIVE 768px — sidebar sube al top */
 @media (max-width: 768px) {
   .TodosProfesoresGrid {
-    padding: 30px 15px;
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .TodosProfesoresGrid > .search-sidebar {
+    width: 100%;
   }
 
   .TodosProfesoresGrid h2 {

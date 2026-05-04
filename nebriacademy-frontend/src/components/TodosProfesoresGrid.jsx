@@ -2,6 +2,7 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
+import SearchSidebar from "./SearchSidebar";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los profesores con buscador por nombre y filtro por especialización
@@ -50,57 +51,36 @@ function TodosProfesoresGrid() {
     return true;
   });
 
+  // ── Configuración del SearchSidebar ──────────────────────────────────────
+  const filterGroups = [
+    {
+      label: "Especialización",
+      key: "especializacion",
+      options: [
+        { label: "Todas", value: "" },
+        ...specializations.map((spec) => ({ label: spec, value: spec })),
+      ],
+    },
+  ];
+
   // ── RENDER ───────────────────────────────────────────────────────────────────
   if (error) return <p className="error-msg">{error}</p>;
 
   return (
     <div className="TodosProfesoresGrid">
       {/* Sidebar lateral con buscador por nombre y filtro por especialización */}
-      <aside className="buscador-sidebar-profesores">
-        <div className="formulario-busqueda">
-          <input
-            type="search"
-            placeholder="Buscar por nombre..."
-            value={searchTerm}
-            onChange={(e) => setSearchTerm(e.target.value)}
-          />
-        </div>
-
-        <div className="categorias-sidebar">
-          <h3>Especialización</h3>
-          <ul>
-            <li>
-              <button
-                onClick={() => setSelectedSpecialization("")}
-                className={!selectedSpecialization ? "activo" : ""}
-              >
-                Todas
-              </button>
-            </li>
-            {specializations.map((spec) => (
-              <li key={spec}>
-                <button
-                  onClick={() => setSelectedSpecialization(spec)}
-                  className={selectedSpecialization === spec ? "activo" : ""}
-                >
-                  {spec}
-                </button>
-              </li>
-            ))}
-          </ul>
-          <hr className="separador-sidebar" />
-          <div className="limpiar-filtros">
-            <button
-              onClick={() => {
-                setSearchTerm("");
-                setSelectedSpecialization("");
-              }}
-            >
-              Limpiar filtros
-            </button>
-          </div>
-        </div>
-      </aside>
+      <SearchSidebar
+        searchTerm={searchTerm}
+        onSearchChange={setSearchTerm}
+        searchPlaceholder="Buscar por nombre..."
+        filterGroups={filterGroups}
+        activeFilters={{ especializacion: selectedSpecialization }}
+        onFilterChange={(key, value) => setSelectedSpecialization(value)}
+        onClearAll={() => {
+          setSearchTerm("");
+          setSelectedSpecialization("");
+        }}
+      />
 
       {/* Grid principal con las tarjetas de los profesores filtrados */}
       <div className="profesores-grid">

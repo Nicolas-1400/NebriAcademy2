@@ -3,6 +3,7 @@ import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
+import SearchSidebar from "./SearchSidebar";
 import useAuthStore from "../store/useAuthStore";
 import Eliminar from "../assets/Iconos/Eliminar.png";
 import useToastStore from "../store/toastStore";
@@ -118,80 +119,40 @@ function TodosCursosGrid() {
     });
   }, [data, filters, user]);
 
+  // ── Configuración del SearchSidebar ──────────────────────────────────────
+  const filterGroups = [
+    {
+      label: "Categorías",
+      key: "category",
+      options: [
+        { label: "Todas", value: "" },
+        ...data.categorias.map((cat) => ({ label: cat, value: cat })),
+      ],
+    },
+    {
+      label: "Nivel",
+      key: "level",
+      options: [
+        { label: "Todos", value: "" },
+        ...NIVELES.map((n) => ({ label: n, value: n })),
+      ],
+    },
+  ];
+
   if (error) return <p>{error}</p>;
 
   return (
     <div className="todos-cursos-grid">
       {/* Sidebar lateral con buscador y filtros de categoría y nivel */}
-      <aside className="buscador-sidebar">
-        <form
-          className="formulario-busqueda"
-          onSubmit={(e) => e.preventDefault()}
-        >
-          <input
-            type="search"
-            placeholder="Buscar cursos..."
-            value={filters.searchTerm}
-            onChange={(e) => updateFilter("searchTerm", e.target.value)}
-          />
-        </form>
-
-        <div className="categorias-sidebar">
-          <h3>Categorías</h3>
-          <ul>
-            <li>
-              <button
-                onClick={() => updateFilter("category", "")}
-                className={!filters.category ? "activo" : ""}
-              >
-                Todas
-              </button>
-            </li>
-            {data.categorias.map((cat) => (
-              <li key={cat}>
-                <button
-                  onClick={() => updateFilter("category", cat)}
-                  className={filters.category === cat ? "activo" : ""}
-                >
-                  {cat}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <h3 className="subtitulo-nivel">Nivel</h3>
-          <ul>
-            <li>
-              <button
-                onClick={() => updateFilter("level", "")}
-                className={!filters.level ? "activo" : ""}
-              >
-                Todos
-              </button>
-            </li>
-            {NIVELES.map((n) => (
-              <li key={n}>
-                <button
-                  onClick={() => updateFilter("level", n)}
-                  className={filters.level === n ? "activo" : ""}
-                >
-                  {n}
-                </button>
-              </li>
-            ))}
-          </ul>
-
-          <div className="limpiar-filtros">
-            <button
-              onClick={() =>
-                setFilters({ category: "", level: "", searchTerm: "" })
-              }
-            >
-              Limpiar filtros
-            </button>
-          </div>
-        </div>
-      </aside>
+      <SearchSidebar
+        searchTerm={filters.searchTerm}
+        onSearchChange={(v) => updateFilter("searchTerm", v)}
+        searchPlaceholder="Buscar cursos..."
+        filterGroups={filterGroups}
+        activeFilters={{ category: filters.category, level: filters.level }}
+        onFilterChange={updateFilter}
+        onClearAll={() => setFilters({ category: "", level: "", searchTerm: "" })}
+      />
 
       {/* Grid principal con las tarjetas de los cursos filtrados */}
       <main className="cursos-contenedor">

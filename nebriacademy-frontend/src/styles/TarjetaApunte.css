@@ -81,7 +81,8 @@
 }
 .like-icon {
   cursor: pointer;
-  width: 25px;
+  width: 15px;
+  height: 15px;
 }
 
 /* RESPONSIVE 768 */
@@ -104,7 +105,8 @@
   }
 
   .like-icon {
-    width: 20px;
+    width: 15px;
+    height: 15px;
   } 
   .like-count {
     font-size: 14px;
@@ -131,7 +133,8 @@
   }
 
   .like-icon {
-    width: 14px;
+    width: 10px;
+    height: 10px;
   } 
   .like-count {
     font-size: 12px;

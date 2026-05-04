@@ -74,7 +74,7 @@ function TarjetaCursos({
       </div>
       <p className="p-profesor">{profesor}</p>
       <p className="p-valoracion">
-        <img className="like-icon" src={Like} alt="Valoración" /> {valoracion}
+        <img className="like-icon-course" src={Like} alt="Valoración" /> {valoracion}
       </p>
       {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
       {isAdmin && (

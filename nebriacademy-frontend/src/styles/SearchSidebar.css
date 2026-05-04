@@ -1,0 +1,208 @@
+/* ══════════════════════════════════════════════════════════════════
+   SearchSidebar.css  —  Sidebar de búsqueda y filtros reutilizable
+   ══════════════════════════════════════════════════════════════════ */
+
+/* ── Contenedor principal ──────────────────────────────────────── */
+.search-sidebar {
+  width: 250px;
+  min-width: 220px;
+  background-color: #ffffff;
+  border-radius: 12px;
+  padding: 22px 18px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.12);
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  height: fit-content;
+  top: 20px;
+}
+
+/* ── Caja de búsqueda ──────────────────────────────────────────── */
+.ss-search-box {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  background-color: #f5f5f5;
+  border: 2px solid #e0e0e0;
+  border-radius: 8px;
+  padding: 0 10px;
+  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+}
+
+.ss-search-box:focus-within {
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 0 3px rgba(194, 0, 47, 0.12);
+  background-color: #fff;
+}
+
+.ss-search-icon {
+  font-size: 14px;
+  color: #999;
+  flex-shrink: 0;
+}
+
+.ss-search-input {
+  flex: 1;
+  border: none;
+  background: transparent;
+  padding: 10px 4px;
+  font-size: 14px;
+  font-family: inherit;
+  color: #333;
+  outline: none;
+  width: 100%;
+}
+
+.ss-search-input::placeholder {
+  color: #aaa;
+}
+
+/* Oculta el botón nativo de limpiar en Chrome/Edge */
+.ss-search-input::-webkit-search-cancel-button {
+  -webkit-appearance: none;
+}
+
+/* ── Grupos de filtros ─────────────────────────────────────────── */
+.ss-filter-group {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.ss-group-title {
+  font-size: 13px;
+  font-weight: bold;
+  text-transform: uppercase;
+  color: var(--rojo-nebrija);
+  border-bottom: 2px solid var(--rojo-nebrija);
+  padding-bottom: 6px;
+}
+
+/* ── Lista de botones (desktop) ────────────────────────────────── */
+.ss-btn-list {
+  list-style: none;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+}
+
+.ss-filter-btn {
+  width: 100%;
+  text-align: left;
+  background: none;
+  border: 1px solid var(--rojo-nebrija);
+  border-radius: 6px;
+  padding: 7px 10px;
+  font-size: 13.5px;
+  font-family: inherit;
+  color: #444;
+  cursor: pointer;
+  transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+}
+
+.ss-filter-btn:hover {
+  background-color: rgba(194, 0, 47, 0.07);
+  color: var(--rojo-nebrija);
+  padding-left: 15px;
+}
+
+.ss-filter-btn.ss-active {
+  background-color: rgba(194, 0, 47, 0.1);
+  color: var(--rojo-nebrija);
+  font-weight: 700;
+  border-color: rgba(194, 0, 47, 0.25);
+  padding-left: 15px;
+}
+
+/* ── Select compacto (móvil — oculto en desktop) ───────────────── */
+.ss-select {
+  display: none;
+  width: 100%;
+  padding: 9px 10px;
+  font-size: 14px;
+  font-family: inherit;
+  border: 1.5px solid #ddd;
+  border-radius: 7px;
+  background-color: #fff;
+  color: #333;
+  cursor: pointer;
+  appearance: auto;
+  transition: border-color 0.2s ease;
+}
+
+.ss-select:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 0 3px rgba(194, 0, 47, 0.1);
+}
+
+/* ── Botón limpiar filtros ─────────────────────────────────────── */
+.ss-clear-btn {
+  width: 100%;
+  padding: 9px 12px;
+  background: transparent;
+  border: 1.5px solid #ddd;
+  border-radius: 7px;
+  font-size: 13px;
+  font-family: inherit;
+  color: #777;
+  cursor: pointer;
+  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  margin-top: 4px;
+}
+
+.ss-clear-btn:hover {
+  background-color: rgba(194, 0, 47, 0.06);
+  border-color: var(--rojo-nebrija);
+  color: var(--rojo-nebrija);
+}
+
+/* ══════════════════════════════════════════════════════════════════
+   RESPONSIVE  ≤ 768 px  —  sidebar sube al top y usa selects
+   ══════════════════════════════════════════════════════════════════ */
+@media (max-width: 768px) {
+  .search-sidebar {
+    width: 100%;
+    min-width: unset;
+    position: static;
+    flex-direction: row;
+    flex-wrap: wrap;
+    align-items: flex-end;
+    gap: 10px;
+    padding: 14px 16px;
+    border-radius: 10px;
+  }
+
+  /* El buscador ocupa todo el ancho */
+  .ss-search-box {
+    flex: 1 1 100%;
+  }
+
+  /* Cada grupo de filtros se convierte en una columna compacta */
+  .ss-filter-group {
+    flex: 1 1 140px;
+    gap: 5px;
+  }
+
+  .ss-group-title {
+    font-size: 11px;
+    padding-bottom: 4px;
+  }
+
+  /* En móvil ocultamos los botones y mostramos el select */
+  .ss-btn-list {
+    display: none;
+  }
+
+  .ss-select {
+    display: block;
+  }
+
+  /* El botón limpiar se queda al final, tamaño automático */
+  .ss-clear-btn {
+    flex: 1 1 auto;
+    margin-top: 0;
+    white-space: nowrap;
+    padding: 9px 14px;
+  }
+}
