@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../config/api";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../assets/Iconos/nebriLogo.png";
 import ImagenPerfilDefault from "../assets/Iconos/ImagenPerfilUsuario.png";
@@ -15,6 +15,7 @@ import CampanaCheck from "../assets/Iconos/Campana-check.png";
 // Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa
 function Nav() {
   const navigate = useNavigate();
+  const location = useLocation();
   const { user: usuario, tipo, logout: logoutStore, setUser } = useAuthStore();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
@@ -331,19 +332,19 @@ function Nav() {
             Incidencias
           </button>
           <button
-            className="boton-nav"
+            className={`boton-nav ${location.pathname === "/Home/Cuentas" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Cuentas")}
           >
             Cuentas
           </button>
           <button
-            className="boton-nav"
+            className={`boton-nav ${location.pathname === "/Home/Cursos" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Cursos")}
           >
             Cursos
           </button>
           <button
-            className="boton-nav"
+            className={`boton-nav ${location.pathname === "/Home/Apuntes" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Apuntes")}
           >
             Apuntes
@@ -355,13 +356,13 @@ function Nav() {
       return (
         <div className="contenedor-elementos-nav-profesor">
           <button
-            className="boton-nav"
+            className={`boton-nav ${location.pathname === "/Home/Apuntes" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Apuntes")}
           >
             Apuntes
           </button>
           <button
-            className="boton-añadir-curso"
+            className={`boton-añadir-curso ${location.pathname === "/Home/AddCurso" ? "activo" : ""}`}
             onClick={() => navigate("/Home/AddCurso")}
           >
             <img
@@ -377,21 +378,27 @@ function Nav() {
     return (
       <div className="contenedor-botones-nav">
         <button
-          className="boton-nav"
+          className={`boton-nav ${location.pathname === "/Home/MiEspacio" ? "activo" : ""}`}
           onClick={() => navigate("/Home/MiEspacio")}
         >
           Mi espacio
         </button>
-        <button className="boton-nav" onClick={() => navigate("/Home/Cursos")}>
+        <button
+          className={`boton-nav ${location.pathname === "/Home/Cursos" ? "activo" : ""}`}
+          onClick={() => navigate("/Home/Cursos")}
+        >
           Cursos
         </button>
         <button
-          className="boton-nav"
+          className={`boton-nav ${location.pathname === "/Home/Profesores" ? "activo" : ""}`}
           onClick={() => navigate("/Home/Profesores")}
         >
           Profesores
         </button>
-        <button className="boton-nav" onClick={() => navigate("/Home/Apuntes")}>
+        <button
+          className={`boton-nav ${location.pathname === "/Home/Apuntes" ? "activo" : ""}`}
+          onClick={() => navigate("/Home/Apuntes")}
+        >
           Apuntes
         </button>
       </div>

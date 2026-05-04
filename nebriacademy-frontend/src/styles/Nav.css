@@ -141,6 +141,14 @@
   box-shadow: none;
 }
 
+.boton-nav.activo {
+  border: 2px solid var(--color-secundario);
+  background-color: var(--color-hover-boton);
+  color: var(--color-secundario);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+  z-index: 10;
+}
+
 .boton-nav:active {
   background-color: var(--color-secundario);
   color: white;
@@ -487,6 +495,14 @@
   background-color: var(--color-hover-boton);
   transform: translateY(1px);
   box-shadow: none;
+}
+
+.boton-añadir-curso.activo {
+  transform: scale(1.05); /* Un poco menos que el otro porque es más ancho */
+  border: 2px solid var(--color-secundario);
+  background-color: var(--color-hover-boton);
+  color: var(--color-secundario);
+  box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
 }
 
 .boton-añadir-curso h3 {
