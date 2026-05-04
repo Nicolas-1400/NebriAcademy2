@@ -19,10 +19,17 @@ import "./styles/TarjetaProfesor.css";
 import "./styles/TodosProfesores.css";
 import "./styles/NotFound.css";
 import "./styles/TarjetaApunte.css";
+import "./styles/Toast.css";
+import "./styles/ConfirmModal.css";
+
+import Toast from "./components/common/Toast.jsx";
+import ConfirmModal from "./components/common/ConfirmModal.jsx";
 
 function App() {
   return <>
     <Analytics />
+    <Toast />
+    <ConfirmModal />
     <AppRouter />
   </>;
 }

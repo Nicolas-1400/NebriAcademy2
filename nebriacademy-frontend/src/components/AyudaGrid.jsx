@@ -1,10 +1,12 @@
 import { API_URL } from "../config/api";
 import { useState } from "react";
 import useAuthStore from "../store/useAuthStore";
+import useToastStore from "../store/toastStore";
 import "../styles/Ayuda.css";
 
 function AyudaGrid() {
   const { user, tipo } = useAuthStore();
+  const { addToast } = useToastStore();
   const [tipoReporte, setTipoReporte] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [archivo, setArchivo] = useState(null);
@@ -13,12 +15,12 @@ function AyudaGrid() {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!tipoReporte || !descripcion) {
-      alert("Por favor, rellena todos los campos requeridos.");
+      addToast("Por favor, rellena todos los campos requeridos.", "error");
       return;
     }
 
     if (archivo && archivo.size > 10 * 1024 * 1024) {
-      alert("El archivo adjunto no puede superar los 10MB.");
+      addToast("El archivo adjunto no puede superar los 10MB.", "error");
       return;
     }
 
@@ -43,18 +45,19 @@ function AyudaGrid() {
       });
 
       if (res.ok) {
-        alert("Incidencia enviada correctamente.");
+        addToast("Incidencia enviada correctamente.", "success");
         setTipoReporte("");
         setDescripcion("");
         setArchivo(null);
         // Reseteamos el input file
-        document.getElementById("archivoIncidencia").value = "";
+        const fileInput = document.getElementById("archivoIncidencia");
+        if (fileInput) fileInput.value = "";
       } else {
-        alert("Error al enviar la incidencia.");
+        addToast("Error al enviar la incidencia.", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error de conexión con el servidor.");
+      addToast("Error de conexión con el servidor.", "error");
     } finally {
       setEnviando(false);
     }

@@ -7,6 +7,8 @@ import CardSlider from "./CardSlider";
 import TarjetaCursos from "./TarjetaCursos";
 import Eliminar from "../assets/Iconos/Eliminar.png";
 import SliderComponent from "./SliderComponent";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 import "../styles/HomeEspacio.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -28,6 +30,8 @@ function Home() {
   const isEstudiante = tipoUsuario === "alumno";
   const isAdmin = tipoUsuario === "administrador";
   const isProfesor = tipoUsuario === "profesor";
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Sincronizar usuario del store
@@ -120,13 +124,11 @@ function Home() {
   // Eliminar curso (profesor)
   const handleDeleteCurso = async (cursoId, e) => {
     e.stopPropagation();
-    if (
-      !window.confirm(
-        "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (vídeos, apuntes, ejercicios...) y NO se podrá recuperar.",
-      )
-    ) {
-      return;
-    }
+    const confirmed = await showConfirm(
+      "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (vídeos, apuntes, ejercicios...) y NO se podrá recuperar.",
+      "Eliminar Curso"
+    );
+    if (!confirmed) return;
 
     try {
       const res = await fetch(`${API_URL}/cursos/${cursoId}`, {
@@ -134,12 +136,13 @@ function Home() {
       });
       if (res.ok) {
         setCursos((prev) => prev.filter((c) => c.id !== cursoId));
+        addToast("Curso eliminado con éxito", "success");
       } else {
-        alert("Error al eliminar el curso");
+        addToast("Error al eliminar el curso", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error de conexión");
+      addToast("Error de conexión", "error");
     }
   };
 

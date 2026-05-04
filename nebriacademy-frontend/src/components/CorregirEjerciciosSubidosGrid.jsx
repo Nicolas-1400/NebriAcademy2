@@ -5,6 +5,8 @@ import { useParams, useNavigate } from "react-router-dom";
 import TarjetaEjercicioAlumno from "./TarjetaEjercicioAlumno";
 import flecha from "../assets/Iconos/flecha-correcta.png";
 import useAuthStore from "../store/useAuthStore";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 import "../styles/CorregirEjerciciosSubidosGrid.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -19,6 +21,8 @@ function CorregirEjerciciosSubidosGrid() {
   // Objeto para guardar el valor tecleado en el input de nota de cada entrega
   const [inputScores, setInputScores] = useState({});
   const { tipo } = useAuthStore();
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
   const navigate = useNavigate();
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -96,7 +100,7 @@ function CorregirEjerciciosSubidosGrid() {
   const handleSubmitScore = async (reg) => {
     const val = Number(inputScores[reg.id]);
     if (isNaN(val) || val < 0 || val > 10 || inputScores[reg.id] === "") {
-      return alert("Introduce una nota válida (0-10)");
+      return addToast("Introduce una nota válida (0-10)", "error");
     }
 
     const existing = getExistingScore(reg.id, reg.alumnoId);
@@ -125,28 +129,30 @@ function CorregirEjerciciosSubidosGrid() {
           ? prev.map((p) => (p.id === datos.id ? datos : p))
           : [...prev, datos],
       );
-      alert("Puntuación guardada");
+      addToast("Puntuación guardada", "success");
     } catch (error) {
       console.error(error);
-      alert("Error al guardar la puntuación");
+      addToast("Error al guardar la puntuación", "error");
     }
   };
 
   // Función exclusiva para administradores: borrar una entrega concreta
   const handleDeleteEntrega = async (entregaId) => {
-    if (!window.confirm("¿Seguro que deseas borrar esta entrega permanentemente?")) return;
+    const confirmed = await showConfirm("¿Seguro que deseas borrar esta entrega permanentemente?", "Borrar Entrega");
+    if (!confirmed) return;
     try {
       const respuesta = await fetch(`${API_URL}/ejerciciosalumnos/${entregaId}`, {
         method: "DELETE",
       });
       if (respuesta.ok) {
         setRegistros((prev) => prev.filter((r) => r.id !== entregaId));
+        addToast("Entrega borrada", "success");
       } else {
-        alert("Error al borrar la entrega");
+        addToast("Error al borrar la entrega", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error de red");
+      addToast("Error de red", "error");
     }
   };
 

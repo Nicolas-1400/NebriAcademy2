@@ -5,6 +5,8 @@ import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
 import useAuthStore from "../store/useAuthStore";
 import Eliminar from "../assets/Iconos/Eliminar.png";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los cursos con filtros por categoría, nivel y buscador de texto
@@ -13,6 +15,8 @@ function TodosCursosGrid() {
   // Leemos la categoría preseleccionada si venimos del HomeFeed pulsando una categoría
   const { state } = useLocation();
   const { tipo, user } = useAuthStore();
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
   const [data, setData] = useState({
     cursos: [],
     profesores: [],
@@ -68,17 +72,19 @@ function TodosCursosGrid() {
 
   // Elimina un curso completo con confirmación (solo admin)
   const handleDeleteCurso = async (cursoId) => {
-    if (!window.confirm("¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.")) return;
+    const confirmed = await showConfirm("¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.", "Eliminar Curso");
+    if (!confirmed) return;
     try {
       const res = await fetch(`${API_URL}/cursos/${cursoId}`, { method: "DELETE" });
       if (res.ok) {
         setData((prev) => ({ ...prev, cursos: prev.cursos.filter((c) => c.id !== cursoId) }));
+        addToast("Curso eliminado correctamente", "success");
       } else {
-        alert("Error al eliminar el curso");
+        addToast("Error al eliminar el curso", "error");
       }
     } catch (e) {
       console.error(e);
-      alert("Error de red");
+      addToast("Error de red", "error");
     }
   };
 

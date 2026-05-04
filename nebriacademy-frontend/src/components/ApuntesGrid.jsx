@@ -7,6 +7,8 @@ import Lapiz from "../assets/Iconos/lapiz.png";
 import SalirEdicion from "../assets/Iconos/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
 import useAuthStore from "../store/useAuthStore";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Página principal de apuntes: listado global con filtros, likes y modo edición
@@ -14,6 +16,8 @@ function ApuntesGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user: usuario, tipo } = useAuthStore();
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [data, setData] = useState({
@@ -180,15 +184,18 @@ function ApuntesGrid() {
 
   // Borra un apunte con confirmación y lo elimina también del estado local
   const handleDelete = async (aid) => {
-    if (!window.confirm("¿Borrar apunte?")) return;
+    const confirmed = await showConfirm("¿Borrar apunte?", "Borrar Apunte");
+    if (!confirmed) return;
     try {
       await fetch(`${API_URL}/apuntes/${aid}`, { method: "DELETE" });
       setData((prev) => ({
         ...prev,
         apuntes: prev.apuntes.filter((a) => a.id !== aid),
       }));
+      addToast("Apunte borrado", "success");
     } catch (e) {
       console.error(e);
+      addToast("Error al borrar apunte", "error");
     }
   };
 

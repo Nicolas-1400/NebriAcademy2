@@ -2,12 +2,14 @@ import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuthStore from "../store/useAuthStore";
+import useToastStore from "../store/toastStore";
 import "../styles/DetalleTicket.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function DetalleTicketGrid() {
   const { issueKey } = useParams();
   const { user } = useAuthStore();
+  const { addToast } = useToastStore();
   const navigate = useNavigate();
 
   const [ticket, setTicket] = useState(null);
@@ -62,12 +64,13 @@ function DetalleTicketGrid() {
           comentarios: [...prev.comentarios, data]
         }));
         setNuevoComentario("");
+        addToast("Comentario enviado", "success");
       } else {
-        alert(data.error || "Error al enviar el comentario");
+        addToast(data.error || "Error al enviar el comentario", "error");
       }
     } catch (err) {
       console.error(err);
-      alert("Error de conexión con el servidor");
+      addToast("Error de conexión con el servidor", "error");
     } finally {
       setEnviandoComentario(false);
     }
