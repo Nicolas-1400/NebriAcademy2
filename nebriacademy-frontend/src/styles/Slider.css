@@ -116,11 +116,19 @@
   align-content: center;
 }
 
-@media (max-width: 500px) {
+@media (max-width: 540px) {
+  .carousel-wrapper::before,
+  .carousel-wrapper::after {
+    display: none !important;
+  }
+
   .card {
     flex: 0 0 100%;
+    max-width: none;
   }
 }
+
+
 
 
 

@@ -25,7 +25,7 @@
   object-fit: cover;
   border: 2px solid var(--rojo-nebrija);
   border-radius: 8px;
-  margin-bottom: 15px;
+  margin-bottom: 8px;
 }
 
 .tarjeta-curso h3 {
@@ -33,6 +33,13 @@
   color: var(--rojo-nebrija);
   border-bottom: 1px solid var(--rojo-nebrija);
   margin-bottom: 10px;
+  line-height: 1.2;
+  min-height: 2.4em;
+  display: -webkit-box;
+  -webkit-line-clamp: 2;
+  line-clamp: 2;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
 }
 
 .tarjeta-curso p {
@@ -42,8 +49,8 @@
   line-height: 1.5;
 }
 
-.p-datos{
- padding: 5px;
+.p-datos {
+  padding: 5px;
   border: 1px solid gray;
   border-radius: 5px;
 }
@@ -155,9 +162,9 @@
     max-width: 380px;
   }
 
-  .tarjeta-curso img {
+  .tarjeta-curso .img-curso {
     height: 180px;
-    margin-bottom: 14px;
+    margin-bottom: 7px;
   }
 
   .tarjeta-curso h3 {
@@ -180,9 +187,9 @@
     padding: 15px;
   }
 
-  .tarjeta-curso img {
+  .tarjeta-curso .img-curso {
     height: 150px;
-    margin-bottom: 12px;
+    margin-bottom: 6px;
   }
 
   .tarjeta-curso h3 {

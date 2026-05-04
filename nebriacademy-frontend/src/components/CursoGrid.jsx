@@ -27,7 +27,7 @@ import EjercicioSubido from "../assets/Iconos/subir-archivo2.png";
 import SubirEjercicio from "../assets/Iconos/subir-archivo.png";
 import Eliminar from "../assets/Iconos/Eliminar.png";
 
-import TarjetaApunteCurso from "./TarjetaApunteCurso";
+import TarjetaApunte from "./TarjetaApunte";
 import TarjetaVideoCurso from "./TarjetaVideoCurso";
 import TarjetaEjercicioCurso from "./TarjetaEjercicioCurso";
 
@@ -626,7 +626,7 @@ function CursoGrid() {
                   {profApuntes.length > 0 ? (
                     <ul className="apuntes-list">
                       {profApuntes.map((a) => (
-                        <TarjetaApunteCurso
+                        <TarjetaApunte
                           key={a.id}
                           apunte={a}
                           usuario={user}
@@ -652,7 +652,7 @@ function CursoGrid() {
                   {alumnApuntes.length > 0 ? (
                     <ul className="apuntes-list">
                       {alumnApuntes.map((a) => (
-                        <TarjetaApunteCurso
+                        <TarjetaApunte
                           key={a.id}
                           apunte={a}
                           usuario={user}
