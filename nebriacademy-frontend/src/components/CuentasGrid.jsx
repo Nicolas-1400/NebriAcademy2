@@ -3,10 +3,14 @@ import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import CuentasTable from "./CuentasTable";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 import "../styles/Cuentas.css"
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function CuentasGrid() {
   const { tipo } = useAuthStore();
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
 
   const [cuentas, setCuentas] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -80,9 +84,9 @@ function CuentasGrid() {
   // Envía una petición para crear una cuenta parcial (solo email y contraseña temporal)
   const handleCrearCuenta = async (e) => {
     e.preventDefault();
-    if (!email) return alert("Email obligatorio");
+    if (!email) return addToast("Email obligatorio", "error");
     if (rol === "alumno" && !email.endsWith("@alumnos.nebrija.es")) {
-      return alert("El email del alumno debe acabar en @alumnos.nebrija.es");
+      return addToast("El email del alumno debe acabar en @alumnos.nebrija.es", "error");
     }
 
     const contrasenaGenerada = generarContrasena();
@@ -103,34 +107,35 @@ function CuentasGrid() {
       if (!respuesta.ok)
         throw new Error(datos.error || "Error al crear la cuenta");
 
-      alert(
-        `Cuenta de ${rol} creada correctamente.\n\nContraseña generada: ${contrasenaGenerada}`,
+      addToast(
+        `Cuenta de ${rol} creada correctamente. Contraseña: ${contrasenaGenerada}`,
+        "success",
+        6000
       );
       setEmail("");
       fetchCuentas();
     } catch (error) {
       console.error(error);
-      alert(error.message);
+      addToast(error.message, "error");
     }
   };
 
   // Borrar cuenta — los alumnos vinculados no se pueden borrar de forma independiente
   const handleBorrarCuenta = async (cuentaId, rolCuenta, esVinculado) => {
     if (rolCuenta === "alumno" && esVinculado) {
-      return alert(
-        "No puedes borrar la versión alumno de un profesor de forma independiente.\nPara eliminar esta cuenta, borra la cuenta de profesor a la que está vinculada.",
+      return addToast(
+        "No puedes borrar la versión alumno de un profesor de forma independiente. Borra la cuenta de profesor vinculada.",
+        "info"
       );
     }
 
-    if (
-      !window.confirm(
-        rolCuenta === "profesor"
-          ? "¿Estás seguro? Se borrará el profesor Y su cuenta de alumno vinculada, además de todos los contenidos asociados."
-          : "¿Estás seguro de que quieres borrar esta cuenta? Se borrarán todos los datos y contenidos dependientes en cascada.",
-      )
-    ) {
-      return;
-    }
+    const confirmed = await showConfirm(
+      rolCuenta === "profesor"
+        ? "¿Estás seguro? Se borrará el profesor Y su cuenta de alumno vinculada, además de todos los contenidos asociados."
+        : "¿Estás seguro de que quieres borrar esta cuenta? Se borrarán todos los datos y contenidos dependientes en cascada.",
+      "Borrar Cuenta"
+    );
+    if (!confirmed) return;
 
     const endpoint =
       rolCuenta === "alumno"
@@ -159,14 +164,14 @@ function CuentasGrid() {
           }
           return resultado;
         });
-        alert("Cuenta borrada con éxito.");
+        addToast("Cuenta borrada con éxito.", "success");
       } else {
         const d = await respuesta.json();
-        alert(d.error || "No se pudo borrar la cuenta");
+        addToast(d.error || "No se pudo borrar la cuenta", "error");
       }
     } catch (error) {
       console.error(error);
-      alert("Error de red");
+      addToast("Error de red", "error");
     }
   };
 
@@ -185,13 +190,14 @@ function CuentasGrid() {
       });
 
       if (!res.ok) {
-        alert("Error al actualizar ese dato");
+        addToast("Error al actualizar ese dato", "error");
         return false;
       }
+      addToast("Dato actualizado", "success");
       return true;
     } catch (e) {
       console.error(e);
-      alert("Error de red");
+      addToast("Error de red", "error");
       return false;
     }
   };
@@ -200,11 +206,11 @@ function CuentasGrid() {
   const handleBlur = async (e, id, rolCuenta, campo, oldVal) => {
     const newVal = e.target.innerText.trim();
     if (newVal !== (oldVal || "").trim()) {
-      if (
-        !window.confirm(
-          `¿Estás seguro de que quieres guardar el cambio de "${oldVal || ""}" a "${newVal}"?`,
-        )
-      ) {
+      const confirmed = await showConfirm(
+        `¿Estás seguro de que quieres guardar el cambio de "${oldVal || ""}" a "${newVal}"?`,
+        "Guardar Cambios"
+      );
+      if (!confirmed) {
         e.target.innerText = oldVal || "";
         return;
       }

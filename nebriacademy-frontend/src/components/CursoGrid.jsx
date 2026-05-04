@@ -3,6 +3,8 @@ import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
+import useToastStore from "../store/toastStore";
+import useModalStore from "../store/modalStore";
 
 import Foto1 from "../assets/ImagenesCursos/Foto1.jpg";
 import Foto2 from "../assets/ImagenesCursos/Foto2.jpg";
@@ -36,6 +38,8 @@ function CursoGrid() {
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, tipo } = useAuthStore();
+  const { addToast } = useToastStore();
+  const { showConfirm } = useModalStore();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [curso, setCurso] = useState(null);
@@ -233,7 +237,8 @@ function CursoGrid() {
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Elimina un elemento de contenido del curso (vídeo, apunte o ejercicio) con confirmación
   const handleDeleteItem = async (type, itemId) => {
-    if (!window.confirm("¿Eliminar este elemento?")) return;
+    const confirmed = await showConfirm("¿Eliminar este elemento?", "Eliminar Contenido");
+    if (!confirmed) return;
     try {
       const endpoint =
         type === "video"
@@ -250,8 +255,9 @@ function CursoGrid() {
         ...prev,
         [type + "s"]: prev[type + "s"].filter((i) => i.id !== itemId),
       }));
+      addToast("Elemento eliminado", "success");
     } catch (e) {
-      alert("Error eliminando");
+      addToast("Error eliminando", "error");
     }
   };
 
@@ -370,13 +376,13 @@ function CursoGrid() {
           archivo: datos.archivo,
         };
         setUploadedEjercicios((prev) => [...prev, nuevoRegistro]);
-        alert("Ejercicio subido correctamente");
+        addToast("Ejercicio subido correctamente", "success");
       } else {
-        alert("Error al subir");
+        addToast("Error al subir", "error");
       }
     } catch (e) {
       console.error(e);
-      alert("Error de red");
+      addToast("Error de red", "error");
     }
   };
 
@@ -396,31 +402,34 @@ function CursoGrid() {
       });
       if (respuesta.ok) {
         setCommentText("");
-        // Recargamos la lista para mostrar el nuevo comentario con nombre del autor
         fetch(`${API_URL}/comentarioalumnocurso?cursoId=${id}`)
           .then((respuesta) => respuesta.json())
           .then((datos) => setComentarios(datos.Comentarios || []));
+        addToast("Comentario enviado", "success");
       } else {
-        alert("Error al enviar comentario");
+        addToast("Error al enviar comentario", "error");
       }
     } catch (e) {
-      alert("Error enviando comentario");
+      addToast("Error enviando comentario", "error");
     }
   };
 
   // Elimina un comentario con confirmación y lo quita del estado local
   const deleteComment = async (cid) => {
-    if (!window.confirm("Borrar comentario?")) return;
+    const confirmed = await showConfirm("¿Borrar comentario?", "Borrar Comentario");
+    if (!confirmed) return;
     try {
       const url = `${API_URL}/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}`;
       const res = await fetch(url, { method: "DELETE" });
       if (res.ok) {
         setComentarios((prev) => prev.filter((c) => c.id !== cid));
+        addToast("Comentario borrado", "success");
       } else {
-        alert("No se pudo borrar el comentario");
+        addToast("No se pudo borrar el comentario", "error");
       }
     } catch (e) {
       console.error(e);
+      addToast("Error de conexión", "error");
     }
   };
 
@@ -452,12 +461,13 @@ function CursoGrid() {
       if (res.ok) {
         setCurso({ ...curso, descripcion: descriptionText });
         setEditingDescription(false);
+        addToast("Descripción actualizada", "success");
       } else {
-        alert("Error al actualizar la descripción");
+        addToast("Error al actualizar la descripción", "error");
       }
     } catch (e) {
       console.error(e);
-      alert("Error de red al actualizar descripción");
+      addToast("Error de red al actualizar descripción", "error");
     }
   };
 
@@ -486,12 +496,13 @@ function CursoGrid() {
           ),
         );
         cancelEditComment();
+        addToast("Comentario editado", "success");
       } else {
-        alert("Error al editar comentario");
+        addToast("Error al editar comentario", "error");
       }
     } catch (e) {
       console.error(e);
-      alert("Error de red");
+      addToast("Error de red", "error");
     }
   };
 
@@ -829,8 +840,21 @@ function CursoGrid() {
           </div>
           <div className="detalles-comentarios">
             <p>Comentarios</p>
+            {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
+            {tipo === "alumno" && (
+              <div className="escribir-comentario">
+                <textarea
+                  placeholder="Comenta..."
+                  value={commentText}
+                  onChange={(e) => setCommentText(e.target.value)}
+                  maxLength={500}
+                />
+                <button onClick={handleCommentSubmit}>Enviar</button>
+              </div>
+            )}
+            <br/>
             <div className="comentarios-existentes">
-              {comentarios.map((c) => (
+              {comentarios.slice().sort((a, b) => b.id - a.id).map((c) => (
                 <div key={c.id} className="comentario-item">
                   <div className="comentario-autor">
                     {c.nombre} {c.apellidos}
@@ -882,18 +906,6 @@ function CursoGrid() {
                 </div>
               ))}
             </div>
-            {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
-            {tipo === "alumno" && (
-              <div className="escribir-comentario">
-                <textarea
-                  placeholder="Comenta..."
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  maxLength={500}
-                />
-                <button onClick={handleCommentSubmit}>Enviar</button>
-              </div>
-            )}
           </div>
         </div>
       </div>
