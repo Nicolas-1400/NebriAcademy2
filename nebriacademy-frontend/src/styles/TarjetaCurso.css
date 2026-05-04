@@ -155,7 +155,7 @@
     max-width: 380px;
   }
 
-  .tarjeta-curso img {
+  .tarjeta-curso .img-curso {
     height: 180px;
     margin-bottom: 14px;
   }
@@ -180,7 +180,7 @@
     padding: 15px;
   }
 
-  .tarjeta-curso img {
+  .tarjeta-curso .img-curso {
     height: 150px;
     margin-bottom: 12px;
   }

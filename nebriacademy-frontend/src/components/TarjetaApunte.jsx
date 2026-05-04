@@ -1,49 +1,95 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import MeGusta from "../assets/Iconos/me-gusta.png";
 import MeGustaMarcado from "../assets/Iconos/me-gusta-marcado.png";
+import Editar from "../assets/Iconos/lapiz.png";
+import Eliminar from "../assets/Iconos/Eliminar.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Tarjeta que muestra un apunte individual en la página global de Apuntes
+// Tarjeta unificada para mostrar un apunte tanto en la lista global de Apuntes
+// como dentro de la vista de un curso concreto.
+//
+// Props opcionales para el contexto de curso (editingMode, handleEditNavigate, etc.):
+// si no se pasan, la tarjeta se comporta como la versión simple de la lista global.
+//
+// Props opcionales para la vista global (autorNombre, categoria):
+// si no se pasan, la tarjeta no muestra categoría ni resuelve el nombre externamente.
 function TarjetaApunte({
   apunte,
   usuario,
   likedIds = [],
   onToggleLike,
+  // Vista global: nombre del autor ya resuelto por el padre
   autorNombre,
+  // Vista de curso: rol del usuario y controles de edición
+  tipo,
+  editingMode = false,
+  handleEditNavigate,
+  handleDeleteContenido,
+  allowEdit = true,
 }) {
-  // Determinamos si el usuario ya ha dado like a este apunte
   const isLiked = likedIds.includes(apunte.id);
+
+  // Los botones de edición solo aparecen en el contexto de curso (cuando se pasa tipo)
+  const showEdit = tipo === "profesor" && editingMode && allowEdit;
+  const showDelete = (tipo === "profesor" && editingMode) || tipo === "administrador";
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div key={apunte.id} className="item-row">
       <div className="item-main">
         <a href={apunte.archivo} target="_blank" rel="noreferrer">
-          {apunte.nombre}
+          {apunte.nombre || apunte.archivo}
         </a>
         {apunte.descripcion && <p>{apunte.descripcion}</p>}
-        {/* Mostramos el nombre del autor si viene resuelto; si no, mostramos el ID */}
-        <p>{autorNombre || apunte.autor}</p>
+        {/* El nombre del autor puede venir ya resuelto (vista global) o en el propio objeto (vista curso) */}
+        <p className="apunte-autor">
+          {autorNombre || apunte.nombreAutor || apunte.autor}
+        </p>
       </div>
 
+      {/* Sección derecha: controles de edición + categoría + like */}
       <div className="apunte-meta">
-        <div className="apunte-categoria">
-          <p>{apunte.categoria}</p>
-        </div>
+        {/* Categoría: solo se muestra en la vista global cuando viene el dato */}
+        {apunte.categoria && (
+          <div className="apunte-categoria">
+            <p>{apunte.categoria}</p>
+          </div>
+        )}
 
-        <div className="apunte-like">
-          {/* El botón de like solo aparece si el componente padre ha pasado la función onToggleLike */}
-          {onToggleLike && usuario?.id && (
-            <>
-              <img
-                src={isLiked ? MeGustaMarcado : MeGusta}
-                alt="like"
-                className={`like-icon ${isLiked ? "liked" : ""}`}
-                onClick={() => onToggleLike(apunte)}
-              />
-              <span className="like-count">{apunte.valoracion || 0}</span>
-            </>
-          )}
-        </div>
+        {/* Controles de edición: editar solo profesor si está permitido, borrar profesor/admin */}
+        {(showEdit || showDelete) && (
+          <div className="edit-controls">
+            {showEdit && (
+              <button
+                onClick={() => handleEditNavigate("apunte", apunte)}
+                title="Editar apunte"
+              >
+                <img src={Editar} alt="Editar" />
+              </button>
+            )}
+            {showDelete && (
+              <button
+                onClick={() => handleDeleteContenido("apunte", apunte.id)}
+                title="Borrar apunte"
+              >
+                <img src={Eliminar} alt="Borrar apunte" />
+              </button>
+            )}
+          </div>
+        )}
+
+        {/* Like: se muestra si el padre pasa la función onToggleLike y hay usuario logueado */}
+        {onToggleLike && usuario?.id && (
+          <div className="apunte-like">
+            <img
+              src={isLiked ? MeGustaMarcado : MeGusta}
+              alt="like"
+              className={`like-icon ${isLiked ? "liked" : ""}`}
+              onClick={() => onToggleLike(apunte)}
+            />
+            <span className="like-count">{apunte.valoracion || 0}</span>
+          </div>
+        )}
       </div>
     </div>
   );
