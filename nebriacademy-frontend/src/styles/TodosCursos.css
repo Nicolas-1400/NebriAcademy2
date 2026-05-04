@@ -149,12 +149,29 @@
 .cursos-grid {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    grid-auto-rows: 1fr;
     gap: 25px;
+}
+
+/* Forzar que todas las tarjetas dentro de este grid tengan el mismo tamaño y truncar títulos */
+.todos-cursos-grid .tarjeta-curso {
+    height: 100%;
+    display: flex;
+    flex-direction: column;
+}
+
+.todos-cursos-grid .tarjeta-curso h3 {
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    line-clamp: 3; /* Propiedad estándar para compatibilidad */
+    -webkit-box-orient: vertical;
+    overflow: hidden;
 }
 
 /* Contenedor relativo de cada tarjeta (para posicionar el botón de admin) */
 .tarjeta-curso-wrapper {
     position: relative;
+    height: 100%;
 }
 
 

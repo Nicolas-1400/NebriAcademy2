@@ -87,6 +87,10 @@ function AddCursoGrid() {
     try {
       const profesorId = usuarioStore?.id;
 
+      if (!profesorId) {
+        return setError("No se ha podido identificar al profesor. Por favor, inicia sesión de nuevo.");
+      }
+
       // Primero creamos el curso para obtener su ID
       const respuestaCurso = await fetch(`${API_URL}/cursos/add`, {
         method: "POST",
@@ -221,11 +225,14 @@ function AddCursoGrid() {
                     <option value="" disabled>
                       Selecciona categoría
                     </option>
-                    <option value="Programacion">Programación</option>
-                    <option value="Diseño">Diseño</option>
+                    <option value="Programación">Programación</option>
+                    <option value="Diseño y UX">Diseño y UX</option>
                     <option value="Ciberseguridad">Ciberseguridad</option>
                     <option value="BDD">Base de datos</option>
                     <option value="Marketing">Marketing</option>
+                    <option value="Inteligencia Artificial">Inteligencia Artificial</option>
+                    <option value="Desarrollo">Desarrollo</option>
+                    <option value="Data Science">Data Science</option>
                   </select>
                 </div>
                 <div className="formulario-grupo">
@@ -266,7 +273,9 @@ function AddCursoGrid() {
                   />
                 </div>
                 <div className="formulario-grupo">
-                  <label>Archivo (.pdf, .doc, .docx, .ppt, .pptx) (máximo 20 MB)</label>
+                  <label>
+                    Archivo (.pdf, .doc, .docx, .ppt, .pptx) (máximo 20 MB)
+                  </label>
                   <input
                     type="file"
                     ref={fileInputRef}

@@ -70,7 +70,6 @@ function TarjetaCursos({
       <div className="p-datos">
         <p className="p-categoria">Categoría: {categoria}</p>
         <p className="p-nivel">Nivel: {nivel}</p>
-        <p className="p-descripcion">{descripcion}</p>
       </div>
       <p className="p-profesor">{profesor}</p>
       <p className="p-valoracion">

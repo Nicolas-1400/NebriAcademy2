@@ -646,6 +646,7 @@
 .detalles-descripcion,
 .detalles-comentarios {
   position: relative;
+  word-wrap: break-word;
 }
 
 .detalles-profesor,
