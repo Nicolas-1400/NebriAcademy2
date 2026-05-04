@@ -450,6 +450,73 @@ function Nav() {
         <h2>NebriAcademy</h2>
       </div>
 
+      {/* Campanita de notificaciones (solo móvil): a la izquierda del botón hamburguesa */}
+      {usuario && (
+        <div className="campana-movil-btn" ref={notificacionesRef}>
+          <button
+            className="bell-btn"
+            onClick={() => {
+              setIsNotificacionesOpen(!isNotificacionesOpen);
+              setIsMenuOpen(false);
+              setIsdesplegableOpen(false);
+              setIsSearchOpen(false);
+            }}
+          >
+            <img
+              src={notificaciones.length > 0 ? CampanaPendiente : CampanaCheck}
+              alt="Notificaciones"
+              className="bell-img"
+            />
+          </button>
+
+          {isNotificacionesOpen && (
+            <div className="notif-desplegable-menu notif-movil-menu">
+              {notificaciones.length === 0 ? (
+                <p className="no-notif">No hay notificaciones</p>
+              ) : (
+                <>
+                  {notificaciones.length > 4 && (
+                    <div className="notif-cont">
+                      {notificaciones.map((noti) => (
+                        <button
+                          className="single-notif"
+                          key={noti.id}
+                          onClick={() => handleNotificacionClick(noti)}
+                        >
+                          <div className="notif-msg">{noti.mensaje}</div>
+                          <small className="msg-date">
+                            {new Date(noti.fecha).toLocaleDateString()}
+                          </small>
+                        </button>
+                      ))}
+                    </div>
+                  )}
+                  {notificaciones.length <= 4 &&
+                    notificaciones.map((noti) => (
+                      <button
+                        className="single-notif"
+                        key={noti.id}
+                        onClick={() => handleNotificacionClick(noti)}
+                      >
+                        <div className="notif-msg">{noti.mensaje}</div>
+                        <small className="msg-date">
+                          {new Date(noti.fecha).toLocaleDateString()}
+                        </small>
+                      </button>
+                    ))}
+                  <button
+                    className="notif-clean-btn"
+                    onClick={handleLimpiarNotificaciones}
+                  >
+                    Limpiar notificaciones
+                  </button>
+                </>
+              )}
+            </div>
+          )}
+        </div>
+      )}
+
       {/* Botón hamburguesa: solo visible en pantallas pequeñas */}
       <button
         className="menu-hamburguesa-btn"
@@ -647,6 +714,24 @@ function Nav() {
                     }}
                   >
                     Mi Perfil
+                  </button>
+                  <button
+                    className="desplegable-item"
+                    onClick={() => {
+                      navigate("/Home/Ayuda");
+                      setIsdesplegableOpen(false);
+                    }}
+                  >
+                    Ayuda
+                  </button>
+                  <button
+                    className="desplegable-item"
+                    onClick={() => {
+                      navigate("/Home/MisTickets");
+                      setIsdesplegableOpen(false);
+                    }}
+                  >
+                    Mis Tickets
                   </button>
                   {mostrarBotonCambio && (
                     <button
