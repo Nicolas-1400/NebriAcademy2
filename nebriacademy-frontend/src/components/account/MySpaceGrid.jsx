@@ -1,10 +1,10 @@
 import './Account.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useEffect, useState, useMemo } from "react";
-import useAuthStore from "../../../store/useAuthStore";
-import CardSlider from "../../common/Sliders/CardSlider";
-import SliderComponent from "../../common/Sliders/SliderComponent";
+import useAuthStore from "../../store/useAuthStore";
+import CardSlider from "../common/Sliders/CardSlider";
+import SliderComponent from "../common/Sliders/SliderComponent";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Espacio personal del alumno: muestra cursos en progreso, favoritos y apuntes propios y guardados
@@ -228,3 +228,7 @@ function MySpaceGrid() {
 }
 
 export default MySpaceGrid;
+
+
+
+

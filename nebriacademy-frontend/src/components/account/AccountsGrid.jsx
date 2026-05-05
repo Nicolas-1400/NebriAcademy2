@@ -1,11 +1,11 @@
 import './Account.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";
-import useAuthStore from "../../../store/useAuthStore";
+import useAuthStore from "../../store/useAuthStore";
 import AccountsTable from "./AccountsTable";
-import useToastStore from "../../../store/toastStore";
-import useModalStore from "../../../store/modalStore";
+import useToastStore from "../../store/toastStore";
+import useModalStore from "../../store/modalStore";
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 function AccountsGrid() {
   const { tipo } = useAuthStore();
@@ -391,3 +391,7 @@ function AccountsGrid() {
 }
 
 export default AccountsGrid;
+
+
+
+

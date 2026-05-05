@@ -1,11 +1,11 @@
 import './Management.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useState, useRef } from "react";
-import useAuthStore from "../../../store/useAuthStore";
+import useAuthStore from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
-import CourseBackgroundCard from "../../catalogs/Courses/CourseBackgroundCard";
+import flecha from "../../assets/Iconos/flecha-correcta.png";
+import CourseBackgroundCard from "../catalogs/Courses/CourseBackgroundCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Formulario para que el profesor cree un nuevo curso con contenido inicial opcional
@@ -377,3 +377,7 @@ function AddCourseGrid() {
 }
 
 export default AddCourseGrid;
+
+
+
+

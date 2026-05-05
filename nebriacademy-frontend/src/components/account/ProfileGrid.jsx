@@ -1,11 +1,11 @@
 import './Account.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";
-import useAuthStore from "../../../store/useAuthStore";
+import useAuthStore from "../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
-import ImagenPerfilDefault from "../../../assets/Iconos/ImagenPerfilUsuario.png";
+import flecha from "../../assets/Iconos/flecha-correcta.png";
+import ImagenPerfilDefault from "../../assets/Iconos/ImagenPerfilUsuario.png";
 import ProfileImageCard, { PERFILES } from "./ProfileImageCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -352,4 +352,8 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 }
 
 export default ProfileGrid;
+
+
+
+
 

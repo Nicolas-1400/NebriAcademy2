@@ -5,7 +5,7 @@ import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import flecha from "../../../assets/Iconos/flecha-correcta.png";
 import ImagenPerfilDefault from "../../../assets/Iconos/ImagenPerfilUsuario.png";
-import { PERFILES } from "../../account/AccountManagement/ProfileImageCard";
+import { PERFILES } from "../../account/ProfileImageCard";
 import CardSlider from "../../common/Sliders/CardSlider";
 
 
@@ -120,3 +120,4 @@ function ProfessorInfoGrid() {
 }
 
 export default ProfessorInfoGrid;
+

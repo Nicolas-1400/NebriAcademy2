@@ -1,7 +1,7 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import ImagenDefault from "../../../assets/Iconos/individuo.png";
-import { PERFILES } from "../../account/AccountManagement/ProfileImageCard";
+import { PERFILES } from "../../account/ProfileImageCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra la información básica de un profesor en la lista de todos los profesores
@@ -35,4 +35,5 @@ function ProfessorCard({
 }
 
 export default ProfessorCard;
+
 

@@ -1,5 +1,5 @@
 /* --------------------------------- Course Management Unified CSS --------------------------------- */
-@import '../../../styles/General.css';
+@import "../../styles/General.css";
 
 
 .perfil-curso {
@@ -548,3 +548,5 @@
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }
+
+

@@ -1,36 +1,36 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import Hom1 from "../../../assets/perfiles/hombre-1.png";
-import Hom2 from "../../../assets/perfiles/hombre-2.png";
-import Hom3 from "../../../assets/perfiles/hombre-3.png";
-import Hom4 from "../../../assets/perfiles/hombre-4.png";
-import Hom5 from "../../../assets/perfiles/hombre-5.png";
-import Hom6 from "../../../assets/perfiles/hombre-6.png";
-import Hom7 from "../../../assets/perfiles/hombre-7.png";
-import Hom8 from "../../../assets/perfiles/hombre-8.png";
-import Hom9 from "../../../assets/perfiles/hombre-9.png";
-import Hom10 from "../../../assets/perfiles/hombre-10.png";
-import Hom11 from "../../../assets/perfiles/hombre-11.png";
-import Hom12 from "../../../assets/perfiles/hombre-12.png";
-import Hom13 from "../../../assets/perfiles/hombre-13.png";
-import Hom14 from "../../../assets/perfiles/hombre-14.png";
-import Hom15 from "../../../assets/perfiles/hombre-15.png";
-import Hom16 from "../../../assets/perfiles/hombre-16.png";
-import Muj1 from "../../../assets/perfiles/mujer-1.png";
-import Muj2 from "../../../assets/perfiles/mujer-2.png";
-import Muj3 from "../../../assets/perfiles/mujer-3.png";
-import Muj4 from "../../../assets/perfiles/mujer-4.png";
-import Muj5 from "../../../assets/perfiles/mujer-5.png";
-import Muj6 from "../../../assets/perfiles/mujer-6.png";
-import Muj7 from "../../../assets/perfiles/mujer-7.png";
-import Muj8 from "../../../assets/perfiles/mujer-8.png";
-import Muj9 from "../../../assets/perfiles/mujer-9.png";
-import Muj10 from "../../../assets/perfiles/mujer-10.png";
-import Muj11 from "../../../assets/perfiles/mujer-11.png";
-import Muj12 from "../../../assets/perfiles/mujer-12.png";
-import Muj13 from "../../../assets/perfiles/mujer-13.png";
-import Muj14 from "../../../assets/perfiles/mujer-14.png";
-import Muj15 from "../../../assets/perfiles/mujer-15.png";
-import Muj16 from "../../../assets/perfiles/mujer-16.png";
+import Hom1 from "../../assets/perfiles/hombre-1.png";
+import Hom2 from "../../assets/perfiles/hombre-2.png";
+import Hom3 from "../../assets/perfiles/hombre-3.png";
+import Hom4 from "../../assets/perfiles/hombre-4.png";
+import Hom5 from "../../assets/perfiles/hombre-5.png";
+import Hom6 from "../../assets/perfiles/hombre-6.png";
+import Hom7 from "../../assets/perfiles/hombre-7.png";
+import Hom8 from "../../assets/perfiles/hombre-8.png";
+import Hom9 from "../../assets/perfiles/hombre-9.png";
+import Hom10 from "../../assets/perfiles/hombre-10.png";
+import Hom11 from "../../assets/perfiles/hombre-11.png";
+import Hom12 from "../../assets/perfiles/hombre-12.png";
+import Hom13 from "../../assets/perfiles/hombre-13.png";
+import Hom14 from "../../assets/perfiles/hombre-14.png";
+import Hom15 from "../../assets/perfiles/hombre-15.png";
+import Hom16 from "../../assets/perfiles/hombre-16.png";
+import Muj1 from "../../assets/perfiles/mujer-1.png";
+import Muj2 from "../../assets/perfiles/mujer-2.png";
+import Muj3 from "../../assets/perfiles/mujer-3.png";
+import Muj4 from "../../assets/perfiles/mujer-4.png";
+import Muj5 from "../../assets/perfiles/mujer-5.png";
+import Muj6 from "../../assets/perfiles/mujer-6.png";
+import Muj7 from "../../assets/perfiles/mujer-7.png";
+import Muj8 from "../../assets/perfiles/mujer-8.png";
+import Muj9 from "../../assets/perfiles/mujer-9.png";
+import Muj10 from "../../assets/perfiles/mujer-10.png";
+import Muj11 from "../../assets/perfiles/mujer-11.png";
+import Muj12 from "../../assets/perfiles/mujer-12.png";
+import Muj13 from "../../assets/perfiles/mujer-13.png";
+import Muj14 from "../../assets/perfiles/mujer-14.png";
+import Muj15 from "../../assets/perfiles/mujer-15.png";
+import Muj16 from "../../assets/perfiles/mujer-16.png";
 
 // ── CONSTANTES ─────────────────────────────────────────────────────────────
 // Mapa exportado de nombre de archivo → imagen importada.
@@ -91,3 +91,7 @@ function ProfileImageCard({ imagenSeleccionada, onSelect }) {
 }
 
 export default ProfileImageCard;
+
+
+
+

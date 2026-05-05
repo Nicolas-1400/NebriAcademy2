@@ -1,6 +1,6 @@
 import './Management.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
@@ -167,4 +167,8 @@ function EditContentGrid() {
 }
 
 export default EditContentGrid;
+
+
+
+
 

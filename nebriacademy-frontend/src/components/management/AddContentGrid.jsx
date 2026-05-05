@@ -1,9 +1,9 @@
 import './Management.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useState, useEffect } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
-import useAuthStore from "../../../store/useAuthStore";
+import useAuthStore from "../../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Componente unificado para añadir contenido (vídeos, apuntes, ejercicios) a un curso
@@ -228,4 +228,8 @@ function AddContentGrid({ tipo, idCurso }) {
 }
 
 export default AddContentGrid;
+
+
+
+
 

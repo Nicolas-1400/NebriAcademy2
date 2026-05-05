@@ -46,3 +46,7 @@ function StudentSubmissionCard({ registro }) {
 }
 
 export default StudentSubmissionCard;
+
+
+
+

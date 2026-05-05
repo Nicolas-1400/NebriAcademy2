@@ -1,13 +1,13 @@
 import './Management.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import { API_URL } from "../../../config/api";
+import { API_URL } from "../../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import StudentSubmissionCard from "./StudentSubmissionCard";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
-import useAuthStore from "../../../store/useAuthStore";
-import useToastStore from "../../../store/toastStore";
-import useModalStore from "../../../store/modalStore";
+import flecha from "../../assets/Iconos/flecha-correcta.png";
+import useAuthStore from "../../store/useAuthStore";
+import useToastStore from "../../store/toastStore";
+import useModalStore from "../../store/modalStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Página para que el profesor corrija las entregas de los alumnos a un ejercicio concreto
@@ -218,3 +218,7 @@ function GradeExercisesGrid() {
 }
 
 export default GradeExercisesGrid;
+
+
+
+

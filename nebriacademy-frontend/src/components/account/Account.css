@@ -1,5 +1,5 @@
 /* --------------------------------- Account Management Unified CSS --------------------------------- */
-@import '../../../styles/General.css';
+@import "../../styles/General.css";
 
 
 /* PERFIL */
@@ -674,3 +674,5 @@
   border-color: #a01b2b;
   transform: scale(1.1);
 }
+
+
