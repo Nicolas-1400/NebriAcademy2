@@ -1,5 +1,5 @@
 /* --------------------------------- Professors Unified CSS --------------------------------- */
-@import '../../../styles/General.css';
+@import '../../../styles/general.css';
 
 /* El sidebar (SearchSidebar) en esta página */
 .TodosProfesoresGrid > .search-sidebar {

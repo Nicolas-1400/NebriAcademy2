@@ -1,7 +1,7 @@
 import AppRouter from "./router/AppRouter.jsx";
 import { Analytics } from "@vercel/analytics/react";
 
-import "./styles/General.css";
+import "./styles/general.css";
 import "./components/layout/Header/Header.css";
 import "./components/layout/Nav/Nav.css";
 import "./components/layout/SearchSidebar/SearchSidebar.css";
