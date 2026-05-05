@@ -6,7 +6,7 @@ import Mas from "../assets/Iconos/mas.png";
 import Lapiz from "../assets/Iconos/lapiz.png";
 import SalirEdicion from "../assets/Iconos/lapiz-cancelar3.png";
 import TarjetaApunte from "./TarjetaApunte";
-import SearchSidebar from "./SearchSidebar";
+import SearchSidebar from "./layout/SearchSidebar/SearchSidebar";
 import useAuthStore from "../store/useAuthStore";
 import useToastStore from "../store/toastStore";
 import useModalStore from "../store/modalStore";
@@ -48,8 +48,8 @@ function ApuntesGrid() {
     if (categoriaParam) {
       setFilters((prev) => ({ ...prev, category: categoriaParam }));
     }
-  // Solo al montar (primera vez que se resuelven los searchParams)
-  // eslint-disable-next-line react-hooks/exhaustive-deps
+    // Solo al montar (primera vez que se resuelven los searchParams)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -63,15 +63,9 @@ function ApuntesGrid() {
           respuestaAlumnos,
           respuestaCategorias,
         ] = await Promise.all([
-          fetch(`${API_URL}/apuntes`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/profesores`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/alumnos`).then((respuesta) =>
-            respuesta.json(),
-          ),
+          fetch(`${API_URL}/apuntes`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/profesores`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/alumnos`).then((respuesta) => respuesta.json()),
           fetch(`${API_URL}/apuntes/categorias`).then((respuesta) =>
             respuesta.json().catch(() => ({ categorias: [] })),
           ),
@@ -106,13 +100,9 @@ function ApuntesGrid() {
   // Resuelve el nombre del autor de un apunte buscando primero entre alumnos y luego entre profesores
   const resolveAutorNombre = (autorId) => {
     const aid = Number(autorId);
-    const alum = data.alumnos.find(
-      (a) => Number(a.usuarioId) === aid,
-    );
+    const alum = data.alumnos.find((a) => Number(a.usuarioId) === aid);
     if (alum) return `${alum.nombre} ${alum.apellidos}`;
-    const prof = data.profesores.find(
-      (p) => Number(p.usuarioId) === aid,
-    );
+    const prof = data.profesores.find((p) => Number(p.usuarioId) === aid);
     if (prof) return `${prof.nombre} ${prof.apellidos}`;
     return "Desconocido";
   };
@@ -242,7 +232,10 @@ function ApuntesGrid() {
         onSearchChange={(v) => updateFilter("searchTerm", v)}
         searchPlaceholder="Buscar..."
         filterGroups={filterGroups}
-        activeFilters={{ category: filters.category, viewMode: filters.viewMode }}
+        activeFilters={{
+          category: filters.category,
+          viewMode: filters.viewMode,
+        }}
         onFilterChange={updateFilter}
         onClearAll={() =>
           setFilters({ category: "", searchTerm: "", viewMode: "all" })

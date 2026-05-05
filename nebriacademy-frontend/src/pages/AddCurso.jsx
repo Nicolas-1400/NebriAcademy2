@@ -1,6 +1,6 @@
-import Nav from "../components/Nav";
+import Nav from "../components/layout/Nav/Nav";
 import AddCursoGrid from "../components/AddCursoGrid";
-import Footer from "../components/Footer";
+import Footer from "../components/layout/Footer/Footer";
 
 function AddCurso() {
   return (

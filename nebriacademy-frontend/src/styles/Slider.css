@@ -1,4 +1,4 @@
-@import "./general.css";
+@import "./General.css";
 
 .slider-component {
   display: flex;
@@ -50,7 +50,11 @@
   left: 0;
   width: 80px;
   height: 100%;
-  background: linear-gradient(to right, var(--fondo, #fff) 0%, transparent 100%);
+  background: linear-gradient(
+    to right,
+    var(--fondo, #fff) 0%,
+    transparent 100%
+  );
   pointer-events: none;
   opacity: 0;
   transition: opacity 0.3s ease;
@@ -127,9 +131,3 @@
     max-width: none;
   }
 }
-
-
-
-
-
-

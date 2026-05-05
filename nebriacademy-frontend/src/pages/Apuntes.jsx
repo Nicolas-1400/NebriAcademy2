@@ -1,6 +1,6 @@
-import Nav from "../components/Nav";
+import Nav from "../components/layout/Nav/Nav";
 import ApuntesGrid from "../components/ApuntesGrid";
-import Footer from "../components/Footer";
+import Footer from "../components/layout/Footer/Footer";
 
 function Apuntes() {
   return (

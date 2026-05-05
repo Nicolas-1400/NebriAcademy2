@@ -1,5 +1,5 @@
-import Footer from "../components/Footer";
-import Nav from "../components/Nav";
+import Footer from "../components/layout/Footer/Footer";
+import Nav from "../components/layout/Nav/Nav";
 import TodosCursosGrid from "../components/TodosCursosGrid";
 
 function TodosCursos() {

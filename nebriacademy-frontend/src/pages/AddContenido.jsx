@@ -1,7 +1,7 @@
 import { useParams } from "react-router-dom";
-import Nav from "../components/Nav";
+import Nav from "../components/layout/Nav/Nav";
 import AddContentGrid from "../components/AddContentGrid";
-import Footer from "../components/Footer";
+import Footer from "../components/layout/Footer/Footer";
 
 function AddContenido() {
   const { tipo, id } = useParams();

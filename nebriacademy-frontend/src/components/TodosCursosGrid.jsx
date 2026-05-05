@@ -3,7 +3,7 @@ import { API_URL } from "../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import TarjetaCursos from "./TarjetaCursos";
-import SearchSidebar from "./SearchSidebar";
+import SearchSidebar from "./layout/SearchSidebar/SearchSidebar";
 import useAuthStore from "../store/useAuthStore";
 import Eliminar from "../assets/Iconos/Eliminar.png";
 import useToastStore from "../store/toastStore";
@@ -42,9 +42,7 @@ function TodosCursosGrid() {
       try {
         const [respuestaCursos, respuestaProfesores, respuestaCategorias] =
           await Promise.all([
-            fetch(`${API_URL}/cursos`).then((respuesta) =>
-              respuesta.json(),
-            ),
+            fetch(`${API_URL}/cursos`).then((respuesta) => respuesta.json()),
             fetch(`${API_URL}/profesores`).then((respuesta) =>
               respuesta.json(),
             ),
@@ -76,12 +74,20 @@ function TodosCursosGrid() {
 
   // Elimina un curso completo con confirmación (solo admin)
   const handleDeleteCurso = async (cursoId) => {
-    const confirmed = await showConfirm("¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.", "Eliminar Curso");
+    const confirmed = await showConfirm(
+      "¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.",
+      "Eliminar Curso",
+    );
     if (!confirmed) return;
     try {
-      const res = await fetch(`${API_URL}/cursos/${cursoId}`, { method: "DELETE" });
+      const res = await fetch(`${API_URL}/cursos/${cursoId}`, {
+        method: "DELETE",
+      });
       if (res.ok) {
-        setData((prev) => ({ ...prev, cursos: prev.cursos.filter((c) => c.id !== cursoId) }));
+        setData((prev) => ({
+          ...prev,
+          cursos: prev.cursos.filter((c) => c.id !== cursoId),
+        }));
         addToast("Curso eliminado correctamente", "success");
       } else {
         addToast("Error al eliminar el curso", "error");
@@ -99,7 +105,11 @@ function TodosCursosGrid() {
   const filteredCursos = useMemo(() => {
     return data.cursos.filter((c) => {
       // Si es alumno vinculado, ocultar los cursos de su profesor vinculado
-      if (user?.esVinculado && user?.profesorVinculadoId && c.profesor === user.profesorVinculadoId)
+      if (
+        user?.esVinculado &&
+        user?.profesorVinculadoId &&
+        c.profesor === user.profesorVinculadoId
+      )
         return false;
 
       if (filters.category && c.categoria !== filters.category) return false;
@@ -154,7 +164,9 @@ function TodosCursosGrid() {
         filterGroups={filterGroups}
         activeFilters={{ category: filters.category, level: filters.level }}
         onFilterChange={updateFilter}
-        onClearAll={() => setFilters({ category: "", level: "", searchTerm: "" })}
+        onClearAll={() =>
+          setFilters({ category: "", level: "", searchTerm: "" })
+        }
       />
 
       {/* Grid principal con las tarjetas de los cursos filtrados */}

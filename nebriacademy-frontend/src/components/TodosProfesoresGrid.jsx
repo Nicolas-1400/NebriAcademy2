@@ -2,7 +2,7 @@
 import { API_URL } from "../config/api";
 import { useEffect, useState } from "react";
 import TarjetaProfesores from "./TarjetaProfesores";
-import SearchSidebar from "./SearchSidebar";
+import SearchSidebar from "./layout/SearchSidebar/SearchSidebar";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los profesores con buscador por nombre y filtro por especialización

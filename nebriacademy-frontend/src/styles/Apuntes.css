@@ -1,4 +1,4 @@
-@import "./general.css";
+@import "./General.css";
 @import "./TarjetaCurso.css";
 
 /* APUNTES GRID */
@@ -17,7 +17,6 @@
   width: clamp(250px, 20%, 300px);
   flex-shrink: 0;
 }
-
 
 .formulario-busqueda {
   display: flex;

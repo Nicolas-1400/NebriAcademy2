@@ -1,9 +1,9 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Importamos todas las páginas de la aplicación
-import Login from "../pages/Login.jsx";
+import Login from "../pages/auth/Login.jsx";
 import NotFound from "../pages/NotFound";
-import Home from "../pages/Home.jsx";
+import Home from "../pages/common/Home.jsx";
 import MiEspacio from "../pages/MiEspacio.jsx";
 import TodosCursos from "../pages/TodosCursos.jsx";
 import Curso from "../pages/Curso.jsx";
@@ -15,13 +15,13 @@ import TodosProfesores from "../pages/TodosProfesores.jsx";
 import InfoProfesor from "../pages/InfoProfesor.jsx";
 import Apuntes from "../pages/Apuntes.jsx";
 
-import PreRegister from "../pages/PreRegister.jsx";
-import Verificacion from "../pages/Verificacion.jsx";
-import Register from "../pages/Register.jsx";
+import PreRegister from "../pages/auth/PreRegister.jsx";
+import Verificacion from "../pages/auth/AccountVerification.jsx";
+import Register from "../pages/auth/Register.jsx";
 import Perfil from "../pages/Perfil.jsx";
-import Ayuda from "../pages/Ayuda.jsx";
-import MisTickets from "../pages/MisTickets.jsx";
-import DetalleTicket from "../pages/DetalleTicket.jsx";
+import Ayuda from "../pages/support/Help.jsx";
+import MisTickets from "../pages/support/MyTickets.jsx";
+import DetalleTicket from "../pages/support/TicketDetail.jsx";
 import Cuentas from "../pages/Cuentas.jsx";
 import Politicas from "../pages/Politicas.jsx";
 
@@ -36,14 +36,8 @@ function AppRouter() {
         <Route path="/PreRegister" element={<PreRegister />} />
 
         {/* Flujo de registro genérico según tipo de usuario */}
-        <Route
-          path="/Register/:tipo"
-          element={<Register />}
-        />
-        <Route
-          path="/Register/Verificacion/:tipo"
-          element={<Verificacion />}
-        />
+        <Route path="/Register/:tipo" element={<Register />} />
+        <Route path="/Register/Verificacion/:tipo" element={<Verificacion />} />
 
         {/* Ruta no encontrada: si ninguna ruta coincide, mostramos la página 404 */}
         <Route path="*" element={<NotFound />} />

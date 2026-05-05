@@ -1,6 +1,6 @@
-import Nav from "../components/Nav";
+import Nav from "../components/layout/Nav/Nav";
 import InfoProfesorGrid from "../components/InfoProfesorGrid";
-import Footer from "../components/Footer";
+import Footer from "../components/layout/Footer/Footer";
 
 function InfoProfesor() {
   return (

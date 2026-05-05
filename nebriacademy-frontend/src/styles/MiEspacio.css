@@ -1,4 +1,4 @@
-@import "./general.css";
+@import "./General.css";
 
 .MiEspacio {
   padding: 40px 20px;
@@ -25,13 +25,12 @@
   gap: 50px;
   padding: 20px;
   border-radius: 20px;
-  background: 
-    linear-gradient(
-      45deg, 
-      rgb(220, 0, 0), 
-      rgb(255, 196, 196), 
-      rgb(220, 0, 0)
-    );
+  background: linear-gradient(
+    45deg,
+    rgb(220, 0, 0),
+    rgb(255, 196, 196),
+    rgb(220, 0, 0)
+  );
 }
 
 /* Secciones de Carouseles */
@@ -43,7 +42,6 @@
   flex-direction: column;
   gap: 20px;
 }
-
 
 .MiEspacio-seccion-cursos-proceso h2,
 .MiEspacio-seccion-cursos-favoritos h2,
@@ -112,7 +110,6 @@
   .MiEspacio-seccion-apuntes-guardados h2 {
     font-size: 18px;
   }
-
 }
 
 /* RESPONSIVE 480px */
@@ -136,5 +133,4 @@
   .MiEspacio-seccion-apuntes-guardados h2 {
     font-size: 16px;
   }
-
 }

@@ -1,5 +1,5 @@
-import Nav from "../components/Nav";
-import Footer from "../components/Footer";
+import Nav from "../components/layout/Nav/Nav";
+import Footer from "../components/layout/Footer/Footer";
 import PerfilGrid from "../components/PerfilGrid";
 
 function Perfil() {
@@ -13,4 +13,3 @@ function Perfil() {
 }
 
 export default Perfil;
-

@@ -1,37 +1,39 @@
 import AppRouter from "./router/AppRouter.jsx";
 import { Analytics } from "@vercel/analytics/react";
 
-import "./styles/general.css";
-import "./styles/Header.css";
-import "./styles/Nav.css";
+import "./styles/General.css";
+import "./components/layout/Header/Header.css";
+import "./components/layout/Nav/Nav.css";
+import "./components/layout/SearchSidebar/SearchSidebar.css";
+import "./components/support/Support.css";
+import "./components/layout/Footer/Footer.css";
+import "./components/auth/Auth.css";
 import "./styles/AddCurso.css";
-import "./styles/Footer.css";
-import "./styles/Login.css";
-import "./styles/RegisterExterno.css";
 import "./styles/Perfil.css";
 import "./styles/TodosCursos.css";
 import "./styles/Politicas.css";
 import "./styles/Curso.css";
 import "./styles/AddContenidoCurso.css";
-import "./styles/HomeEspacio.css";
+import "./components/common/Home/Home.css";
 import "./styles/Apuntes.css";
 import "./styles/TarjetaProfesor.css";
 import "./styles/TodosProfesores.css";
 import "./styles/NotFound.css";
 import "./styles/TarjetaApunte.css";
-import "./styles/Toast.css";
-import "./styles/ConfirmModal.css";
-
-import Toast from "./components/common/Toast.jsx";
-import ConfirmModal from "./components/common/ConfirmModal.jsx";
+import "./components/common/Notifications/Toast.css";
+import "./components/common/Modals/ConfirmModal.css";
+import Toast from "./components/common/Notifications/Toast.jsx";
+import ConfirmModal from "./components/common/Modals/ConfirmModal.jsx";
 
 function App() {
-  return <>
-    <Analytics />
-    <Toast />
-    <ConfirmModal />
-    <AppRouter />
-  </>;
+  return (
+    <>
+      <Analytics />
+      <Toast />
+      <ConfirmModal />
+      <AppRouter />
+    </>
+  );
 }
 
 export default App;
