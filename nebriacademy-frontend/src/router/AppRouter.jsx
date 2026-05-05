@@ -2,7 +2,7 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Importamos todas las páginas de la aplicación
 import Login from "../pages/auth/Login.jsx";
-import NotFound from "../pages/NotFound";
+import NotFound from "../pages/common/NotFound.jsx";
 import Home from "../pages/common/Home.jsx";
 import MiEspacio from "../pages/MiEspacio.jsx";
 import TodosCursos from "../pages/TodosCursos.jsx";
@@ -14,16 +14,15 @@ import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
 import TodosProfesores from "../pages/TodosProfesores.jsx";
 import InfoProfesor from "../pages/InfoProfesor.jsx";
 import Apuntes from "../pages/Apuntes.jsx";
-
 import PreRegister from "../pages/auth/PreRegister.jsx";
-import Verificacion from "../pages/auth/AccountVerification.jsx";
+import Verification from "../pages/auth/AccountVerification.jsx";
 import Register from "../pages/auth/Register.jsx";
 import Perfil from "../pages/Perfil.jsx";
-import Ayuda from "../pages/support/Help.jsx";
-import MisTickets from "../pages/support/MyTickets.jsx";
-import DetalleTicket from "../pages/support/TicketDetail.jsx";
+import Help from "../pages/support/Help.jsx";
+import MyTickets from "../pages/support/MyTickets.jsx";
+import TicketDetail from "../pages/support/TicketDetail.jsx";
 import Cuentas from "../pages/Cuentas.jsx";
-import Politicas from "../pages/Politicas.jsx";
+import Policies from "../pages/support/Policies.jsx";
 
 import ProtectedRoute from "./ProtectedRoute";
 
@@ -37,7 +36,7 @@ function AppRouter() {
 
         {/* Flujo de registro genérico según tipo de usuario */}
         <Route path="/Register/:tipo" element={<Register />} />
-        <Route path="/Register/Verificacion/:tipo" element={<Verificacion />} />
+        <Route path="/Register/Verification/:tipo" element={<Verification />} />
 
         {/* Ruta no encontrada: si ninguna ruta coincide, mostramos la página 404 */}
         <Route path="*" element={<NotFound />} />
@@ -68,26 +67,26 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Ayuda"
+          path="/Home/Help"
           element={
             <ProtectedRoute>
-              <Ayuda />
+              <Help />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/MisTickets"
+          path="/Home/MyTickets"
           element={
             <ProtectedRoute>
-              <MisTickets />
+              <MyTickets />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/MisTickets/:issueKey"
+          path="/Home/MyTickets/:issueKey"
           element={
             <ProtectedRoute>
-              <DetalleTicket />
+              <TicketDetail />
             </ProtectedRoute>
           }
         />
@@ -159,10 +158,10 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Politicas/:tipo"
+          path="/Home/Policies/:tipo"
           element={
             <ProtectedRoute>
-              <Politicas />
+              <Policies />
             </ProtectedRoute>
           }
         />

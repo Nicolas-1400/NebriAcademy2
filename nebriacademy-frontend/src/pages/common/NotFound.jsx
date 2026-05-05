@@ -1,4 +1,4 @@
-import NotFoundGrid from "../components/NotFoundGrid";
+import NotFoundGrid from "../../components/common/NotFound/NotFoundGrid";
 
 function NotFound() {
   return (

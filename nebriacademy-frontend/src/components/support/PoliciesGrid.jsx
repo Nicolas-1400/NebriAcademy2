@@ -1,4 +1,4 @@
-function PoliticasGrid({ tipo }) {
+function PoliciesGrid({ tipo }) {
   if (tipo === "privacidad") {
     return (
       <div className="PoliticasGrid">
@@ -1200,4 +1200,4 @@ function PoliticasGrid({ tipo }) {
     );
   }
 }
-export default PoliticasGrid;
+export default PoliciesGrid;

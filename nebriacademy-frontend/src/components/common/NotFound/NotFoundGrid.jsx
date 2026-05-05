@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import flecha from "../assets/Iconos/flecha-correcta.png";
+import flecha from "../../../assets/Iconos/flecha-correcta.png";
 
 // Página que se muestra cuando el usuario intenta acceder a una URL que no existe
 function NotFoundGrid() {
