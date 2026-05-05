@@ -135,6 +135,24 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
+    // Si se proporciona una razón (borrado por admin), notificamos al profesor
+    const { reason } = req.query;
+    if (reason && curso.profesor) {
+      try {
+        const prof = await Profesores.findByPk(curso.profesor);
+        if (prof && prof.usuarioId) {
+          await require("../models/Notificaciones.js").create({
+            usuarioId: prof.usuarioId,
+            tipoUsuario: "profesor",
+            mensaje: `Tu curso "${curso.nombreCurso}" ha sido eliminado por un administrador. Razón: ${reason}`,
+            fecha: new Date(),
+          });
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado:", errNotif.message);
+      }
+    }
+
     // Borramos los vídeos del curso: primero el archivo físico y luego el registro en BDD
     const videos = await require("../models/Videos.js").findAll({
       where: { curso: id },

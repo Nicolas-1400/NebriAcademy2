@@ -1,4 +1,4 @@
-// ── IMPORTACIONES ───────────────────────────────────────────────────────────
+import { useState } from "react";
 import Editar from "../../../assets/Iconos/lapiz.png";
 import Eliminar from "../../../assets/Iconos/Eliminar.png";
 
@@ -12,41 +12,47 @@ function CourseVideoCard({
   handleEditNavigate,
   handleDeleteContenido,
 }) {
-  // Los botones de edición solo son visibles si el usuario es profesor y el modo edición está activo
+  const [expanded, setExpanded] = useState(false);
   const isProfesorEdit = tipo === "profesor" && editingMode;
   const showDelete = isProfesorEdit || tipo === "administrador";
 
-  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div key={video.id} className="video-item">
-      <div>
-        <h5>{video.nombre}</h5>
+    <div key={video.id} className={`video-item ${expanded ? "expanded" : ""}`}>
+      <div className="video-item-header" onClick={() => setExpanded(!expanded)}>
+        <div className="video-title-group">
+          <span className={`arrow-toggle ${expanded ? "active" : ""}`}>▶</span>
+          <h5>{video.nombre}</h5>
+        </div>
+
+        {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
+        {(isProfesorEdit || showDelete) && (
+          <div className="edit-controls" onClick={(e) => e.stopPropagation()}>
+            {isProfesorEdit && (
+              <button
+                onClick={() => handleEditNavigate("video", video)}
+                title="Editar vídeo"
+              >
+                <img src={Editar} alt="Editar" />
+              </button>
+            )}
+            {showDelete && (
+              <button
+                onClick={() => handleDeleteContenido("video", video.id)}
+                title="Borrar vídeo"
+              >
+                <img src={Eliminar} alt="Borrar vídeo" />
+              </button>
+            )}
+          </div>
+        )}
       </div>
 
-      <video controls>
-        <source src={video.archivo} type="video/mp4" />
-        Tu navegador no soporta el elemento <code>video</code>.
-      </video>
-
-      {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
-      {(isProfesorEdit || showDelete) && (
-        <div className="edit-controls">
-          {isProfesorEdit && (
-            <button
-              onClick={() => handleEditNavigate("video", video)}
-              title="Editar vídeo"
-            >
-              <img src={Editar} alt="Editar" />
-            </button>
-          )}
-          {showDelete && (
-            <button
-              onClick={() => handleDeleteContenido("video", video.id)}
-              title="Borrar vídeo"
-            >
-              <img src={Eliminar} alt="Borrar vídeo" />
-            </button>
-          )}
+      {expanded && (
+        <div className="video-player-container">
+          <video controls autoPlay>
+            <source src={video.archivo} type="video/mp4" />
+            Tu navegador no soporta el elemento <code>video</code>.
+          </video>
         </div>
       )}
     </div>
@@ -54,3 +60,4 @@ function CourseVideoCard({
 }
 
 export default CourseVideoCard;
+

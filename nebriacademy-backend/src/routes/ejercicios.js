@@ -180,7 +180,26 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
+    // Si se proporciona una razón (borrado por admin), notificamos al autor (profesor)
+    const { reason } = req.query;
+    if (reason && ej.autor) {
+      try {
+        const prof = await Profesores.findByPk(ej.autor);
+        if (prof && prof.usuarioId) {
+          await Notificaciones.create({
+            usuarioId: prof.usuarioId,
+            tipoUsuario: "profesor",
+            mensaje: `Tu ejercicio "${ej.nombre}" ha sido eliminado por un administrador. Razón: ${reason}`,
+            fecha: new Date(),
+          });
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado (ejercicio):", errNotif.message);
+      }
+    }
+
     await ej.destroy();
+
     res.json({ mensaje: "Eliminado" });
   } catch (e) {
     res.status(500).json({ error: "Server error" });

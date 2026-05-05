@@ -179,10 +179,21 @@ function NotesGrid() {
 
   // Borra un apunte con confirmación y lo elimina también del estado local
   const handleDelete = async (aid) => {
-    const confirmed = await showConfirm("¿Borrar apunte?", "Borrar Apunte");
-    if (!confirmed) return;
+    const isUIAdmin = tipo === "administrador";
+    const result = await showConfirm(
+      "¿Borrar apunte?",
+      "Borrar Apunte",
+      { withInput: isUIAdmin }
+    );
+    if (result === false) return;
+    
     try {
-      await fetch(`${API_URL}/apuntes/${aid}`, { method: "DELETE" });
+      let url = `${API_URL}/apuntes/${aid}`;
+      if (isUIAdmin && typeof result === "string" && result.trim()) {
+        url += `?reason=${encodeURIComponent(result)}`;
+      }
+
+      await fetch(url, { method: "DELETE" });
       setData((prev) => ({
         ...prev,
         apuntes: prev.apuntes.filter((a) => a.id !== aid),
@@ -193,6 +204,7 @@ function NotesGrid() {
       addToast("Error al borrar apunte", "error");
     }
   };
+
 
   // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (field, val) =>

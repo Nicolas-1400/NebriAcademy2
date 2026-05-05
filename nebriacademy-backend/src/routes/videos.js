@@ -178,7 +178,26 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
+    // Si se proporciona una razón (borrado por admin), notificamos al autor (profesor)
+    const { reason } = req.query;
+    if (reason && v.autor) {
+      try {
+        const prof = await Profesores.findByPk(v.autor);
+        if (prof && prof.usuarioId) {
+          await Notificaciones.create({
+            usuarioId: prof.usuarioId,
+            tipoUsuario: "profesor",
+            mensaje: `Tu vídeo "${v.nombre}" ha sido eliminado por un administrador. Razón: ${reason}`,
+            fecha: new Date(),
+          });
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado (video):", errNotif.message);
+      }
+    }
+
     await v.destroy();
+
     res.json({ mensaje: "Eliminado" });
   } catch (e) {
     res.status(500).json({ error: "Server error" });

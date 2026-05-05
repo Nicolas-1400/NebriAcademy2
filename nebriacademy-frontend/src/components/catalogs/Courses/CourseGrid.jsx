@@ -31,6 +31,8 @@ import Eliminar from "../../../assets/Iconos/Eliminar.png";
 import NoteCard from "../Notes/NoteCard";
 import CourseVideoCard from "./CourseVideoCard";
 import CourseExerciseCard from "./CourseExerciseCard";
+import Avatar from "../../common/Avatar/Avatar";
+import { PERFILES } from "../../account/ProfileImageCard.jsx";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Página de detalle de un curso: muestra su contenido (vídeos, apuntes, ejercicios),
@@ -46,13 +48,15 @@ function CourseGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [curso, setCurso] = useState(null);
   // Estado del botón "+" para animar su rotación al abrirse el menú de añadir contenido
-  const [rotado, setRotado] = useState(false);
-  const [profesor, setProfesor] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
   const [contenidos, setContenidos] = useState({
     videos: [],
     apuntes: [],
     ejercicios: [],
   });
+  const [rotado, setRotado] = useState(false);
+  const [profesor, setProfesor] = useState(null);
   const [comentarios, setComentarios] = useState([]);
 
   // Datos específicos del alumno logueado: relación con el curso, likes y entregas
@@ -61,7 +65,6 @@ function CourseGrid() {
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [puntuacionesEjercicios, setPuntuacionesEjercicios] = useState([]);
 
-  const [error, setError] = useState(null);
   // editingMode activa los controles de editar/borrar sobre el contenido del curso (solo profesor)
   const [editingMode, setEditingMode] = useState(false);
   // showAddMenu controla la visibilidad del menú desplegable para añadir contenido (solo profesor)
@@ -190,17 +193,26 @@ function CourseGrid() {
 
         // Normalizamos los booleanos que MySQL puede devolver como 0/1 o "0"/"1"
         const toBool = (v) => v === true || v === 1 || v === "1";
-        setRegistroUser({
-          ...respuestaRegistro,
-          favorito: toBool(respuestaRegistro.favorito),
-          apuntado: toBool(respuestaRegistro.apuntado),
-          valoracion:
-            respuestaRegistro.valoracion == null
-              ? null
-              : toBool(respuestaRegistro.valoracion),
-        });
-        if (respuestaRegistro.comentario)
-          setCommentText(respuestaRegistro.comentario);
+        
+        if (respuestaRegistro) {
+          setRegistroUser({
+            ...respuestaRegistro,
+            favorito: toBool(respuestaRegistro.favorito),
+            apuntado: toBool(respuestaRegistro.apuntado),
+            valoracion:
+              respuestaRegistro.valoracion == null
+                ? null
+                : toBool(respuestaRegistro.valoracion),
+          });
+          if (respuestaRegistro.comentario)
+            setCommentText(respuestaRegistro.comentario);
+        } else {
+          setRegistroUser({
+            favorito: false,
+            apuntado: false,
+            valoracion: null,
+          });
+        }
 
         const [likesData, ejerciciosData, puntuacionesData] = await Promise.all(
           [
@@ -239,8 +251,14 @@ function CourseGrid() {
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Elimina un elemento de contenido del curso (vídeo, apunte o ejercicio) con confirmación
   const handleDeleteItem = async (type, itemId) => {
-    const confirmed = await showConfirm("¿Eliminar este elemento?", "Eliminar Contenido");
-    if (!confirmed) return;
+    const isUIAdmin = tipo === "administrador";
+    const result = await showConfirm(
+      "¿Eliminar este elemento?",
+      "Eliminar Contenido",
+      { withInput: isUIAdmin }
+    );
+    if (result === false) return;
+    
     try {
       const endpoint =
         type === "video"
@@ -248,7 +266,13 @@ function CourseGrid() {
           : type === "apunte"
             ? "apuntes"
             : "ejercicios";
-      await fetch(`${API_URL}/${endpoint}/${itemId}`, {
+      
+      let url = `${API_URL}/${endpoint}/${itemId}`;
+      if (isUIAdmin && typeof result === "string" && result.trim()) {
+        url += `?reason=${encodeURIComponent(result)}`;
+      }
+
+      await fetch(url, {
         method: "DELETE",
       });
 
@@ -262,6 +286,7 @@ function CourseGrid() {
       addToast("Error eliminando", "error");
     }
   };
+
 
   // Comprueba si el autor de un apunte es el profesor del curso usando exclusivamente el usuarioId
   const isProfesorApunte = (apunte) => {
@@ -530,6 +555,7 @@ function CourseGrid() {
       {/* Cabecera del curso: imagen de fondo, título, categoría, nivel y controles del alumno */}
       <div className="curso-header">
         <img className="curso-header-bg" src={bgImage} alt="" />
+
         <div className="curso-header-info">
           <h2>{curso.nombreCurso}</h2>
           <p>{curso.categoria}</p>
@@ -860,7 +886,12 @@ function CourseGrid() {
               {comentarios.slice().sort((a, b) => b.id - a.id).map((c) => (
                 <div key={c.id} className="comentario-item">
                   <div className="comentario-autor">
-                    {c.nombre} {c.apellidos}
+                    <Avatar 
+                      name={`${c.nombre} ${c.apellidos}`} 
+                      src={c.imagenPerfil && PERFILES[c.imagenPerfil] ? PERFILES[c.imagenPerfil] : null}
+                      size="32px" 
+                    />
+                    <span>{c.nombre} {c.apellidos}</span>
                   </div>
                   {editingComment.id === c.id ? (
                     // Formulario de edición en línea para el comentario activo

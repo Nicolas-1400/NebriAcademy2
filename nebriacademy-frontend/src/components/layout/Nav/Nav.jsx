@@ -10,6 +10,7 @@ import ImagenMenuHamburguesa from "../../../assets/Iconos/menuHamburguesa.png";
 import useAuthStore from "../../../store/useAuthStore";
 import CampanaPendiente from "../../../assets/Iconos/Campana-pendiente.png";
 import CampanaCheck from "../../../assets/Iconos/Campana-check.png";
+import Avatar from "../../common/Avatar/Avatar";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Barra de navegación principal: logo, buscador global, accesos rápidos, menú de perfil y menú hamburguesa
@@ -617,14 +618,10 @@ function Nav() {
               setIsSearchOpen(false);
             }}
           >
-            <img
-              className="perfil-nav"
-              src={
-                usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
-                  ? PERFILES[usuario.imagenPerfil]
-                  : ImagenPerfilDefault
-              }
-              alt="Perfil"
+            <Avatar 
+              name={`${usuario?.nombre} ${usuario?.apellidos}`} 
+              src={usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil] ? PERFILES[usuario.imagenPerfil] : null} 
+              size="38px"
             />
           </button>
 

@@ -23,15 +23,17 @@ function AllCoursesGrid() {
     cursos: [],
     profesores: [],
     categorias: [],
+    enrollments: [], // Relación alumno-curso (favoritos, apuntados)
   });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  // Estado de los filtros: categoría, nivel y buscador de texto
+  // Estado de los filtros: categoría, nivel, buscador y modo de vista
   const [filters, setFilters] = useState({
     category: state?.selectedCategory || "",
     level: "",
     searchTerm: "",
+    viewMode: "all", // "all", "popular", "novedades", "favoritos", "apuntados"
   });
 
   const NIVELES = ["Básico", "Intermedio", "Avanzado"];
@@ -41,21 +43,25 @@ function AllCoursesGrid() {
   useEffect(() => {
     const cargarDatos = async () => {
       try {
-        const [respuestaCursos, respuestaProfesores, respuestaCategorias] =
-          await Promise.all([
-            fetch(`${API_URL}/cursos`).then((respuesta) => respuesta.json()),
-            fetch(`${API_URL}/profesores`).then((respuesta) =>
-              respuesta.json(),
-            ),
-            fetch(`${API_URL}/cursos/categorias`).then((respuesta) =>
-              respuesta.json().catch(() => ({ categorias: [] })),
-            ),
-          ]);
+        const fetchPromises = [
+          fetch(`${API_URL}/cursos`).then((r) => r.json()),
+          fetch(`${API_URL}/profesores`).then((r) => r.json()),
+          fetch(`${API_URL}/cursos/categorias`).then((r) => r.json().catch(() => ({ categorias: [] }))),
+        ];
+
+        // Solo cargamos enrolamientos si hay un alumno logueado
+        if (tipo === "alumno" && user?.id) {
+          fetchPromises.push(fetch(`${API_URL}/cursosalumnos`).then((r) => r.json()));
+        }
+
+        const [respuestaCursos, respuestaProfesores, respuestaCategorias, respuestaEnroll] =
+          await Promise.all(fetchPromises);
 
         setData({
           cursos: respuestaCursos.Cursos || [],
           profesores: respuestaProfesores.Profesores || [],
           categorias: respuestaCategorias.categorias || [],
+          enrollments: respuestaEnroll?.CursosAlumnos || [],
         });
       } catch (error) {
         console.error(error);
@@ -65,7 +71,8 @@ function AllCoursesGrid() {
       }
     };
     cargarDatos();
-  }, []);
+  }, [user, tipo]);
+
 
   // Busca el nombre del profesor a partir del ID del curso para mostrarlo en la tarjeta
   const getProfesorName = (pid) => {
@@ -75,13 +82,19 @@ function AllCoursesGrid() {
 
   // Elimina un curso completo con confirmación (solo admin)
   const handleDeleteCurso = async (cursoId) => {
-    const confirmed = await showConfirm(
+    const reason = await showConfirm(
       "¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.",
       "Eliminar Curso",
+      { withInput: true }
     );
-    if (!confirmed) return;
+    if (reason === false) return; // Cancelado
+    
     try {
-      const res = await fetch(`${API_URL}/cursos/${cursoId}`, {
+      const url = reason && typeof reason === "string" 
+        ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(reason)}`
+        : `${API_URL}/cursos/${cursoId}`;
+
+      const res = await fetch(url, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -99,41 +112,60 @@ function AllCoursesGrid() {
     }
   };
 
+
   // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
 
   // Lista de cursos filtrada según los criterios activos; se recalcula solo cuando cambien datos o filtros
   const filteredCursos = useMemo(() => {
-    return data.cursos.filter((c) => {
-      // Si es alumno vinculado, ocultar los cursos de su profesor vinculado
-      if (
-        user?.esVinculado &&
-        user?.profesorVinculadoId &&
-        c.profesor === user.profesorVinculadoId
-      )
-        return false;
+    let list = [...data.cursos];
+
+    // Aplicamos filtros de vista (favoritos, apuntados, populares, novedades)
+    if (filters.viewMode === "favoritos" && user?.id) {
+      const favIds = data.enrollments
+        .filter((e) => e.alumnoId === user.id && e.favorito)
+        .map((e) => e.cursoId);
+      list = list.filter((c) => favIds.includes(c.id));
+    } else if (filters.viewMode === "apuntados" && user?.id) {
+      const enrolledIds = data.enrollments
+        .filter((e) => e.alumnoId === user.id && e.apuntado)
+        .map((e) => e.cursoId);
+      list = list.filter((c) => enrolledIds.includes(c.id));
+    } else if (filters.viewMode === "popular") {
+      list.sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0));
+    } else if (filters.viewMode === "novedades") {
+      list.sort((a, b) => b.id - a.id);
+    }
+
+    // Aplicamos filtros básicos (categoría, nivel, búsqueda)
+    return list.filter((c) => {
+      // Los profesores solo ven sus propios cursos si se activa algún filtro (opcional, mantener lógica actual)
+      if (tipo === "profesor" && !data.cursos.some(cur => cur.profesor === user.id)) {
+        // En este proyecto parece que los profesores ven todo el catálogo
+      }
 
       if (filters.category && c.categoria !== filters.category) return false;
 
-      if (
-        filters.level &&
-        (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()
-      )
-        return false;
+      if (filters.level && (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()) return false;
 
-      if (
-        filters.searchTerm &&
-        !(c.nombreCurso || "")
-          .toLowerCase()
-          .includes(filters.searchTerm.toLowerCase())
-      )
-        return false;
+      if (filters.searchTerm && !(c.nombreCurso || "").toLowerCase().includes(filters.searchTerm.toLowerCase())) return false;
 
       return true;
     });
-  }, [data, filters, user]);
+  }, [data, filters, user, tipo]);
+
 
   // ── Configuración del SearchSidebar ──────────────────────────────────────
+  const viewModeOptions = [
+    { label: "Todos", value: "all" },
+    { label: "Populares", value: "popular" },
+    { label: "Novedades", value: "novedades" },
+    ...(tipo === "alumno" ? [
+      { label: "Favoritos", value: "favoritos" },
+      { label: "Apuntados", value: "apuntados" }
+    ] : []),
+  ];
+
   const filterGroups = [
     {
       label: "Categorías",
@@ -151,6 +183,11 @@ function AllCoursesGrid() {
         ...NIVELES.map((n) => ({ label: n, value: n })),
       ],
     },
+    {
+      label: "Ver",
+      key: "viewMode",
+      options: viewModeOptions,
+    },
   ];
 
   if (error) return <p>{error}</p>;
@@ -163,12 +200,17 @@ function AllCoursesGrid() {
         onSearchChange={(v) => updateFilter("searchTerm", v)}
         searchPlaceholder="Buscar cursos..."
         filterGroups={filterGroups}
-        activeFilters={{ category: filters.category, level: filters.level }}
+        activeFilters={{ 
+          category: filters.category, 
+          level: filters.level,
+          viewMode: filters.viewMode 
+        }}
         onFilterChange={updateFilter}
         onClearAll={() =>
-          setFilters({ category: "", level: "", searchTerm: "" })
+          setFilters({ category: "", level: "", searchTerm: "", viewMode: "all" })
         }
       />
+
 
       {/* Grid principal con las tarjetas de los cursos filtrados */}
       <main className="cursos-contenedor">

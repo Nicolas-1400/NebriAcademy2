@@ -32,6 +32,32 @@ router.get("/:usuarioId", async (req, res) => {
   }
 });
 
+// ── POST ────────────────────────────────────────────────────────────────────
+// Crear una nueva notificación
+router.post("/", async (req, res) => {
+  try {
+    const { usuarioId, tipoUsuario, mensaje, enlace } = req.body;
+    
+    if (!usuarioId || !mensaje) {
+      return res.status(400).json({ error: "Faltan campos obligatorios (usuarioId, mensaje)" });
+    }
+
+    const nueva = await Notificaciones.create({
+      usuarioId: parseInt(usuarioId),
+      tipoUsuario,
+      mensaje,
+      enlace,
+      vista: false,
+      fecha: new Date(),
+    });
+
+    res.status(201).json(nueva);
+  } catch (error) {
+    console.error("Error creando notificación:", error);
+    res.status(500).json({ error: "Error interno del servidor" });
+  }
+});
+
 // ── DELETE ──────────────────────────────────────────────────────────────────
 // Borrar una notificación al marcarla como vista
 router.delete("/:id", async (req, res) => {

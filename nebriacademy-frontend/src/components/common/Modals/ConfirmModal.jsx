@@ -1,7 +1,7 @@
 import useModalStore from "../../../store/modalStore";
 
 const ConfirmModal = () => {
-  const { isOpen, title, message, confirm, cancel } = useModalStore();
+  const { isOpen, title, message, withInput, inputValue, setInputValue, confirm, cancel } = useModalStore();
 
   if (!isOpen) return null;
 
@@ -10,6 +10,18 @@ const ConfirmModal = () => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>{title}</h2>
         <p>{message}</p>
+        
+        {withInput && (
+          <div className="modal-input-container">
+            <textarea
+              placeholder="Indica la razón (opcional)..."
+              value={inputValue}
+              onChange={(e) => setInputValue(e.target.value)}
+              rows={3}
+            />
+          </div>
+        )}
+
         <div className="modal-actions">
           <button className="modal-btn cancel" onClick={cancel}>
             Cancelar
@@ -24,3 +36,4 @@ const ConfirmModal = () => {
 };
 
 export default ConfirmModal;
+

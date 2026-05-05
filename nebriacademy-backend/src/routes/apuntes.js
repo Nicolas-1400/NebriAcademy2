@@ -256,7 +256,24 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
+    // Si se proporciona una razón (borrado por admin), notificamos al autor
+    const { reason } = req.query;
+    if (reason && apunte.autor) {
+      try {
+        await Notificaciones.create({
+          usuarioId: apunte.autor,
+          // Buscamos si es profesor o alumno para el tipoUsuario si fuese necesario, 
+          // pero el mensaje es lo principal.
+          mensaje: `Tu apunte "${apunte.nombre}" ha sido eliminado por un administrador. Razón: ${reason}`,
+          fecha: new Date(),
+        });
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado (apunte):", errNotif.message);
+      }
+    }
+
     await apunte.destroy();
+
     res.json({ mensaje: "Eliminado correctamente" });
   } catch (error) {
     console.error(error);
