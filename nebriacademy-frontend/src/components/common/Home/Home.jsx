@@ -3,10 +3,10 @@ import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import CardSlider from "../../CardSlider";
-import TarjetaCursos from "../../TarjetaCursos";
+import CardSlider from "../../common/Sliders/CardSlider";
+import CourseCard from "../../catalogs/Courses/CourseCard";
 import Eliminar from "../../../assets/Iconos/Eliminar.png";
-import SliderComponent from "../../SliderComponent";
+import SliderComponent from "../../common/Sliders/SliderComponent";
 import useToastStore from "../../../store/toastStore";
 import useModalStore from "../../../store/modalStore";
 
@@ -117,7 +117,7 @@ function Home() {
 
   // Navegar a cursos con filtro por categoría
   const handleCategoryClick = (categoria) => {
-    navigate(`/Home/Cursos`, { state: { selectedCategory: categoria } });
+    navigate(`/Home/Courses`, { state: { selectedCategory: categoria } });
   };
 
   // Eliminar curso (profesor)
@@ -284,7 +284,7 @@ function Home() {
               <p className="mensaje-vacio">Aún no has creado ningún curso.</p>
             ) : (
               misCursos().map((c) => (
-                <TarjetaCursos
+                <CourseCard
                   key={c.id}
                   name={c.nombreCurso}
                   cursoId={c.id}
@@ -309,3 +309,4 @@ function Home() {
 }
 
 export default Home;
+

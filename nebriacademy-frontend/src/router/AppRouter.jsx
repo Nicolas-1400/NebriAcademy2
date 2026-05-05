@@ -4,24 +4,24 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 import Login from "../pages/auth/Login.jsx";
 import NotFound from "../pages/common/NotFound.jsx";
 import Home from "../pages/common/Home.jsx";
-import MiEspacio from "../pages/MiEspacio.jsx";
-import TodosCursos from "../pages/TodosCursos.jsx";
-import Curso from "../pages/Curso.jsx";
-import AddCurso from "../pages/AddCurso.jsx";
-import AddContenido from "../pages/AddContenido.jsx";
-import EditarContenido from "../pages/EditarContenido.jsx";
-import CorregirEjerciciosSubidos from "../pages/CorregirEjerciciosSubidos.jsx";
-import TodosProfesores from "../pages/TodosProfesores.jsx";
-import InfoProfesor from "../pages/InfoProfesor.jsx";
-import Apuntes from "../pages/Apuntes.jsx";
+import MySpace from "../pages/account/AccountManagement/MySpace.jsx";
+import AllCourses from "../pages/catalogs/Courses/AllCourses.jsx";
+import CourseDetail from "../pages/catalogs/Courses/CourseDetail.jsx";
+import AddCourse from "../pages/management/CourseManagement/AddCourse.jsx";
+import AddContent from "../pages/management/CourseManagement/AddContent.jsx";
+import EditContent from "../pages/management/CourseManagement/EditContent.jsx";
+import GradeExercises from "../pages/management/CourseManagement/GradeExercises.jsx";
+import AllProfessors from "../pages/catalogs/Professors/AllProfessors.jsx";
+import ProfessorProfile from "../pages/catalogs/Professors/ProfessorProfile.jsx";
+import AllNotes from "../pages/catalogs/Notes/AllNotes.jsx";
 import PreRegister from "../pages/auth/PreRegister.jsx";
 import Verification from "../pages/auth/AccountVerification.jsx";
 import Register from "../pages/auth/Register.jsx";
-import Perfil from "../pages/Perfil.jsx";
+import Profile from "../pages/account/AccountManagement/Profile.jsx";
 import Help from "../pages/support/Help.jsx";
 import MyTickets from "../pages/support/MyTickets.jsx";
 import TicketDetail from "../pages/support/TicketDetail.jsx";
-import Cuentas from "../pages/Cuentas.jsx";
+import Accounts from "../pages/account/AccountManagement/Accounts.jsx";
 import Policies from "../pages/support/Policies.jsx";
 
 import ProtectedRoute from "./ProtectedRoute";
@@ -51,18 +51,18 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/MiEspacio"
+          path="/Home/MySpace"
           element={
             <ProtectedRoute requiredTipo="alumno">
-              <MiEspacio />
+              <MySpace />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Perfil"
+          path="/Home/Profile"
           element={
             <ProtectedRoute>
-              <Perfil />
+              <Profile />
             </ProtectedRoute>
           }
         />
@@ -92,68 +92,68 @@ function AppRouter() {
         />
 
         <Route
-          path="/Home/Cursos"
+          path="/Home/Courses"
           element={
             <ProtectedRoute requiredTipo={["alumno", "administrador"]}>
-              <TodosCursos />
+              <AllCourses />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Cursos/:id"
+          path="/Home/Courses/:id"
           element={
             <ProtectedRoute>
-              <Curso />
+              <CourseDetail />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/AddContenido/:tipo/:id?"
+          path="/Home/AddContent/:tipo/:id?"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <AddContenido />
+              <AddContent />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/Home/Profesores"
+          path="/Home/Professors"
           element={
             <ProtectedRoute requiredTipo="alumno">
-              <TodosProfesores />
+              <AllProfessors />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Profesores/:id"
+          path="/Home/Professors/:id"
           element={
             <ProtectedRoute requiredTipo="alumno">
-              <InfoProfesor />
+              <ProfessorProfile />
             </ProtectedRoute>
           }
         />
 
         <Route
-          path="/Home/Cuentas"
+          path="/Home/Accounts"
           element={
             <ProtectedRoute requiredTipo="administrador">
-              <Cuentas />
+              <Accounts />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Apuntes"
+          path="/Home/Notes"
           element={
             <ProtectedRoute>
-              <Apuntes />
+              <AllNotes />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Apuntes/EditarApunte/:id"
+          path="/Home/Notes/EditContent/:id"
           element={
             <ProtectedRoute requiredTipo={["alumno", "profesor"]}>
-              <EditarContenido />
+              <EditContent />
             </ProtectedRoute>
           }
         />
@@ -168,26 +168,26 @@ function AppRouter() {
 
         {/* Rutas exclusivas de profesor: requieren además que el tipo de usuario sea "profesor" */}
         <Route
-          path="/Home/AddCurso"
+          path="/Home/AddCourse"
           element={
             <ProtectedRoute requiredTipo="profesor">
-              <AddCurso />
+              <AddCourse />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Cursos/:id/EditarContenido"
+          path="/Home/Courses/:id/EditContent"
           element={
             <ProtectedRoute requiredTipo="profesor">
-              <EditarContenido />
+              <EditContent />
             </ProtectedRoute>
           }
         />
         <Route
-          path="/Home/Cursos/:id/CorregirEjercicios/:id"
+          path="/Home/Courses/:id/GradeExercises/:id"
           element={
             <ProtectedRoute requiredTipo={["profesor", "administrador"]}>
-              <CorregirEjerciciosSubidos />
+              <GradeExercises />
             </ProtectedRoute>
           }
         />
