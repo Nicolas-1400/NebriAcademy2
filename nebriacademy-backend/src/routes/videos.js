@@ -110,7 +110,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
               usuarioId: al.usuarioId,
               tipoUsuario: "alumno",
               mensaje: `Nuevo vídeo subido en el curso ${c ? c.nombreCurso : 'seleccionado'}`,
-              enlace: `/Home/Cursos/${curso}`
+              enlace: `/Home/Courses/${curso}`
             });
           }
         }

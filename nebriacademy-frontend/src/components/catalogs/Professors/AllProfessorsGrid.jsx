@@ -3,7 +3,7 @@ import './Professors.css';
 import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import ProfessorCard from "./ProfessorCard";
-import SearchSidebar from "../../layout/SearchSidebar/SearchSidebar";
+import SearchSidebar from "../../common/SearchSidebar/SearchSidebar";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Listado de todos los profesores con buscador por nombre y filtro por especialización

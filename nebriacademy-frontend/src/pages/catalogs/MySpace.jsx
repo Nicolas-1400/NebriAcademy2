@@ -1,5 +1,5 @@
 import Nav from "../../components/layout/Nav/Nav";
-import MySpaceGrid from "../../components/account/MySpaceGrid";
+import MySpaceGrid from "../../components/catalogs/Home/MySpaceGrid";
 import Footer from "../../components/layout/Footer/Footer";
 
 function MySpace() {

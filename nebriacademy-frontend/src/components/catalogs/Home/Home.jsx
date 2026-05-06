@@ -4,7 +4,7 @@ import { useEffect, useState } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import CardSlider from "../../common/Sliders/CardSlider";
-import CourseCard from "../../catalogs/Courses/CourseCard";
+import CourseCard from "../Courses/CourseCard";
 import Eliminar from "../../../assets/Iconos/Eliminar.png";
 import SliderComponent from "../../common/Sliders/SliderComponent";
 import useToastStore from "../../../store/toastStore";

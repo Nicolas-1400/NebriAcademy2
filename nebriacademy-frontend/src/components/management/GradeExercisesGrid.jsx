@@ -13,7 +13,7 @@ import useModalStore from "../../store/modalStore";
 // Página para que el profesor corrija las entregas de los alumnos a un ejercicio concreto
 function GradeExercisesGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
-  const { id } = useParams();
+  const { exerciseId } = useParams();
   const [registros, setRegistros] = useState([]);
   const [alumnos, setAlumnos] = useState([]);
   // Lista de puntuaciones ya guardadas para saber si hacer PUT o POST al guardar nota
@@ -45,9 +45,9 @@ function GradeExercisesGrid() {
           : datosRegistros || [];
         // Si llega un ID en la URL, filtramos solo las entregas de ese ejercicio
         setRegistros(
-          id
+          exerciseId
             ? allRegs.filter(
-                (registro) => String(registro.ejercicioId) === String(id),
+                (registro) => String(registro.ejercicioId) === String(exerciseId),
               )
             : allRegs,
         );
@@ -67,7 +67,7 @@ function GradeExercisesGrid() {
       .catch((error) =>
         console.error("Error cargando datos corrección:", error),
       );
-  }, [id]);
+  }, [exerciseId]);
 
   // Añadimos a cada registro el nombre completo del alumno para mostrarlo en la tarjeta
   const ejerciciosConNombre = useMemo(() => {

@@ -165,7 +165,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
                 usuarioId: al.usuarioId,
                 tipoUsuario: "alumno",
                 mensaje: `Nuevo apunte subido en el curso ${c ? c.nombreCurso : 'seleccionado'}`,
-                enlace: `/Home/Cursos/${cursoId}`
+                enlace: `/Home/Courses/${cursoId}`
               });
             }
           }
@@ -181,7 +181,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
                 usuarioId: p.usuarioId,
                 tipoUsuario: "profesor",
                 mensaje: `El alumno ${u ? u.nombre : 'Anónimo'} ha subido un apunte al curso ${c ? c.nombreCurso : 'seleccionado'}`,
-                enlace: `/Home/Cursos/${cursoId}`
+                enlace: `/Home/Courses/${cursoId}`
               });
             }
           }

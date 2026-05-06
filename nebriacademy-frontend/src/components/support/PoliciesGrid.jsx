@@ -1,5 +1,5 @@
 function PoliciesGrid({ tipo }) {
-  if (tipo === "privacidad") {
+  if (tipo === "privacyPolicy") {
     return (
       <div className="PoliticasGrid">
         <h1>Política de privacidad</h1>
@@ -764,7 +764,7 @@ function PoliciesGrid({ tipo }) {
     );
   } 
   
-  else if (tipo === "nota-legal") {
+  else if (tipo === "legalNote") {
     return (
       <div className="PoliticasGrid">
         <h1>Nota legal</h1>

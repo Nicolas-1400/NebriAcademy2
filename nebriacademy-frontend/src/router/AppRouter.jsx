@@ -3,8 +3,8 @@ import { BrowserRouter, Routes, Route } from "react-router-dom";
 // Importamos todas las páginas de la aplicación
 import Login from "../pages/auth/Login.jsx";
 import NotFound from "../pages/common/NotFound.jsx";
-import Home from "../pages/common/Home.jsx";
-import MySpace from "../pages/account/MySpace.jsx";
+import Home from "../pages/catalogs/Home.jsx";
+import MySpace from "../pages/catalogs/MySpace.jsx";
 import AllCourses from "../pages/catalogs/Courses/AllCourses.jsx";
 import CourseDetail from "../pages/catalogs/Courses/CourseDetail.jsx";
 import AddCourse from "../pages/management/AddCourse.jsx";
@@ -13,7 +13,7 @@ import EditContent from "../pages/management/EditContent.jsx";
 import GradeExercises from "../pages/management/GradeExercises.jsx";
 import AllProfessors from "../pages/catalogs/Professors/AllProfessors.jsx";
 import ProfessorProfile from "../pages/catalogs/Professors/ProfessorProfile.jsx";
-import AllNotes from "../pages/catalogs/Notes/AllNotes.jsx";
+import AllNotes from "../pages/catalogs/AllNotes.jsx";
 import PreRegister from "../pages/auth/PreRegister.jsx";
 import Verification from "../pages/auth/AccountVerification.jsx";
 import Register from "../pages/auth/Register.jsx";
@@ -184,7 +184,7 @@ function AppRouter() {
           }
         />
         <Route
-          path="/Home/Courses/:id/GradeExercises/:id"
+          path="/Home/Courses/:courseId/GradeExercises/:exerciseId"
           element={
             <ProtectedRoute requiredTipo={["profesor", "administrador"]}>
               <GradeExercises />

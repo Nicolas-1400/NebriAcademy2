@@ -10,9 +10,9 @@ function Footer() {
     <div className="footer">
       {/* Links a las páginas legales de la aplicación */}
       <div className="footer-politicas">
-        <a href="/Home/Politicas/privacidad">Política de privacidad</a>
-        <a href="/Home/Politicas/nota-legal">Nota legal</a>
-        <a href="/Home/Politicas/cookies">Política de cookies</a>
+        <a href="/Home/Policies/privacyPolicy">Política de privacidad</a>
+        <a href="/Home/Policies/legalNote">Nota legal</a>
+        <a href="/Home/Policies/cookies">Política de cookies</a>
       </div>
 
       {/* Iconos de redes sociales que enlazan a los perfiles oficiales */}

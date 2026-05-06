@@ -127,7 +127,7 @@ function TicketDetailGrid() {
       <div className="detalle-ticket-left">
         <button
           className="btn-submit"
-          onClick={() => navigate("/Home/MisTickets")}
+          onClick={() => navigate("/Home/MyTickets")}
         >
           ← Volver a Mis Tickets
         </button>

@@ -108,7 +108,7 @@ router.post("/", upload.single("archivo"), async (req, res) => {
               usuarioId: p.usuarioId,
               tipoUsuario: "profesor",
               mensaje: `El alumno ${validAlumno.nombre} ha subido una respuesta al ejercicio ${validEjercicio.nombre}`,
-              enlace: `/Home/CorregirEjerciciosSubidos/${ejercicioId}`
+              enlace: `/Home/Courses/${validEjercicio.curso}/GradeExercises/${ejercicioId}`
             });
           }
         }

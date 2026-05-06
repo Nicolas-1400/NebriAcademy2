@@ -643,7 +643,7 @@ function Nav() {
               <button
                 className="desplegable-item"
                 onClick={() => {
-                  navigate("/Home/Ayuda");
+                  navigate("/Home/Help");
                   setIsdesplegableOpen(false);
                 }}
               >
@@ -652,7 +652,7 @@ function Nav() {
               <button
                 className="desplegable-item"
                 onClick={() => {
-                  navigate("/Home/MisTickets");
+                  navigate("/Home/MyTickets");
                   setIsdesplegableOpen(false);
                 }}
               >
@@ -715,7 +715,7 @@ function Nav() {
                   <button
                     className="desplegable-item"
                     onClick={() => {
-                      navigate("/Home/Ayuda");
+                      navigate("/Home/Help");
                       setIsdesplegableOpen(false);
                     }}
                   >
@@ -724,7 +724,7 @@ function Nav() {
                   <button
                     className="desplegable-item"
                     onClick={() => {
-                      navigate("/Home/MisTickets");
+                      navigate("/Home/MyTickets");
                       setIsdesplegableOpen(false);
                     }}
                   >

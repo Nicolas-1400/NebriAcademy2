@@ -4,7 +4,7 @@ import { API_URL } from "../../../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useLocation } from "react-router-dom";
 import CourseCard from "./CourseCard";
-import SearchSidebar from "../../layout/SearchSidebar/SearchSidebar";
+import SearchSidebar from "../../common/SearchSidebar/SearchSidebar";
 import useAuthStore from "../../../store/useAuthStore";
 import Eliminar from "../../../assets/Iconos/Eliminar.png";
 import useToastStore from "../../../store/toastStore";

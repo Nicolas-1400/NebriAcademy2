@@ -7,7 +7,7 @@ import Mas from "../../../assets/Iconos/mas.png";
 import Lapiz from "../../../assets/Iconos/lapiz.png";
 import SalirEdicion from "../../../assets/Iconos/lapiz-cancelar3.png";
 import NoteCard from "./NoteCard";
-import SearchSidebar from "../../layout/SearchSidebar/SearchSidebar";
+import SearchSidebar from "../../common/SearchSidebar/SearchSidebar";
 import useAuthStore from "../../../store/useAuthStore";
 import useToastStore from "../../../store/toastStore";
 import useModalStore from "../../../store/modalStore";

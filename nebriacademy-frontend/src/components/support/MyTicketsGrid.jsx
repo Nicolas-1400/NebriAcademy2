@@ -71,7 +71,7 @@ function MyTicketsGrid() {
               <tr
                 className="fila-ticket"
                 key={t.key}
-                onClick={() => navigate(`/Home/MisTickets/${t.key}`)}
+                onClick={() => navigate(`/Home/MyTickets/${t.key}`)}
               >
                 <td className="td-resumen">
                   {(() => {

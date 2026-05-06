@@ -51,7 +51,7 @@ router.post("/", async (req, res) => {
               usuarioId: al.usuarioId,
               tipoUsuario: "alumno",
               mensaje: `Se ha corregido tu respuesta del ejercicio ${ej.nombre}`,
-              enlace: `/Home/Cursos/${ej.curso}`
+              enlace: `/Home/Courses/${ej.curso}`
             });
           }
         }
@@ -88,7 +88,7 @@ router.put("/:id", async (req, res) => {
               usuarioId: al.usuarioId,
               tipoUsuario: "alumno",
               mensaje: `Se ha actualizado la corrección de tu respuesta del ejercicio ${ej.nombre}`,
-              enlace: `/Home/Cursos/${ej.curso}`
+              enlace: `/Home/Courses/${ej.curso}`
             });
           }
         }

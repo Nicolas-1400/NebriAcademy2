@@ -4,6 +4,7 @@ const router = express.Router();
 const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
 const Administradores = require("../models/Administradores.js");
+const Cursos = require("../models/Cursos.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /comentarioalumnocurso — Devuelve todos los comentarios, opcionalmente filtrados por cursoId.
@@ -141,6 +142,15 @@ router.delete("/:id", async (req, res) => {
     if (tipo === "administrador") {
       await c.destroy();
       return res.json({ mensaje: "Eliminado" });
+    }
+
+    // Los profesores pueden borrar cualquier comentario si el curso es suyo
+    if (tipo === "profesor") {
+      const c_curso = await Cursos.findByPk(c.cursoId);
+      if (c_curso && String(c_curso.profesor) === String(profileId)) {
+        await c.destroy();
+        return res.json({ mensaje: "Eliminado" });
+      }
     }
 
     let requesterUsuarioId = null;
