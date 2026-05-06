@@ -5,6 +5,7 @@ const ComentarioAlumnoCurso = require("../models/ComentatioAlumnoCurso.js");
 const Alumnos = require("../models/Alumnos.js");
 const Administradores = require("../models/Administradores.js");
 const Cursos = require("../models/Cursos.js");
+const Notificaciones = require("../models/Notificaciones.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /comentarioalumnocurso — Devuelve todos los comentarios, opcionalmente filtrados por cursoId.
@@ -138,29 +139,45 @@ router.delete("/:id", async (req, res) => {
 
     const { profileId, tipo } = req.query;
 
-    // Los administradores pueden borrar cualquier comentario sin restricción
-    if (tipo === "administrador") {
-      await c.destroy();
-      return res.json({ mensaje: "Eliminado" });
-    }
+    const { reason } = req.query;
 
-    // Los profesores pueden borrar cualquier comentario si el curso es suyo
-    if (tipo === "profesor") {
+    // 1. Verificar permisos y notificar si procede
+    let authorized = false;
+
+    if (tipo === "administrador") {
+      authorized = true;
+    } else if (tipo === "profesor") {
       const c_curso = await Cursos.findByPk(c.cursoId);
       if (c_curso && String(c_curso.profesor) === String(profileId)) {
-        await c.destroy();
-        return res.json({ mensaje: "Eliminado" });
+        authorized = true;
+      }
+    } else if (tipo === "alumno") {
+      const u = await Alumnos.findByPk(profileId);
+      if (u && u.usuarioId === c.usuarioId) {
+        authorized = true;
       }
     }
 
-    let requesterUsuarioId = null;
-    if (tipo === "alumno") {
-      const u = await Alumnos.findByPk(profileId);
-      if (u) requesterUsuarioId = u.usuarioId;
-    }
-    // Si el usuarioId no coincide con el del comentario, devolvemos 403 (prohibido)
-    if (!requesterUsuarioId || requesterUsuarioId !== c.usuarioId) {
+    if (!authorized) {
       return res.status(403).json({ error: "No autorizado" });
+    }
+
+    // 2. Notificar al autor si hay razón y no es el autor quien borra
+    const u_deleter = (tipo === "alumno") ? await Alumnos.findByPk(profileId) : null;
+    const isOwnerDeleting = u_deleter && u_deleter.usuarioId === c.usuarioId;
+
+    if (reason && c.usuarioId && !isOwnerDeleting) {
+      try {
+        const curso = await Cursos.findByPk(c.cursoId);
+        await Notificaciones.create({
+          usuarioId: c.usuarioId,
+          tipoUsuario: "alumno",
+          mensaje: `Tu comentario en el curso "${curso ? curso.nombreCurso : 'seleccionado'}" ha sido eliminado. Razón: ${reason}`,
+          fecha: new Date(),
+        });
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado (comentario):", errNotif.message);
+      }
     }
 
     await c.destroy();

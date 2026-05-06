@@ -61,6 +61,38 @@ router.delete("/:id", async (req, res) => {
     }
 
     const usuarioId = alumno.usuarioId;
+
+    // Si se proporciona una razón, notificamos a los profesores afectados
+    const { reason } = req.query;
+    if (reason) {
+      try {
+        const Cursos = require("../models/Cursos.js");
+        const CursosAlumnos = require("../models/CursosAlumnos.js");
+        const Notificaciones = require("../models/Notificaciones.js");
+        const ProfesoresModel = require("../models/Profesores.js");
+
+        const matriculas = await CursosAlumnos.findAll({ 
+          where: { alumnoId: req.params.id, apuntado: true } 
+        });
+        for (const m of matriculas) {
+          const curso = await Cursos.findByPk(m.cursoId);
+          if (curso && curso.profesor) {
+            const prof = await ProfesoresModel.findByPk(curso.profesor);
+            if (prof && prof.usuarioId) {
+              await Notificaciones.create({
+                usuarioId: prof.usuarioId,
+                tipoUsuario: "profesor",
+                mensaje: `El alumno ${alumno.nombre} ${alumno.apellidos} ha sido dado de baja. Razón: ${reason}`,
+                fecha: new Date(),
+              });
+            }
+          }
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificaciones de borrado de alumno:", errNotif.message);
+      }
+    }
+
     await alumno.destroy();
 
     if (usuarioId) {
@@ -79,10 +111,12 @@ router.delete("/:id", async (req, res) => {
 router.post("/admin/crear", async (req, res) => {
   try {
     const { email, contrasena } = req.body;
-    if (!email || !contrasena) return res.status(400).json({ error: "Se requiere email y contraseña" });
+    if (!email || !contrasena)
+      return res.status(400).json({ error: "Se requiere email y contraseña" });
 
     const existente = await Alumnos.findOne({ where: { email } });
-    if (existente) return res.status(400).json({ error: "Email ya registrado" });
+    if (existente)
+      return res.status(400).json({ error: "Email ya registrado" });
 
     // 1. Crear usuario base
     const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });

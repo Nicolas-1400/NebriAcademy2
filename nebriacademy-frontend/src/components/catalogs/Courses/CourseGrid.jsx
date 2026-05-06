@@ -1,4 +1,4 @@
-import './Courses.css';
+import "./Courses.css";
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
@@ -38,7 +38,6 @@ import { PERFILES } from "../../account/ProfileImageCard.jsx";
 // Página de detalle de un curso: muestra su contenido (vídeos, apuntes, ejercicios),
 // permite a los alumnos votar, apuntarse y comentar, y al profesor editar el contenido.
 function CourseGrid() {
-
   const { id } = useParams();
   const navigate = useNavigate();
   const { user, tipo } = useAuthStore();
@@ -193,7 +192,7 @@ function CourseGrid() {
 
         // Normalizamos los booleanos que MySQL puede devolver como 0/1 o "0"/"1"
         const toBool = (v) => v === true || v === 1 || v === "1";
-        
+
         if (respuestaRegistro) {
           setRegistroUser({
             ...respuestaRegistro,
@@ -251,14 +250,14 @@ function CourseGrid() {
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Elimina un elemento de contenido del curso (vídeo, apunte o ejercicio) con confirmación
   const handleDeleteItem = async (type, itemId) => {
-    const isUIAdmin = tipo === "administrador";
+    const isModerator = tipo === "administrador" || tipo === "profesor";
     const result = await showConfirm(
       "¿Eliminar este elemento?",
       "Eliminar Contenido",
-      { withInput: isUIAdmin }
+      { withInput: isModerator },
     );
     if (result === false) return;
-    
+
     try {
       const endpoint =
         type === "video"
@@ -266,9 +265,9 @@ function CourseGrid() {
           : type === "apunte"
             ? "apuntes"
             : "ejercicios";
-      
+
       let url = `${API_URL}/${endpoint}/${itemId}`;
-      if (isUIAdmin && typeof result === "string" && result.trim()) {
+      if (isModerator && typeof result === "string" && result.trim()) {
         url += `?reason=${encodeURIComponent(result)}`;
       }
 
@@ -286,7 +285,6 @@ function CourseGrid() {
       addToast("Error eliminando", "error");
     }
   };
-
 
   // Comprueba si el autor de un apunte es el profesor del curso usando exclusivamente el usuarioId
   const isProfesorApunte = (apunte) => {
@@ -443,10 +441,16 @@ function CourseGrid() {
 
   // Elimina un comentario con confirmación y lo quita del estado local
   const deleteComment = async (cid) => {
-    const confirmed = await showConfirm("¿Borrar comentario?", "Borrar Comentario");
-    if (!confirmed) return;
+    // Si es administrador o profesor borrando algo que no es suyo, pedimos razón
+    const isOwner = Number(comentarios.find(c => c.id === cid)?.usuarioId) === Number(user.usuarioId || user.id);
+    const options = (!isOwner && (tipo === "administrador" || tipo === "profesor")) ? { withInput: true } : {};
+    
+    const reason = await showConfirm("¿Borrar comentario?", "Borrar Comentario", options);
+    if (reason === false) return;
+    
     try {
-      const url = `${API_URL}/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}`;
+      const reasonParam = typeof reason === "string" ? `&reason=${encodeURIComponent(reason)}` : "";
+      const url = `${API_URL}/comentarioalumnocurso/${cid}?profileId=${user.id}&tipo=${tipo}${reasonParam}`;
       const res = await fetch(url, { method: "DELETE" });
       if (res.ok) {
         setComentarios((prev) => prev.filter((c) => c.id !== cid));
@@ -723,7 +727,6 @@ function CourseGrid() {
                         />
                       </div>
                       <div className="ejercicio-row-boton">
-
                         {tipo === "profesor" || tipo === "administrador" ? (
                           // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
                           <button
@@ -881,64 +884,73 @@ function CourseGrid() {
                 <button onClick={handleCommentSubmit}>Enviar</button>
               </div>
             )}
-            <br/>
+            <br />
             <div className="comentarios-existentes">
-              {comentarios.slice().sort((a, b) => b.id - a.id).map((c) => (
-                <div key={c.id} className="comentario-item">
-                  <div className="comentario-autor">
-                    <Avatar 
-                      name={`${c.nombre} ${c.apellidos}`} 
-                      src={c.imagenPerfil && PERFILES[c.imagenPerfil] ? PERFILES[c.imagenPerfil] : null}
-                      size="32px" 
-                    />
-                    <span>{c.nombre} {c.apellidos}</span>
-                  </div>
-                  {editingComment.id === c.id ? (
-                    // Formulario de edición en línea para el comentario activo
-                    <div className="edit-comment-box">
-                      <textarea
-                        value={editingComment.text}
-                        onChange={(e) =>
-                          setEditingComment({
-                            ...editingComment,
-                            text: e.target.value,
-                          })
+              {comentarios
+                .slice()
+                .sort((a, b) => b.id - a.id)
+                .map((c) => (
+                  <div key={c.id} className="comentario-item">
+                    <div className="comentario-autor">
+                      <Avatar
+                        name={`${c.nombre} ${c.apellidos}`}
+                        src={
+                          c.imagenPerfil && PERFILES[c.imagenPerfil]
+                            ? PERFILES[c.imagenPerfil]
+                            : null
                         }
+                        size="32px"
                       />
-                      <button onClick={saveEditComment}>Guardar</button>
-                      <button onClick={cancelEditComment}>Cancelar</button>
+                      <span>
+                        {c.nombre} {c.apellidos}
+                      </span>
                     </div>
-                  ) : (
-                    <>
-                      <p>{c.comentario}</p>
-                      {/* Botones para el autor del comentario (excepto admin) */}
-                      {tipo !== "administrador" &&
-                      user &&
-                      Number(c.usuarioId) ===
-                        Number(user.usuarioId || user.id) ? (
-                        <div className="comentario-acciones">
-                          <button onClick={() => startEditComment(c)}>
-                            Editar
-                          </button>
-                          <button onClick={() => deleteComment(c.id)}>
-                            Borrar
-                          </button>
-                        </div>
-                      ) : (
-                        /* Admin o Profesor en modo edición pueden borrar cualquier comentario */
-                        (tipo === "administrador" ||
-                          (tipo === "profesor" && editingMode)) && (
+                    {editingComment.id === c.id ? (
+                      // Formulario de edición en línea para el comentario activo
+                      <div className="edit-comment-box">
+                        <textarea
+                          value={editingComment.text}
+                          onChange={(e) =>
+                            setEditingComment({
+                              ...editingComment,
+                              text: e.target.value,
+                            })
+                          }
+                        />
+                        <button onClick={saveEditComment}>Guardar</button>
+                        <button onClick={cancelEditComment}>Cancelar</button>
+                      </div>
+                    ) : (
+                      <>
+                        <p>{c.comentario}</p>
+                        {/* Botones para el autor del comentario (excepto admin) */}
+                        {tipo !== "administrador" &&
+                        user &&
+                        Number(c.usuarioId) ===
+                          Number(user.usuarioId || user.id) ? (
                           <div className="comentario-acciones">
+                            <button onClick={() => startEditComment(c)}>
+                              Editar
+                            </button>
                             <button onClick={() => deleteComment(c.id)}>
                               Borrar
                             </button>
                           </div>
-                        )
-                      )}
-                    </>
-                  )}
-                </div>
-              ))}
+                        ) : (
+                          /* Admin o Profesor en modo edición pueden borrar cualquier comentario */
+                          (tipo === "administrador" ||
+                            (tipo === "profesor" && editingMode)) && (
+                            <div className="comentario-acciones">
+                              <button onClick={() => deleteComment(c.id)}>
+                                Borrar
+                              </button>
+                            </div>
+                          )
+                        )}
+                      </>
+                    )}
+                  </div>
+                ))}
             </div>
           </div>
         </div>
@@ -1021,4 +1033,3 @@ function CourseGrid() {
 }
 
 export default CourseGrid;
-

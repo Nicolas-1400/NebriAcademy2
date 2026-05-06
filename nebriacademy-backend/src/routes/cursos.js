@@ -9,7 +9,7 @@ const ProfesoresCursos = require("../models/ProfesoresCursos.js");
 
 // ── GET ─────────────────────────────────────────────────────────────────────
 // GET /cursos — Devuelve todos los cursos registrados.
-// La imagen de cada curso se resuelve en el frontend (TarjetaCursos.jsx) usando el nombre guardado en BDD o 
+// La imagen de cada curso se resuelve en el frontend (TarjetaCursos.jsx) usando el nombre guardado en BDD o
 // el ID del curso como fallback.
 router.get("/", async (req, res) => {
   try {
@@ -135,21 +135,45 @@ router.delete("/:id", async (req, res) => {
       return res.status(404).json({ error: "Curso no encontrado" });
     }
 
-    // Si se proporciona una razón (borrado por admin), notificamos al profesor
+    // Si se proporciona una razón (borrado por admin o profesor), notificamos a los afectados
     const { reason } = req.query;
-    if (reason && curso.profesor) {
+    if (reason) {
       try {
-        const prof = await Profesores.findByPk(curso.profesor);
-        if (prof && prof.usuarioId) {
-          await require("../models/Notificaciones.js").create({
-            usuarioId: prof.usuarioId,
-            tipoUsuario: "profesor",
-            mensaje: `Tu curso "${curso.nombreCurso}" ha sido eliminado por un administrador. Razón: ${reason}`,
-            fecha: new Date(),
-          });
+        const Notificaciones = require("../models/Notificaciones.js");
+        const Alumnos = require("../models/Alumnos.js");
+        const CursosAlumnos = require("../models/CursosAlumnos.js");
+
+        // 1. Notificar al profesor
+        if (curso.profesor) {
+          const prof = await Profesores.findByPk(curso.profesor);
+          if (prof && prof.usuarioId) {
+            await Notificaciones.create({
+              usuarioId: prof.usuarioId,
+              tipoUsuario: "profesor",
+              mensaje: `El curso "${curso.nombreCurso}" ha sido eliminado. Razón: ${reason}`,
+              fecha: new Date(),
+            });
+          }
+        }
+
+        // 2. Notificar a todos los alumnos apuntados
+        const matriculados = await CursosAlumnos.findAll({ 
+          where: { cursoId: id, apuntado: true } 
+        });
+        
+        for (const m of matriculados) {
+          const al = await Alumnos.findByPk(m.alumnoId);
+          if (al && al.usuarioId) {
+            await Notificaciones.create({
+              usuarioId: al.usuarioId,
+              tipoUsuario: "alumno",
+              mensaje: `El curso "${curso.nombreCurso}" al que estabas apuntado ha sido eliminado. Razón: ${reason}`,
+              fecha: new Date(),
+            });
+          }
         }
       } catch (errNotif) {
-        console.warn("Error enviando notificación de borrado:", errNotif.message);
+        console.warn("Error enviando notificaciones de borrado de curso:", errNotif.message);
       }
     }
 

@@ -256,19 +256,41 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
-    // Si se proporciona una razón (borrado por admin), notificamos al autor
+    // Si se proporciona una razón, notificamos a los afectados
     const { reason } = req.query;
-    if (reason && apunte.autor) {
+    if (reason) {
       try {
-        await Notificaciones.create({
-          usuarioId: apunte.autor,
-          // Buscamos si es profesor o alumno para el tipoUsuario si fuese necesario, 
-          // pero el mensaje es lo principal.
-          mensaje: `Tu apunte "${apunte.nombre}" ha sido eliminado por un administrador. Razón: ${reason}`,
-          fecha: new Date(),
-        });
+        // 1. Notificar al autor (si no es él quien borra)
+        if (apunte.autor) {
+          await Notificaciones.create({
+            usuarioId: apunte.autor,
+            mensaje: `Tu apunte "${apunte.nombre}" ha sido eliminado. Razón: ${reason}`,
+            fecha: new Date(),
+          });
+        }
+
+        // 2. Notificar a todos los alumnos del curso (si el apunte pertenece a uno)
+        if (apunte.curso) {
+          const matriculados = await CursosAlumnos.findAll({ 
+            where: { cursoId: apunte.curso, apuntado: true } 
+          });
+          for (const m of matriculados) {
+            // Evitamos notificar doble al autor si es alumno del curso
+            if (m.alumnoId && String(m.alumnoId) !== String(apunte.autor)) {
+              const al = await Alumnos.findByPk(m.alumnoId);
+              if (al && al.usuarioId) {
+                await Notificaciones.create({
+                  usuarioId: al.usuarioId,
+                  tipoUsuario: "alumno",
+                  mensaje: `Se ha eliminado un apunte ("${apunte.nombre}") del curso en el que estás inscrito. Razón: ${reason}`,
+                  fecha: new Date(),
+                });
+              }
+            }
+          }
+        }
       } catch (errNotif) {
-        console.warn("Error enviando notificación de borrado (apunte):", errNotif.message);
+        console.warn("Error enviando notificaciones de borrado (apunte):", errNotif.message);
       }
     }
 

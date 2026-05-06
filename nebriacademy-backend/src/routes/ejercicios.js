@@ -180,21 +180,45 @@ router.delete("/:id", async (req, res) => {
       }
     }
 
-    // Si se proporciona una razón (borrado por admin), notificamos al autor (profesor)
+    // Si se proporciona una razón, notificamos a los afectados
     const { reason } = req.query;
-    if (reason && ej.autor) {
+    if (reason) {
       try {
-        const prof = await Profesores.findByPk(ej.autor);
-        if (prof && prof.usuarioId) {
-          await Notificaciones.create({
-            usuarioId: prof.usuarioId,
-            tipoUsuario: "profesor",
-            mensaje: `Tu ejercicio "${ej.nombre}" ha sido eliminado por un administrador. Razón: ${reason}`,
-            fecha: new Date(),
+        const CursosAlumnos = require("../models/CursosAlumnos.js");
+        const Alumnos = require("../models/Alumnos.js");
+
+        // 1. Notificar al autor (profesor)
+        if (ej.autor) {
+          const prof = await Profesores.findByPk(ej.autor);
+          if (prof && prof.usuarioId) {
+            await Notificaciones.create({
+              usuarioId: prof.usuarioId,
+              tipoUsuario: "profesor",
+              mensaje: `Tu ejercicio "${ej.nombre}" ha sido eliminado. Razón: ${reason}`,
+              fecha: new Date(),
+            });
+          }
+        }
+
+        // 2. Notificar a todos los alumnos del curso
+        if (ej.curso) {
+          const matriculados = await CursosAlumnos.findAll({ 
+            where: { cursoId: ej.curso, apuntado: true } 
           });
+          for (const m of matriculados) {
+            const al = await Alumnos.findByPk(m.alumnoId);
+            if (al && al.usuarioId) {
+              await Notificaciones.create({
+                usuarioId: al.usuarioId,
+                tipoUsuario: "alumno",
+                mensaje: `Se ha eliminado un ejercicio ("${ej.nombre}") del curso en el que estás inscrito. Razón: ${reason}`,
+                fecha: new Date(),
+              });
+            }
+          }
         }
       } catch (errNotif) {
-        console.warn("Error enviando notificación de borrado (ejercicio):", errNotif.message);
+        console.warn("Error enviando notificaciones de borrado (ejercicio):", errNotif.message);
       }
     }
 

@@ -1,4 +1,4 @@
-import './Account.css';
+import "./Account.css";
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";
@@ -21,13 +21,13 @@ function AccountsGrid() {
 
   // Estado para el buscador
   const [filtros, setFiltros] = useState({
-    nombre: '',
-    apellidos: '',
-    email: '',
-    dni: '',
-    numTelefono: '',
-    pais: '',
-    localidad: ''
+    nombre: "",
+    apellidos: "",
+    email: "",
+    dni: "",
+    numTelefono: "",
+    pais: "",
+    localidad: "",
   });
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
@@ -86,7 +86,10 @@ function AccountsGrid() {
     e.preventDefault();
     if (!email) return addToast("Email obligatorio", "error");
     if (rol === "alumno" && !email.endsWith("@alumnos.nebrija.es")) {
-      return addToast("El email del alumno debe acabar en @alumnos.nebrija.es", "error");
+      return addToast(
+        "El email del alumno debe acabar en @alumnos.nebrija.es",
+        "error",
+      );
     }
 
     const contrasenaGenerada = generarContrasena();
@@ -110,7 +113,7 @@ function AccountsGrid() {
       addToast(
         `Cuenta de ${rol} creada correctamente. Contraseña: ${contrasenaGenerada}`,
         "success",
-        6000
+        6000,
       );
       setEmail("");
       fetchCuentas();
@@ -125,22 +128,27 @@ function AccountsGrid() {
     if (rolCuenta === "alumno" && esVinculado) {
       return addToast(
         "No puedes borrar la versión alumno de un profesor de forma independiente. Borra la cuenta de profesor vinculada.",
-        "info"
+        "info",
       );
     }
 
-    const confirmed = await showConfirm(
+    const reason = await showConfirm(
       rolCuenta === "profesor"
         ? "¿Estás seguro? Se borrará el profesor Y su cuenta de alumno vinculada, además de todos los contenidos asociados."
         : "¿Estás seguro de que quieres borrar esta cuenta? Se borrarán todos los datos y contenidos dependientes en cascada.",
-      "Borrar Cuenta"
+      "Borrar Cuenta",
+      { withInput: true },
     );
-    if (!confirmed) return;
+    if (reason === false) return;
 
-    const endpoint =
+    let endpoint =
       rolCuenta === "alumno"
         ? `${API_URL}/alumnos/${cuentaId}`
         : `${API_URL}/profesores/${cuentaId}`;
+
+    if (typeof reason === "string" && reason.trim()) {
+      endpoint += `?reason=${encodeURIComponent(reason)}`;
+    }
 
     try {
       const respuesta = await fetch(endpoint, { method: "DELETE" });
@@ -156,10 +164,7 @@ function AccountsGrid() {
           );
           if (rolCuenta === "profesor" && cuenta?.alumnoVinculadoId) {
             resultado = resultado.filter(
-              (c) =>
-                !(
-                  c.id === cuenta.alumnoVinculadoId && c.rol === "alumno"
-                ),
+              (c) => !(c.id === cuenta.alumnoVinculadoId && c.rol === "alumno"),
             );
           }
           return resultado;
@@ -208,7 +213,7 @@ function AccountsGrid() {
     if (newVal !== (oldVal || "").trim()) {
       const confirmed = await showConfirm(
         `¿Estás seguro de que quieres guardar el cambio de "${oldVal || ""}" a "${newVal}"?`,
-        "Guardar Cambios"
+        "Guardar Cambios",
       );
       if (!confirmed) {
         e.target.innerText = oldVal || "";
@@ -252,14 +257,81 @@ function AccountsGrid() {
     return `${prof.nombre || ""} ${prof.apellidos || ""}`.trim() || prof.email;
   };
 
-  const headersAlumnos = ["Nombre", "Apellidos", "Email", "Contraseña", "DNI", "Nº Tarjeta", "Nº Teléfono", "Redes", "País", "Localidad", "Acciones"];
-  const keysAlumnos = ["nombre", "apellidos", "email", "contrasena", "dni", "numeroTarjeta", "numTelefono", "redes", "pais", "localidad"];
+  const headersAlumnos = [
+    "Nombre",
+    "Apellidos",
+    "Email",
+    "Contraseña",
+    "DNI",
+    "Nº Tarjeta",
+    "Nº Teléfono",
+    "Redes",
+    "País",
+    "Localidad",
+    "Acciones",
+  ];
+  const keysAlumnos = [
+    "nombre",
+    "apellidos",
+    "email",
+    "contrasena",
+    "dni",
+    "numeroTarjeta",
+    "numTelefono",
+    "redes",
+    "pais",
+    "localidad",
+  ];
 
-  const headersProfesores = ["Nombre", "Apellidos", "Email", "Contraseña", "DNI", "Cuenta Bancaria", "Nº Teléfono", "Redes", "País", "Localidad", "Especialización", "Imagen Perfil", "Acciones"];
-  const keysProfesores = ["nombre", "apellidos", "email", "contrasena", "dni", "numCuentaBancaria", "numTelefono", "redes", "pais", "localidad", "especializacion", "imagenPerfil"];
+  const headersProfesores = [
+    "Nombre",
+    "Apellidos",
+    "Email",
+    "Contraseña",
+    "DNI",
+    "Cuenta Bancaria",
+    "Nº Teléfono",
+    "Redes",
+    "País",
+    "Localidad",
+    "Especialización",
+    "Imagen Perfil",
+    "Acciones",
+  ];
+  const keysProfesores = [
+    "nombre",
+    "apellidos",
+    "email",
+    "contrasena",
+    "dni",
+    "numCuentaBancaria",
+    "numTelefono",
+    "redes",
+    "pais",
+    "localidad",
+    "especializacion",
+    "imagenPerfil",
+  ];
 
-  const headersVinculados = ["Profesor vinculado", "Nombre", "Apellidos", "DNI", "Nº Teléfono", "Redes", "País", "Localidad"];
-  const keysVinculados = ["nombre", "apellidos", "dni", "numTelefono", "redes", "pais", "localidad"];
+  const headersVinculados = [
+    "Profesor vinculado",
+    "Nombre",
+    "Apellidos",
+    "DNI",
+    "Nº Teléfono",
+    "Redes",
+    "País",
+    "Localidad",
+  ];
+  const keysVinculados = [
+    "nombre",
+    "apellidos",
+    "dni",
+    "numTelefono",
+    "redes",
+    "pais",
+    "localidad",
+  ];
 
   return (
     <div className="contenedor-cuentas">
@@ -280,7 +352,9 @@ function AccountsGrid() {
             <option value="alumno">Alumno</option>
             <option value="profesor">Profesor</option>
           </select>
-          <button className="btn-cuentas btn-crear" type="submit">Crear cuenta</button>
+          <button className="btn-cuentas btn-crear" type="submit">
+            Crear cuenta
+          </button>
         </form>
       </div>
       {/* Buscador*/}
@@ -297,7 +371,9 @@ function AccountsGrid() {
             type="text"
             placeholder="Apellidos"
             value={filtros.apellidos}
-            onChange={(e) => setFiltros({ ...filtros, apellidos: e.target.value })}
+            onChange={(e) =>
+              setFiltros({ ...filtros, apellidos: e.target.value })
+            }
           />
           <input
             type="text"
@@ -315,7 +391,9 @@ function AccountsGrid() {
             type="text"
             placeholder="Nº Teléfono"
             value={filtros.numTelefono}
-            onChange={(e) => setFiltros({ ...filtros, numTelefono: e.target.value })}
+            onChange={(e) =>
+              setFiltros({ ...filtros, numTelefono: e.target.value })
+            }
           />
           <input
             type="text"
@@ -327,17 +405,25 @@ function AccountsGrid() {
             type="text"
             placeholder="Localidad"
             value={filtros.localidad}
-            onChange={(e) => setFiltros({ ...filtros, localidad: e.target.value })}
+            onChange={(e) =>
+              setFiltros({ ...filtros, localidad: e.target.value })
+            }
           />
-          <button type="button" className="btn-cuentas btn-crear" onClick={() => setFiltros({
-            nombre: '',
-            apellidos: '',
-            email: '',
-            dni: '',
-            numTelefono: '',
-            pais: '',
-            localidad: ''
-          })}>
+          <button
+            type="button"
+            className="btn-cuentas btn-crear"
+            onClick={() =>
+              setFiltros({
+                nombre: "",
+                apellidos: "",
+                email: "",
+                dni: "",
+                numTelefono: "",
+                pais: "",
+                localidad: "",
+              })
+            }
+          >
             Limpiar filtros
           </button>
         </form>
@@ -348,7 +434,7 @@ function AccountsGrid() {
       ) : (
         <div className="contenedor-alumnos">
           {/* ── TABLA ALUMNOS BÁSICOS ── */}
-          <AccountsTable 
+          <AccountsTable
             title="Alumnos"
             data={alumnosBasicos}
             filtros={filtros}
@@ -361,7 +447,7 @@ function AccountsGrid() {
           />
 
           {/* ── TABLA PROFESORES ── */}
-          <AccountsTable 
+          <AccountsTable
             title="Profesores"
             data={profesores}
             filtros={filtros}
@@ -373,8 +459,8 @@ function AccountsGrid() {
             className="t-profesores"
           />
 
-           {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
-          <AccountsTable 
+          {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
+          <AccountsTable
             title="Cuentas alumno de profesores"
             data={alumnosVinculados}
             filtros={filtros}
@@ -391,7 +477,3 @@ function AccountsGrid() {
 }
 
 export default AccountsGrid;
-
-
-
-

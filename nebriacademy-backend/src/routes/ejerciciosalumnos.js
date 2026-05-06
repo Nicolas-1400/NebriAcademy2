@@ -18,21 +18,26 @@ const upload = multer({ storage: multer.memoryStorage() });
 // ── HELPER ──────────────────────────────────────────────────────────────────
 function uploadToCloudinary(buffer, options) {
   return new Promise((resolve, reject) => {
-    const stream = cloudinary.uploader.upload_chunked_stream(options, (error, result) => {
-      if (error) return reject(error);
-      resolve(result);
-    });
+    const stream = cloudinary.uploader.upload_chunked_stream(
+      options,
+      (error, result) => {
+        if (error) return reject(error);
+        resolve(result);
+      },
+    );
     streamifier.createReadStream(buffer).pipe(stream);
   });
 }
 
 function extractPublicId(url, resourceType) {
   try {
-    const parts = url.split('/');
-    const uploadIdx = parts.indexOf('upload');
+    const parts = url.split("/");
+    const uploadIdx = parts.indexOf("upload");
     const afterUpload = parts.slice(uploadIdx + 2);
-    const publicIdWithExt = afterUpload.join('/');
-    return resourceType === 'raw' ? publicIdWithExt : publicIdWithExt.replace(/\.[^/.]+$/, "");
+    const publicIdWithExt = afterUpload.join("/");
+    return resourceType === "raw"
+      ? publicIdWithExt
+      : publicIdWithExt.replace(/\.[^/.]+$/, "");
   } catch {
     return null;
   }
@@ -40,9 +45,9 @@ function extractPublicId(url, resourceType) {
 
 // Extrae el resource_type real de la URL de Cloudinary para borrados correctos
 function getResourceTypeFromUrl(url) {
-  if (url.includes('/image/upload/')) return 'image';
-  if (url.includes('/video/upload/')) return 'video';
-  return 'raw';
+  if (url.includes("/image/upload/")) return "image";
+  if (url.includes("/video/upload/")) return "video";
+  return "raw";
 }
 
 // ── GET ─────────────────────────────────────────────────────────────────────
@@ -99,7 +104,9 @@ router.post("/", upload.single("archivo"), async (req, res) => {
     // --- NOTIFICACIONES ---
     try {
       if (validEjercicio.curso) {
-        const arrProfesores = await ProfesoresCursos.findAll({ where: { cursoId: validEjercicio.curso } });
+        const arrProfesores = await ProfesoresCursos.findAll({
+          where: { cursoId: validEjercicio.curso },
+        });
         const notificaciones = [];
         for (const pc of arrProfesores) {
           const p = await Profesores.findByPk(pc.profesorId);
@@ -108,14 +115,18 @@ router.post("/", upload.single("archivo"), async (req, res) => {
               usuarioId: p.usuarioId,
               tipoUsuario: "profesor",
               mensaje: `El alumno ${validAlumno.nombre} ha subido una respuesta al ejercicio ${validEjercicio.nombre}`,
-              enlace: `/Home/Courses/${validEjercicio.curso}/GradeExercises/${ejercicioId}`
+              enlace: `/Home/Courses/${validEjercicio.curso}/GradeExercises/${ejercicioId}`,
             });
           }
         }
-        if (notificaciones.length > 0) await Notificaciones.bulkCreate(notificaciones);
+        if (notificaciones.length > 0)
+          await Notificaciones.bulkCreate(notificaciones);
       }
     } catch (errNoti) {
-      console.error("Error creando notificaciones (ejerciciosalumnos):", errNoti);
+      console.error(
+        "Error creando notificaciones (ejerciciosalumnos):",
+        errNoti,
+      );
     }
 
     res.status(201).json({ id: nuevo.id, archivo: nuevo.archivo });
@@ -134,13 +145,19 @@ router.put("/:id", upload.single("archivo"), async (req, res) => {
     const updates = { ...req.body };
 
     if (req.file) {
-      if (r.archivo && r.archivo.includes('cloudinary.com')) {
+      if (r.archivo && r.archivo.includes("cloudinary.com")) {
         try {
           const resourceType = getResourceTypeFromUrl(r.archivo);
           const pid = extractPublicId(r.archivo, resourceType);
-          if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+          if (pid)
+            await cloudinary.uploader.destroy(pid, {
+              resource_type: resourceType,
+            });
         } catch (e) {
-          console.warn('No se pudo borrar entrega anterior de Cloudinary:', e.message);
+          console.warn(
+            "No se pudo borrar entrega anterior de Cloudinary:",
+            e.message,
+          );
         }
       }
       const baseName = req.file.originalname
@@ -167,13 +184,39 @@ router.delete("/:id", async (req, res) => {
     const r = await EjerciciosAlumnos.findByPk(req.params.id);
     if (!r) return res.status(404).json({ error: "No encontrado" });
 
-    if (r.archivo && r.archivo.includes('cloudinary.com')) {
+    if (r.archivo && r.archivo.includes("cloudinary.com")) {
       try {
         const resourceType = getResourceTypeFromUrl(r.archivo);
         const pid = extractPublicId(r.archivo, resourceType);
-        if (pid) await cloudinary.uploader.destroy(pid, { resource_type: resourceType });
+        if (pid)
+          await cloudinary.uploader.destroy(pid, {
+            resource_type: resourceType,
+          });
       } catch (e) {
-        console.warn('No se pudo borrar entrega de Cloudinary:', e.message);
+        console.warn("No se pudo borrar entrega de Cloudinary:", e.message);
+      }
+    }
+
+    // Si se proporciona una razón, notificamos al alumno autor de la entrega
+    const { reason } = req.query;
+    if (reason && r.alumnoId) {
+      try {
+        const Alumnos = require("../models/Alumnos.js");
+        const Ejercicios = require("../models/Ejercicios.js");
+        const Notificaciones = require("../models/Notificaciones.js");
+        
+        const al = await Alumnos.findByPk(r.alumnoId);
+        const ej = await Ejercicios.findByPk(r.ejercicioId);
+        if (al && al.usuarioId) {
+          await Notificaciones.create({
+            usuarioId: al.usuarioId,
+            tipoUsuario: "alumno",
+            mensaje: `Tu entrega para el ejercicio "${ej ? ej.nombre : 'seleccionado'}" ha sido eliminada por un administrador. Razón: ${reason}`,
+            fecha: new Date(),
+          });
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificación de borrado (entrega):", errNotif.message);
       }
     }
 

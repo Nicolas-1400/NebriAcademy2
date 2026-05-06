@@ -123,14 +123,19 @@ function Home() {
   // Eliminar curso (profesor)
   const handleDeleteCurso = async (cursoId, e) => {
     e.stopPropagation();
-    const confirmed = await showConfirm(
+    const result = await showConfirm(
       "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (vídeos, apuntes, ejercicios...) y NO se podrá recuperar.",
       "Eliminar Curso",
+      { withInput: true }
     );
-    if (!confirmed) return;
+    if (result === false) return;
 
     try {
-      const res = await fetch(`${API_URL}/cursos/${cursoId}`, {
+      const url = typeof result === "string" && result.trim()
+        ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(result)}`
+        : `${API_URL}/cursos/${cursoId}`;
+
+      const res = await fetch(url, {
         method: "DELETE",
       });
       if (res.ok) {
@@ -309,4 +314,3 @@ function Home() {
 }
 
 export default Home;
-

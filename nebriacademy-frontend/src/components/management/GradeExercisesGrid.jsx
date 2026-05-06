@@ -1,4 +1,4 @@
-import './Management.css';
+import "./Management.css";
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../config/api";
 import { useEffect, useState, useMemo } from "react";
@@ -32,9 +32,7 @@ function GradeExercisesGrid() {
       fetch(`${API_URL}/ejerciciosalumnos`).then((respuesta) =>
         respuesta.json(),
       ),
-      fetch(`${API_URL}/alumnos`).then((respuesta) =>
-        respuesta.json(),
-      ),
+      fetch(`${API_URL}/alumnos`).then((respuesta) => respuesta.json()),
       fetch(`${API_URL}/puntuacionesejercicios`).then((respuesta) =>
         respuesta.json(),
       ),
@@ -47,7 +45,8 @@ function GradeExercisesGrid() {
         setRegistros(
           exerciseId
             ? allRegs.filter(
-                (registro) => String(registro.ejercicioId) === String(exerciseId),
+                (registro) =>
+                  String(registro.ejercicioId) === String(exerciseId),
               )
             : allRegs,
         );
@@ -138,10 +137,19 @@ function GradeExercisesGrid() {
 
   // Función exclusiva para administradores: borrar una entrega concreta
   const handleDeleteEntrega = async (entregaId) => {
-    const confirmed = await showConfirm("¿Seguro que deseas borrar esta entrega permanentemente?", "Borrar Entrega");
-    if (!confirmed) return;
+    const reason = await showConfirm(
+      "¿Seguro que deseas borrar esta entrega permanentemente?",
+      "Borrar Entrega",
+      { withInput: true },
+    );
+    if (reason === false) return;
     try {
-      const respuesta = await fetch(`${API_URL}/ejerciciosalumnos/${entregaId}`, {
+      const url =
+        typeof reason === "string" && reason.trim()
+          ? `${API_URL}/ejerciciosalumnos/${entregaId}?reason=${encodeURIComponent(reason)}`
+          : `${API_URL}/ejerciciosalumnos/${entregaId}`;
+
+      const respuesta = await fetch(url, {
         method: "DELETE",
       });
       if (respuesta.ok) {
@@ -182,7 +190,9 @@ function GradeExercisesGrid() {
                         max="10"
                         className="input-nota"
                         value={currentVal}
-                        onChange={(e) => handeScoreInput(reg.id, e.target.value)}
+                        onChange={(e) =>
+                          handeScoreInput(reg.id, e.target.value)
+                        }
                         placeholder="0-10"
                       />
                       <button
@@ -218,7 +228,3 @@ function GradeExercisesGrid() {
 }
 
 export default GradeExercisesGrid;
-
-
-
-

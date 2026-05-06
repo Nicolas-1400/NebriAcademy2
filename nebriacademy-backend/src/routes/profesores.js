@@ -47,7 +47,15 @@ router.put("/:id", async (req, res) => {
 
     // Sincronizar campos comunes al alumno vinculado (excepto email, contrasena y tarjeta)
     if (p.alumnoVinculadoId) {
-      const camposSincronizables = ["nombre", "apellidos", "dni", "numTelefono", "redes", "pais", "localidad"];
+      const camposSincronizables = [
+        "nombre",
+        "apellidos",
+        "dni",
+        "numTelefono",
+        "redes",
+        "pais",
+        "localidad",
+      ];
       const syncPayload = {};
       camposSincronizables.forEach((campo) => {
         if (req.body[campo] !== undefined) syncPayload[campo] = req.body[campo];
@@ -64,13 +72,44 @@ router.put("/:id", async (req, res) => {
   }
 });
 
-
 // ── DELETE ──────────────────────────────────────────────────────────────────
 // DELETE /profesores/:id — Elimina el profesor, su usuario base y también el alumno vinculado (si lo tiene)
 router.delete("/:id", async (req, res) => {
   try {
     const p = await Profesores.findByPk(req.params.id);
     if (!p) return res.status(404).json({ error: "No encontrado" });
+
+    // Si se proporciona una razón, notificamos a los alumnos afectados
+    const { reason } = req.query;
+    if (reason) {
+      try {
+        const Cursos = require("../models/Cursos.js");
+        const CursosAlumnos = require("../models/CursosAlumnos.js");
+        const Notificaciones = require("../models/Notificaciones.js");
+        const AlumnosModel = require("../models/Alumnos.js");
+
+        // Buscar todos los cursos del profesor
+        const cursos = await Cursos.findAll({ where: { profesor: req.params.id } });
+        for (const curso of cursos) {
+          const matriculados = await CursosAlumnos.findAll({ 
+            where: { cursoId: curso.id, apuntado: true } 
+          });
+          for (const m of matriculados) {
+            const al = await AlumnosModel.findByPk(m.alumnoId);
+            if (al && al.usuarioId) {
+              await Notificaciones.create({
+                usuarioId: al.usuarioId,
+                tipoUsuario: "alumno",
+                mensaje: `El profesor ${p.nombre} ${p.apellidos} y sus cursos ("${curso.nombreCurso}") ya no están disponibles. Razón: ${reason}`,
+                fecha: new Date(),
+              });
+            }
+          }
+        }
+      } catch (errNotif) {
+        console.warn("Error enviando notificaciones de borrado de profesor:", errNotif.message);
+      }
+    }
 
     const usuarioIdProfesor = p.usuarioId;
     const alumnoVinculadoId = p.alumnoVinculadoId;
@@ -99,7 +138,6 @@ router.delete("/:id", async (req, res) => {
     res.status(500).json({ error: "Server error" });
   }
 });
-
 
 // ── POST ADMIN ──────────────────────────────────────────────────────────────
 // POST /profesores/admin/crear — Crea un profesor base (incompleto) desde admin.
@@ -253,7 +291,9 @@ router.post("/verificacionprofesor/completar", async (req, res) => {
 
     // Sincronizar datos comunes al alumno vinculado (sin email ni contraseña)
     if (profesor.alumnoVinculadoId) {
-      const alumnoVinculado = await Alumnos.findByPk(profesor.alumnoVinculadoId);
+      const alumnoVinculado = await Alumnos.findByPk(
+        profesor.alumnoVinculadoId,
+      );
       if (alumnoVinculado) {
         await alumnoVinculado.update({
           nombre,
@@ -290,12 +330,18 @@ router.post("/cambiar-cuenta", async (req, res) => {
     if (profesorId) {
       // Cambio: profesor → alumno vinculado
       const profesor = await Profesores.findByPk(profesorId);
-      if (!profesor) return res.status(404).json({ error: "Profesor no encontrado" });
+      if (!profesor)
+        return res.status(404).json({ error: "Profesor no encontrado" });
       if (!profesor.alumnoVinculadoId)
-        return res.status(400).json({ error: "Este profesor no tiene alumno vinculado" });
+        return res
+          .status(400)
+          .json({ error: "Este profesor no tiene alumno vinculado" });
 
       const alumno = await Alumnos.findByPk(profesor.alumnoVinculadoId);
-      if (!alumno) return res.status(404).json({ error: "Alumno vinculado no encontrado" });
+      if (!alumno)
+        return res
+          .status(404)
+          .json({ error: "Alumno vinculado no encontrado" });
 
       return res.json({
         mensaje: "Cambiado a modo alumno",
@@ -321,12 +367,18 @@ router.post("/cambiar-cuenta", async (req, res) => {
     if (alumnoId) {
       // Cambio: alumno vinculado → profesor
       const alumno = await Alumnos.findByPk(alumnoId);
-      if (!alumno) return res.status(404).json({ error: "Alumno no encontrado" });
+      if (!alumno)
+        return res.status(404).json({ error: "Alumno no encontrado" });
       if (!alumno.esVinculado || !alumno.profesorVinculadoId)
-        return res.status(400).json({ error: "Este alumno no está vinculado a un profesor" });
+        return res
+          .status(400)
+          .json({ error: "Este alumno no está vinculado a un profesor" });
 
       const profesor = await Profesores.findByPk(alumno.profesorVinculadoId);
-      if (!profesor) return res.status(404).json({ error: "Profesor vinculado no encontrado" });
+      if (!profesor)
+        return res
+          .status(404)
+          .json({ error: "Profesor vinculado no encontrado" });
 
       return res.json({
         mensaje: "Cambiado a modo profesor",
