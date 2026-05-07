@@ -1,0 +1,128 @@
+@import "../../../../styles/general.css";
+
+/* El sidebar (SearchSidebar) en esta página */
+.TodosProfesoresGrid > .search-sidebar {
+  width: clamp(250px, 20%, 300px);
+  flex-shrink: 0;
+}
+
+/* PROFESORES */
+.TodosProfesoresGrid {
+  display: flex;
+  gap: 30px;
+  padding: 40px;
+  min-height: calc(100vh - 250px);
+  align-items: flex-start;
+  background-image: url("../../../../assets/Fondos/fondo-clase.jpg");
+  background-size: cover;
+  background-position: center;
+}
+
+.profesores-grid {
+  flex: 1;
+  min-width: 0;
+  background-color: rgba(255, 224, 224, 0.9);
+  padding: 25px;
+  border-radius: 10px;
+}
+
+.profesores-grid h2 {
+  color: #333;
+  margin-bottom: 30px;
+  padding-bottom: 10px;
+  border-bottom: 5px solid var(--rojo-nebrija);
+  font-size: 28px;
+  font-weight: 700;
+}
+
+.profesores-contenedor {
+  display: flex;
+  gap: 20px;
+  flex-wrap: wrap;
+  justify-content: center;
+  padding: 0;
+}
+
+.profesores-contenedor .tarjeta-profesor {
+  flex: 0 0 240px;
+}
+
+.mensaje-vacio,
+.TodosProfesoresGrid > p {
+  color: #999;
+  font-size: 14px;
+  font-style: italic;
+  padding: 20px;
+  text-align: center;
+  width: 100%;
+}
+
+/* Scrollbar cuando haya overflow horizontal */
+.profesores-contenedor::-webkit-scrollbar {
+  height: 8px;
+}
+
+.profesores-contenedor::-webkit-scrollbar-track {
+  background: #f1f1f1;
+  border-radius: 10px;
+}
+
+.profesores-contenedor::-webkit-scrollbar-thumb {
+  background: var(--rojo-nebrija);
+  border-radius: 10px;
+}
+
+/* RESPONSIVE 1024px */
+@media (max-width: 1024px) {
+  .TodosProfesoresGrid {
+    padding: 35px 20px;
+  }
+
+  .profesores-contenedor {
+    gap: 18px;
+    padding: 0;
+  }
+
+  .profesores-contenedor .tarjeta-profesor {
+    flex: 0 0 220px;
+  }
+}
+
+/* RESPONSIVE 768px — sidebar sube al top */
+@media (max-width: 768px) {
+  .TodosProfesoresGrid {
+    flex-direction: column;
+    padding: 15px;
+    gap: 15px;
+  }
+
+  .TodosProfesoresGrid > .search-sidebar {
+    width: 100%;
+  }
+
+  .profesores-grid h2 {
+    font-size: 22px;
+    margin-bottom: 20px;
+  }
+
+  .profesores-contenedor .tarjeta-profesor {
+    flex: 0 0 48%;
+  }
+}
+
+/* RESPONSIVE 480px */
+@media (max-width: 480px) {
+  .profesores-contenedor {
+    gap: 12px;
+    justify-content: center;
+  }
+
+  .profesores-contenedor .tarjeta-profesor {
+    flex: 0 0 100%;
+    max-width: 420px;
+  }
+
+  .profesores-grid h2 {
+    font-size: 20px;
+  }
+}

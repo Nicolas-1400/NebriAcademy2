@@ -1,0 +1,23 @@
+@import "../../../styles/general.css";
+
+.corregir-ejercicios-grid {
+  margin: 20px;
+  background-color: var(--color-fondo);
+}
+
+.corregir-ejercicios-grid h3 {
+  border-bottom: 3px solid var(--rojo-nebrija);
+  border-radius: 3px;
+  color: var(--rojo-nebrija);
+  font-size: 24px;
+  font-weight: bold;
+}
+
+.ejercicios-lista {
+  display: flex;
+  flex-direction: row;
+  list-style: none;
+  padding: 20px;
+  gap: 20px;
+  flex-wrap: wrap;
+}

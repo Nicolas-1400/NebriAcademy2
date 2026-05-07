@@ -1,0 +1,94 @@
+@import "../../../styles/general.css";
+
+.contenedor-alumnos {
+  background-color: #fff;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+}
+
+.contenedor-alumnos h3 {
+  color: var(--rojo-nebrija);
+  margin-bottom: 15px;
+  font-size: 1.4em;
+}
+
+.tabla-contenedor {
+  overflow-x: auto;
+  overflow-y: auto;
+  max-height: 250px;
+  margin-bottom: 30px;
+}
+
+.tabla {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.9em;
+  min-width: 1200px; /* Asegura que la tabla tenga ancho mínimo para scroll */
+}
+
+.head-tabla th {
+  background-color: var(--rojo-nebrija);
+  color: white;
+  padding: 12px;
+  text-align: left;
+  border: 1px solid #ddd;
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+.contenido-tabla td {
+  padding: 10px;
+  border: 1px solid #ddd;
+  background-color: #ffffff;
+}
+
+.contenido-tabla tr:nth-child(even) td {
+  background-color: #f9f9f9;
+}
+
+.contenido-tabla tr:hover td {
+  background-color: var(--color-hover-boton);
+}
+
+.contenido-tabla td:hover {
+  background-color: #ffe0e0 !important; /* Rojo claro para hover en celda */
+  cursor: pointer;
+}
+
+.contenido-tabla td[contenteditable]:focus {
+  background-color: #fff;
+  outline: 2px solid var(--rojo-nebrija);
+  border-radius: 4px;
+}
+
+.contenido-tabla button {
+  background-color: #dc3545;
+  color: white;
+  border: none;
+  padding: 5px 10px;
+  border-radius: 4px;
+  cursor: pointer;
+  transition: background-color 0.3s;
+}
+
+.contenido-tabla button:hover {
+  background-color: #c82333;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .tabla {
+    font-size: 0.8em;
+  }
+
+  .head-tabla th,
+  .contenido-tabla td {
+    padding: 8px;
+  }
+
+  .contenido-tabla td[contenteditable] {
+    min-width: 100px;
+  }
+}

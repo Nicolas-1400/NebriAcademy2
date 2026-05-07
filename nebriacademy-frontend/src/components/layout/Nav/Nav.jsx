@@ -4,7 +4,7 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
 import Logo from "../../../assets/Iconos/nebriLogo.png";
 import ImagenPerfilDefault from "../../../assets/Iconos/ImagenPerfilUsuario.png";
-import { PERFILES } from "../../account/ProfileImageCard.jsx";
+import { PERFILES } from "../../account/ProfileImageCard/ProfileImageCard";
 import ImagenBotonMas from "../../../assets/Iconos/botonMas.png";
 import ImagenMenuHamburguesa from "../../../assets/Iconos/menuHamburguesa.png";
 import useAuthStore from "../../../store/useAuthStore";

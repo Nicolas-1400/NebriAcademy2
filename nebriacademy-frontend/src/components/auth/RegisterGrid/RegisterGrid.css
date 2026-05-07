@@ -1,0 +1,342 @@
+@import "../../../styles/general.css";
+
+/* REGISTER EXTERNO */
+.register-grid-externo {
+  display: flex;
+  justify-content: space-around;
+  min-height: 615px;
+  background-image: url("../../../assets/Fondos/FondoLogin.png");
+  background-color: #fdfefe;
+  background-size: 105%;
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding: 40px;
+}
+
+.formulario-register-contenedor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 60px 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.formulario-register-contenedor h2 {
+  margin-bottom: 20px;
+  font-size: 28px;
+  color: var(--rojo-nebrija);
+  font-family: "Arial", sans-serif;
+}
+
+.formulario-register {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.formulario-register input,
+.formulario-register select {
+  padding: 15px;
+  font-size: 14px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  font-family: "Arial", sans-serif;
+}
+
+.formulario-register input:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
+}
+
+.formulario-register button {
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.formulario-register button:hover {
+  background-color: var(--color-secundario);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
+}
+
+.formulario-register-contenedor a {
+  color: var(--rojo-nebrija);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.formulario-register-contenedor a:hover {
+  text-decoration: underline;
+}
+
+/* Precios Section */
+.register-precios {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  width: 32%;
+  min-width: 350px;
+  max-width: 420px;
+  background-color: #ffffff;
+  padding: 30px;
+  border-radius: 12px;
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.12);
+  border: 1px solid rgba(0, 0, 0, 0.04);
+}
+
+.register-precios h2 {
+  margin-bottom: 18px;
+  font-size: 26px;
+  color: var(--rojo-nebrija);
+  font-family: "Arial", sans-serif;
+}
+
+.precios-contenido {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  width: 100%;
+  align-items: center;
+}
+
+.precio {
+  display: inline-flex;
+  align-items: baseline;
+  gap: 8px;
+  background: linear-gradient(
+    90deg,
+    var(--rojo-nebrija) 0%,
+    var(--color-secundario) 100%
+  );
+  padding: 12px 18px;
+  border-radius: 30px;
+  font-size: 28px;
+  font-weight: 800;
+  color: white;
+  box-shadow: 0 6px 18px rgba(220, 126, 126, 0.08);
+}
+
+.descripcion-precio {
+  width: 100%;
+}
+
+.descripcion-precio p {
+  font-size: 19px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  color: #333;
+}
+
+.descripcion-precio ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: grid;
+  gap: 8px;
+}
+
+.descripcion-precio li {
+  font-size: 14px;
+  color: #444;
+  padding: 8px 0;
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+}
+
+/* Form Styles used when tipo is alumnonebrija/profesor (borrowed from login) */
+.login-grid {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  min-height: 615px;
+  background-image: url("../../../assets/Fondos/FondoLogin.png");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding: 40px;
+}
+
+.formulario-login-contenedor {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 60px 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.formulario-login {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.formulario-login input, .formulario-login select {
+    padding: 15px;
+    font-size: 14px;
+    border: 2px solid #ddd;
+    border-radius: 5px;
+    transition: all 0.3s ease;
+    font-family: "Arial", sans-serif;
+}
+
+.formulario-login input:focus {
+    outline: none;
+    border-color: var(--rojo-nebrija);
+    box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
+}
+
+.formulario-login button {
+    padding: 15px;
+    font-size: 16px;
+    font-weight: bold;
+    background-color: var(--rojo-nebrija);
+    color: white;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+}
+
+.formulario-login button:hover {
+    background-color: var(--color-secundario);
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
+}
+
+.error-login {
+  text-align: center;
+  color: var(--color-secundario);
+}
+
+/* RESPONSIVE Register Alumno Externo 1024 */
+@media (max-width: 1024px) {
+  .register-grid-externo {
+    padding: 30px;
+    min-height: 550px;
+    background-size: 120%;
+    background-position: center right;
+    gap: 20px;
+  }
+
+  .formulario-register-contenedor {
+    width: 50%;
+    padding: 50px 40px;
+  }
+
+  .formulario-register input,
+  .formulario-register select {
+    padding: 14px;
+    font-size: 13px;
+  }
+
+  .formulario-register button {
+    padding: 14px;
+    font-size: 15px;
+  }
+
+  .formulario-register-contenedor a {
+    font-size: 13px;
+  }
+  
+  .register-precios {
+    width: 40%;
+    max-width: 480px;
+    padding: 26px;
+  }
+  .precio {
+    font-size: 24px;
+  }
+  
+  /* Also responsive for login styles if used in Register */
+  .login-grid {
+    padding: 35px;
+    gap: 25px;
+  }
+
+  .formulario-login-contenedor {
+    width: 50%;
+    padding: 50px 40px;
+  }
+}
+
+/* RESPONSIVE Register Alumno Externo 768px */
+@media (max-width: 768px) {
+  .register-grid-externo {
+    flex-direction: column;
+    padding: 20px;
+    min-height: auto;
+    background-image: none;
+    gap: 30px;
+  }
+
+  .formulario-register-contenedor {
+    width: 100%;
+    padding: 40px 30px;
+  }
+
+  .formulario-register input,
+  .formulario-register select {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .formulario-register button {
+    padding: 12px;
+    font-size: 14px;
+  }
+
+  .formulario-register-contenedor a {
+    font-size: 12px;
+  }
+  
+  .register-precios {
+    width: 90%;
+    max-width: 420px;
+    padding: 22px;
+    margin: 0 auto;
+  }
+  .precio {
+    font-size: 22px;
+  }
+  
+  .login-grid {
+    flex-direction: column;
+    padding: 20px;
+    min-height: auto;
+    gap: 30px;
+    height: 100vh;
+    background-image: url("../../../assets/Fondos/FondoLogin_rotado.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
+
+  .formulario-login-contenedor {
+    width: 50%;
+    padding: 40px 30px;
+  }
+}
