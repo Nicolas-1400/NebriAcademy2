@@ -1,4 +1,3 @@
-import './Sliders.css';
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config/api";
 import Foto1 from "../../../assets/ImagenesCursos/Foto1.jpg";

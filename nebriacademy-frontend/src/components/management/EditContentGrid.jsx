@@ -1,4 +1,3 @@
-import './Management.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../config/api";
 import { useEffect, useState } from "react";

@@ -1,6 +1,3 @@
-import React from 'react';
-import './Avatar.css';
-
 const Avatar = ({ name, src, size = '40px' }) => {
   const getInitials = (name) => {
     if (!name) return '?';

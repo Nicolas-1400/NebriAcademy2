@@ -1,4 +1,3 @@
-import '../../account/Account.css';
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
 import { useEffect, useState, useMemo } from "react";
