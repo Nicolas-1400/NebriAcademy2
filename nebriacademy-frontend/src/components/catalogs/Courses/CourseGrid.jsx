@@ -627,7 +627,7 @@ function CourseGrid() {
 
           {puedeVerContenido ? (
             <>
-              <h4>Vídeos</h4>
+              <h4>Videos</h4>
               {contenidos.videos.length > 0 ? (
                 <div className="videos-list">
                   {contenidos.videos.map((v) => (

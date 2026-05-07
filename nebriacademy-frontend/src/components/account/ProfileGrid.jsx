@@ -93,14 +93,11 @@ function ProfileGrid() {
         delete payload.imagenPerfil;
       }
 
-      const respuesta = await fetch(
-        `${API_URL}/usuarios/${user.id}`,
-        {
-          method: "PUT",
-          headers: { "Content-Type": "application/json" },
-          body: JSON.stringify(payload),
-        },
-      );
+      const respuesta = await fetch(`${API_URL}/usuarios/${user.id}`, {
+        method: "PUT",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(payload),
+      });
 
       if (respuesta.ok) {
         const usuarioActualizado = await respuesta.json();
@@ -124,7 +121,9 @@ function ProfileGrid() {
 
   // Determinamos qué imagen mostrar en el panel izquierdo
   const imagenMostrar =
-    tipo === "profesor" && formData.imagenPerfil && PERFILES[formData.imagenPerfil]
+    tipo === "profesor" &&
+    formData.imagenPerfil &&
+    PERFILES[formData.imagenPerfil]
       ? PERFILES[formData.imagenPerfil]
       : ImagenPerfilDefault;
 
@@ -133,17 +132,21 @@ function ProfileGrid() {
       {/* Panel izquierdo: datos de solo lectura */}
       <div className="datosPerfil">
         <h1>Mi Perfil</h1>
-        <img className="imagenPerfil" src={imagenMostrar} alt="Perfil Usuario" />
+        <img
+          className="imagenPerfil"
+          src={imagenMostrar}
+          alt="Perfil Usuario"
+        />
         <h2 className="nombrePerfil">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
         {!user.esVinculado && <p className="correoPerfil">{user.email}</p>}
         <p className="tipoPerfil">
           {tipo === "administrador"
             ? "Administrador"
             : tipo === "profesor"
-            ? "Profesor"
-            : user.esVinculado
-            ? "Alumno (cuenta vinculada)"
-            : "Alumno"}
+              ? "Profesor"
+              : user.esVinculado
+                ? "Alumno (cuenta vinculada)"
+                : "Alumno"}
         </p>
 
         {tipo === "profesor" && user.especializacion && (
@@ -162,7 +165,10 @@ function ProfileGrid() {
         {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
         {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
 
-        <form onSubmit={handleSubmit} className={tipo === "profesor" ? "formulario-profesor" : ""}>
+        <form
+          onSubmit={handleSubmit}
+          className={tipo === "profesor" ? "formulario-profesor" : ""}
+        >
           {/* Si es profesor, usamos el layout de dos columnas para el avatar */}
           {tipo === "profesor" ? (
             <div className="seccion-superior-form">
@@ -175,20 +181,20 @@ function ProfileGrid() {
               </div>
 
               <div className="columna-datos">
-                <FormularioCampos 
-                  formData={formData} 
-                  handleChange={handleChange} 
-                  tipo={tipo} 
-                  user={user} 
+                <FormularioCampos
+                  formData={formData}
+                  handleChange={handleChange}
+                  tipo={tipo}
+                  user={user}
                 />
               </div>
             </div>
           ) : (
-            <FormularioCampos 
-              formData={formData} 
-              handleChange={handleChange} 
-              tipo={tipo} 
-              user={user} 
+            <FormularioCampos
+              formData={formData}
+              handleChange={handleChange}
+              tipo={tipo}
+              user={user}
             />
           )}
 
@@ -284,12 +290,17 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
               value={formData.especializacion}
               onChange={handleChange}
             >
-              <option value="" disabled>Seleccione una especialización</option>
-              <option value="Programacion">Programación</option>
-              <option value="Diseño">Diseño</option>
-              <option value="Ciberseguridad">Ciberseguridad</option>
+              <option value="" disabled>
+                Seleccione una especialización
+              </option>
+              <option value="Programación">Programación</option>
               <option value="BDD">Base de datos</option>
+              <option value="Ciberseguridad">Ciberseguridad</option>
+              <option value="Diseño y UX">Diseño y UX</option>
               <option value="Marketing">Marketing</option>
+              <option value="Inteligencia Artificial">Inteligencia Artificial</option>
+              <option value="Desarrollo">Desarrollo</option>
+              <option value="Data Science">Data Science</option>
             </select>
           </div>
         </>
@@ -319,7 +330,9 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
       <div className="formulario-grupo">
         <label htmlFor="pais">País:</label>
         <select name="pais" value={formData.pais} onChange={handleChange}>
-          <option value="" disabled>Seleccione un país</option>
+          <option value="" disabled>
+            Seleccione un país
+          </option>
           <option value="España">España</option>
           <option value="México">México</option>
           <option value="Colombia">Colombia</option>
@@ -336,8 +349,14 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 
       <div className="formulario-grupo">
         <label htmlFor="localidad">Localidad:</label>
-        <select name="localidad" value={formData.localidad} onChange={handleChange}>
-          <option value="" disabled>Seleccione una localidad</option>
+        <select
+          name="localidad"
+          value={formData.localidad}
+          onChange={handleChange}
+        >
+          <option value="" disabled>
+            Seleccione una localidad
+          </option>
           <option value="Madrid">Madrid</option>
           <option value="Barcelona">Barcelona</option>
           <option value="Valencia">Valencia</option>
@@ -351,8 +370,3 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 }
 
 export default ProfileGrid;
-
-
-
-
-

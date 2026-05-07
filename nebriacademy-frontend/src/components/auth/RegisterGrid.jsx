@@ -268,11 +268,14 @@ function RegisterGrid({ tipo }) {
               <option value="" disabled>
                 Seleccione una especialización
               </option>
-              <option value="Programacion">Programación</option>
-              <option value="Diseño">Diseño</option>
-              <option value="Ciberseguridad">Ciberseguridad</option>
+              <option value="Programación">Programación</option>
               <option value="BDD">Base de datos</option>
+              <option value="Ciberseguridad">Ciberseguridad</option>
+              <option value="Diseño y UX">Diseño y UX</option>
               <option value="Marketing">Marketing</option>
+              <option value="Inteligencia Artificial">Inteligencia Artificial</option>
+              <option value="Desarrollo">Desarrollo</option>
+              <option value="Data Science">Data Science</option>
             </select>
           )}
 

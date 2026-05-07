@@ -124,7 +124,7 @@ function Home() {
   const handleDeleteCurso = async (cursoId, e) => {
     e.stopPropagation();
     const result = await showConfirm(
-      "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (vídeos, apuntes, ejercicios...) y NO se podrá recuperar.",
+      "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (videos, apuntes, ejercicios...) y NO se podrá recuperar.",
       "Eliminar Curso",
       { withInput: true }
     );

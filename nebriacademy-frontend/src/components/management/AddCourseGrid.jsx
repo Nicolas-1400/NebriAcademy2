@@ -88,7 +88,9 @@ function AddCourseGrid() {
       const profesorId = usuarioStore?.id;
 
       if (!profesorId) {
-        return setError("No se ha podido identificar al profesor. Por favor, inicia sesión de nuevo.");
+        return setError(
+          "No se ha podido identificar al profesor. Por favor, inicia sesión de nuevo.",
+        );
       }
 
       // Primero creamos el curso para obtener su ID
@@ -230,7 +232,9 @@ function AddCourseGrid() {
                     <option value="Ciberseguridad">Ciberseguridad</option>
                     <option value="BDD">Base de datos</option>
                     <option value="Marketing">Marketing</option>
-                    <option value="Inteligencia Artificial">Inteligencia Artificial</option>
+                    <option value="Inteligencia Artificial">
+                      Inteligencia Artificial
+                    </option>
                     <option value="Desarrollo">Desarrollo</option>
                     <option value="Data Science">Data Science</option>
                   </select>
@@ -376,7 +380,3 @@ function AddCourseGrid() {
 }
 
 export default AddCourseGrid;
-
-
-
-
