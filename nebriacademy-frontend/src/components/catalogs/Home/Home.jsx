@@ -5,7 +5,7 @@ import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import CardSlider from "../../common/Sliders/CardSlider";
 import CourseCard from "../Courses/CourseCard/CourseCard";
-import Eliminar from "../../../assets/Iconos/Eliminar.png";
+import DeleteIcon from "../../../assets/Icons/delete.png";
 import SliderComponent from "../../common/Sliders/SliderComponent";
 import useToastStore from "../../../store/toastStore";
 import useModalStore from "../../../store/modalStore";
@@ -182,7 +182,7 @@ function Home() {
             title="Borrar cursos"
           >
             <img
-              src={Eliminar}
+              src={DeleteIcon}
               alt="Papelera"
               className={`icon-delete-mode ${isDeleting ? "active" : "inactive"}`}
             />

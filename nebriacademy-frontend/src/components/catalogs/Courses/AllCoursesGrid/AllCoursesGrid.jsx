@@ -5,7 +5,7 @@ import { useLocation } from "react-router-dom";
 import CourseCard from "../CourseCard/CourseCard";
 import SearchSidebar from "../../../common/SearchSidebar/SearchSidebar";
 import useAuthStore from "../../../../store/useAuthStore";
-import Eliminar from "../../../../assets/Iconos/Eliminar.png";
+import DeleteIcon from "../../../../assets/Icons/delete.png";
 import useToastStore from "../../../../store/toastStore";
 import useModalStore from "../../../../store/modalStore";
 

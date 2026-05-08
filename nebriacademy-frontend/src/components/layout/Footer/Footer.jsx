@@ -1,8 +1,8 @@
-import Linkedin from "../../../assets/Iconos/linkedin.png";
-import Facebook from "../../../assets/Iconos/facebook.png";
-import X from "../../../assets/Iconos/X.png";
-import Instagram from "../../../assets/Iconos/instagram.png";
-import YouTube from "../../../assets/Iconos/youtube.png";
+import Linkedin from "../../../assets/Icons/linkedin.png";
+import Facebook from "../../../assets/Icons/facebook.png";
+import X from "../../../assets/Icons/X.png";
+import Instagram from "../../../assets/Icons/instagram.png";
+import YouTube from "../../../assets/Icons/youtube.png";
 
 // Footer con los links a las políticas legales y a las redes sociales de la universidad
 function Footer() {

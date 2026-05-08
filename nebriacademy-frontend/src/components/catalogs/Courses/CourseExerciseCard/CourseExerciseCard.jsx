@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import Editar from "../../../../assets/Iconos/lapiz.png";
-import Eliminar from "../../../../assets/Iconos/Eliminar.png";
+import PencilIcon from "../../../../assets/Icons/pencil.png";
+import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra un ejercicio dentro de la vista de un curso.
@@ -34,7 +34,7 @@ function CourseExerciseCard({
               onClick={() => handleEditNavigate("ejercicio", ejercicio)}
               title="Editar ejercicio"
             >
-              <img src={Editar} alt="Editar" />
+              <img src={PencilIcon} alt="Editar" />
             </button>
           )}
           {showDelete && (
@@ -42,7 +42,7 @@ function CourseExerciseCard({
               onClick={() => handleDeleteContenido("ejercicio", ejercicio.id)}
               title="Borrar ejercicio"
             >
-              <img src={Eliminar} alt="Borrar ejercicio" />
+              <img src={DeleteIcon} alt="Borrar ejercicio" />
             </button>
           )}
         </div>

@@ -1,4 +1,4 @@
-import Logo from "../../../assets/Iconos/nebriLogo.png";
+import Logo from "../../../assets/Icons/nebriLogo.png";
 
 // Header estático que muestra el logo y el nombre de la aplicación.
 // Solo aparece en las páginas de registro y login (antes de entrar al home).

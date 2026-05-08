@@ -2,14 +2,14 @@
 import { API_URL } from "../../../config/api";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useState, useRef, useEffect } from "react";
-import Logo from "../../../assets/Iconos/nebriLogo.png";
-import ImagenPerfilDefault from "../../../assets/Iconos/ImagenPerfilUsuario.png";
+import Logo from "../../../assets/Icons/nebriLogo.png";
+import DefaultProfileImage from "../../../assets/Icons/DefaultProfileImage.png";
 import { PERFILES } from "../../account/ProfileImageCard/ProfileImageCard";
-import ImagenBotonMas from "../../../assets/Iconos/botonMas.png";
-import ImagenMenuHamburguesa from "../../../assets/Iconos/menuHamburguesa.png";
+import ButtonPlusIcon from "../../../assets/Icons/button-plus.png";
+import HamburgerMenuIcon from "../../../assets/Icons/hamburger-menu.png";
 import useAuthStore from "../../../store/useAuthStore";
-import CampanaPendiente from "../../../assets/Iconos/Campana-pendiente.png";
-import CampanaCheck from "../../../assets/Iconos/Campana-check.png";
+import BellPending from "../../../assets/Icons/bell-pending.png";
+import BellCheck from "../../../assets/Icons/bell-check.png";
 import Avatar from "../../common/Avatar/Avatar";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -368,7 +368,7 @@ function Nav() {
           >
             <img
               className="icono-boton-mas"
-              src={ImagenBotonMas}
+              src={ButtonPlusIcon}
               alt="Añadir"
             />
             <h3>Añadir curso</h3>
@@ -464,7 +464,7 @@ function Nav() {
             }}
           >
             <img
-              src={notificaciones.length > 0 ? CampanaPendiente : CampanaCheck}
+              src={notificaciones.length > 0 ? BellPending : BellCheck}
               alt="Notificaciones"
               className="bell-img"
             />
@@ -528,7 +528,7 @@ function Nav() {
         }}
       >
         <img
-          src={ImagenMenuHamburguesa}
+          src={HamburgerMenuIcon}
           alt="Menu"
           className="menu-hamburguesa-icon"
         />
@@ -553,7 +553,7 @@ function Nav() {
             >
               <img
                 src={
-                  notificaciones.length > 0 ? CampanaPendiente : CampanaCheck
+                  notificaciones.length > 0 ? BellPending : BellCheck
                 }
                 alt="Notificaciones"
                 className="bell-img"
@@ -691,7 +691,7 @@ function Nav() {
                   src={
                     usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
                       ? PERFILES[usuario.imagenPerfil]
-                      : ImagenPerfilDefault
+                      : DefaultProfileImage
                   }
                   alt="Perfil"
                 />

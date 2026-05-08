@@ -1,5 +1,5 @@
 import { useNavigate } from "react-router-dom";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
+import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 
 // Página que se muestra cuando el usuario intenta acceder a una URL que no existe
 function NotFoundGrid() {
@@ -11,7 +11,7 @@ function NotFoundGrid() {
         <p>Página no encontrada</p>
         {/* El botón "Volver" navega a la página anterior en el historial del navegador */}
         <button className="boton-go-back" onClick={() => navigate(-1)}>
-          <img src={flecha} alt="Volver" />
+          <img src={ArrowCorrect} alt="Volver" />
           <p>Volver</p>
         </button>
       </div>

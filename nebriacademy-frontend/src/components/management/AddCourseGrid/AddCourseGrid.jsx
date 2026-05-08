@@ -3,7 +3,7 @@ import { API_URL } from "../../../config/api";
 import { useState, useRef } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
+import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 import CourseBackgroundCard from "../../catalogs/Courses/CourseBackgroundCard/CourseBackgroundCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -368,7 +368,7 @@ function AddCourseGrid() {
                 className="boton-go-back"
                 onClick={() => navigate("/Home")}
               >
-                <img src={flecha} alt="Volver" />
+                <img src={ArrowCorrect} alt="Volver" />
                 <p>Volver</p>
               </button>
             </div>

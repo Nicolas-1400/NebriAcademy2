@@ -1,14 +1,14 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import Foto1 from "../../../../assets/ImagenesCursos/Foto1.jpg";
-import Foto2 from "../../../../assets/ImagenesCursos/Foto2.jpg";
-import Foto3 from "../../../../assets/ImagenesCursos/Foto3.jpg";
-import Foto4 from "../../../../assets/ImagenesCursos/Foto4.jpg";
-import Foto5 from "../../../../assets/ImagenesCursos/Foto5.jpg";
-import Foto6 from "../../../../assets/ImagenesCursos/Foto6.jpg";
-import Foto7 from "../../../../assets/ImagenesCursos/Foto7.jpg";
-import Foto8 from "../../../../assets/ImagenesCursos/Foto8.jpg";
-import Foto9 from "../../../../assets/ImagenesCursos/Foto9.jpg";
-import Foto10 from "../../../../assets/ImagenesCursos/Foto10.jpg";
+import Foto1 from "../../../../assets/CourseImages/Foto1.jpg";
+import Foto2 from "../../../../assets/CourseImages/Foto2.jpg";
+import Foto3 from "../../../../assets/CourseImages/Foto3.jpg";
+import Foto4 from "../../../../assets/CourseImages/Foto4.jpg";
+import Foto5 from "../../../../assets/CourseImages/Foto5.jpg";
+import Foto6 from "../../../../assets/CourseImages/Foto6.jpg";
+import Foto7 from "../../../../assets/CourseImages/Foto7.jpg";
+import Foto8 from "../../../../assets/CourseImages/Foto8.jpg";
+import Foto9 from "../../../../assets/CourseImages/Foto9.jpg";
+import Foto10 from "../../../../assets/CourseImages/Foto10.jpg";
 
 // ── CONSTANTES ─────────────────────────────────────────────────────────────
 // Mapa de nombre → objeto de imagen importado por Vite

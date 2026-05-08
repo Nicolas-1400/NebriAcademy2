@@ -3,8 +3,8 @@ import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
-import flecha from "../../../assets/Iconos/flecha-correcta.png";
-import ImagenPerfilDefault from "../../../assets/Iconos/ImagenPerfilUsuario.png";
+import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
+import DefaultProfileImage from "../../../assets/Icons/DefaultProfileImage.png";
 import ProfileImageCard, { PERFILES } from "../ProfileImageCard/ProfileImageCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -125,7 +125,7 @@ function ProfileGrid() {
     formData.imagenPerfil &&
     PERFILES[formData.imagenPerfil]
       ? PERFILES[formData.imagenPerfil]
-      : ImagenPerfilDefault;
+      : DefaultProfileImage;
 
   return (
     <div className="perfil">
@@ -211,7 +211,7 @@ function ProfileGrid() {
             className="boton-go-back"
             onClick={() => navigate(-1)}
           >
-            <img src={flecha} alt="Volver" />
+            <img src={ArrowCorrect} alt="Volver" />
             <p>Volver</p>
           </button>
         </form>

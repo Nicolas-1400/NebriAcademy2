@@ -35,7 +35,7 @@ function RegisterGrid({ tipo }) {
       if (emailToUse) {
         setFormData((prev) => ({ ...prev, email: emailToUse }));
       } else {
-        navigate("/Register/Verificacion/alumnonebrija", { replace: true });
+        navigate("/Register/Verification/alumnonebrija", { replace: true });
       }
     } else if (tipo === "profesor") {
       const verifiedEmail = sessionStorage.getItem("verifiedProfessorEmail");
@@ -44,7 +44,7 @@ function RegisterGrid({ tipo }) {
       if (emailToUse) {
         setFormData((prev) => ({ ...prev, email: emailToUse }));
       } else {
-        navigate("/Register/Verificacion/profesor", { replace: true });
+        navigate("/Register/Verification/profesor", { replace: true });
       }
     }
     // Para alumnoexterno no hay verificación previa

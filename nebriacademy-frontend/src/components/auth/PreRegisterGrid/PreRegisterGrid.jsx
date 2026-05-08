@@ -1,8 +1,8 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
-import familiaNebrija from "../../../assets/Iconos/familiaNebrija.png";
-import individuo from "../../../assets/Iconos/individuo.png";
-import profesor from "../../../assets/Iconos/profesor.png";
+import NebrijaFamilyIcon from "../../../assets/Icons/nebrijaFamily.png";
+import IndividualIcon from "../../../assets/Icons/individual.png";
+import ProfessorIcon from "../../../assets/Icons/professor.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Pantalla previa al registro: el usuario elige si es alumno Nebrija, alumno externo o profesor
@@ -18,9 +18,9 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-estudiante-si"
-          onClick={() => navigate("/Register/Verificacion/alumnonebrija")}
+          onClick={() => navigate("/Register/Verification/alumnonebrija")}
         >
-          <img src={familiaNebrija} alt="Familia Nebrija" />
+          <img src={NebrijaFamilyIcon} alt="Familia Nebrija" />
           <h3>Si</h3>
           <p>Estudio actualmente en un centro asociado a Nebrija</p>
         </button>
@@ -30,7 +30,7 @@ function PreRegisterGrid() {
           className="boton-estudiante-no"
           onClick={() => navigate("/Register/alumnoexterno")}
         >
-          <img src={individuo} alt="Individuo" />
+          <img src={IndividualIcon} alt="Individuo" />
           <h3>No</h3>
           <p>
             <b>No</b> estudio actualmente en un centro asociado a Nebrija
@@ -42,9 +42,9 @@ function PreRegisterGrid() {
         <button
           type="button"
           className="boton-profesor"
-          onClick={() => navigate("/Register/Verificacion/profesor")}
+          onClick={() => navigate("/Register/Verification/profesor")}
         >
-          <img src={profesor} alt="Profesor" />
+          <img src={ProfessorIcon} alt="Profesor" />
           <p>Soy profesor</p>
         </button>
       </div>

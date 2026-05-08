@@ -1,6 +1,6 @@
 import { useState } from "react";
-import Editar from "../../../../assets/Iconos/lapiz.png";
-import Eliminar from "../../../../assets/Iconos/Eliminar.png";
+import PencilIcon from "../../../../assets/Icons/pencil.png";
+import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta que muestra un vídeo dentro de la vista de un curso.
@@ -32,7 +32,7 @@ function CourseVideoCard({
                 onClick={() => handleEditNavigate("video", video)}
                 title="Editar vídeo"
               >
-                <img src={Editar} alt="Editar" />
+                <img src={PencilIcon} alt="Editar" />
               </button>
             )}
             {showDelete && (
@@ -40,7 +40,7 @@ function CourseVideoCard({
                 onClick={() => handleDeleteContenido("video", video.id)}
                 title="Borrar vídeo"
               >
-                <img src={Eliminar} alt="Borrar vídeo" />
+                <img src={DeleteIcon} alt="Borrar vídeo" />
               </button>
             )}
           </div>

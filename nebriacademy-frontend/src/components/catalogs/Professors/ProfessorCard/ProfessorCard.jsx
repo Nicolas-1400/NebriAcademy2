@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
-import ImagenDefault from "../../../../assets/Iconos/individuo.png";
+import DefaultIndividualIcon from "../../../../assets/Icons/individual.png";
 import { PERFILES } from "../../../account/ProfileImageCard/ProfileImageCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -17,7 +17,7 @@ function ProfessorCard({
   const imageSrc =
     imagenPerfil && PERFILES[imagenPerfil]
       ? PERFILES[imagenPerfil]
-      : ImagenDefault;
+      : DefaultIndividualIcon;
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (

@@ -1,17 +1,17 @@
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config/api";
-import Foto1 from "../../../assets/ImagenesCursos/Foto1.jpg";
-import Foto2 from "../../../assets/ImagenesCursos/Foto2.jpg";
-import Foto3 from "../../../assets/ImagenesCursos/Foto3.jpg";
-import Foto4 from "../../../assets/ImagenesCursos/Foto4.jpg";
-import Foto5 from "../../../assets/ImagenesCursos/Foto5.jpg";
-import Foto6 from "../../../assets/ImagenesCursos/Foto6.jpg";
-import Foto7 from "../../../assets/ImagenesCursos/Foto7.jpg";
-import Foto8 from "../../../assets/ImagenesCursos/Foto8.jpg";
-import Foto9 from "../../../assets/ImagenesCursos/Foto9.jpg";
-import Foto10 from "../../../assets/ImagenesCursos/Foto10.jpg";
-import MeGusta from "../../../assets/Iconos/me-gusta.png";
-import MeGustaMarcado from "../../../assets/Iconos/me-gusta-marcado.png";
+import Foto1 from "../../../assets/CourseImages/Foto1.jpg";
+import Foto2 from "../../../assets/CourseImages/Foto2.jpg";
+import Foto3 from "../../../assets/CourseImages/Foto3.jpg";
+import Foto4 from "../../../assets/CourseImages/Foto4.jpg";
+import Foto5 from "../../../assets/CourseImages/Foto5.jpg";
+import Foto6 from "../../../assets/CourseImages/Foto6.jpg";
+import Foto7 from "../../../assets/CourseImages/Foto7.jpg";
+import Foto8 from "../../../assets/CourseImages/Foto8.jpg";
+import Foto9 from "../../../assets/CourseImages/Foto9.jpg";
+import Foto10 from "../../../assets/CourseImages/Foto10.jpg";
+import LikeIcon from "../../../assets/Icons/like.png";
+import LikeMarkedIcon from "../../../assets/Icons/like-marked.png";
 
 const IMAGES_MAP = {
   Foto1,
@@ -82,7 +82,7 @@ function CardSlider({
             className={`card-slider-like-button ${isLiked ? "liked" : ""}`}
             onClick={() => onToggleLike?.(apunte)}
           >
-            <img src={isLiked ? MeGustaMarcado : MeGusta} alt="Like" />
+            <img src={isLiked ? LikeMarkedIcon : LikeIcon} alt="Like" />
             <span>{apunte.valoracion || 0}</span>
           </button>
         </div>
@@ -103,7 +103,7 @@ function CardSlider({
         <h3>{name}</h3>
         <p className="card-slider-nivel">Nivel: {nivel}</p>
         <p className="card-slider-valoracion">
-          <img src={MeGustaMarcado} alt="Like" />
+          <img src={LikeMarkedIcon} alt="Like" />
           <span>{valoracion || 0}</span>
         </p>
       </div>

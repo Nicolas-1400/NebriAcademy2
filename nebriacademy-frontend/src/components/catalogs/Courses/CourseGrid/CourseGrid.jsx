@@ -6,26 +6,26 @@ import { useParams, useNavigate } from "react-router-dom";
 import useToastStore from "../../../../store/toastStore";
 import useModalStore from "../../../../store/modalStore";
 
-import Foto1 from "../../../../assets/ImagenesCursos/Foto1.jpg";
-import Foto2 from "../../../../assets/ImagenesCursos/Foto2.jpg";
-import Foto3 from "../../../../assets/ImagenesCursos/Foto3.jpg";
-import Foto4 from "../../../../assets/ImagenesCursos/Foto4.jpg";
-import Foto5 from "../../../../assets/ImagenesCursos/Foto5.jpg";
-import Foto6 from "../../../../assets/ImagenesCursos/Foto6.jpg";
-import Foto7 from "../../../../assets/ImagenesCursos/Foto7.jpg";
-import Foto8 from "../../../../assets/ImagenesCursos/Foto8.jpg";
-import Foto9 from "../../../../assets/ImagenesCursos/Foto9.jpg";
-import Foto10 from "../../../../assets/ImagenesCursos/Foto10.jpg";
+import Foto1 from "../../../../assets/CourseImages/Foto1.jpg";
+import Foto2 from "../../../../assets/CourseImages/Foto2.jpg";
+import Foto3 from "../../../../assets/CourseImages/Foto3.jpg";
+import Foto4 from "../../../../assets/CourseImages/Foto4.jpg";
+import Foto5 from "../../../../assets/CourseImages/Foto5.jpg";
+import Foto6 from "../../../../assets/CourseImages/Foto6.jpg";
+import Foto7 from "../../../../assets/CourseImages/Foto7.jpg";
+import Foto8 from "../../../../assets/CourseImages/Foto8.jpg";
+import Foto9 from "../../../../assets/CourseImages/Foto9.jpg";
+import Foto10 from "../../../../assets/CourseImages/Foto10.jpg";
 
-import Flecha from "../../../../assets/Iconos/flecha-correcta.png";
-import FlechaMarcada from "../../../../assets/Iconos/flecha-correcta-marcada.png";
-import Mas from "../../../../assets/Iconos/mas.png";
-import Lapiz from "../../../../assets/Iconos/lapiz.png";
-import SalirEdicion from "../../../../assets/Iconos/lapiz-cancelar3.png";
-import CorregirEjercicio2 from "../../../../assets/Iconos/editar-archivo1.png";
-import EjercicioSubido from "../../../../assets/Iconos/subir-archivo2.png";
-import SubirEjercicio from "../../../../assets/Iconos/subir-archivo.png";
-import Eliminar from "../../../../assets/Iconos/Eliminar.png";
+import ArrowCorrect from "../../../../assets/Icons/arrow-correct.png";
+import ArrowCorrectMarked from "../../../../assets/Icons/arrow-correct-marked.png";
+import PlusIcon from "../../../../assets/Icons/plus.png";
+import PencilIcon from "../../../../assets/Icons/pencil.png";
+import PencilCancel from "../../../../assets/Icons/pencil-cancel3.png";
+import EditFile from "../../../../assets/Icons/edit-file1.png";
+import UploadFile2 from "../../../../assets/Icons/upload-file2.png";
+import UploadFile from "../../../../assets/Icons/upload-file.png";
+import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 import NoteCard from "../../Notes/NoteCard/NoteCard";
 import CourseVideoCard from "../CourseVideoCard/CourseVideoCard";
@@ -576,7 +576,7 @@ function CourseGrid() {
               >
                 <img
                   src={
-                    registroUser?.valoracion === true ? FlechaMarcada : Flecha
+                    registroUser?.valoracion === true ? ArrowCorrectMarked : ArrowCorrect
                   }
                   alt="Up"
                 />
@@ -588,7 +588,7 @@ function CourseGrid() {
               >
                 <img
                   src={
-                    registroUser?.valoracion === false ? FlechaMarcada : Flecha
+                    registroUser?.valoracion === false ? ArrowCorrectMarked : ArrowCorrect
                   }
                   alt="Down"
                 />
@@ -736,7 +736,7 @@ function CourseGrid() {
                               )
                             }
                           >
-                            <img src={CorregirEjercicio2} alt="Ver entregas" />
+                            <img src={EditFile} alt="Ver entregas" />
                           </button>
                         ) : (
                           // El alumno puede subir su entrega o ver el archivo ya subido y su nota
@@ -759,7 +759,7 @@ function CourseGrid() {
                                       className="btn-ejercicio-subido"
                                     >
                                       <img
-                                        src={EjercicioSubido}
+                                        src={UploadFile2}
                                         alt="Ver ejercicio"
                                       />
                                     </a>
@@ -778,7 +778,7 @@ function CourseGrid() {
                                         }
                                       />
                                       <img
-                                        src={SubirEjercicio}
+                                        src={UploadFile}
                                         alt="Subir"
                                         className="img-subir-ejercicio"
                                       />
@@ -967,7 +967,7 @@ function CourseGrid() {
               onClick={() => setEditingMode(!editingMode)}
               title={editingMode ? "Salir edición" : "Editar"}
             >
-              <img src={editingMode ? SalirEdicion : Lapiz} alt="Edit" />
+              <img src={editingMode ? PencilCancel : PencilIcon} alt="Edit" />
             </button>
           )}
 
@@ -990,7 +990,7 @@ function CourseGrid() {
                 }}
                 title="Añadir contenido"
               >
-                <img src={Mas} alt="Añadir contenido" />
+                <img src={PlusIcon} alt="Añadir contenido" />
               </button>
               {showAddMenu && tipo === "profesor" && (
                 <div className="add-menu">

@@ -5,7 +5,7 @@
   align-items: center;
   justify-content: space-between;
   min-height: 615px;
-  background-image: url("../../../assets/Fondos/FondoLogin.png");
+  background-image: url("../../../assets/Backgrounds/LoginBackground.png");
   background-size: cover;
   background-position: right center;
   background-repeat: no-repeat;
@@ -136,7 +136,7 @@
     min-height: auto;
     gap: 30px;
     height: 100vh;
-    background-image: url("../../../assets/Fondos/FondoLogin_rotado.png");
+    background-image: url("../../../assets/Backgrounds/LoginBackgroundRotated.png");
     background-size: cover;
     background-position: top;
     background-repeat: no-repeat;

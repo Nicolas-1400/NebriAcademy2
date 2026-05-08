@@ -2,8 +2,8 @@
 import { API_URL } from "../../../../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
-import flecha from "../../../../assets/Iconos/flecha-correcta.png";
-import ImagenPerfilDefault from "../../../../assets/Iconos/ImagenPerfilUsuario.png";
+import ArrowCorrect from "../../../../assets/Icons/arrow-correct.png";
+import DefaultProfileImage from "../../../../assets/Icons/DefaultProfileImage.png";
 import { PERFILES } from "../../../account/ProfileImageCard/ProfileImageCard";
 import CardSlider from "../../../common/Sliders/CardSlider";
 
@@ -82,7 +82,7 @@ function ProfessorInfoGrid() {
         )}
 
         <button className="boton-go-back" onClick={() => navigate(-1)}>
-          <img src={flecha} alt="Volver" />
+          <img src={ArrowCorrect} alt="Volver" />
           <p>Volver</p>
         </button>
       </div>
@@ -95,7 +95,7 @@ function ProfessorInfoGrid() {
           src={
             profesor?.imagenPerfil && PERFILES[profesor.imagenPerfil]
               ? PERFILES[profesor.imagenPerfil]
-              : ImagenPerfilDefault
+              : DefaultProfileImage
           }
           alt="Perfil Usuario"
         />

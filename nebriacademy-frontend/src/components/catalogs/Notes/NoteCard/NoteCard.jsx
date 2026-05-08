@@ -1,8 +1,8 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
-import MeGusta from "../../../../assets/Iconos/me-gusta.png";
-import MeGustaMarcado from "../../../../assets/Iconos/me-gusta-marcado.png";
-import Editar from "../../../../assets/Iconos/lapiz.png";
-import Eliminar from "../../../../assets/Iconos/Eliminar.png";
+import LikeIcon from "../../../../assets/Icons/like.png";
+import LikeMarkedIcon from "../../../../assets/Icons/like-marked.png";
+import PencilIcon from "../../../../assets/Icons/pencil.png";
+import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Tarjeta unificada para mostrar un apunte tanto en la lista global de Apuntes
@@ -64,7 +64,7 @@ function NoteCard({
                 onClick={() => handleEditNavigate("apunte", apunte)}
                 title="Editar apunte"
               >
-                <img src={Editar} alt="Editar" />
+                <img src={PencilIcon} alt="Editar" />
               </button>
             )}
             {showDelete && (
@@ -72,7 +72,7 @@ function NoteCard({
                 onClick={() => handleDeleteContenido("apunte", apunte.id)}
                 title="Borrar apunte"
               >
-                <img src={Eliminar} alt="Borrar apunte" />
+                <img src={DeleteIcon} alt="Borrar apunte" />
               </button>
             )}
           </div>
@@ -82,7 +82,7 @@ function NoteCard({
         {onToggleLike && usuario?.id && (
           <div className="apunte-like">
             <img
-              src={isLiked ? MeGustaMarcado : MeGusta}
+              src={isLiked ? LikeMarkedIcon : LikeIcon}
               alt="like"
               className={`like-icon ${isLiked ? "liked" : ""}`}
               onClick={() => onToggleLike(apunte)}

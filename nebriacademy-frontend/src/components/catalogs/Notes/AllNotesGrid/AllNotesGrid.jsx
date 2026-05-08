@@ -2,9 +2,9 @@
 import { API_URL } from "../../../../config/api";
 import { useEffect, useState, useMemo } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
-import Mas from "../../../../assets/Iconos/mas.png";
-import Lapiz from "../../../../assets/Iconos/lapiz.png";
-import SalirEdicion from "../../../../assets/Iconos/lapiz-cancelar3.png";
+import PlusIcon from "../../../../assets/Icons/plus.png";
+import PencilIcon from "../../../../assets/Icons/pencil.png";
+import PencilCancel from "../../../../assets/Icons/pencil-cancel3.png";
 import NoteCard from "../NoteCard/NoteCard";
 import SearchSidebar from "../../../common/SearchSidebar/SearchSidebar";
 import useAuthStore from "../../../../store/useAuthStore";
@@ -308,7 +308,7 @@ function AllNotesGrid() {
             onClick={() => setEditMode(!editMode)}
             title={editMode ? "Salir edición" : "Editar"}
           >
-            <img src={editMode ? SalirEdicion : Lapiz} alt="Editar" />
+            <img src={editMode ? PencilCancel : PencilIcon} alt="Editar" />
           </button>
         )}
         {tipo !== "administrador" && (
@@ -321,7 +321,7 @@ function AllNotesGrid() {
             }
             title="Subir"
           >
-            <img src={Mas} alt="Subir" />
+            <img src={PlusIcon} alt="Subir" />
           </button>
         )}
       </div>

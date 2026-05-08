@@ -6,7 +6,7 @@
   gap: 30px;
   padding: 40px;
   min-height: calc(100vh - 250px);
-  background-image: url("../../../../assets/Fondos/fondo-biblioteca.jpg");
+  background-image: url("../../../../assets/Backgrounds/library-background.jpg");
   background-position: center;
   align-items: flex-start;
 }

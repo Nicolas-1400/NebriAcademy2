@@ -13,7 +13,7 @@
   padding: 40px;
   min-height: calc(100vh - 250px);
   align-items: flex-start;
-  background-image: url("../../../../assets/Fondos/fondo-clase.jpg");
+  background-image: url("../../../../assets/Backgrounds/classroom-background.jpg");
   background-size: cover;
   background-position: center;
 }
