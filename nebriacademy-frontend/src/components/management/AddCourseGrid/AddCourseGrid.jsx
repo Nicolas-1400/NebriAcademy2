@@ -15,7 +15,7 @@ function AddCourseGrid() {
   const [categoria, setCategoria] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [nivel, setNivel] = useState("");
-  const [imagen, setImagen] = useState("Foto1");
+  const [imagen, setImagen] = useState("photo1");
 
   // Campos del apunte inicial del curso (opcional)
   const [fileApunte, setFileApunte] = useState(null);
@@ -174,7 +174,7 @@ function AddCourseGrid() {
         setCategoria("");
         setDescripcion("");
         setNivel("");
-        setImagen("Foto1");
+        setImagen("photo1");
         setFileApunte(null);
         setNombreApunte("");
         setDescripcionApunte("");

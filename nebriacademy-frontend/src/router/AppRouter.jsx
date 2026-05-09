@@ -1,30 +1,30 @@
 import { BrowserRouter, Routes, Route } from "react-router-dom";
 
 // Importamos todas las páginas de la aplicación
-import Login from "../pages/auth/Login/Login.jsx";
+import Login from "../pages/auth/Login.jsx";
 import NotFound from "../pages/common/NotFound.jsx";
-import Home from "../pages/catalogs/Home/Home.jsx";
-import MySpace from "../pages/catalogs/MySpace/MySpace.jsx";
-import AllCourses from "../pages/catalogs/Courses/AllCourses/AllCourses.jsx";
-import CourseDetail from "../pages/catalogs/Courses/CourseDetail/CourseDetail.jsx";
-import AddCourse from "../pages/management/AddCourse/AddCourse.jsx";
-import AddContent from "../pages/management/AddContent/AddContent.jsx";
-import EditContent from "../pages/management/EditContent/EditContent.jsx";
-import GradeExercises from "../pages/management/GradeExercises/GradeExercises.jsx";
-import AllProfessors from "../pages/catalogs/Professors/AllProfessors/AllProfessors.jsx";
-import ProfessorProfile from "../pages/catalogs/Professors/ProfessorProfile/ProfessorProfile.jsx";
-import AllNotes from "../pages/catalogs/Notes/AllNotes/AllNotes.jsx";
-import PreRegister from "../pages/auth/PreRegister/PreRegister.jsx";
-import Verification from "../pages/auth/AccountVerification/AccountVerification.jsx";
-import Register from "../pages/auth/Register/Register.jsx";
-import Profile from "../pages/account/Profile/Profile.jsx";
-import Help from "../pages/support/Help/Help.jsx";
-import MyTickets from "../pages/support/MyTickets/MyTickets.jsx";
-import TicketDetail from "../pages/support/TicketDetail/TicketDetail.jsx";
-import Accounts from "../pages/account/Accounts/Accounts.jsx";
-import Policies from "../pages/support/Policies/Policies.jsx";
+import Home from "../pages/catalogs/Home.jsx";
+import MySpace from "../pages/catalogs/MySpace.jsx";
+import AllCourses from "../pages/catalogs/Courses/AllCourses.jsx";
+import CourseDetail from "../pages/catalogs/Courses/CourseDetail.jsx";
+import AddCourse from "../pages/management/AddCourse.jsx";
+import AddContent from "../pages/management/AddContent.jsx";
+import EditContent from "../pages/management/EditContent.jsx";
+import GradeExercises from "../pages/management/GradeExercises.jsx";
+import AllProfessors from "../pages/catalogs/Professors/AllProfessors.jsx";
+import ProfessorInfo from "../pages/catalogs/Professors/ProfessorInfo.jsx";
+import AllNotes from "../pages/catalogs/AllNotes.jsx";
+import PreRegister from "../pages/auth/PreRegister.jsx";
+import Verification from "../pages/auth/AccountVerification.jsx";
+import Register from "../pages/auth/Register.jsx";
+import Profile from "../pages/account/Profile.jsx";
+import Help from "../pages/support/Help.jsx";
+import MyTickets from "../pages/support/MyTickets.jsx";
+import TicketDetail from "../pages/support/TicketDetail.jsx";
+import Accounts from "../pages/account/Accounts.jsx";
+import Policies from "../pages/support/Policies.jsx";
 
-import ProtectedRoute from "./ProtectedRoute";
+import ProtectedRoute from "./ProtectedRoute.jsx";
 
 function AppRouter() {
   return (
@@ -128,7 +128,7 @@ function AppRouter() {
           path="/Home/Professors/:id"
           element={
             <ProtectedRoute requiredTipo="alumno">
-              <ProfessorProfile />
+              <ProfessorInfo />
             </ProtectedRoute>
           }
         />

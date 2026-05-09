@@ -15,7 +15,7 @@ import "./components/auth/RegisterGrid/RegisterGrid.css";
 import "./components/auth/PreRegisterGrid/PreRegisterGrid.css";
 import "./components/auth/AccountVerificationGrid/AccountVerificationGrid.css";
 import "./components/catalogs/Home/Home.css";
-import "./components/catalogs/Home/MySpaceGrid/MySpaceGrid.css";
+import "./components/catalogs/MySpaceGrid/MySpaceGrid.css";
 import "./components/catalogs/Courses/AllCoursesGrid/AllCoursesGrid.css";
 import "./components/catalogs/Courses/CourseCard/CourseCard.css";
 import "./components/catalogs/Courses/CourseGrid/CourseGrid.css";

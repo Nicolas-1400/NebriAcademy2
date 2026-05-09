@@ -1,15 +1,15 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
-import Foto1 from "../../../../assets/CourseImages/Foto1.jpg";
-import Foto2 from "../../../../assets/CourseImages/Foto2.jpg";
-import Foto3 from "../../../../assets/CourseImages/Foto3.jpg";
-import Foto4 from "../../../../assets/CourseImages/Foto4.jpg";
-import Foto5 from "../../../../assets/CourseImages/Foto5.jpg";
-import Foto6 from "../../../../assets/CourseImages/Foto6.jpg";
-import Foto7 from "../../../../assets/CourseImages/Foto7.jpg";
-import Foto8 from "../../../../assets/CourseImages/Foto8.jpg";
-import Foto9 from "../../../../assets/CourseImages/Foto9.jpg";
-import Foto10 from "../../../../assets/CourseImages/Foto10.jpg";
+import photo1 from "../../../../assets/CourseImages/photo1.jpg";
+import photo2 from "../../../../assets/CourseImages/photo2.jpg";
+import photo3 from "../../../../assets/CourseImages/photo3.jpg";
+import photo4 from "../../../../assets/CourseImages/photo4.jpg";
+import photo5 from "../../../../assets/CourseImages/photo5.jpg";
+import photo6 from "../../../../assets/CourseImages/photo6.jpg";
+import photo7 from "../../../../assets/CourseImages/photo7.jpg";
+import photo8 from "../../../../assets/CourseImages/photo8.jpg";
+import photo9 from "../../../../assets/CourseImages/photo9.jpg";
+import photo10 from "../../../../assets/CourseImages/photo10.jpg";
 import LikeMarkedIcon from "../../../../assets/Icons/like-marked.png";
 import DeleteIcon from "../../../../assets/Icons/delete.png";
 
@@ -34,16 +34,16 @@ function CourseCard({
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
   // Mapa para buscar la imagen por nombre tal como viene guardada en la BDD
   const IMAGES_MAP = {
-    Foto1,
-    Foto2,
-    Foto3,
-    Foto4,
-    Foto5,
-    Foto6,
-    Foto7,
-    Foto8,
-    Foto9,
-    Foto10,
+    photo1,
+    photo2,
+    photo3,
+    photo4,
+    photo5,
+    photo6,
+    photo7,
+    photo8,
+    photo9,
+    photo10,
   };
 
   // Obtenemos la imagen del curso directamente del mapa por su nombre guardado en la BDD
@@ -73,7 +73,12 @@ function CourseCard({
       </div>
       <p className="p-profesor">{profesor}</p>
       <p className="p-valoracion">
-        <img className="like-icon-course" src={LikeMarkedIcon} alt="Valoración" /> {valoracion}
+        <img
+          className="like-icon-course"
+          src={LikeMarkedIcon}
+          alt="Valoración"
+        />{" "}
+        {valoracion}
       </p>
       {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
       {isAdmin && (
