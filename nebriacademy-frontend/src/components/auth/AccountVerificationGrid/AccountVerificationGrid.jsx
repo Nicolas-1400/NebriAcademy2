@@ -71,8 +71,8 @@ function AccountVerificationGrid({ tipo }) {
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="login-grid">
-      <div className="formulario-login-contenedor">
-        <form className="formulario-login" onSubmit={handleVerification}>
+      <div className="verification-form-container">
+        <form className="verification-form" onSubmit={handleVerification}>
           <input
             type="email"
             placeholder="Email de la familia Nebrija"
@@ -87,7 +87,7 @@ function AccountVerificationGrid({ tipo }) {
             onChange={(e) => setContrasena(e.target.value)}
             required
           />
-          {error && <p className="error-login">{error}</p>}
+          {error && <p className="verification-error-message">{error}</p>}
           <button type="submit">Verificar Cuenta</button>
         </form>
         <p>

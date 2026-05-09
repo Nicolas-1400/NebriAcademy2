@@ -77,14 +77,14 @@ export const PERFILES = {
 function ProfileImageCard({ imagenSeleccionada, onSelect }) {
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div className="grid-imagenes-perfil">
+    <div className="profile-image-grid">
       {Object.entries(PERFILES).map(([nombreArchivo, src]) => (
         <img
           key={nombreArchivo}
           src={src}
           alt={nombreArchivo}
-          // La imagen actualmente seleccionada recibe la clase "seleccionada" para resaltarse visualmente
-          className={`imagen-opcion ${imagenSeleccionada === nombreArchivo ? "seleccionada" : ""}`}
+          // La imagen actualmente seleccionada recibe la clase "selected" para resaltarse visualmente
+          className={`avatar-option ${imagenSeleccionada === nombreArchivo ? "selected" : ""}`}
           onClick={() => onSelect(nombreArchivo)}
         />
       ))}

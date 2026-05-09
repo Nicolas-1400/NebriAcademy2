@@ -59,7 +59,7 @@ function AccountsTable({
           <tbody className="table-content">
             {filteredData.length === 0 ? (
               <tr>
-                <td colSpan={headers.length} className="mensaje-vacio-table">
+                <td colSpan={headers.length} className="empty-table-message">
                   No se han encontrado {title.toLowerCase()} que coincidan con
                   la búsqueda.
                 </td>

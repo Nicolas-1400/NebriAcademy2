@@ -120,7 +120,7 @@ function Nav() {
       if (
         notificacionesRef.current &&
         !notificacionesRef.current.contains(event.target) &&
-        !event.target.closest(".campana-button")
+        !event.target.closest(".bell-button")
       ) {
         setIsNotificacionesOpen(false);
       }
@@ -333,19 +333,19 @@ function Nav() {
             Incidencias
           </button>
           <button
-            className={`button-nav ${location.pathname === "/Home/Accounts" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Accounts" ? "active" : ""}`}
             onClick={() => navigate("/Home/Accounts")}
           >
             Cuentas
           </button>
           <button
-            className={`button-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Courses" ? "active" : ""}`}
             onClick={() => navigate("/Home/Courses")}
           >
             Cursos
           </button>
           <button
-            className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Notes" ? "active" : ""}`}
             onClick={() => navigate("/Home/Notes")}
           >
             Apuntes
@@ -357,13 +357,13 @@ function Nav() {
       return (
         <div className="container-nav-elements-teacher">
           <button
-            className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Notes" ? "active" : ""}`}
             onClick={() => navigate("/Home/Notes")}
           >
             Apuntes
           </button>
           <button
-            className={`add-course-button ${location.pathname === "/Home/AddCourse" ? "activo" : ""}`}
+            className={`add-course-button ${location.pathname === "/Home/AddCourse" ? "active" : ""}`}
             onClick={() => navigate("/Home/AddCourse")}
           >
             <img
@@ -379,25 +379,25 @@ function Nav() {
     return (
       <div className="nav-button-container">
         <button
-          className={`button-nav ${location.pathname === "/Home/MySpace" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/MySpace" ? "active" : ""}`}
           onClick={() => navigate("/Home/MySpace")}
         >
           Mi espacio
         </button>
         <button
-          className={`button-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Courses" ? "active" : ""}`}
           onClick={() => navigate("/Home/Courses")}
         >
           Cursos
         </button>
         <button
-          className={`button-nav ${location.pathname === "/Home/Professors" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Professors" ? "active" : ""}`}
           onClick={() => navigate("/Home/Professors")}
         >
           Profesores
         </button>
         <button
-          className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Notes" ? "active" : ""}`}
           onClick={() => navigate("/Home/Notes")}
         >
           Apuntes

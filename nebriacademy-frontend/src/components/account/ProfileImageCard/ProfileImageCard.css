@@ -1,6 +1,6 @@
 @import "../../../styles/general.css";
 
-.grid-imagenes-perfil {
+.profile-image-grid {
   display: grid;
   grid-template-columns: repeat(4, 1fr);
   gap: 10px;
@@ -8,7 +8,7 @@
   margin-bottom: 20px;
 }
 
-.imagen-opcion {
+.avatar-option {
   width: 100%;
   border-radius: 50%;
   cursor: pointer;
@@ -18,11 +18,11 @@
     border-color 0.2s;
 }
 
-.imagen-opcion:hover {
+.avatar-option:hover {
   transform: scale(1.1);
 }
 
-.imagen-opcion.seleccionada {
+.avatar-option.selected {
   border-color: #a01b2b;
   transform: scale(1.1);
 }

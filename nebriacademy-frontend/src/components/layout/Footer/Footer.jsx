@@ -9,7 +9,7 @@ function Footer() {
   return (
     <div className="footer">
       {/* Links a las páginas legales de la aplicación */}
-      <div className="footer-politics">
+      <div className="footer-policies">
         <a href="/Home/Policies/privacyPolicy">Política de privacidad</a>
         <a href="/Home/Policies/legalNote">Nota legal</a>
         <a href="/Home/Policies/cookies">Política de cookies</a>

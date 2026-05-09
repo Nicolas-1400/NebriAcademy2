@@ -165,7 +165,7 @@
   background-image: none;
 }
 
-.hamburger-dropdown-menu .button-nav.activo {
+.hamburger-dropdown-menu .button-nav.active {
   color: var(--rojo-nebrija);
   font-weight: bold;
   background-color: var(--color-hover-button);
@@ -265,7 +265,7 @@
   border-bottom-color: var(--color-hover-button);
 }
 
-.button-nav.activo {
+.button-nav.active {
   color: white;
   border-bottom-color: white;
 }
@@ -623,7 +623,7 @@
   box-shadow: none;
 }
 
-.add-course-button.activo {
+.add-course-button.active {
   transform: scale(1.05); /* Un poco menos que el otro porque es más ancho */
   border: 2px solid var(--color-secundario);
   background-color: var(--color-hover-button);

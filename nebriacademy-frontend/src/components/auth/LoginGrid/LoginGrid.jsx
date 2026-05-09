@@ -47,9 +47,9 @@ function LoginGrid() {
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="login-grid">
-      <div className="formulario-login-contenedor">
+      <div className="login-form-container">
         {/* Formulario de login: al hacer submit se ejecuta handleLogin */}
-        <form className="formulario-login" onSubmit={handleLogin}>
+        <form className="login-form" onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Email"
@@ -66,7 +66,7 @@ function LoginGrid() {
           />
 
           {/* Mostramos el error solo si hay alguno */}
-          {error && <p className="error-login">{error}</p>}
+          {error && <p className="login-error-message">{error}</p>}
 
           <button type="submit">Iniciar Sesión</button>
         </form>

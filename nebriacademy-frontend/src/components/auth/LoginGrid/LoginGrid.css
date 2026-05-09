@@ -12,7 +12,7 @@
   padding: 40px;
 }
 
-.formulario-login-contenedor {
+.login-form-container {
   display: flex;
   flex-direction: column;
   justify-content: center;
@@ -24,14 +24,14 @@
   box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
 }
 
-.formulario-login-contenedor h2 {
+.login-form-container h2 {
   font-size: 26px;
   margin-bottom: 18px;
   font-family: "Arial", sans-serif;
   color: var(--rojo-nebrija);
 }
 
-.formulario-login {
+.login-form {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -39,8 +39,8 @@
   margin-bottom: 20px;
 }
 
-.formulario-login input,
-.formulario-login select {
+.login-form input,
+.login-form select {
   padding: 15px;
   font-size: 14px;
   border: 2px solid #ddd;
@@ -49,13 +49,13 @@
   font-family: "Arial", sans-serif;
 }
 
-.formulario-login input:focus {
+.login-form input:focus {
   outline: none;
   border-color: var(--rojo-nebrija);
   box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
 }
 
-.formulario-login button {
+.login-form button {
   padding: 15px;
   font-size: 16px;
   font-weight: bold;
@@ -67,13 +67,13 @@
   transition: all 0.3s ease;
 }
 
-.formulario-login button:hover {
+.login-form button:hover {
   background-color: var(--color-secundario);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
 }
 
-.formulario-login-contenedor a {
+.login-form-container a {
   color: var(--rojo-nebrija);
   text-decoration: none;
   font-size: 14px;
@@ -81,11 +81,11 @@
   transition: color 0.3s ease;
 }
 
-.formulario-login-contenedor a:hover {
+.login-form-container a:hover {
   text-decoration: underline;
 }
 
-.error-login {
+.login-error-message {
   text-align: center;
   color: var(--color-secundario);
 }
@@ -97,33 +97,33 @@
     gap: 25px;
   }
 
-  .formulario-login-contenedor {
+  .login-form-container {
     width: 50%;
     padding: 50px 40px;
   }
 
-  .formulario-login-contenedor h2 {
+  .login-form-container h2 {
     font-size: 24px;
     margin-bottom: 16px;
   }
 
-  .formulario-login {
+  .login-form {
     gap: 18px;
     margin-bottom: 18px;
   }
 
-  .formulario-login input,
-  .formulario-login select {
+  .login-form input,
+  .login-form select {
     padding: 14px;
     font-size: 13px;
   }
 
-  .formulario-login button {
+  .login-form button {
     padding: 14px;
     font-size: 15px;
   }
 
-  .formulario-login-contenedor a {
+  .login-form-container a {
     font-size: 13px;
   }
 }
@@ -142,18 +142,18 @@
     background-repeat: no-repeat;
   }
 
-  .formulario-login-contenedor {
+  .login-form-container {
     width: 50%;
     padding: 40px 30px;
   }
 
-  .formulario-login input,
-  .formulario-login select {
+  .login-form input,
+  .login-form select {
     padding: 12px;
     font-size: 13px;
   }
 
-  .formulario-login button {
+  .login-form button {
     padding: 12px;
     font-size: 14px;
   }

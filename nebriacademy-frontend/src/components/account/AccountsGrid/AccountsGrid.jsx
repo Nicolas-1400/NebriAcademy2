@@ -443,7 +443,7 @@ function AccountsGrid() {
             rol="alumno"
             onBlur={handleBlur}
             onDelete={handleBorrarCuenta}
-            className="t-alumnos-basicos"
+            className="t-basic-students"
           />
 
           {/* ── TABLA PROFESORES ── */}
@@ -456,7 +456,7 @@ function AccountsGrid() {
             rol="profesor"
             onBlur={handleBlur}
             onDelete={handleBorrarCuenta}
-            className="t-profesores"
+            className="t-professors"
           />
 
           {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
@@ -468,7 +468,7 @@ function AccountsGrid() {
             columnKeys={keysVinculados}
             rol="alumno-vinculado"
             getExtraCol={getNombreProfesor}
-            className="t-alumnos-vinculados"
+            className="t-linked-students"
           />
         </div>
       )}

@@ -9,7 +9,7 @@
   width: 100%;
 }
 
-.footer-politics {
+.footer-policies {
   display: flex;
   justify-content: center;
   gap: 30px;
@@ -17,7 +17,7 @@
   flex-wrap: wrap;
 }
 
-.footer-politics a {
+.footer-policies a {
   color: white;
   text-decoration: none;
   font-size: 14px;
@@ -26,7 +26,7 @@
   border-bottom: 2px solid transparent;
 }
 
-.footer-politics a:hover {
+.footer-policies a:hover {
   border-bottom: 2px solid white;
 }
 
@@ -72,12 +72,12 @@
     padding: 12px;
   }
 
-  .footer-politics {
+  .footer-policies {
     gap: 15px;
     margin-bottom: 15px;
   }
 
-  .footer-politics a {
+  .footer-policies a {
     font-size: 12px;
   }
 
@@ -108,12 +108,12 @@
     padding: 13px;
   }
 
-  .footer-politics {
+  .footer-policies {
     gap: 25px;
     margin-bottom: 18px;
   }
 
-  .footer-politics a {
+  .footer-policies a {
     font-size: 13px;
   }
 
