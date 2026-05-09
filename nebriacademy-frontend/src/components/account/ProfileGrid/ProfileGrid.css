@@ -1,7 +1,7 @@
 @import "../../../styles/general.css";
 
-/* PERFIL */
-.perfil {
+/* PROFILE */
+.profile-container {
   display: flex;
   gap: 40px;
   padding: 40px;
@@ -10,7 +10,7 @@
   margin-bottom: 100px;
 }
 
-.datosPerfil {
+.profile-details-card {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,12 +22,12 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.datosPerfil h1 {
+.profile-details-card h1 {
   font-size: 24px;
   color: var(--rojo-nebrija);
 }
 
-.imagenPerfil {
+.profile-avatar {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -35,40 +35,40 @@
   border: 3px solid var(--rojo-nebrija);
 }
 
-.nombrePerfil {
+.profile-name {
   font-size: 20px;
   color: #333;
   margin-top: 10px;
 }
 
-.correoPerfil {
+.profile-email {
   font-size: 14px;
   color: #777;
 }
 
-.tipoPerfil {
+.profile-role {
   font-size: 12px;
   color: var(--rojo-nebrija);
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.telPerfil,
-.paisPerfil,
-.localidadPerfil,
-.redesPerfil {
+.profile-phone,
+.profile-country,
+.profile-city,
+.profile-social-links {
   font-size: 13px;
   color: #666;
   margin-top: 5px;
 }
 
-.especializacionPerfil {
+.profile-specialization {
   font-size: 13px;
   color: #666;
   margin-top: 5px;
 }
 
-.formularioEditarPerfil {
+.edit-profile-form {
   width: 70%;
   background-color: white;
   padding: 30px;
@@ -76,7 +76,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.formularioEditarPerfil h3 {
+.edit-profile-form h3 {
   font-size: 22px;
   color: var(--rojo-nebrija);
   margin-bottom: 20px;
@@ -84,36 +84,36 @@
   padding-bottom: 10px;
 }
 
-.formularioEditarPerfil form {
+.edit-profile-form form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.formularioEditarPerfil form.formulario-profesor {
+.edit-profile-form form.teacher-form-layout {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.seccion-superior-form {
+.form-top-section {
   display: flex;
   gap: 30px;
   width: 100%;
 }
 
-.columna-imagen {
+.form-image-column {
   flex: 0 0 45%;
 }
 
-.columna-datos {
+.form-data-column {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.label-seccion {
+.form-section-label {
   display: block;
   font-weight: 600;
   color: #333;
@@ -121,34 +121,37 @@
   margin-bottom: 8px;
 }
 
-.formulario-grupo {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.formulario-grupo label {
+.form-group label {
   font-weight: 600;
   color: #333;
   font-size: 14px;
 }
 
-.formulario-grupo input {
+.form-group input,
+.form-group select {
   padding: 12px;
   border: 2px solid #ddd;
   border-radius: 5px;
   font-size: 14px;
   font-family: "Arial", sans-serif;
   transition: all 0.3s ease;
+  width: 100%;
 }
 
-.formulario-grupo input:focus {
+.form-group input:focus,
+.form-group select:focus {
   outline: none;
   border-color: var(--rojo-nebrija);
   box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
 }
 
-.button-editar-perfil {
+.btn-edit-profile {
   grid-column: 1 / -1;
   padding: 15px;
   background-color: var(--rojo-nebrija);
@@ -161,13 +164,13 @@
   transition: all 0.3s ease;
 }
 
-.button-editar-perfil:hover {
+.btn-edit-profile:hover {
   background-color: var(--color-secundario);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
 }
 
-.mensaje-exito {
+.message-success {
   grid-column: 1 / -1;
   padding: 12px;
   background-color: #d4edda;
@@ -179,7 +182,7 @@
   margin-bottom: 10px;
 }
 
-.mensaje-error {
+.message-error {
   grid-column: 1 / -1;
   padding: 12px;
   background-color: #f8d7da;
@@ -191,7 +194,7 @@
   margin-bottom: 10px;
 }
 
-.cursos-profesor {
+.teacher-courses-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -199,134 +202,206 @@
   padding-bottom: 20px;
 }
 
-/* RESPONSIVE Perfil 1024px */
+.btn-go-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  width: 150px;
+  height: 30px;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px black;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.btn-go-back img {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  transform: rotate(180deg);
+}
+
+.btn-go-back:hover {
+  border: 1px solid var(--color-secundario);
+  color: var(--color-secundario);
+  background-color: var(--color-hover-button);
+  transition: all 0.3s ease;
+  translate: 1px 1px;
+  box-shadow: none;
+}
+
+.btn-go-back img:hover {
+  background-color: var(--color-hover-button);
+  transition: all 0.3s ease;
+}
+
+/* RESPONSIVE Profile 1024px */
 @media (max-width: 1024px) {
-  .perfil {
+  .profile-container {
     gap: 30px;
     padding: 35px;
     margin-bottom: 70px;
   }
 
-  .datosPerfil {
+  .profile-details-card {
     width: 35%;
     padding: 25px;
   }
 
-  .datosPerfil h1 {
+  .profile-details-card h1 {
     font-size: 22px;
   }
 
-  .imagenPerfil {
+  .profile-avatar {
     width: 140px;
     height: 140px;
   }
 
-  .nombrePerfil {
+  .profile-name {
     font-size: 18px;
   }
 
-  .formularioEditarPerfil {
+  .edit-profile-form {
     width: 65%;
     padding: 25px;
   }
 
-  .formularioEditarPerfil h3 {
+  .edit-profile-form h3 {
     font-size: 20px;
     margin-bottom: 18px;
   }
 
-  .seccion-superior-form {
+  .form-top-section {
     flex-direction: column;
     gap: 20px;
   }
 
-  .columna-imagen,
-  .columna-datos {
+  .form-image-column,
+  .form-data-column {
     width: 100%;
     flex: none;
   }
 
-  .formularioEditarPerfil form.formulario-profesor {
+  .edit-profile-form form.teacher-form-layout {
     grid-template-columns: 1fr 1fr;
     gap: 18px;
   }
 
-  .formulario-grupo input {
+  .form-group input,
+  .form-group select {
     font-size: 13px;
     padding: 11px;
   }
 
-  .button-editar-perfil {
+  .btn-edit-profile {
     padding: 13px;
     font-size: 15px;
   }
+
+  .btn-go-back {
+    width: 140px;
+    height: 28px;
+    font-size: 14px;
+  }
+
+  .btn-go-back img {
+    width: 18px;
+    height: 18px;
+  }
 }
 
-/* RESPONSIVE Perfil 768px */
+/* RESPONSIVE Profile 768px */
 @media (max-width: 768px) {
-  .perfil {
+  .profile-container {
     flex-direction: column;
     gap: 20px;
     padding: 20px;
     margin-bottom: 60px;
   }
 
-  .datosPerfil {
+  .profile-details-card {
     width: 100%;
     padding: 20px;
   }
 
-  .datosPerfil h1 {
+  .profile-details-card h1 {
     font-size: 20px;
   }
 
-  .imagenPerfil {
+  .profile-avatar {
     width: 120px;
     height: 120px;
   }
 
-  .nombrePerfil {
+  .profile-name {
     font-size: 18px;
     margin-top: 8px;
   }
 
-  .correoPerfil {
+  .profile-email {
     font-size: 12px;
   }
 
-  .telPerfil,
-  .paisPerfil,
-  .especializacionPerfil {
+  .profile-phone,
+  .profile-country,
+  .profile-specialization {
     font-size: 12px;
     margin-top: 4px;
   }
 
-  .formularioEditarPerfil {
+  .edit-profile-form {
     width: 100%;
     padding: 20px;
   }
 
-  .formularioEditarPerfil h3 {
+  .edit-profile-form h3 {
     font-size: 18px;
     margin-bottom: 15px;
   }
 
-  .formulario-grupo label {
+  .form-group label {
     font-size: 13px;
   }
 
-  .formularioEditarPerfil form.formulario-profesor {
+  .edit-profile-form form.teacher-form-layout {
     grid-template-columns: 1fr;
     gap: 15px;
   }
 
-  .formulario-grupo input {
+  .form-group input,
+  .form-group select {
     padding: 10px;
     font-size: 13px;
   }
 
-  .button-editar-perfil {
+  .btn-edit-profile {
     padding: 12px;
     font-size: 14px;
+  }
+
+  .btn-go-back {
+    width: 130px;
+    height: 26px;
+    font-size: 12px;
+  }
+
+  .btn-go-back img {
+    width: 16px;
+    height: 16px;
+  }
+}
+
+/* RESPONSIVE mobile (480px) */
+@media (max-width: 480px) {
+  .btn-go-back {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }

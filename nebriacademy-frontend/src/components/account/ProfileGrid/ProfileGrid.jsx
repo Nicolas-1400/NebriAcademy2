@@ -130,18 +130,18 @@ function ProfileGrid() {
       : DefaultProfileImage;
 
   return (
-    <div className="perfil">
+    <div className="profile-container">
       {/* Panel izquierdo: datos de solo lectura */}
-      <div className="datosPerfil">
+      <div className="profile-details-card">
         <h1>Mi Perfil</h1>
         <img
-          className="imagenPerfil"
+          className="profile-avatar"
           src={imagenMostrar}
           alt="Perfil Usuario"
         />
-        <h2 className="nombrePerfil">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
-        {!user.esVinculado && <p className="correoPerfil">{user.email}</p>}
-        <p className="tipoPerfil">
+        <h2 className="profile-name">{`${user.nombre || ""} ${user.apellidos || ""}`}</h2>
+        {!user.esVinculado && <p className="profile-email">{user.email}</p>}
+        <p className="profile-role">
           {tipo === "administrador"
             ? "Administrador"
             : tipo === "profesor"
@@ -152,37 +152,37 @@ function ProfileGrid() {
         </p>
 
         {tipo === "profesor" && user.especializacion && (
-          <p className="especializacionPerfil">📚 {user.especializacion}</p>
+          <p className="profile-specialization">📚 {user.especializacion}</p>
         )}
-        {user.numTelefono && <p className="telPerfil">📱 {user.numTelefono}</p>}
-        {user.pais && <p className="paisPerfil">🌍 {user.pais}</p>}
+        {user.numTelefono && <p className="profile-phone">📱 {user.numTelefono}</p>}
+        {user.pais && <p className="profile-country">🌍 {user.pais}</p>}
         {user.localidad && (
-          <p className="localidadPerfil">🏙️ {user.localidad}</p>
+          <p className="profile-city">🏙️ {user.localidad}</p>
         )}
       </div>
 
       {/* Panel derecho: formulario para editar los datos del perfil */}
-      <div className="formularioEditarPerfil">
+      <div className="edit-profile-form">
         <h3>Editar Perfil</h3>
-        {mensajeExito && <p className="mensaje-exito">{mensajeExito}</p>}
-        {mensajeError && <p className="mensaje-error">{mensajeError}</p>}
+        {mensajeExito && <p className="message-success">{mensajeExito}</p>}
+        {mensajeError && <p className="message-error">{mensajeError}</p>}
 
         <form
           onSubmit={handleSubmit}
-          className={tipo === "profesor" ? "formulario-profesor" : ""}
+          className={tipo === "profesor" ? "teacher-form-layout" : ""}
         >
           {/* Si es profesor, usamos el layout de dos columnas para el avatar */}
           {tipo === "profesor" ? (
-            <div className="seccion-superior-form">
-              <div className="columna-imagen">
-                <label className="label-seccion">Imagen de Perfil:</label>
+            <div className="form-top-section">
+              <div className="form-image-column">
+                <label className="form-section-label">Imagen de Perfil:</label>
                 <ProfileImageCard
                   imagenSeleccionada={formData.imagenPerfil}
                   onSelect={handleImageSelect}
                 />
               </div>
 
-              <div className="columna-datos">
+              <div className="form-data-column">
                 <FormularioCampos
                   formData={formData}
                   handleChange={handleChange}
@@ -202,7 +202,7 @@ function ProfileGrid() {
 
           <button
             type="submit"
-            className="button-editar-perfil"
+            className="btn-edit-profile"
             disabled={loading}
           >
             {loading ? "Guardando..." : "Guardar Cambios"}
@@ -210,7 +210,7 @@ function ProfileGrid() {
 
           <button
             type="button"
-            className="button-go-back"
+            className="btn-go-back"
             onClick={() => navigate(-1)}
           >
             <img src={ArrowCorrect} alt="Volver" />
@@ -226,7 +226,7 @@ function ProfileGrid() {
 function FormularioCampos({ formData, handleChange, tipo, user }) {
   return (
     <>
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="nombre">Nombre:</label>
         <input
           name="nombre"
@@ -236,7 +236,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
         />
       </div>
 
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="apellidos">Apellidos:</label>
         <input
           name="apellidos"
@@ -248,7 +248,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 
       {/* Contraseña: solo para alumnos no vinculados, profesores o administradores */}
       {(!user.esVinculado || tipo !== "alumno") && (
-        <div className="formulario-grupo">
+        <div className="form-group">
           <label htmlFor="contrasena">Contraseña:</label>
           <input
             type="password"
@@ -262,7 +262,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 
       {/* Campos específicos según el tipo */}
       {tipo === "alumno" && !user.esVinculado && (
-        <div className="formulario-grupo">
+        <div className="form-group">
           <label htmlFor="numeroTarjeta">Número de Tarjeta:</label>
           <input
             name="numeroTarjeta"
@@ -275,7 +275,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
 
       {tipo === "profesor" && (
         <>
-          <div className="formulario-grupo">
+          <div className="form-group">
             <label htmlFor="numCuentaBancaria">Cuenta Bancaria:</label>
             <input
               name="numCuentaBancaria"
@@ -285,7 +285,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
             />
           </div>
 
-          <div className="formulario-grupo">
+          <div className="form-group">
             <label htmlFor="especializacion">Especialización:</label>
             <select
               name="especializacion"
@@ -310,7 +310,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
         </>
       )}
 
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="numTelefono">Teléfono:</label>
         <input
           type="tel"
@@ -321,7 +321,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
         />
       </div>
 
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="redes">Redes Sociales:</label>
         <input
           name="redes"
@@ -331,7 +331,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
         />
       </div>
 
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="pais">País:</label>
         <select name="pais" value={formData.pais} onChange={handleChange}>
           <option value="" disabled>
@@ -351,7 +351,7 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
         </select>
       </div>
 
-      <div className="formulario-grupo">
+      <div className="form-group">
         <label htmlFor="localidad">Localidad:</label>
         <select
           name="localidad"
