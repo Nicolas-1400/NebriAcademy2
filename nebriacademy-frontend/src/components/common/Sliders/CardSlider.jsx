@@ -51,7 +51,7 @@ function CardSlider({
           <p className="card-slider-author">{autorNombre || apunte.autor}</p>
           <button
             type="button"
-            className="card-slider-category card-slider-category-btn"
+            className="card-slider-category card-slider-category-button"
             onClick={(e) => {
               e.stopPropagation();
               navigate(

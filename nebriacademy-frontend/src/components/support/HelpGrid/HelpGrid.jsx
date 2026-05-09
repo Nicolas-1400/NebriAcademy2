@@ -111,7 +111,7 @@ function HelpGrid() {
             onChange={(e) => setArchivo(e.target.files[0])}
           />
         </p>
-        <button className="btn-enviar" type="submit" disabled={enviando}>
+        <button className="button-enviar" type="submit" disabled={enviando}>
           Enviar
         </button>
       </form>

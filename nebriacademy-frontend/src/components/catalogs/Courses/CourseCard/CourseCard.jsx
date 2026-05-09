@@ -59,7 +59,7 @@ function CourseCard({
       {isDeleting && (
         <button
           onClick={onDelete}
-          className="btn-delete-overlay"
+          className="button-delete-overlay"
           title="Eliminar curso"
         >
           <img src={DeleteIcon} alt="X" />
@@ -83,7 +83,7 @@ function CourseCard({
       {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
       {isAdmin && (
         <button
-          className="btn-eliminar-curso-admin-standalone"
+          className="button-eliminar-curso-admin-standalone"
           onClick={(e) => {
             e.stopPropagation();
             if (onAdminDelete) onAdminDelete();

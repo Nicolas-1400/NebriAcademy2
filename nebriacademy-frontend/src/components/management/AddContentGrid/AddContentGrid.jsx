@@ -225,12 +225,12 @@ function AddContentGrid({ tipo, idCurso }) {
         {error && <p className="error">{error}</p>}
 
         <div className="form-buttons">
-          <button type="submit" className="btn-subir" disabled={loading}>
+          <button type="submit" className="button-subir" disabled={loading}>
             {loading ? "Subiendo..." : "Subir"}
           </button>
           <button
             type="button"
-            className="btn-cancel"
+            className="button-cancel"
             onClick={() => navigate(-1)}
           >
             Cancelar

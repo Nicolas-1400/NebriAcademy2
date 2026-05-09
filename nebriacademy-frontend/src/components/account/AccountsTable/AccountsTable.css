@@ -1,33 +1,33 @@
 @import "../../../styles/general.css";
 
-.contenedor-alumnos {
+.students-container {
   background-color: #fff;
   padding: 20px;
   border-radius: 8px;
   box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
 }
 
-.contenedor-alumnos h3 {
+.students-container h3 {
   color: var(--rojo-nebrija);
   margin-bottom: 15px;
   font-size: 1.4em;
 }
 
-.tabla-contenedor {
+.table-container {
   overflow-x: auto;
   overflow-y: auto;
   max-height: 250px;
   margin-bottom: 30px;
 }
 
-.tabla {
+.table {
   width: 100%;
   border-collapse: collapse;
   font-size: 0.9em;
-  min-width: 1200px; /* Asegura que la tabla tenga ancho mínimo para scroll */
+  min-width: 1200px; /* Asegura que la table tenga ancho mínimo para scroll */
 }
 
-.head-tabla th {
+.head-table th {
   background-color: var(--rojo-nebrija);
   color: white;
   padding: 12px;
@@ -38,32 +38,32 @@
   z-index: 1;
 }
 
-.contenido-tabla td {
+.table-content td {
   padding: 10px;
   border: 1px solid #ddd;
   background-color: #ffffff;
 }
 
-.contenido-tabla tr:nth-child(even) td {
+.table-content tr:nth-child(even) td {
   background-color: #f9f9f9;
 }
 
-.contenido-tabla tr:hover td {
+.table-content tr:hover td {
   background-color: var(--color-hover-button);
 }
 
-.contenido-tabla td:hover {
+.table-content td:hover {
   background-color: #ffe0e0 !important; /* Rojo claro para hover en celda */
   cursor: pointer;
 }
 
-.contenido-tabla td[contenteditable]:focus {
+.table-content td[contenteditable]:focus {
   background-color: #fff;
   outline: 2px solid var(--rojo-nebrija);
   border-radius: 4px;
 }
 
-.contenido-tabla button {
+.table-content button {
   background-color: #dc3545;
   color: white;
   border: none;
@@ -73,22 +73,22 @@
   transition: background-color 0.3s;
 }
 
-.contenido-tabla button:hover {
+.table-content button:hover {
   background-color: #c82333;
 }
 
 /* Responsive */
 @media (max-width: 768px) {
-  .tabla {
+  .table {
     font-size: 0.8em;
   }
 
-  .head-tabla th,
-  .contenido-tabla td {
+  .head-table th,
+  .table-content td {
     padding: 8px;
   }
 
-  .contenido-tabla td[contenteditable] {
+  .table-content td[contenteditable] {
     min-width: 100px;
   }
 }

@@ -126,14 +126,15 @@ function Home() {
     const result = await showConfirm(
       "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (videos, apuntes, ejercicios...) y NO se podrá recuperar.",
       "Eliminar Curso",
-      { withInput: true }
+      { withInput: true },
     );
     if (result === false) return;
 
     try {
-      const url = typeof result === "string" && result.trim()
-        ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(result)}`
-        : `${API_URL}/cursos/${cursoId}`;
+      const url =
+        typeof result === "string" && result.trim()
+          ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(result)}`
+          : `${API_URL}/cursos/${cursoId}`;
 
       const res = await fetch(url, {
         method: "DELETE",
@@ -154,7 +155,7 @@ function Home() {
   if (loading) {
     return (
       <div className="page-container">
-        <p className="mensaje-cargando">Cargando tu espacio...</p>
+        <p className="loading-message">Cargando tu espacio...</p>
       </div>
     );
   }
@@ -178,7 +179,7 @@ function Home() {
         {isProfesor && (
           <button
             onClick={() => setIsDeleting(!isDeleting)}
-            className="btn-delete-mode"
+            className="button-delete-mode"
             title="Borrar cursos"
           >
             <img
@@ -248,7 +249,7 @@ function Home() {
               {categorias.map((categoria) => (
                 <button
                   key={categoria}
-                  className="category-btn"
+                  className="category-button"
                   onClick={() => handleCategoryClick(categoria)}
                 >
                   {categoria}

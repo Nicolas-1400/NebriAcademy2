@@ -179,13 +179,11 @@ function AllNotesGrid() {
   // Borra un apunte con confirmación y lo elimina también del estado local
   const handleDelete = async (aid) => {
     const isUIAdmin = tipo === "administrador";
-    const result = await showConfirm(
-      "¿Borrar apunte?",
-      "Borrar Apunte",
-      { withInput: isUIAdmin }
-    );
+    const result = await showConfirm("¿Borrar apunte?", "Borrar Apunte", {
+      withInput: isUIAdmin,
+    });
     if (result === false) return;
-    
+
     try {
       let url = `${API_URL}/apuntes/${aid}`;
       if (isUIAdmin && typeof result === "string" && result.trim()) {
@@ -203,7 +201,6 @@ function AllNotesGrid() {
       addToast("Error al borrar apunte", "error");
     }
   };
-
 
   // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (field, val) =>
@@ -259,7 +256,7 @@ function AllNotesGrid() {
         <h2>Apuntes</h2>
         <div className="apuntes-list-container">
           {loading ? (
-            <p className="mensaje-cargando">Cargando apuntes...</p>
+            <p className="loading-message">Cargando apuntes...</p>
           ) : processedApuntes.length > 0 ? (
             <ul className="apuntes-list">
               {processedApuntes.map((ap) => (

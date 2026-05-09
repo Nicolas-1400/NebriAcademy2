@@ -334,13 +334,13 @@ function AccountsGrid() {
   ];
 
   return (
-    <div className="contenedor-cuentas">
+    <div className="accounts-container">
       <h2>Gestión de cuentas de usuario</h2>
 
       {/* Bloque para crear cuentas nuevas de forma parcial */}
-      <div className="contenedor-nuevas-cuentas">
+      <div className="new-accounts-container">
         <h3>Crear cuenta</h3>
-        <form className="nuevas-form" onSubmit={handleCrearCuenta}>
+        <form className="new-accounts-form" onSubmit={handleCrearCuenta}>
           <input
             type="email"
             placeholder="Email"
@@ -352,15 +352,15 @@ function AccountsGrid() {
             <option value="alumno">Alumno</option>
             <option value="profesor">Profesor</option>
           </select>
-          <button className="btn-cuentas btn-crear" type="submit">
+          <button className="accounts-button create-button" type="submit">
             Crear cuenta
           </button>
         </form>
       </div>
       {/* Buscador*/}
-      <div className="contenedor-nuevas-cuentas">
+      <div className="new-accounts-container">
         <h3>Filtros de búsqueda</h3>
-        <form className="nuevas-form">
+        <form className="new-accounts-form">
           <input
             type="text"
             placeholder="Nombre"
@@ -411,7 +411,7 @@ function AccountsGrid() {
           />
           <button
             type="button"
-            className="btn-cuentas btn-crear"
+            className="accounts-button create-button"
             onClick={() =>
               setFiltros({
                 nombre: "",
@@ -430,9 +430,9 @@ function AccountsGrid() {
       </div>
 
       {loading ? (
-        <p className="mensaje-cargando">Cargando cuentas...</p>
+        <p className="loading-message">Cargando cuentas...</p>
       ) : (
-        <div className="contenedor-alumnos">
+        <div className="students-container">
           {/* ── TABLA ALUMNOS BÁSICOS ── */}
           <AccountsTable
             title="Alumnos"

@@ -37,21 +37,13 @@ function MySpaceGrid() {
           respuestaAlumnos,
           respuestaProfesores,
         ] = await Promise.all([
-          fetch(`${API_URL}/cursos`).then((respuesta) =>
-            respuesta.json(),
-          ),
+          fetch(`${API_URL}/cursos`).then((respuesta) => respuesta.json()),
           fetch(`${API_URL}/cursosalumnos`).then((respuesta) =>
             respuesta.json(),
           ),
-          fetch(`${API_URL}/apuntes`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/alumnos`).then((respuesta) =>
-            respuesta.json(),
-          ),
-          fetch(`${API_URL}/profesores`).then((respuesta) =>
-            respuesta.json(),
-          ),
+          fetch(`${API_URL}/apuntes`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/alumnos`).then((respuesta) => respuesta.json()),
+          fetch(`${API_URL}/profesores`).then((respuesta) => respuesta.json()),
         ]);
 
         setData({
@@ -119,13 +111,9 @@ function MySpaceGrid() {
   const resolveAutorName = (autorId) => {
     const aid = Number(autorId);
     if (!aid) return "";
-    const alum = data.alumnos.find(
-      (a) => Number(a.usuarioId) === aid,
-    );
+    const alum = data.alumnos.find((a) => Number(a.usuarioId) === aid);
     if (alum) return `${alum.nombre} ${alum.apellidos}`;
-    const prof = data.profesores.find(
-      (p) => Number(p.usuarioId) === aid,
-    );
+    const prof = data.profesores.find((p) => Number(p.usuarioId) === aid);
     if (prof) return `${prof.nombre} ${prof.apellidos}`;
     return "Autor no encontrado";
   };
@@ -167,7 +155,7 @@ function MySpaceGrid() {
   if (loading)
     return (
       <div className="page-container">
-        <p className="mensaje-cargando">Cargando tu espacio personal...</p>
+        <p className="loading-message">Cargando tu espacio personal...</p>
       </div>
     );
   if (error)
@@ -205,7 +193,9 @@ function MySpaceGrid() {
             ),
           )
         ) : (
-          <p className="mensaje-vacio">No hay {title.toLowerCase()} registrados.</p>
+          <p className="mensaje-vacio">
+            No hay {title.toLowerCase()} registrados.
+          </p>
         )}
       </SliderComponent>
     </div>
@@ -220,7 +210,11 @@ function MySpaceGrid() {
         {renderSection("Cursos en proceso", cursosEnProceso, "cursos-proceso")}
         {renderSection("Cursos favoritos", cursosFavoritos, "cursos-favoritos")}
         {renderSection("Tus apuntes", misApuntes, "tus-apuntes")}
-        {renderSection("Apuntes favoritos", apuntesFavoritos, "apuntes-guardados")}
+        {renderSection(
+          "Apuntes favoritos",
+          apuntesFavoritos,
+          "apuntes-guardados",
+        )}
       </div>
     </div>
   );

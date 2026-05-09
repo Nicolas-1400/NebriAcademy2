@@ -26,7 +26,9 @@
   border: 2px solid #e0e0e0;
   border-radius: 8px;
   padding: 0 10px;
-  transition: border-color 0.25s ease, box-shadow 0.25s ease;
+  transition:
+    border-color 0.25s ease,
+    box-shadow 0.25s ease;
 }
 
 .ss-search-box:focus-within {
@@ -79,14 +81,14 @@
 }
 
 /* ── Lista de botones (desktop) ────────────────────────────────── */
-.ss-btn-list {
+.ss-button-list {
   list-style: none;
   display: flex;
   flex-direction: column;
   gap: 4px;
 }
 
-.ss-filter-btn {
+.ss-filter-button {
   width: 100%;
   text-align: left;
   background: none;
@@ -97,16 +99,19 @@
   font-family: inherit;
   color: #444;
   cursor: pointer;
-  transition: background 0.18s ease, color 0.18s ease, padding-left 0.18s ease;
+  transition:
+    background 0.18s ease,
+    color 0.18s ease,
+    padding-left 0.18s ease;
 }
 
-.ss-filter-btn:hover {
+.ss-filter-button:hover {
   background-color: rgba(194, 0, 47, 0.07);
   color: var(--rojo-nebrija);
   padding-left: 15px;
 }
 
-.ss-filter-btn.ss-active {
+.ss-filter-button.ss-active {
   background-color: rgba(194, 0, 47, 0.1);
   color: var(--rojo-nebrija);
   font-weight: 700;
@@ -137,7 +142,7 @@
 }
 
 /* ── Botón limpiar filtros ─────────────────────────────────────── */
-.ss-clear-btn {
+.ss-clear-button {
   width: 100%;
   padding: 9px 12px;
   background: transparent;
@@ -147,11 +152,14 @@
   font-family: inherit;
   color: #777;
   cursor: pointer;
-  transition: background 0.18s ease, border-color 0.18s ease, color 0.18s ease;
+  transition:
+    background 0.18s ease,
+    border-color 0.18s ease,
+    color 0.18s ease;
   margin-top: 4px;
 }
 
-.ss-clear-btn:hover {
+.ss-clear-button:hover {
   background-color: rgba(194, 0, 47, 0.06);
   border-color: var(--rojo-nebrija);
   color: var(--rojo-nebrija);
@@ -190,7 +198,7 @@
   }
 
   /* En móvil ocultamos los botones y mostramos el select */
-  .ss-btn-list {
+  .ss-button-list {
     display: none;
   }
 
@@ -199,7 +207,7 @@
   }
 
   /* El botón limpiar se queda al final, tamaño automático */
-  .ss-clear-btn {
+  .ss-clear-button {
     flex: 1 1 auto;
     margin-top: 0;
     white-space: nowrap;

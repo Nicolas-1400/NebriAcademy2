@@ -126,7 +126,7 @@ function TicketDetailGrid() {
     <div className="contenedor-detalle-ticket-grid">
       <div className="detalle-ticket-left">
         <button
-          className="btn-submit"
+          className="button-submit"
           onClick={() => navigate("/Home/MyTickets")}
         >
           ← Volver a Mis Tickets
@@ -197,7 +197,7 @@ function TicketDetailGrid() {
           />
           <br />
           <button
-            className="btn-submit"
+            className="button-submit"
             type="submit"
             disabled={subiendoAdjuntos || archivosAdjuntar.length === 0}
           >
@@ -250,7 +250,7 @@ function TicketDetailGrid() {
           />
           <br />
           <button
-            className="btn-submit"
+            className="button-submit"
             type="submit"
             disabled={enviandoComentario}
           >

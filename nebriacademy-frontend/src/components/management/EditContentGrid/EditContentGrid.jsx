@@ -140,11 +140,15 @@ function EditContentGrid() {
         {error && <p className="error">{error}</p>}
 
         <div className="form-buttons">
-          <button className="btn-subir" onClick={handleSave} disabled={loading}>
+          <button
+            className="button-subir"
+            onClick={handleSave}
+            disabled={loading}
+          >
             {loading ? "Guardando..." : "Guardar"}
           </button>
           <button
-            className="btn-cancel"
+            className="button-cancel"
             onClick={() => {
               if (cursoId) {
                 navigate(`/Home/Courses/${cursoId}`);

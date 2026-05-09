@@ -1,7 +1,16 @@
 import useModalStore from "../../../store/modalStore";
 
 const ConfirmModal = () => {
-  const { isOpen, title, message, withInput, inputValue, setInputValue, confirm, cancel } = useModalStore();
+  const {
+    isOpen,
+    title,
+    message,
+    withInput,
+    inputValue,
+    setInputValue,
+    confirm,
+    cancel,
+  } = useModalStore();
 
   if (!isOpen) return null;
 
@@ -10,7 +19,7 @@ const ConfirmModal = () => {
       <div className="modal-content" onClick={(e) => e.stopPropagation()}>
         <h2>{title}</h2>
         <p>{message}</p>
-        
+
         {withInput && (
           <div className="modal-input-container">
             <textarea
@@ -23,10 +32,10 @@ const ConfirmModal = () => {
         )}
 
         <div className="modal-actions">
-          <button className="modal-btn cancel" onClick={cancel}>
+          <button className="modal-button cancel" onClick={cancel}>
             Cancelar
           </button>
-          <button className="modal-btn confirm" onClick={confirm}>
+          <button className="modal-button confirm" onClick={confirm}>
             Confirmar
           </button>
         </div>
@@ -36,4 +45,3 @@ const ConfirmModal = () => {
 };
 
 export default ConfirmModal;
-

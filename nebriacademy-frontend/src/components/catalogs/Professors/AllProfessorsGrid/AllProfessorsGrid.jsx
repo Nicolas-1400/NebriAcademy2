@@ -88,7 +88,7 @@ function AllProfessorsGrid() {
       <div className="profesores-grid">
         <h2>Profesores</h2>
         {loading ? (
-          <p className="mensaje-cargando">Cargando profesores...</p>
+          <p className="loading-message">Cargando profesores...</p>
         ) : filteredProfesores.length > 0 ? (
           <div className="profesores-contenedor">
             {filteredProfesores.map((p) => (

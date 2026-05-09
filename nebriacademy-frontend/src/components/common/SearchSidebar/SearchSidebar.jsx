@@ -1,4 +1,3 @@
-
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 /**
  * SearchSidebar — buscador + filtros laterales reutilizable.
@@ -43,7 +42,7 @@ function SearchSidebar({
           <h3 className="ss-group-title">{group.label}</h3>
 
           {/* Versión desktop: lista de botones */}
-          <ul className="ss-btn-list">
+          <ul className="ss-button-list">
             {group.options.map((opt) => {
               const isActive =
                 activeFilters[group.key] === opt.value ||
@@ -51,7 +50,7 @@ function SearchSidebar({
               return (
                 <li key={opt.value}>
                   <button
-                    className={`ss-filter-btn${isActive ? " ss-active" : ""}`}
+                    className={`ss-filter-button${isActive ? " ss-active" : ""}`}
                     onClick={() => onFilterChange?.(group.key, opt.value)}
                   >
                     {opt.label}
@@ -77,7 +76,7 @@ function SearchSidebar({
       ))}
 
       {/* ── Limpiar filtros ───────────────────────────────────────────── */}
-      <button className="ss-clear-btn" onClick={onClearAll}>
+      <button className="ss-clear-button" onClick={onClearAll}>
         ✕ Limpiar filtros
       </button>
     </aside>

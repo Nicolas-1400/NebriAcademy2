@@ -1,6 +1,5 @@
 /* --------------------------------- Sliders Unified CSS --------------------------------- */
-@import '../../../styles/general.css';
-
+@import "../../../styles/general.css";
 
 .slider-component {
   display: flex;
@@ -72,7 +71,7 @@
   display: none;
 }
 
-.carousel-btn {
+.carousel-button {
   background-color: var(--rojo-nebrija);
   color: white;
   border: none;
@@ -90,25 +89,25 @@
   flex-shrink: 0;
 }
 
-.carousel-btn:hover {
+.carousel-button:hover {
   background-color: #a00038;
   transform: scale(1.05);
 }
 
-.carousel-btn:active {
+.carousel-button:active {
   transform: scale(0.95);
 }
 
-.carousel-btn:disabled {
+.carousel-button:disabled {
   opacity: 0.5;
   cursor: not-allowed;
 }
 
-.carousel-btn-left {
+.carousel-button-left {
   order: -1;
 }
 
-.carousel-btn-right {
+.carousel-button-right {
   order: 1;
 }
 
@@ -145,7 +144,9 @@
   padding: 1rem;
   box-shadow: 0 10px 20px rgba(0, 0, 0, 0.08);
   cursor: pointer;
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
   flex: 0 0 calc(20% - 1rem);
   min-width: 220px;
   max-width: 300px;
@@ -260,13 +261,15 @@
   margin: 0;
 }
 
-.card-slider-category-btn {
+.card-slider-category-button {
   border: none;
   cursor: pointer;
-  transition: background-color 0.2s ease, transform 0.15s ease;
+  transition:
+    background-color 0.2s ease,
+    transform 0.15s ease;
 }
 
-.card-slider-category-btn:hover {
+.card-slider-category-button:hover {
   background-color: rgba(194, 0, 47, 0.22);
   transform: scale(1.04);
 }
@@ -340,4 +343,3 @@
     max-width: none;
   }
 }
-

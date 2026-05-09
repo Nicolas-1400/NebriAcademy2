@@ -151,7 +151,7 @@ pre {
 }
 
 /* Botones */
-.btn-submit {
+.button-submit {
   padding: 8px;
   margin: 10px 0;
   border: 2px solid var(--color-secundario);
@@ -162,7 +162,7 @@ pre {
   transition: all 0.2s;
   background-color: var(--rojo-nebrija);
 }
-.btn-submit:hover {
+.button-submit:hover {
   font-weight: bold;
   color: var(--rojo-nebrija);
   background-color: var(--color-hover-button);

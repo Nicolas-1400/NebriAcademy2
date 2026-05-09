@@ -195,7 +195,7 @@ function GradeExercisesGrid() {
                         placeholder="0-10"
                       />
                       <button
-                        className="btn-guardar-nota"
+                        className="button-guardar-nota"
                         onClick={() => handleSubmitScore(reg)}
                       >
                         Guardar nota
@@ -204,7 +204,7 @@ function GradeExercisesGrid() {
                   )}
                   {(tipo === "administrador" || tipo === "profesor") && (
                     <button
-                      className="btn-borrar-ejercicio"
+                      className="button-borrar-ejercicio"
                       onClick={() => handleDeleteEntrega(reg.id)}
                     >
                       Borrar entrega

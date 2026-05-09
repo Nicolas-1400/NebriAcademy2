@@ -10,7 +10,7 @@
   margin-bottom: 100px;
 }
 
-.datosPerfil {
+.profile-data {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -22,7 +22,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.datosPerfil h1 {
+.profile-data h1 {
   font-size: 24px;
   color: var(--rojo-nebrija);
 }
@@ -35,13 +35,13 @@
   border: 3px solid var(--rojo-nebrija);
 }
 
-.nombrePerfil {
+.profile-name {
   font-size: 20px;
   color: #333;
   margin-top: 10px;
 }
 
-.correoPerfil {
+.profile-email {
   font-size: 14px;
   color: #777;
 }
@@ -207,12 +207,12 @@
     margin-bottom: 70px;
   }
 
-  .datosPerfil {
+  .profile-data {
     width: 35%;
     padding: 25px;
   }
 
-  .datosPerfil h1 {
+  .profile-data h1 {
     font-size: 22px;
   }
 
@@ -241,12 +241,12 @@
     margin-bottom: 60px;
   }
 
-  .datosPerfil {
+  .profile-data {
     width: 100%;
     padding: 20px;
   }
 
-  .datosPerfil h1 {
+  .profile-data h1 {
     font-size: 20px;
   }
 
@@ -255,12 +255,12 @@
     height: 120px;
   }
 
-  .nombrePerfil {
+  .profile-name {
     font-size: 18px;
     margin-top: 8px;
   }
 
-  .correoPerfil {
+  .profile-email {
     font-size: 12px;
   }
 

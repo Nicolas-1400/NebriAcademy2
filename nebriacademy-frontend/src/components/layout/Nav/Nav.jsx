@@ -506,7 +506,7 @@ function Nav() {
                       </button>
                     ))}
                   <button
-                    className="notif-clean-btn"
+                    className="notif-clean-button"
                     onClick={handleLimpiarNotificaciones}
                   >
                     Limpiar notificaciones
@@ -594,7 +594,7 @@ function Nav() {
                         </button>
                       ))}
                     <button
-                      className="notif-clean-btn"
+                      className="notif-clean-button"
                       onClick={handleLimpiarNotificaciones}
                     >
                       Limpiar notificaciones

@@ -50,7 +50,7 @@ const SliderComponent = ({ children }) => {
   return (
     <div className="slider-component">
       <button
-        className="carousel-btn carousel-btn-left"
+        className="carousel-button carousel-button-left"
         onClick={() => handleScroll("left")}
         aria-label="Desplazar slider a la izquierda"
         disabled={!canScrollLeft}
@@ -58,14 +58,16 @@ const SliderComponent = ({ children }) => {
         ‹
       </button>
 
-      <div className={`carousel-wrapper${canScrollRight ? " fade-right" : ""}${!canScrollRight && canScrollLeft ? " fade-left" : ""}`}>
+      <div
+        className={`carousel-wrapper${canScrollRight ? " fade-right" : ""}${!canScrollRight && canScrollLeft ? " fade-left" : ""}`}
+      >
         <div ref={sliderRef} className="carousel">
           {children}
         </div>
       </div>
 
       <button
-        className="carousel-btn carousel-btn-right"
+        className="carousel-button carousel-button-right"
         onClick={() => handleScroll("right")}
         aria-label="Desplazar slider a la derecha"
         disabled={!canScrollRight}

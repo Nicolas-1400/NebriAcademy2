@@ -55,7 +55,7 @@ function ProfessorInfoGrid() {
 
   if (error) return <p className="error-msg">{error}</p>;
   if (loading)
-    return <p className="mensaje-cargando">Cargando perfil del profesor...</p>;
+    return <p className="loading-message">Cargando perfil del profesor...</p>;
 
   return (
     <div className="profesor-contenedor-principal">
@@ -88,7 +88,7 @@ function ProfessorInfoGrid() {
       </div>
 
       {/* Datos personales del profesor: foto, nombre, email, especialización, país y localidad */}
-      <div className="datosPerfil">
+      <div className="profile-data">
         <h1>Profesor</h1>
         <img
           className="imagenPerfil"
@@ -99,12 +99,12 @@ function ProfessorInfoGrid() {
           }
           alt="Perfil Usuario"
         />
-        <h2 className="nombrePerfil">
+        <h2 className="profile-name">
           {profesor
             ? `${profesor.nombre} ${profesor.apellidos}`
             : "Cargando..."}
         </h2>
-        <p className="correoPerfil">{profesor?.email}</p>
+        <p className="profile-email">{profesor?.email}</p>
         {profesor?.especializacion && (
           <p className="especializacionPerfil">📚 {profesor.especializacion}</p>
         )}

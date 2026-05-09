@@ -612,13 +612,13 @@ function CourseGrid() {
             </p>
             <p>
               <button
-                className="btn-favorito"
+                className="button-favorito"
                 onClick={() => handleLike("favorito")}
               >
                 {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
               </button>
               <button
-                className="btn-apuntarme"
+                className="button-apuntarme"
                 onClick={() => handleLike("apuntado")}
               >
                 {registroUser?.apuntado ? "✔ Apuntado" : "Apuntarme"}
@@ -745,7 +745,7 @@ function CourseGrid() {
                         {tipo === "profesor" || tipo === "administrador" ? (
                           // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
                           <button
-                            className="btn-corregir-ejercicio"
+                            className="button-corregir-ejercicio"
                             onClick={() =>
                               navigate(
                                 `/Home/Courses/${id}/GradeExercises/${e.id}`,
@@ -772,7 +772,7 @@ function CourseGrid() {
                                       href={entrega.archivo}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="btn-ejercicio-subido"
+                                      className="button-ejercicio-subido"
                                     >
                                       <img
                                         src={UploadFile2}
@@ -781,7 +781,7 @@ function CourseGrid() {
                                     </a>
                                   ) : (
                                     // Si no ha entregado, mostramos el input de subida disfrazado de botón
-                                    <label className="btn-subir-ejercicio">
+                                    <label className="button-subir-ejercicio">
                                       <input
                                         type="file"
                                         className="file-input-hidden"
@@ -877,7 +877,7 @@ function CourseGrid() {
                       setDescriptionText(curso.descripcion);
                       setEditingDescription(true);
                     }}
-                    className="btn-editar-descripcion"
+                    className="button-editar-descripcion"
                   >
                     Editar
                   </button>

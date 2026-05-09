@@ -455,7 +455,7 @@
   font-weight: 400;
 }
 
-.notif-clean-btn {
+.notif-clean-button {
   padding: 10px 16px;
   border: none;
   border-top: 1px solid #f0f0f0;
@@ -469,7 +469,7 @@
   text-align: center;
 }
 
-.notif-clean-btn:hover {
+.notif-clean-button:hover {
   background-color: var(--rojo-nebrija);
   color: white;
   font-weight: 600;

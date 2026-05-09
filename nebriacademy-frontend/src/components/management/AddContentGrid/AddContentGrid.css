@@ -74,7 +74,7 @@
   display: flex;
   gap: 8px;
 }
-.btn-subir {
+.button-subir {
   background: var(--rojo-nebrija);
   color: white;
   padding: 10px 16px;
@@ -85,13 +85,13 @@
   transition: all 0.3s ease;
 }
 
-.btn-subir:hover {
+.button-subir:hover {
   background: transparent;
   border: 2px solid var(--rojo-nebrija);
   color: var(--rojo-nebrija);
 }
 
-.btn-cancel {
+.button-cancel {
   background: #eee;
   padding: 10px 16px;
   border-radius: 8px;
@@ -100,7 +100,7 @@
   transition: all 0.3s ease;
 }
 
-.btn-cancel:hover {
+.button-cancel:hover {
   background: transparent;
   border: 2px solid var(--rojo-nebrija);
   color: var(--rojo-nebrija);
@@ -170,8 +170,8 @@
     flex-wrap: wrap;
   }
 
-  .btn-subir,
-  .btn-cancel {
+  .button-subir,
+  .button-cancel {
     padding: 8px 12px;
     font-size: 13px;
   }
@@ -189,8 +189,8 @@
     flex-direction: column;
   }
 
-  .btn-subir,
-  .btn-cancel {
+  .button-subir,
+  .button-cancel {
     width: 100%;
   }
 }

@@ -29,7 +29,7 @@
   border-color: var(--color-secundario);
 }
 
-.btn-guardar-nota {
+.button-guardar-nota {
   padding: 8px;
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
@@ -39,16 +39,16 @@
   transition: all 0.3s ease;
 }
 
-.btn-guardar-nota:hover {
+.button-guardar-nota:hover {
   background-color: var(--rojo-nebrija);
   color: white;
 }
 
-.btn-guardar-nota:active {
+.button-guardar-nota:active {
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }
-.btn-borrar-ejercicio {
+.button-borrar-ejercicio {
   padding: 8px;
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
@@ -58,12 +58,12 @@
   transition: all 0.3s ease;
 }
 
-.btn-borrar-ejercicio:hover {
+.button-borrar-ejercicio:hover {
   background-color: #a00026;
   color: white;
 }
 
-.btn-borrar-ejercicio:active {
+.button-borrar-ejercicio:active {
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }

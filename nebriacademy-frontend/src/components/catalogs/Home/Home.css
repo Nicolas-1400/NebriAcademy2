@@ -83,7 +83,7 @@
   flex-wrap: wrap;
 }
 
-.category-btn {
+.category-button {
   padding: 12px 24px;
   border: 2px solid var(--rojo-nebrija);
   background-color: white;
@@ -95,14 +95,14 @@
   transition: all 0.3s ease;
 }
 
-.category-btn:hover {
+.category-button:hover {
   background-color: var(--rojo-nebrija);
   color: white;
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(194, 0, 47, 0.2);
 }
 
-.category-btn:active {
+.category-button:active {
   transform: translateY(0);
 }
 
@@ -151,7 +151,7 @@
 }
 
 /* Botón de modo eliminar */
-.btn-delete-mode {
+.button-delete-mode {
   background: none;
   border: none;
   cursor: pointer;
@@ -159,7 +159,7 @@
   transition: transform 0.2s ease;
 }
 
-.btn-delete-mode:hover {
+.button-delete-mode:hover {
   filter: drop-shadow(0 0 5px red);
 }
 
@@ -192,7 +192,7 @@
     gap: 12px;
   }
 
-  .category-btn {
+  .category-button {
     padding: 11px 22px;
     font-size: 13px;
   }
@@ -226,7 +226,7 @@
     gap: 10px;
   }
 
-  .category-btn {
+  .category-button {
     padding: 10px 20px;
     font-size: 13px;
   }
@@ -260,7 +260,7 @@
     gap: 8px;
   }
 
-  .category-btn {
+  .category-button {
     padding: 8px 16px;
     font-size: 12px;
   }

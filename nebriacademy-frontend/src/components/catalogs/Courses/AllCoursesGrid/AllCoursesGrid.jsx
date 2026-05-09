@@ -45,16 +45,24 @@ function AllCoursesGrid() {
         const fetchPromises = [
           fetch(`${API_URL}/cursos`).then((r) => r.json()),
           fetch(`${API_URL}/profesores`).then((r) => r.json()),
-          fetch(`${API_URL}/cursos/categorias`).then((r) => r.json().catch(() => ({ categorias: [] }))),
+          fetch(`${API_URL}/cursos/categorias`).then((r) =>
+            r.json().catch(() => ({ categorias: [] })),
+          ),
         ];
 
         // Solo cargamos enrolamientos si hay un alumno logueado
         if (tipo === "alumno" && user?.id) {
-          fetchPromises.push(fetch(`${API_URL}/cursosalumnos`).then((r) => r.json()));
+          fetchPromises.push(
+            fetch(`${API_URL}/cursosalumnos`).then((r) => r.json()),
+          );
         }
 
-        const [respuestaCursos, respuestaProfesores, respuestaCategorias, respuestaEnroll] =
-          await Promise.all(fetchPromises);
+        const [
+          respuestaCursos,
+          respuestaProfesores,
+          respuestaCategorias,
+          respuestaEnroll,
+        ] = await Promise.all(fetchPromises);
 
         setData({
           cursos: respuestaCursos.Cursos || [],
@@ -72,7 +80,6 @@ function AllCoursesGrid() {
     cargarDatos();
   }, [user, tipo]);
 
-
   // Busca el nombre del profesor a partir del ID del curso para mostrarlo en la tarjeta
   const getProfesorName = (pid) => {
     const p = data.profesores.find((prof) => prof.id === pid);
@@ -84,14 +91,15 @@ function AllCoursesGrid() {
     const reason = await showConfirm(
       "¿Eliminar este curso y todo su contenido? Esta acción no se puede deshacer.",
       "Eliminar Curso",
-      { withInput: true }
+      { withInput: true },
     );
     if (reason === false) return; // Cancelado
-    
+
     try {
-      const url = reason && typeof reason === "string" 
-        ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(reason)}`
-        : `${API_URL}/cursos/${cursoId}`;
+      const url =
+        reason && typeof reason === "string"
+          ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(reason)}`
+          : `${API_URL}/cursos/${cursoId}`;
 
       const res = await fetch(url, {
         method: "DELETE",
@@ -110,7 +118,6 @@ function AllCoursesGrid() {
       addToast("Error de red", "error");
     }
   };
-
 
   // Actualiza un único campo de los filtros sin alterar los demás
   const updateFilter = (k, v) => setFilters((prev) => ({ ...prev, [k]: v }));
@@ -139,30 +146,44 @@ function AllCoursesGrid() {
     // Aplicamos filtros básicos (categoría, nivel, búsqueda)
     return list.filter((c) => {
       // Los profesores solo ven sus propios cursos si se activa algún filtro (opcional, mantener lógica actual)
-      if (tipo === "profesor" && !data.cursos.some(cur => cur.profesor === user.id)) {
+      if (
+        tipo === "profesor" &&
+        !data.cursos.some((cur) => cur.profesor === user.id)
+      ) {
         // En este proyecto parece que los profesores ven todo el catálogo
       }
 
       if (filters.category && c.categoria !== filters.category) return false;
 
-      if (filters.level && (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()) return false;
+      if (
+        filters.level &&
+        (c.nivel || "").toLowerCase() !== filters.level.toLowerCase()
+      )
+        return false;
 
-      if (filters.searchTerm && !(c.nombreCurso || "").toLowerCase().includes(filters.searchTerm.toLowerCase())) return false;
+      if (
+        filters.searchTerm &&
+        !(c.nombreCurso || "")
+          .toLowerCase()
+          .includes(filters.searchTerm.toLowerCase())
+      )
+        return false;
 
       return true;
     });
   }, [data, filters, user, tipo]);
-
 
   // ── Configuración del SearchSidebar ──────────────────────────────────────
   const viewModeOptions = [
     { label: "Todos", value: "all" },
     { label: "Populares", value: "popular" },
     { label: "Novedades", value: "novedades" },
-    ...(tipo === "alumno" ? [
-      { label: "Favoritos", value: "favoritos" },
-      { label: "Apuntados", value: "apuntados" }
-    ] : []),
+    ...(tipo === "alumno"
+      ? [
+          { label: "Favoritos", value: "favoritos" },
+          { label: "Apuntados", value: "apuntados" },
+        ]
+      : []),
   ];
 
   const filterGroups = [
@@ -199,23 +220,27 @@ function AllCoursesGrid() {
         onSearchChange={(v) => updateFilter("searchTerm", v)}
         searchPlaceholder="Buscar cursos..."
         filterGroups={filterGroups}
-        activeFilters={{ 
-          category: filters.category, 
+        activeFilters={{
+          category: filters.category,
           level: filters.level,
-          viewMode: filters.viewMode 
+          viewMode: filters.viewMode,
         }}
         onFilterChange={updateFilter}
         onClearAll={() =>
-          setFilters({ category: "", level: "", searchTerm: "", viewMode: "all" })
+          setFilters({
+            category: "",
+            level: "",
+            searchTerm: "",
+            viewMode: "all",
+          })
         }
       />
-
 
       {/* Grid principal con las tarjetas de los cursos filtrados */}
       <main className="cursos-contenedor">
         <h2>Cursos</h2>
         {loading ? (
-          <p className="mensaje-cargando">Cargando cursos...</p>
+          <p className="loading-message">Cargando cursos...</p>
         ) : filteredCursos.length > 0 ? (
           <div className="cursos-grid">
             {filteredCursos.map((c) => (

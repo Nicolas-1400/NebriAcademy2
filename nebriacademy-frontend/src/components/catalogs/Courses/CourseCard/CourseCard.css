@@ -99,7 +99,7 @@
 }
 
 /* Botón Eliminar Overlay */
-.btn-delete-overlay {
+.button-delete-overlay {
   position: absolute;
   top: 5px;
   right: 5px;
@@ -116,11 +116,11 @@
   transition: all 0.2s ease;
 }
 
-.btn-delete-overlay:hover {
+.button-delete-overlay:hover {
   background: var(--color-hover-button);
 }
 
-.btn-delete-overlay img {
+.button-delete-overlay img {
   width: 16px;
   height: 16px;
   margin: 0;
@@ -128,7 +128,7 @@
 }
 
 /* Botón Eliminar Curso Admin Independiente */
-.btn-eliminar-curso-admin-standalone {
+.button-eliminar-curso-admin-standalone {
   margin-top: 15px;
   width: 100%;
   background-color: var(--rojo-nebrija);
@@ -145,13 +145,13 @@
   transition: background-color 0.3s ease;
 }
 
-.btn-eliminar-curso-admin-standalone img {
+.button-eliminar-curso-admin-standalone img {
   width: 18px;
   height: 18px;
   filter: brightness(0) invert(1);
 }
 
-.btn-eliminar-curso-admin-standalone:hover {
+.button-eliminar-curso-admin-standalone:hover {
   background-color: #a00026;
 }
 

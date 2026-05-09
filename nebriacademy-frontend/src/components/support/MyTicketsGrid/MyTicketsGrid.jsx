@@ -47,7 +47,7 @@ function MyTicketsGrid() {
         Aquí puedes ver todos los reportes que has enviado al equipo de soporte.
       </p>
 
-      {loading && <p className="mensaje-cargando">Cargando tickets...</p>}
+      {loading && <p className="loading-message">Cargando tickets...</p>}
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && tickets.length === 0 && (
