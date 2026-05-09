@@ -109,22 +109,22 @@ function RegisterGrid({ tipo }) {
   return (
     <div
       className={
-        tipo === "alumnonebrija" ? "login-grid" : "register-grid-externo"
+        tipo === "alumnonebrija" ? "login-grid" : "register-grid-external"
       }
     >
       <div
         className={
           tipo === "alumnonebrija"
-            ? "formulario-login-contenedor"
-            : "formulario-register-contenedor"
+            ? "login-form-container"
+: "register-form-container"
         }
       >
         <h2>Regístrate</h2>
         <form
           className={
             tipo === "alumnonebrija"
-              ? "formulario-login"
-              : "formulario-register"
+              ? "login-form"
+              : "register-form"
           }
           onSubmit={handleRegister}
         >
@@ -279,7 +279,7 @@ function RegisterGrid({ tipo }) {
             </select>
           )}
 
-          {error && <p className="error-login">{error}</p>}
+          {error && <p className="register-error-message">{error}</p>}
           <button type="submit">
             {tipo === "profesor" ? "Completar Registro" : "Registrarse"}
           </button>
@@ -291,11 +291,11 @@ function RegisterGrid({ tipo }) {
       </div>
 
       {tipo === "alumnoexterno" && (
-        <div className="register-precios">
+        <div className="register-pricing">
           <h2>Precio</h2>
-          <div className="precios-contenido">
-            <div className="precio">Por solo 5.99€/mes.</div>
-            <div className="descripcion-precio">
+          <div className="pricing-content">
+            <div className="price">Por solo 5.99€/mes.</div>
+            <div className="price-description">
               <p>Acceso completo a nuestra plataforma educativa:</p>
               <ul>
                 <li>📚 Acceso ilimitado a todos los cursos disponibles</li>

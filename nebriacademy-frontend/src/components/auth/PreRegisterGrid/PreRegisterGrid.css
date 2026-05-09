@@ -19,14 +19,14 @@
   margin-bottom: 30px;
 }
 
-.contenedor-buttons {
+.buttons-container {
   display: flex;
   gap: 100px;
   margin-bottom: 30px;
 }
 
-.button-estudiante-si,
-.button-estudiante-no {
+.student-yes-button,
+.student-no-button {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -43,7 +43,7 @@
   cursor: pointer;
 }
 
-.button-profesor {
+.professor-button {
   display: flex;
   flex-direction: row;
   align-items: center;
@@ -60,21 +60,21 @@
   cursor: pointer;
 }
 
-.button-estudiante-si:hover,
-.button-estudiante-no:hover,
-.button-profesor:hover {
+.student-yes-button:hover,
+.student-no-button:hover,
+.professor-button:hover {
   border-color: var(--rojo-nebrija);
   box-shadow: 5px 5px 20px var(--rojo-nebrija);
   translate: 0 3px;
   transition: all 0.3s ease;
 }
 
-.button-estudiante-si img,
-.button-estudiante-no img {
+.student-yes-button img,
+.student-no-button img {
   width: 75px;
 }
 
-.button-profesor img {
+.professor-button img {
   width: 50px;
 }
 
@@ -92,30 +92,30 @@
     margin-bottom: 25px;
   }
 
-  .contenedor-buttons {
+  .buttons-container {
     gap: 80px;
     margin-bottom: 25px;
   }
 
-  .button-estudiante-si,
-  .button-estudiante-no {
+  .student-yes-button,
+  .student-no-button {
     width: 280px;
     height: 230px;
     font-size: 20px;
   }
 
-  .button-profesor {
+  .professor-button {
     width: 230px;
     height: 65px;
     font-size: 18px;
   }
 
-  .button-estudiante-si img,
-  .button-estudiante-no img {
+  .student-yes-button img,
+  .student-no-button img {
     width: 70px;
   }
 
-  .button-profesor img {
+  .professor-button img {
     width: 48px;
   }
 }
@@ -135,34 +135,34 @@
     margin-bottom: 20px;
   }
 
-  .contenedor-buttons {
+  .buttons-container {
     flex-direction: column;
     gap: 20px;
     margin-bottom: 20px;
     align-items: center;
   }
 
-  .button-estudiante-si,
-  .button-estudiante-no {
+  .student-yes-button,
+  .student-no-button {
     width: 100%;
     max-width: 280px;
     height: 200px;
     font-size: 18px;
   }
 
-  .button-profesor {
+  .professor-button {
     width: 100%;
     max-width: 280px;
     height: 60px;
     font-size: 16px;
   }
 
-  .button-estudiante-si img,
-  .button-estudiante-no img {
+  .student-yes-button img,
+  .student-no-button img {
     width: 60px;
   }
 
-  .button-profesor img {
+  .professor-button img {
     width: 40px;
   }
 }
