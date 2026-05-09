@@ -148,7 +148,7 @@
   box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
 }
 
-.boton-editar-perfil {
+.button-editar-perfil {
   grid-column: 1 / -1;
   padding: 15px;
   background-color: var(--rojo-nebrija);
@@ -161,7 +161,7 @@
   transition: all 0.3s ease;
 }
 
-.boton-editar-perfil:hover {
+.button-editar-perfil:hover {
   background-color: var(--color-secundario);
   transform: translateY(-2px);
   box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);

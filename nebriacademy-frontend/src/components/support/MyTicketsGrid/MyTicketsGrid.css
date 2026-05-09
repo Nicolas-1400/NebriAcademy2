@@ -46,7 +46,7 @@
 }
 
 .fila-ticket:hover {
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   cursor: pointer;
 }
 

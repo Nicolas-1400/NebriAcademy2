@@ -14,10 +14,10 @@ function PreRegisterGrid() {
     <div className="pre-register-grid">
       <h2>¿Eres estudiante de la familia Nebrija?</h2>
 
-      <div className="contenedor-botones">
+      <div className="contenedor-buttons">
         <button
           type="button"
-          className="boton-estudiante-si"
+          className="button-estudiante-si"
           onClick={() => navigate("/Register/Verification/alumnonebrija")}
         >
           <img src={NebrijaFamilyIcon} alt="Familia Nebrija" />
@@ -27,7 +27,7 @@ function PreRegisterGrid() {
 
         <button
           type="button"
-          className="boton-estudiante-no"
+          className="button-estudiante-no"
           onClick={() => navigate("/Register/alumnoexterno")}
         >
           <img src={IndividualIcon} alt="Individuo" />
@@ -41,7 +41,7 @@ function PreRegisterGrid() {
       <div>
         <button
           type="button"
-          className="boton-profesor"
+          className="button-profesor"
           onClick={() => navigate("/Register/Verification/profesor")}
         >
           <img src={ProfessorIcon} alt="Profesor" />

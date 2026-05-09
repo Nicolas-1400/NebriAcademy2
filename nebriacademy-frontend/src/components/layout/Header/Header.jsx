@@ -5,7 +5,7 @@ import Logo from "../../../assets/Icons/nebriLogo.png";
 function Header() {
   return (
     <header className="header">
-      <div className="contenedor-header">
+      <div className="header-container">
         <img className="logo-header" src={Logo} alt="Logo Nebriacademy" />
         <h1>NebriAcademy</h1>
       </div>

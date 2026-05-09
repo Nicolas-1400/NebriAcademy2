@@ -60,7 +60,7 @@
 }
 
 .apunte-categoria {
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   border: 1px solid var(--color-secundario);
   border-radius: 5px;
   padding: 2px;
@@ -109,7 +109,7 @@
   .like-icon {
     width: 15px;
     height: 15px;
-  } 
+  }
   .like-count {
     font-size: 14px;
   }
@@ -137,7 +137,7 @@
   .like-icon {
     width: 10px;
     height: 10px;
-  } 
+  }
   .like-count {
     font-size: 12px;
   }

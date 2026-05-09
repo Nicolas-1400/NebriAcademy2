@@ -113,14 +113,14 @@ function Nav() {
       if (
         menuRef.current &&
         !menuRef.current.contains(event.target) &&
-        !event.target.closest(".menu-hamburguesa-btn")
+        !event.target.closest(".hamburger-menu-button")
       ) {
         setIsMenuOpen(false);
       }
       if (
         notificacionesRef.current &&
         !notificacionesRef.current.contains(event.target) &&
-        !event.target.closest(".campana-boton")
+        !event.target.closest(".campana-button")
       ) {
         setIsNotificacionesOpen(false);
       }
@@ -320,9 +320,9 @@ function Nav() {
   const renderNavButtons = () => {
     if (tipo === "administrador") {
       return (
-        <div className="contenedor-botones-nav">
+        <div className="nav-button-container">
           <button
-            className="boton-nav"
+            className="button-nav"
             onClick={() =>
               window.open(
                 "https://asistencianebriacademy.atlassian.net/jira/software/projects/KAN/list?jql=project%20%3D%20KAN%20ORDER%20BY%20created%20DESC",
@@ -333,19 +333,19 @@ function Nav() {
             Incidencias
           </button>
           <button
-            className={`boton-nav ${location.pathname === "/Home/Accounts" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Accounts" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Accounts")}
           >
             Cuentas
           </button>
           <button
-            className={`boton-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Courses")}
           >
             Cursos
           </button>
           <button
-            className={`boton-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Notes")}
           >
             Apuntes
@@ -355,19 +355,19 @@ function Nav() {
     }
     if (tipo === "profesor") {
       return (
-        <div className="contenedor-elementos-nav-profesor">
+        <div className="container-nav-elements-teacher">
           <button
-            className={`boton-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+            className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
             onClick={() => navigate("/Home/Notes")}
           >
             Apuntes
           </button>
           <button
-            className={`boton-añadir-curso ${location.pathname === "/Home/AddCourse" ? "activo" : ""}`}
+            className={`add-course-button ${location.pathname === "/Home/AddCourse" ? "activo" : ""}`}
             onClick={() => navigate("/Home/AddCourse")}
           >
             <img
-              className="icono-boton-mas"
+              className="icon-button-plus"
               src={ButtonPlusIcon}
               alt="Añadir"
             />
@@ -377,27 +377,27 @@ function Nav() {
       );
     }
     return (
-      <div className="contenedor-botones-nav">
+      <div className="nav-button-container">
         <button
-          className={`boton-nav ${location.pathname === "/Home/MySpace" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/MySpace" ? "activo" : ""}`}
           onClick={() => navigate("/Home/MySpace")}
         >
           Mi espacio
         </button>
         <button
-          className={`boton-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Courses" ? "activo" : ""}`}
           onClick={() => navigate("/Home/Courses")}
         >
           Cursos
         </button>
         <button
-          className={`boton-nav ${location.pathname === "/Home/Professors" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Professors" ? "activo" : ""}`}
           onClick={() => navigate("/Home/Professors")}
         >
           Profesores
         </button>
         <button
-          className={`boton-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
+          className={`button-nav ${location.pathname === "/Home/Notes" ? "activo" : ""}`}
           onClick={() => navigate("/Home/Notes")}
         >
           Apuntes
@@ -412,7 +412,7 @@ function Nav() {
       <div ref={searchRef} className="search-wrapper">
         <input
           type="search"
-          className="barra-busqueda-nav"
+          className="nav-searchbar"
           placeholder="Buscar..."
           value={query}
           onChange={handleQueryChange}
@@ -423,15 +423,15 @@ function Nav() {
           }}
         />
         {isSearchOpen && suggestions.length > 0 && (
-          <ul className="sugerencias-busqueda-contenedor">
+          <ul className="search-suggestions-container">
             {suggestions.map((s) => (
               <li
                 key={`${s.type}-${s.id}`}
-                className="sugerencias-busqueda"
+                className="search-suggestions"
                 onClick={() => handleSuggestionClick(s)}
               >
-                <span className="nombre-sugerencia">{s.name}</span>
-                <span className="tipo-sugerencia">{s.type}</span>
+                <span className="suggested-name">{s.name}</span>
+                <span className="suggested-type">{s.type}</span>
               </li>
             ))}
           </ul>
@@ -444,7 +444,7 @@ function Nav() {
       {/* Logo: al hacer clic navega al Home */}
       <div
         role="button"
-        className="contenedor-logo-titulo"
+        className="title-logo-container"
         onClick={() => navigate("/Home")}
       >
         <img className="logo-nav" src={Logo} alt="Logo" />
@@ -453,9 +453,9 @@ function Nav() {
 
       {/* Campanita de notificaciones (solo móvil): a la izquierda del botón hamburguesa */}
       {usuario && (
-        <div className="campana-movil-btn" ref={notificacionesRef}>
+        <div className="mobile-bell" ref={notificacionesRef}>
           <button
-            className="bell-btn"
+            className="bell-button"
             onClick={() => {
               setIsNotificacionesOpen(!isNotificacionesOpen);
               setIsMenuOpen(false);
@@ -471,7 +471,7 @@ function Nav() {
           </button>
 
           {isNotificacionesOpen && (
-            <div className="notif-desplegable-menu notif-movil-menu">
+            <div className="notif-dropdown-menu notif-mobile-menu">
               {notificaciones.length === 0 ? (
                 <p className="no-notif">No hay notificaciones</p>
               ) : (
@@ -520,7 +520,7 @@ function Nav() {
 
       {/* Botón hamburguesa: solo visible en pantallas pequeñas */}
       <button
-        className="menu-hamburguesa-btn"
+        className="hamburger-menu-button"
         onClick={() => {
           setIsMenuOpen(!isMenuOpen);
           setIsNotificacionesOpen(false);
@@ -530,20 +530,20 @@ function Nav() {
         <img
           src={HamburgerMenuIcon}
           alt="Menu"
-          className="menu-hamburguesa-icon"
+          className="hamburger-menu-icon"
         />
       </button>
 
       {/* Zona derecha de la nav: botones, buscador e imagen de perfil */}
-      <div className="contenedor-elementos-derecha">
+      <div className="right-elements-container">
         {renderNavButtons()}
         {renderSearch()}
 
         {/* Campanita Notificaciones */}
         {usuario && (
-          <div className="notif-desplegable-container" ref={notificacionesRef}>
+          <div className="notif-dropdown-container" ref={notificacionesRef}>
             <button
-              className="bell-btn" /* perfil-button" */
+              className="bell-button" /* profile-button" */
               onClick={() => {
                 setIsNotificacionesOpen(!isNotificacionesOpen);
                 setIsdesplegableOpen(false);
@@ -552,16 +552,14 @@ function Nav() {
               }}
             >
               <img
-                src={
-                  notificaciones.length > 0 ? BellPending : BellCheck
-                }
+                src={notificaciones.length > 0 ? BellPending : BellCheck}
                 alt="Notificaciones"
                 className="bell-img"
               />
             </button>
 
             {isNotificacionesOpen && (
-              <div className="notif-desplegable-menu">
+              <div className="notif-dropdown-menu">
                 {notificaciones.length === 0 ? (
                   <p className="no-notif">No hay notificaciones</p>
                 ) : (
@@ -609,30 +607,34 @@ function Nav() {
         )}
 
         {/* Botón de perfil con desplegable para ver datos, ir al perfil o cerrar sesión */}
-        <div className="perfil-desplegable-container" ref={desplegableRef}>
+        <div className="dropdown-profile-container" ref={desplegableRef}>
           <button
-            className="perfil-button"
+            className="profile-button"
             onClick={() => {
               setIsdesplegableOpen(!isdesplegableOpen);
               setIsNotificacionesOpen(false);
               setIsSearchOpen(false);
             }}
           >
-            <Avatar 
-              name={`${usuario?.nombre} ${usuario?.apellidos}`} 
-              src={usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil] ? PERFILES[usuario.imagenPerfil] : null} 
+            <Avatar
+              name={`${usuario?.nombre} ${usuario?.apellidos}`}
+              src={
+                usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
+                  ? PERFILES[usuario.imagenPerfil]
+                  : null
+              }
               size="38px"
             />
           </button>
 
           {isdesplegableOpen && (
-            <div className="desplegable-menu">
+            <div className="dropdown-menu">
               <h3>
                 {usuario?.nombre} {usuario?.apellidos}
               </h3>
               <p>{usuario?.email}</p>
               <button
-                className="desplegable-item"
+                className="dropdown-item"
                 onClick={() => {
                   navigate("/Home/Profile");
                   setIsdesplegableOpen(false);
@@ -641,7 +643,7 @@ function Nav() {
                 Mi Perfil
               </button>
               <button
-                className="desplegable-item"
+                className="dropdown-item"
                 onClick={() => {
                   navigate("/Home/Help");
                   setIsdesplegableOpen(false);
@@ -650,7 +652,7 @@ function Nav() {
                 Ayuda
               </button>
               <button
-                className="desplegable-item"
+                className="dropdown-item"
                 onClick={() => {
                   navigate("/Home/MyTickets");
                   setIsdesplegableOpen(false);
@@ -659,14 +661,11 @@ function Nav() {
                 Mis Tickets
               </button>
               {mostrarBotonCambio && (
-                <button
-                  className="desplegable-item"
-                  onClick={handleCambiarCuenta}
-                >
+                <button className="dropdown-item" onClick={handleCambiarCuenta}>
                   {textoBtnCambio}
                 </button>
               )}
-              <button className="desplegable-item" onClick={handleLogout}>
+              <button className="dropdown-item" onClick={handleLogout}>
                 Cerrar Sesión
               </button>
             </div>
@@ -676,18 +675,18 @@ function Nav() {
 
       {/* Menú hamburguesa desplegable (versión responsive): contiene los mismos botones y el perfil */}
       {isMenuOpen && (
-        <div className="menu-hamburguesa-desplegable" ref={menuRef}>
-          <div className="contenedor-elementos-derecha-responsive">
-            <div className="perfil-desplegable-container" ref={desplegableRef}>
+        <div className="hamburger-dropdown-menu" ref={menuRef}>
+          <div className="container-right-elements-responsive">
+            <div className="dropdown-profile-container" ref={desplegableRef}>
               <button
-                className="perfil-button"
+                className="profile-button"
                 onClick={() => {
                   setIsdesplegableOpen(!isdesplegableOpen);
                   setIsNotificacionesOpen(false);
                 }}
               >
                 <img
-                  className="perfil-nav"
+                  className="profile-nav"
                   src={
                     usuario?.imagenPerfil && PERFILES[usuario.imagenPerfil]
                       ? PERFILES[usuario.imagenPerfil]
@@ -698,13 +697,13 @@ function Nav() {
               </button>
 
               {isdesplegableOpen && (
-                <div className="desplegable-menu">
+                <div className="dropdown-menu">
                   <h3>
                     {usuario?.nombre} {usuario?.apellidos}
                   </h3>
                   <p>{usuario?.email}</p>
                   <button
-                    className="desplegable-item"
+                    className="dropdown-item"
                     onClick={() => {
                       navigate("/Home/Profile");
                       setIsdesplegableOpen(false);
@@ -713,7 +712,7 @@ function Nav() {
                     Mi Perfil
                   </button>
                   <button
-                    className="desplegable-item"
+                    className="dropdown-item"
                     onClick={() => {
                       navigate("/Home/Help");
                       setIsdesplegableOpen(false);
@@ -722,7 +721,7 @@ function Nav() {
                     Ayuda
                   </button>
                   <button
-                    className="desplegable-item"
+                    className="dropdown-item"
                     onClick={() => {
                       navigate("/Home/MyTickets");
                       setIsdesplegableOpen(false);
@@ -732,13 +731,13 @@ function Nav() {
                   </button>
                   {mostrarBotonCambio && (
                     <button
-                      className="desplegable-item"
+                      className="dropdown-item"
                       onClick={handleCambiarCuenta}
                     >
                       {textoBtnCambio}
                     </button>
                   )}
-                  <button className="desplegable-item" onClick={handleLogout}>
+                  <button className="dropdown-item" onClick={handleLogout}>
                     Cerrar Sesión
                   </button>
                 </div>
@@ -755,5 +754,3 @@ function Nav() {
 }
 
 export default Nav;
-
-

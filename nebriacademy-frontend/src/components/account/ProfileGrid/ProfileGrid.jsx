@@ -5,7 +5,9 @@ import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 import DefaultProfileImage from "../../../assets/Icons/DefaultProfileImage.png";
-import ProfileImageCard, { PERFILES } from "../ProfileImageCard/ProfileImageCard";
+import ProfileImageCard, {
+  PERFILES,
+} from "../ProfileImageCard/ProfileImageCard";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Perfil del usuario (alumno/administrador/profesor): muestra sus datos y permite editarlos
@@ -200,7 +202,7 @@ function ProfileGrid() {
 
           <button
             type="submit"
-            className="boton-editar-perfil"
+            className="button-editar-perfil"
             disabled={loading}
           >
             {loading ? "Guardando..." : "Guardar Cambios"}
@@ -208,7 +210,7 @@ function ProfileGrid() {
 
           <button
             type="button"
-            className="boton-go-back"
+            className="button-go-back"
             onClick={() => navigate(-1)}
           >
             <img src={ArrowCorrect} alt="Volver" />
@@ -298,7 +300,9 @@ function FormularioCampos({ formData, handleChange, tipo, user }) {
               <option value="Ciberseguridad">Ciberseguridad</option>
               <option value="Diseño y UX">Diseño y UX</option>
               <option value="Marketing">Marketing</option>
-              <option value="Inteligencia Artificial">Inteligencia Artificial</option>
+              <option value="Inteligencia Artificial">
+                Inteligencia Artificial
+              </option>
               <option value="Desarrollo">Desarrollo</option>
               <option value="Data Science">Data Science</option>
             </select>

@@ -97,11 +97,7 @@ function EditContentGrid() {
         <p>
           <strong>Archivo actual:</strong>{" "}
           {item.archivo ? (
-            <a
-              href={item.archivo}
-              target="_blank"
-              rel="noreferrer"
-            >
+            <a href={item.archivo} target="_blank" rel="noreferrer">
               Ver archivo actual
             </a>
           ) : (
@@ -143,7 +139,7 @@ function EditContentGrid() {
 
         {error && <p className="error">{error}</p>}
 
-        <div className="form-botones">
+        <div className="form-buttons">
           <button className="btn-subir" onClick={handleSave} disabled={loading}>
             {loading ? "Guardando..." : "Guardar"}
           </button>

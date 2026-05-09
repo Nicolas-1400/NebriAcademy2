@@ -69,7 +69,7 @@
   color: #b00020;
 }
 
-.form-botones {
+.form-buttons {
   margin-top: 12px;
   display: flex;
   gap: 8px;
@@ -164,7 +164,7 @@
     font-size: 13px;
   }
 
-  .form-botones {
+  .form-buttons {
     margin-top: 10px;
     gap: 6px;
     flex-wrap: wrap;
@@ -185,7 +185,7 @@
     padding: 12px;
   }
 
-  .form-botones {
+  .form-buttons {
     flex-direction: column;
   }
 

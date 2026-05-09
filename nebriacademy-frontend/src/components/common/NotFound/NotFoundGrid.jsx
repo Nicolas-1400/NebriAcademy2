@@ -10,7 +10,7 @@ function NotFoundGrid() {
         <h2>404</h2>
         <p>Página no encontrada</p>
         {/* El botón "Volver" navega a la página anterior en el historial del navegador */}
-        <button className="boton-go-back" onClick={() => navigate(-1)}>
+        <button className="button-go-back" onClick={() => navigate(-1)}>
           <img src={ArrowCorrect} alt="Volver" />
           <p>Volver</p>
         </button>

@@ -49,7 +49,7 @@
 }
 
 .contenido-tabla tr:hover td {
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
 }
 
 .contenido-tabla td:hover {

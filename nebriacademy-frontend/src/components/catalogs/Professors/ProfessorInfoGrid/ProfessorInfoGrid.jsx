@@ -7,7 +7,6 @@ import DefaultProfileImage from "../../../../assets/Icons/DefaultProfileImage.pn
 import { PERFILES } from "../../../account/ProfileImageCard/ProfileImageCard";
 import CardSlider from "../../../common/Sliders/CardSlider";
 
-
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Página de detalle de un profesor: muestra sus datos personales y los cursos que imparte
 function ProfessorInfoGrid() {
@@ -32,9 +31,7 @@ function ProfessorInfoGrid() {
             if (!respuesta.ok) throw new Error("Error al obtener profesor");
             return respuesta.json();
           }),
-          fetch(`${API_URL}/cursos`).then((respuesta) =>
-            respuesta.json(),
-          ),
+          fetch(`${API_URL}/cursos`).then((respuesta) => respuesta.json()),
         ]);
 
         setProfesor(respuestaProfesor);
@@ -57,7 +54,8 @@ function ProfessorInfoGrid() {
   }, [id]);
 
   if (error) return <p className="error-msg">{error}</p>;
-  if (loading) return <p className="mensaje-cargando">Cargando perfil del profesor...</p>;
+  if (loading)
+    return <p className="mensaje-cargando">Cargando perfil del profesor...</p>;
 
   return (
     <div className="profesor-contenedor-principal">
@@ -78,10 +76,12 @@ function ProfessorInfoGrid() {
             ))}
           </div>
         ) : (
-          <p className="mensaje-vacio">Este profesor aún no tiene cursos publicados.</p>
+          <p className="mensaje-vacio">
+            Este profesor aún no tiene cursos publicados.
+          </p>
         )}
 
-        <button className="boton-go-back" onClick={() => navigate(-1)}>
+        <button className="button-go-back" onClick={() => navigate(-1)}>
           <img src={ArrowCorrect} alt="Volver" />
           <p>Volver</p>
         </button>

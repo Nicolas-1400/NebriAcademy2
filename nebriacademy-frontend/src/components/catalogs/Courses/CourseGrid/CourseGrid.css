@@ -105,7 +105,7 @@
    4. BOTONES DEL HEADER - VALORACIÓN, FAVORITO, APUNTARSE (ESQUINA INFERIOR DERECHA)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-header-botones {
+.curso-header-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -122,7 +122,7 @@
   transition: all 0.3s ease;
 }
 
-.curso-header-botones p {
+.curso-header-buttons p {
   display: flex;
   align-items: center;
   color: white;
@@ -321,8 +321,14 @@
 }
 
 @keyframes slideDown {
-  from { opacity: 0; transform: translateY(-10px); }
-  to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 .video-item video {
@@ -334,7 +340,6 @@
   object-fit: cover;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
 }
-
 
 /* BOTONES EDITAR Y AÑADIR CONTENIDO */
 .edit-controls {
@@ -354,11 +359,11 @@
 
 .edit-controls button:hover {
   border: 1px solid var(--rojo-nebrija);
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
 }
 
 .edit-controls button:active {
-  border: 1px solid var(--color-hover-boton);
+  border: 1px solid var(--color-hover-button);
   background-color: var(--color-secundario);
 }
 
@@ -389,7 +394,7 @@
 }
 
 .editarCurso:hover {
-  background: var(--color-hover-boton);
+  background: var(--color-hover-button);
   border: 2px solid var(--rojo-nebrija);
   box-shadow: 0 0 10px var(--color-secundario);
 }
@@ -435,7 +440,7 @@
 }
 
 .subirContenidoCurso:hover {
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   border: 2px solid var(--rojo-nebrija);
   box-shadow: 0 0 10px var(--color-secundario);
 }
@@ -477,7 +482,7 @@
 }
 
 .add-menu button:hover {
-  background: var(--color-hover-boton);
+  background: var(--color-hover-button);
   border: 1px solid var(--rojo-nebrija);
   border-radius: 6px;
 }
@@ -552,7 +557,7 @@
   width: 90%;
   gap: 8px;
 }
-.ejercicio-row-boton {
+.ejercicio-row-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -579,7 +584,7 @@
 .btn-corregir-ejercicio:hover,
 .btn-ejercicio-subido:hover,
 .btn-subir-ejercicio:hover {
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   border-color: var(--rojo-nebrija);
   transition: all 0.3s ease;
   translate: 2px 2px;
@@ -611,7 +616,7 @@
   margin-top: 10px;
   width: 70px;
   font-weight: bold;
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   border: 1px solid var(--color-secundario);
   border-radius: 5px;
   padding: 4px 8px;
@@ -904,7 +909,7 @@
     min-height: 350px;
   }
 
-  .curso-header-botones {
+  .curso-header-buttons {
     flex-shrink: 0;
   }
 
@@ -943,7 +948,7 @@
     min-height: 300px;
   }
 
-  .curso-header-botones {
+  .curso-header-buttons {
     align-self: flex-end;
     gap: 10px;
   }
@@ -963,11 +968,11 @@
     font-size: 24px;
   }
 
-  .curso-header-botones p {
+  .curso-header-buttons p {
     font-size: 12px;
   }
 
-  .curso-header-botones button {
+  .curso-header-buttons button {
     padding: 8px 12px;
     font-size: 11px;
   }

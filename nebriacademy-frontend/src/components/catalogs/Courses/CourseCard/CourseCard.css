@@ -117,7 +117,7 @@
 }
 
 .btn-delete-overlay:hover {
-  background: var(--color-hover-boton);
+  background: var(--color-hover-button);
 }
 
 .btn-delete-overlay img {

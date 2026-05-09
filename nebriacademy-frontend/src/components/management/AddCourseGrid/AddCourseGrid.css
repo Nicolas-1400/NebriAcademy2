@@ -44,7 +44,7 @@
   padding: 10px;
   border: 1px solid var(--rojo-nebrija);
   border-radius: 5px;
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   width: 95%;
 }
 
@@ -78,7 +78,7 @@
   resize: vertical;
 }
 
-.boton-editar-perfil {
+.button-editar-perfil {
   width: 100%;
   padding: 12px;
   background-color: var(--rojo-nebrija);
@@ -89,7 +89,7 @@
   cursor: pointer;
 }
 
-.boton-go-back {
+.button-go-back {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -108,24 +108,24 @@
   transition: color 0.3s ease;
 }
 
-.boton-go-back img {
+.button-go-back img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
   transform: rotate(180deg);
 }
 
-.boton-go-back:hover {
+.button-go-back:hover {
   border: 1px solid var(--color-secundario);
   color: var(--color-secundario);
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
   transition: all 0.3s ease;
   translate: 1px 1px;
   box-shadow: none;
 }
 
-.boton-go-back img:hover {
-  background-color: var(--color-hover-boton);
+.button-go-back img:hover {
+  background-color: var(--color-hover-button);
   transition: all 0.3s ease;
 }
 
@@ -180,13 +180,13 @@
     min-height: 130px;
   }
 
-  .boton-go-back {
+  .button-go-back {
     width: 140px;
     height: 28px;
     font-size: 14px;
   }
 
-  .boton-go-back img {
+  .button-go-back img {
     width: 18px;
     height: 18px;
   }
@@ -224,18 +224,18 @@
     min-height: 100px;
   }
 
-  .boton-editar-perfil {
+  .button-editar-perfil {
     padding: 10px;
     font-size: 14px;
   }
 
-  .boton-go-back {
+  .button-go-back {
     width: 130px;
     height: 26px;
     font-size: 12px;
   }
 
-  .boton-go-back img {
+  .button-go-back img {
     width: 16px;
     height: 16px;
   }
@@ -257,7 +257,7 @@
     padding: 12px;
   }
 
-  .boton-go-back {
+  .button-go-back {
     width: 100%;
     margin-bottom: 10px;
   }

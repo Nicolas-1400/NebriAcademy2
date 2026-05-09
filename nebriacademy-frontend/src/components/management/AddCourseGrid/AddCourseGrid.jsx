@@ -356,16 +356,16 @@ function AddCourseGrid() {
             {/* Galería de imágenes para elegir la portada del curso */}
             <CourseBackgroundCard selectedImage={imagen} onSelect={setImagen} />
 
-            <div className="botones-cont">
+            <div className="buttons-cont">
               {success && <p className="mensaje-exito">{success}</p>}
               {error && <p className="mensaje-error">{error}</p>}
 
-              <button type="submit" className="boton-editar-perfil">
+              <button type="submit" className="button-editar-perfil">
                 Crear curso
               </button>
               <button
                 type="button"
-                className="boton-go-back"
+                className="button-go-back"
                 onClick={() => navigate("/Home")}
               >
                 <img src={ArrowCorrect} alt="Volver" />

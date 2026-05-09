@@ -165,5 +165,5 @@ pre {
 .btn-submit:hover {
   font-weight: bold;
   color: var(--rojo-nebrija);
-  background-color: var(--color-hover-boton);
+  background-color: var(--color-hover-button);
 }

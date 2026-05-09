@@ -18,13 +18,16 @@ function AddContentGrid({ tipo, idCurso }) {
   const idToUse = idCurso || idParam;
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
-  const cursoId = isCourseContent 
-    ? (state?.cursoId || (idToUse && Number(idToUse) > 0 ? Number(idToUse) : null))
+  const cursoId = isCourseContent
+    ? state?.cursoId ||
+      (idToUse && Number(idToUse) > 0 ? Number(idToUse) : null)
     : null;
 
   // El tipo inicial depende de si es curso (puede ser video/ejercicio) o individual (solo apunte)
   const initialTipo = isCourseContent
-    ? (tipoUsuario !== "profesor" ? "apunte" : state?.tipo || "apunte")
+    ? tipoUsuario !== "profesor"
+      ? "apunte"
+      : state?.tipo || "apunte"
     : "apunte";
 
   const [tipoContenido, setTipoContenido] = useState(initialTipo);
@@ -39,7 +42,7 @@ function AddContentGrid({ tipo, idCurso }) {
   const [loading, setLoading] = useState(false);
 
   // ── EFECTOS ─────────────────────────────────────────────────────────────────
-  
+
   // Caso 1: Contenido de CURSO (Cargamos categoría del curso automáticamente)
   useEffect(() => {
     if (isCourseContent && cursoId) {
@@ -47,7 +50,7 @@ function AddContentGrid({ tipo, idCurso }) {
         .then((respuesta) => (respuesta.ok ? respuesta.json() : null))
         .then((datos) => {
           if (datos && datos.categoria) {
-            setFormData(prev => ({ ...prev, categoria: datos.categoria }));
+            setFormData((prev) => ({ ...prev, categoria: datos.categoria }));
           }
         })
         .catch((error) => console.error("Error cargando curso:", error));
@@ -60,7 +63,9 @@ function AddContentGrid({ tipo, idCurso }) {
       fetch(`${API_URL}/apuntes/categorias`)
         .then((respuesta) => respuesta.json())
         .then((datos) =>
-          setCategorias(Array.isArray(datos.categorias) ? datos.categorias : []),
+          setCategorias(
+            Array.isArray(datos.categorias) ? datos.categorias : [],
+          ),
         )
         .catch((error) => console.error("Error cargando categorias:", error));
     }
@@ -92,11 +97,11 @@ function AddContentGrid({ tipo, idCurso }) {
       const form = new FormData();
       form.append("nombre", formData.nombre);
       form.append("archivo", file);
-      
+
       if (isCourseContent && cursoId) {
         form.append("curso", cursoId);
       }
-      
+
       if (formData.categoria) {
         form.append("categoria", formData.categoria);
       }
@@ -141,18 +146,20 @@ function AddContentGrid({ tipo, idCurso }) {
   return (
     <div className="addcontenidocursogrid">
       <h2>
-        {isCourseContent 
-          ? `Añadir ${tipoContenido} al curso` 
+        {isCourseContent
+          ? `Añadir ${tipoContenido} al curso`
           : "Añadir apuntes"}
       </h2>
-      
+
       <form onSubmit={handleSubmit} className="add-contenido-form">
         <div className="form-group">
           <label>Nombre</label>
           <input
             className="input-area"
             value={formData.nombre}
-            onChange={(e) => setFormData({ ...formData, nombre: e.target.value })}
+            onChange={(e) =>
+              setFormData({ ...formData, nombre: e.target.value })
+            }
             required
           />
         </div>
@@ -163,23 +170,29 @@ function AddContentGrid({ tipo, idCurso }) {
             <label>Descripción</label>
             <textarea
               value={formData.descripcion}
-              onChange={(e) => setFormData({ ...formData, descripcion: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, descripcion: e.target.value })
+              }
             />
           </div>
         )}
 
         <div className="form-group">
           <label>
-            Archivo {tipoContenido === "video" 
-              ? "(se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm)" 
-              : "(se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar)"} (máximo 20 MB)
+            Archivo{" "}
+            {tipoContenido === "video"
+              ? "(se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm)"
+              : "(se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar)"}{" "}
+            (máximo 20 MB)
           </label>
           <input
             className="input-area"
             type="file"
-            accept={tipoContenido === "video" 
-              ? ".mp4, .mov, .avi, .mkv, .wmv, .webm" 
-              : ".txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip, .rar"}
+            accept={
+              tipoContenido === "video"
+                ? ".mp4, .mov, .avi, .mkv, .wmv, .webm"
+                : ".txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip, .rar"
+            }
             onChange={(e) => setFile(e.target.files?.[0] || null)}
             required
           />
@@ -195,7 +208,9 @@ function AddContentGrid({ tipo, idCurso }) {
             <select
               className="input-area"
               value={formData.categoria}
-              onChange={(e) => setFormData({ ...formData, categoria: e.target.value })}
+              onChange={(e) =>
+                setFormData({ ...formData, categoria: e.target.value })
+              }
             >
               <option value="">-- Selecciona categoría --</option>
               {categorias.map((c) => (
@@ -209,7 +224,7 @@ function AddContentGrid({ tipo, idCurso }) {
 
         {error && <p className="error">{error}</p>}
 
-        <div className="form-botones">
+        <div className="form-buttons">
           <button type="submit" className="btn-subir" disabled={loading}>
             {loading ? "Subiendo..." : "Subir"}
           </button>

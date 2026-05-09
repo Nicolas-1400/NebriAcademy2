@@ -579,7 +579,7 @@ function CourseGrid() {
 
         {/* Botones de valoración, favorito y apuntarme: solo para alumnos */}
         {tipo === "alumno" && (
-          <div className="curso-header-botones">
+          <div className="curso-header-buttons">
             <p>
               <strong>Valoración: </strong>
               <button
@@ -628,7 +628,7 @@ function CourseGrid() {
         )}
         {/* El profesor o los administradores, solo ven la valoración total, sin poder votar */}
         {(tipo === "profesor" || tipo === "administrador") && (
-          <div className="curso-header-botones">
+          <div className="curso-header-buttons">
             <p>
               <strong>Valoración: {curso.valoracion || 0}</strong>
             </p>
@@ -741,7 +741,7 @@ function CourseGrid() {
                           handleDeleteContenido={handleDeleteItem}
                         />
                       </div>
-                      <div className="ejercicio-row-boton">
+                      <div className="ejercicio-row-button">
                         {tipo === "profesor" || tipo === "administrador" ? (
                           // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
                           <button

@@ -218,7 +218,7 @@ function GradeExercisesGrid() {
       ) : (
         <p>No hay entregas para este ejercicio.</p>
       )}
-      <button className="boton-go-back" onClick={() => navigate(-1)}>
+      <button className="button-go-back" onClick={() => navigate(-1)}>
         <img src={ArrowCorrect} alt="Volver" />
         <p>Volver</p>
       </button>

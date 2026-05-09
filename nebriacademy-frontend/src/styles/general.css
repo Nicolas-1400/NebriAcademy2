@@ -1,80 +1,89 @@
-
 /* ESTILOS GENERALES */
 
 * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
 }
 
 body {
-    font-family: 'Arial', sans-serif;
-    color: #000000;
-    background-color: var(--color-fondo);
+  font-family: "Arial", sans-serif;
+  color: #000000;
+  background-color: var(--color-fondo);
 }
 
 /*VARIABLES*/
 :root {
-    --rojo-nebrija: #C2002F;
-    --color-secundario: #d92552d1;
-    --color-fondo:#ebebeb;
-    --color-hover-boton: #ffe0e0;
-
+  --rojo-nebrija: #c2002f;
+  --color-secundario: #d92552d1;
+  --color-fondo: #ebebeb;
+  --color-hover-button: #ffe0e0;
 }
 
 /* ESTILOS DE CARGA Y ESTADOS VACÍOS */
-.mensaje-cargando, .mensaje-vacio {
-    text-align: center;
-    padding: 3rem 1rem;
-    font-size: 1.2rem;
-    color: #666;
-    width: 100%;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    justify-content: center;
-    gap: 1rem;
+.mensaje-cargando,
+.mensaje-vacio {
+  text-align: center;
+  padding: 3rem 1rem;
+  font-size: 1.2rem;
+  color: #666;
+  width: 100%;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 1rem;
 }
 
 .mensaje-cargando {
-    font-weight: 500;
-    color: var(--rojo-nebrija);
-    animation: fadeIn 0.5s ease-in-out;
+  font-weight: 500;
+  color: var(--rojo-nebrija);
+  animation: fadeIn 0.5s ease-in-out;
 }
 
 .mensaje-cargando::after {
-    content: "";
-    width: 30px;
-    height: 30px;
-    border: 3px solid #f3f3f3;
-    border-top: 3px solid var(--rojo-nebrija);
-    border-radius: 50%;
-    animation: spin 1s linear infinite;
+  content: "";
+  width: 30px;
+  height: 30px;
+  border: 3px solid #f3f3f3;
+  border-top: 3px solid var(--rojo-nebrija);
+  border-radius: 50%;
+  animation: spin 1s linear infinite;
 }
 
 .mensaje-vacio {
-    background: rgba(255, 255, 255, 0.5);
-    border-radius: 12px;
-    border: 1px dashed #ccc;
-    margin: 1rem 0;
+  background: rgba(255, 255, 255, 0.5);
+  border-radius: 12px;
+  border: 1px dashed #ccc;
+  margin: 1rem 0;
 }
 
 .mensaje-vacio-tabla {
-    text-align: center;
-    padding: 2rem !important;
-    color: #888;
-    font-style: italic;
-    background: rgba(0,0,0,0.02);
+  text-align: center;
+  padding: 2rem !important;
+  color: #888;
+  font-style: italic;
+  background: rgba(0, 0, 0, 0.02);
 }
 
 @keyframes spin {
-    0% { transform: rotate(0deg); }
-    100% { transform: rotate(360deg); }
+  0% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(360deg);
+  }
 }
 
 @keyframes fadeIn {
-    from { opacity: 0; transform: translateY(10px); }
-    to { opacity: 1; transform: translateY(0); }
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
 }
 
 /* ── SCROLLBAR PERSONALIZADO ── */
@@ -103,4 +112,3 @@ body {
   scrollbar-width: thin;
   scrollbar-color: var(--rojo-nebrija) #f1f1f1;
 }
-

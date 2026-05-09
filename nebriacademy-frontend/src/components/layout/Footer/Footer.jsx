@@ -9,14 +9,14 @@ function Footer() {
   return (
     <div className="footer">
       {/* Links a las páginas legales de la aplicación */}
-      <div className="footer-politicas">
+      <div className="footer-politics">
         <a href="/Home/Policies/privacyPolicy">Política de privacidad</a>
         <a href="/Home/Policies/legalNote">Nota legal</a>
         <a href="/Home/Policies/cookies">Política de cookies</a>
       </div>
 
       {/* Iconos de redes sociales que enlazan a los perfiles oficiales */}
-      <div className="footer-redes">
+      <div className="footer-socialmedia">
         <a
           href="https://www.linkedin.com/school/universidad-nebrija/"
           alt="LinkedIn"
