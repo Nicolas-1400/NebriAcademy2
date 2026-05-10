@@ -107,27 +107,10 @@ function RegisterGrid({ tipo }) {
   const isEmailDisabled = tipo === "alumnonebrija" || tipo === "profesor";
 
   return (
-    <div
-      className={
-        tipo === "alumnonebrija" ? "login-grid" : "register-grid-external"
-      }
-    >
-      <div
-        className={
-          tipo === "alumnonebrija"
-            ? "login-form-container"
-: "register-form-container"
-        }
-      >
+    <div className="auth-grid register-ext">
+      <div className="auth-form-container">
         <h2>Regístrate</h2>
-        <form
-          className={
-            tipo === "alumnonebrija"
-              ? "login-form"
-              : "register-form"
-          }
-          onSubmit={handleRegister}
-        >
+        <form className="auth-form" onSubmit={handleRegister}>
           {isEmailDisabled && (
             <input
               name="email"

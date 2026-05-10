@@ -46,10 +46,10 @@ function LoginGrid() {
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div className="login-grid">
-      <div className="login-form-container">
+    <div className="auth-grid">
+      <div className="auth-form-container">
         {/* Formulario de login: al hacer submit se ejecuta handleLogin */}
-        <form className="login-form" onSubmit={handleLogin}>
+        <form className="auth-form" onSubmit={handleLogin}>
           <input
             type="email"
             placeholder="Email"

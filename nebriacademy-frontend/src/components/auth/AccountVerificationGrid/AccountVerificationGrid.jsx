@@ -70,9 +70,9 @@ function AccountVerificationGrid({ tipo }) {
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div className="login-grid">
-      <div className="verification-form-container">
-        <form className="verification-form" onSubmit={handleVerification}>
+    <div className="auth-grid">
+      <div className="auth-form-container">
+        <form className="auth-form" onSubmit={handleVerification}>
           <input
             type="email"
             placeholder="Email de la familia Nebrija"

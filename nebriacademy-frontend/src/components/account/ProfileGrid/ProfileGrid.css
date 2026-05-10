@@ -55,8 +55,7 @@
 
 .profile-phone,
 .profile-country,
-.profile-city,
-.profile-social-links {
+.profile-city {
   font-size: 13px;
   color: #666;
   margin-top: 5px;
@@ -192,14 +191,6 @@
   font-size: 14px;
   text-align: center;
   margin-bottom: 10px;
-}
-
-.teacher-courses-list {
-  display: flex;
-  flex-direction: row;
-  flex-wrap: wrap;
-  gap: 20px;
-  padding-bottom: 20px;
 }
 
 .btn-go-back {

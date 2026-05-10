@@ -261,7 +261,7 @@ function AllCoursesGrid() {
             ))}
           </div>
         ) : (
-          <p className="mensaje-vacio">No se han encontrado cursos.</p>
+          <p className="empty-message">No se han encontrado cursos.</p>
         )}
       </main>
     </div>

@@ -292,7 +292,7 @@ function AllNotesGrid() {
               ))}
             </ul>
           ) : (
-            <p className="mensaje-vacio">No se han encontrado apuntes.</p>
+            <p className="empty-message">No se han encontrado apuntes.</p>
           )}
         </div>
       </main>

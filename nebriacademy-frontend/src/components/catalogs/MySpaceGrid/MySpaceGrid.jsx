@@ -193,7 +193,7 @@ function MySpaceGrid() {
             ),
           )
         ) : (
-          <p className="mensaje-vacio">
+          <p className="empty-message">
             No hay {title.toLowerCase()} registrados.
           </p>
         )}

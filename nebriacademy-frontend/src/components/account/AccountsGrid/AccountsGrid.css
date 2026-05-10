@@ -72,12 +72,7 @@
   background-color: var(--color-secundario);
 }
 
-.loading-message {
-  text-align: center;
-  font-size: 1.2em;
-  color: var(--rojo-nebrija);
-  margin: 20px 0;
-}
+
 
 /* Responsive */
 @media (max-width: 768px) {

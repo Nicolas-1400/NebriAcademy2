@@ -59,7 +59,7 @@
 }
 
 /* Mensaje vacío */
-.mensaje-vacio {
+.empty-message {
   color: #000000;
   font-size: 14px;
   font-style: italic;

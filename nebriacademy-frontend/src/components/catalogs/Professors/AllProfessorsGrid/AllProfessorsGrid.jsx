@@ -103,7 +103,7 @@ function AllProfessorsGrid() {
             ))}
           </div>
         ) : (
-          <p className="mensaje-vacio">No se han encontrado profesores.</p>
+          <p className="empty-message">No se han encontrado profesores.</p>
         )}
       </div>
     </div>

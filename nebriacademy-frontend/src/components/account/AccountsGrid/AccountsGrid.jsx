@@ -432,7 +432,7 @@ function AccountsGrid() {
       {loading ? (
         <p className="loading-message">Cargando cuentas...</p>
       ) : (
-        <div className="students-container">
+        <div className="tables-container">
           {/* ── TABLA ALUMNOS BÁSICOS ── */}
           <AccountsTable
             title="Alumnos"
@@ -443,7 +443,6 @@ function AccountsGrid() {
             rol="alumno"
             onBlur={handleBlur}
             onDelete={handleBorrarCuenta}
-            className="t-basic-students"
           />
 
           {/* ── TABLA PROFESORES ── */}
@@ -456,7 +455,6 @@ function AccountsGrid() {
             rol="profesor"
             onBlur={handleBlur}
             onDelete={handleBorrarCuenta}
-            className="t-professors"
           />
 
           {/* ── TABLA ALUMNOS VINCULADOS A PROFESORES ── */}
@@ -468,7 +466,6 @@ function AccountsGrid() {
             columnKeys={keysVinculados}
             rol="alumno-vinculado"
             getExtraCol={getNombreProfesor}
-            className="t-linked-students"
           />
         </div>
       )}

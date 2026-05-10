@@ -210,7 +210,7 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="mensaje-vacio">
+                <p className="empty-message">
                   No se han encontrado cursos en esta sección.
                 </p>
               )}
@@ -234,7 +234,7 @@ function Home() {
                     />
                   ))
                 ) : (
-                  <p className="mensaje-vacio">
+                  <p className="empty-message">
                     Aún no estás apuntado a ningún curso. ¡Explora el catálogo!
                   </p>
                 )}
@@ -274,7 +274,7 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="mensaje-vacio">
+                <p className="empty-message">
                   No se han encontrado cursos en esta sección.
                 </p>
               )}
@@ -287,7 +287,7 @@ function Home() {
           <h2>Tus cursos</h2>
           <div className="grid-courses">
             {misCursos().length === 0 ? (
-              <p className="mensaje-vacio">Aún no has creado ningún curso.</p>
+              <p className="empty-message">Aún no has creado ningún curso.</p>
             ) : (
               misCursos().map((c) => (
                 <CourseCard

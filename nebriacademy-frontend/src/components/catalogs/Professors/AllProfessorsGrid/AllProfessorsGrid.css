@@ -47,7 +47,7 @@
   flex: 0 0 240px;
 }
 
-.mensaje-vacio,
+.empty-message,
 .TodosProfesoresGrid > p {
   color: #999;
   font-size: 14px;

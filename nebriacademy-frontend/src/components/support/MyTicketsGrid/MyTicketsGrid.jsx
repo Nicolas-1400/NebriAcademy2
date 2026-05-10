@@ -51,7 +51,7 @@ function MyTicketsGrid() {
       {error && <p className="error">{error}</p>}
 
       {!loading && !error && tickets.length === 0 && (
-        <p className="mensaje-vacio">
+        <p className="empty-message">
           No se han encontrado tickets reportados.
         </p>
       )}

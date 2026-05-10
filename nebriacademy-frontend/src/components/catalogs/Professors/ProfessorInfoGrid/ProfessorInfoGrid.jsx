@@ -76,7 +76,7 @@ function ProfessorInfoGrid() {
             ))}
           </div>
         ) : (
-          <p className="mensaje-vacio">
+          <p className="empty-message">
             Este profesor aún no tiene cursos publicados.
           </p>
         )}
