@@ -66,18 +66,18 @@ function HelpGrid() {
   };
 
   return (
-    <div className="contenedor-ayuda">
+    <div className="help-container">
       <h1>Solicita ayuda al equipo de soporte de Nebriacademy</h1>
       <h3>
         ¿Necesitas ayuda con algo?
         <br />
         Escríbenos y resolveremos tu problema lo antes posible.
       </h3>
-      <form className="form-ayuda" onSubmit={handleSubmit}>
+      <form className="help-form" onSubmit={handleSubmit}>
         <p>
           Selecciona qué quieres reportar
           <select
-            className="seleccion-report"
+            className="report-selection"
             name="tipoReporte"
             value={tipoReporte}
             onChange={(e) => setTipoReporte(e.target.value)}
@@ -94,7 +94,7 @@ function HelpGrid() {
           Describe el problema o mejora
           <br />
           <textarea
-            className="descripcion-contenedor"
+            className="description-container"
             name="descripcion"
             value={descripcion}
             onChange={(e) => setDescripcion(e.target.value)}
@@ -105,18 +105,18 @@ function HelpGrid() {
           ¿Tienes alguna imagen, video o documento? Adjúntalo para que podamos
           entender mejor el problema (Máximo 10MB):
           <input
-            className="seleccion-archivo"
+            className="file-selection"
             type="file"
             id="archivoIncidencia"
             onChange={(e) => setArchivo(e.target.files[0])}
           />
         </p>
-        <button className="button-enviar" type="submit" disabled={enviando}>
+        <button className="send-button" type="submit" disabled={enviando}>
           Enviar
         </button>
       </form>
       {enviando && (
-        <span className="text-enviar">
+        <span className="sending-text">
           Enviando tu reporte a Jira, espera un momento...
         </span>
       )}
