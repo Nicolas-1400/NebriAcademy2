@@ -137,16 +137,16 @@ function TicketDetailGrid() {
           <p>
             <strong>Estado: </strong>
             <span
-              className={`estado-ticket ${(() => {
+              className={`ticket-status ${(() => {
                 switch ((ticket.estado || "").toLowerCase()) {
                   case "por hacer":
-                    return "por-hacer";
+                    return "to-do";
                   case "en curso":
-                    return "en-curso";
+                    return "in-progress";
                   case "esperando al cliente":
-                    return "esperando-cliente";
+                    return "waiting-for-client";
                   case "resuelto":
-                    return "resuelto";
+                    return "resolved";
                   default:
                     return "";
                 }

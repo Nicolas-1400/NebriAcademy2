@@ -36,7 +36,7 @@ function StudentSubmissionCard({ registro }) {
         </a>
 
         {alumnoNombre && (
-          <div className="subtitulo">Subido por: {alumnoNombre}</div>
+          <div className="subtitulo-subido">Subido por: {alumnoNombre}</div>
         )}
 
         {descripcion && <p className="mt-2">{descripcion}</p>}

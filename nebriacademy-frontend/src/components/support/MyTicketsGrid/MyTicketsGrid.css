@@ -1,7 +1,7 @@
 @import "../../../styles/general.css";
 
 /* ---------------------------------MisTicketsGrid--------------------------------- */
-.contenedor-mis-tickets {
+.my-tickets-container {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -12,51 +12,42 @@
   border-radius: 8px;
 }
 
-.contenedor-mis-tickets h1 {
+.my-tickets-container h1 {
   color: var(--rojo-nebrija);
   margin-bottom: 10px;
   border-bottom: 2px solid var(--rojo-nebrija);
 }
 
-.subtitulo {
+.my-tickets-subtitle {
   color: var(--color-primario);
   text-align: center;
   margin-bottom: 20px;
 }
 
-.tabla-tickets {
+.tickets-table {
   width: 100%;
   border-collapse: collapse;
 }
 
-.titulo-columna th {
+.column-title th {
   background-color: var(--rojo-nebrija);
   color: white;
   padding: 10px;
   border-left: 1px solid white;
 }
 
-.titulo-columna th:first-child {
+.column-title th:first-child {
   border-left: none;
 }
 
-.cuerpo-tabla td {
+.table-body td {
   padding: 10px;
   border: 1px solid var(--rojo-nebrija);
 }
 
-.fila-ticket:hover {
+.ticket-row:hover {
   background-color: var(--color-hover-button);
   cursor: pointer;
-}
-
-.cargando {
-  padding: 8px;
-  margin: 10px;
-  background-color: rgba(128, 128, 128, 0.233);
-  border-radius: 5px;
-  color: gray;
-  font-style: italic;
 }
 
 .error {
@@ -78,7 +69,7 @@
 }
 
 /* Tipo de ticket */
-.td-resumen span.primer-palabra {
+.td-summary span.first-word {
   color: var(--rojo-nebrija);
   font-weight: bold;
   background-color: rgb(225, 225, 225);
@@ -87,29 +78,29 @@
 }
 
 /* Estado del ticket */
-.td-estado {
+.td-status {
   text-align: center;
 }
 
-.estado-ticket {
+.ticket-status {
   font-weight: bold;
   padding: 4px 8px;
   border-radius: 4px;
 }
 
-.estado-ticket.por-hacer {
+.ticket-status.to-do {
   background-color: #e0e0e0;
   color: #555;
 }
-.estado-ticket.en-curso {
+.ticket-status.in-progress {
   background-color: #1976d2;
   color: white;
 }
-.estado-ticket.esperando-cliente {
+.ticket-status.waiting-for-client {
   background-color: #90caf9;
   color: #0d47a1;
 }
-.estado-ticket.resuelto {
+.ticket-status.resolved {
   background-color: #43a047;
   color: white;
 }

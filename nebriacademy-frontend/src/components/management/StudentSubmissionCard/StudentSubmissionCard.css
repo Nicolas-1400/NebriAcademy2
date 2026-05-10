@@ -67,3 +67,9 @@
   background-color: var(--color-secundario);
   border-color: var(--color-secundario);
 }
+
+.subtitulo-subido {
+  color: var(--color-primario);
+  text-align: center;
+  margin-bottom: 20px;
+}

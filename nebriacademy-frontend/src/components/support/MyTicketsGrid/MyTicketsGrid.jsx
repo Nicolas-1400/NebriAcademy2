@@ -41,9 +41,9 @@ function MyTicketsGrid() {
   };
 
   return (
-    <div className="contenedor-mis-tickets">
+    <div className="my-tickets-container">
       <h1>Mis Tickets</h1>
-      <p className="subtitulo">
+      <p className="my-tickets-subtitle">
         Aquí puedes ver todos los reportes que has enviado al equipo de soporte.
       </p>
 
@@ -57,8 +57,8 @@ function MyTicketsGrid() {
       )}
 
       {!loading && tickets.length > 0 && (
-        <table className="tabla-tickets">
-          <thead className="titulo-columna">
+        <table className="tickets-table">
+          <thead className="column-title">
             <tr>
               <th>Asunto</th>
               <th>Estado</th>
@@ -66,36 +66,36 @@ function MyTicketsGrid() {
               <th>Última actualización</th>
             </tr>
           </thead>
-          <tbody className="cuerpo-tabla">
+          <tbody className="table-body">
             {tickets.map((t) => (
               <tr
-                className="fila-ticket"
+                className="ticket-row"
                 key={t.key}
                 onClick={() => navigate(`/Home/MyTickets/${t.key}`)}
               >
-                <td className="td-resumen">
+                <td className="td-summary">
                   {(() => {
                     const [primera, ...resto] = t.resumen.split(" ");
                     return (
                       <>
-                        <span className="primer-palabra">{primera}</span>
+                        <span className="first-word">{primera}</span>
                         {resto.length > 0 ? " " + resto.join(" ") : ""}
                       </>
                     );
                   })()}
                 </td>
-                <td className="td-estado">
+                <td className="td-status">
                   <span
-                    className={`estado-ticket ${(() => {
+                    className={`ticket-status ${(() => {
                       switch ((t.estado || "").toLowerCase()) {
                         case "por hacer":
-                          return "por-hacer";
+                          return "to-do";
                         case "en curso":
-                          return "en-curso";
+                          return "in-progress";
                         case "esperando al cliente":
-                          return "esperando-cliente";
+                          return "waiting-for-client";
                         case "resuelto":
-                          return "resuelto";
+                          return "resolved";
                         default:
                           return "";
                       }
