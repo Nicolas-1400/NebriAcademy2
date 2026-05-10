@@ -25,10 +25,14 @@ import Accounts from "../pages/account/Accounts.jsx";
 import Policies from "../pages/support/Policies.jsx";
 
 import ProtectedRoute from "./ProtectedRoute.jsx";
+import ScrollToTop from "../components/common/ScrollToTop/ScrollToTop.jsx";
+
 
 function AppRouter() {
   return (
     <BrowserRouter>
+      <ScrollToTop />
+
       <Routes>
         {/* Rutas públicas: accesibles sin estar logueado */}
         <Route path="/" element={<Login />} />
