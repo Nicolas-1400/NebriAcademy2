@@ -123,8 +123,8 @@ function TicketDetailGrid() {
   if (!ticket) return null;
 
   return (
-    <div className="contenedor-detalle-ticket-grid">
-      <div className="detalle-ticket-left">
+    <div className="container-detail-ticket-grid">
+      <div className="detail-ticket-left">
         <button
           className="button-submit"
           onClick={() => navigate("/Home/MyTickets")}
@@ -189,7 +189,7 @@ function TicketDetailGrid() {
         <h3>Adjuntar nuevos archivos</h3>
         <form onSubmit={handleSubirAdjuntos}>
           <input
-            className="subir-archivos"
+            className="upload-files"
             type="file"
             multiple
             accept="image/*,video/*,.pdf,.doc,.docx,.txt"
@@ -204,13 +204,13 @@ function TicketDetailGrid() {
             {subiendoAdjuntos ? "Subiendo..." : "Subir archivos"}
           </button>
           {mensajeAdjuntos && (
-            <p className="mensaje-adjuntos">{mensajeAdjuntos}</p>
+            <p className="attached-message">{mensajeAdjuntos}</p>
           )}
         </form>
       </div>
-      <div className="detalle-ticket-chat">
+      <div className="detail-ticket-chat">
         <h2>Chat</h2>
-        <div className="chat-comentarios">
+        <div className="chat-comments">
           {ticket.comentarios.length === 0 && (
             <p className="no-tickets">Aún no hay comentarios en este ticket.</p>
           )}
@@ -229,12 +229,12 @@ function TicketDetailGrid() {
               : c.texto;
 
             return (
-              <div key={c.id} className="mensaje-chat">
+              <div key={c.id} className="chat-message">
                 <div className="chat-header">
                   {autorVisible}
-                  <span className="chat-fecha">{formatFecha(c.fecha)}</span>
+                  <span className="chat-date">{formatFecha(c.fecha)}</span>
                 </div>
-                <div className="chat-texto">{textoVisible}</div>
+                <div className="chat-text">{textoVisible}</div>
               </div>
             );
           })}

@@ -1,7 +1,7 @@
 @import "../../../styles/general.css";
 
 /* ---------------------------------TicketDetailGrid--------------------------------- */
-.contenedor-detalle-ticket-grid {
+.container-detail-ticket-grid {
   display: flex;
   flex-direction: row;
   gap: 32px;
@@ -14,7 +14,7 @@
   border: 2px solid var(--rojo-nebrija);
   border-radius: 8px;
 }
-.detalle-ticket-left {
+.detail-ticket-left {
   flex: 2;
   min-width: 350px;
   background-color: white;
@@ -22,7 +22,7 @@
   border: 2px solid var(--rojo-nebrija);
   border-radius: 8px;
 }
-.detalle-ticket-chat {
+.detail-ticket-chat {
   flex: 1;
   min-width: 320px;
   background: white;
@@ -35,19 +35,19 @@
   border-radius: 8px;
 }
 
-.detalle-ticket-chat h2 {
+.detail-ticket-chat h2 {
   margin-bottom: 18px;
   border-bottom: 2px solid var(--rojo-nebrija);
 }
 
 /* Chat comentarios */
-.chat-comentarios {
+.chat-comments {
   display: flex;
   flex-direction: column;
   gap: 12px;
   margin-bottom: 18px;
 }
-.mensaje-chat {
+.chat-message {
   background: white;
   border: 1px solid gray;
   border-radius: 6px;
@@ -62,12 +62,12 @@
   margin-bottom: 4px;
   color: var(--rojo-nebrija);
 }
-.chat-fecha {
+.chat-date {
   font-size: 0.9em;
   color: #888;
   margin-left: 8px;
 }
-.chat-texto {
+.chat-text {
   font-size: 1em;
   color: #333;
   word-break: break-word;
@@ -83,24 +83,24 @@
 }
 
 /* Contenedor Left */
-.detalle-ticket-left h1 {
+.detail-ticket-left h1 {
   margin-bottom: 12px;
   border-bottom: 2px solid var(--rojo-nebrija);
   padding-bottom: 4px;
   font-size: 1.3rem;
 }
 
-.detalle-ticket-left h2,
-.detalle-ticket-left h3 {
+.detail-ticket-left h2,
+.detail-ticket-left h3 {
   margin-top: 24px;
   margin-bottom: 8px;
   border-bottom: 2px solid var(--rojo-nebrija);
   width: fit-content;
 }
-.detalle-ticket-left h2 {
+.detail-ticket-left h2 {
   font-size: 1.2rem;
 }
-.detalle-ticket-left h3 {
+.detail-ticket-left h3 {
   font-size: 1.1rem;
 }
 
@@ -133,7 +133,7 @@ pre {
   margin-bottom: 8px;
 }
 
-.subir-archivos {
+.upload-files {
   width: 90%;
   margin-top: 8px;
   margin-bottom: 12px;
@@ -141,7 +141,7 @@ pre {
   cursor: pointer;
 }
 
-.mensaje-adjuntos {
+.attached-message {
   padding: 8px;
   margin: 10px;
   background-color: rgba(128, 128, 128, 0.233);
