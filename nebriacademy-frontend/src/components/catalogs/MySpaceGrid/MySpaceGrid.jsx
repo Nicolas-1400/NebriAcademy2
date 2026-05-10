@@ -172,7 +172,7 @@ function MySpaceGrid() {
       <SliderComponent>
         {items.length > 0 ? (
           items.map((item) =>
-            type.includes("cursos") ? (
+            type.includes("courses") ? (
               <CardSlider
                 key={item.id}
                 name={item.nombreCurso}
@@ -207,14 +207,10 @@ function MySpaceGrid() {
         <h1>Tu espacio {user ? `${user.nombre} ${user.apellidos}` : ""}</h1>
       </div>
       <div className="page-sections">
-        {renderSection("Cursos en proceso", cursosEnProceso, "cursos-proceso")}
-        {renderSection("Cursos favoritos", cursosFavoritos, "cursos-favoritos")}
-        {renderSection("Tus apuntes", misApuntes, "tus-apuntes")}
-        {renderSection(
-          "Apuntes favoritos",
-          apuntesFavoritos,
-          "apuntes-guardados",
-        )}
+        {renderSection("Cursos en proceso", cursosEnProceso, "courses-in-progress")}
+        {renderSection("Cursos favoritos", cursosFavoritos, "favorite-courses")}
+        {renderSection("Tus apuntes", misApuntes, "your-notes")}
+        {renderSection("Apuntes favoritos", apuntesFavoritos, "saved-notes")}
       </div>
     </div>
   );
