@@ -1,7 +1,7 @@
 function PoliciesGrid({ tipo }) {
   if (tipo === "privacyPolicy") {
     return (
-      <div className="PoliticasGrid">
+      <div className="policiesGrid">
         <h1>Política de privacidad</h1>
 
         <p>
@@ -753,18 +753,18 @@ function PoliciesGrid({ tipo }) {
           ¿Qué responsabilidad tienes en el tratamiento de datos de terceros?
         </h4>
         <p>
-          En el caso de que se hayan facilitado los datos personales de un tercero,
-          es la exclusiva responsabilidad de quien lo haga haber obtenido
-          previamente el consentimiento de esa persona para que sus datos sean
-          tratados por nosotros, debiendo haberle informado previamente de todo
-          lo previsto en el artículo 14 del Reglamento General de Protección de
-          Datos.
+          En el caso de que se hayan facilitado los datos personales de un
+          tercero, es la exclusiva responsabilidad de quien lo haga haber
+          obtenido previamente el consentimiento de esa persona para que sus
+          datos sean tratados por nosotros, debiendo haberle informado
+          previamente de todo lo previsto en el artículo 14 del Reglamento
+          General de Protección de Datos.
         </p>
       </div>
     );
   } else if (tipo === "legalNote") {
     return (
-      <div className="PoliticasGrid">
+      <div className="policiesGrid">
         <h1>Nota legal</h1>
 
         <p>
@@ -810,9 +810,9 @@ function PoliciesGrid({ tipo }) {
           condiciones incluidas en esta Nota Legal. Algunos aspectos de esta
           página Web, por su especialidad, pueden estar sujetos a condiciones o
           reglas particulares que pueden sustituir, completar o modificar esta
-          Nota Legal, por lo que también deben ser aceptadas por el/la
-          usuario/a que los utilice o acceda a ellos. <br /> <br /> 3.- Todos
-          los contenidos de esta Web (textos, fotografías, gráficos, imágenes,
+          Nota Legal, por lo que también deben ser aceptadas por el/la usuario/a
+          que los utilice o acceda a ellos. <br /> <br /> 3.- Todos los
+          contenidos de esta Web (textos, fotografías, gráficos, imágenes,
           tecnología, software, links, contenidos audiovisuales o sonoros,
           diseño gráfico, código fuente, etc.), así como las marcas y demás
           signos distintivos son propiedad de la UNIVERSIDAD NEBRIJA o de
@@ -883,8 +883,8 @@ function PoliciesGrid({ tipo }) {
           <li>
             el titular de la página que establece el enlace no podrá utilizar la
             marca o cualquier otro signo distintivo de la UNIVERSIDAD NEBRIJA
-            dentro de su página Web, salvo en los casos autorizados por la Ley
-            o permitidos expresamente por la UNIVERSIDAD NEBRIJA;
+            dentro de su página Web, salvo en los casos autorizados por la Ley o
+            permitidos expresamente por la UNIVERSIDAD NEBRIJA;
           </li>
           <li>
             la página que establezca el enlace deberá cumplir con la ley y no
@@ -922,19 +922,19 @@ function PoliciesGrid({ tipo }) {
           podrá ponerse en contacto con la UNIVERSIDAD NEBRIJA indicándolo.{" "}
           <br /> <br /> 8.- Para la resolución de cualquier conflicto derivado
           del uso de esta Web o de sus contenidos, se aplicará el derecho
-          español y serán competentes los Juzgados y Tribunales de Madrid (España).{" "}
-          <br /> <br /> 9.- Ponemos a su disposición la presente Nota Legal con
-          la finalidad de informarle detalladamente sobre la entidad titular de
-          esta página web y las condiciones de uso de la misma. Si, en el
-          futuro, introdujésemos modificaciones en estas condiciones, se lo
-          comunicaremos a través de esta página web, de modo que pueda usted
+          español y serán competentes los Juzgados y Tribunales de Madrid
+          (España). <br /> <br /> 9.- Ponemos a su disposición la presente Nota
+          Legal con la finalidad de informarle detalladamente sobre la entidad
+          titular de esta página web y las condiciones de uso de la misma. Si,
+          en el futuro, introdujésemos modificaciones en estas condiciones, se
+          lo comunicaremos a través de esta página web, de modo que pueda usted
           conocer las nuevas condiciones de uso que se adopten.
         </p>
       </div>
     );
   } else if (tipo === "cookiesPolicy") {
     return (
-      <div className="PoliticasGrid">
+      <div className="policiesGrid">
         <h1>Política de Cookies</h1>
 
         <p>
