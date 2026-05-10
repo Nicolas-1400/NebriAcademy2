@@ -31,7 +31,8 @@ function NoteCard({
 
   // Los botones de edición solo aparecen en el contexto de curso (cuando se pasa tipo)
   const showEdit = tipo === "profesor" && editingMode && allowEdit;
-  const showDelete = (tipo === "profesor" && editingMode) || tipo === "administrador";
+  const showDelete =
+    (tipo === "profesor" && editingMode) || tipo === "administrador";
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
@@ -48,10 +49,10 @@ function NoteCard({
       </div>
 
       {/* Sección derecha: controles de edición + categoría + like */}
-      <div className="apunte-meta">
+      <div className="right-section-notes">
         {/* Categoría: solo se muestra en la vista global cuando viene el dato */}
         {apunte.categoria && (
-          <div className="apunte-categoria">
+          <div className="note-category">
             <p>{apunte.categoria}</p>
           </div>
         )}
@@ -80,7 +81,7 @@ function NoteCard({
 
         {/* Like: se muestra si el padre pasa la función onToggleLike y hay usuario logueado */}
         {onToggleLike && usuario?.id && (
-          <div className="apunte-like">
+          <div className="note-like">
             <img
               src={isLiked ? LikeMarkedIcon : LikeIcon}
               alt="like"

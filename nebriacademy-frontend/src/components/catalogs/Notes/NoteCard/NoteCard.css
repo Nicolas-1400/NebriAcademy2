@@ -49,7 +49,7 @@
   color: var(--color-secundario);
 }
 
-.apunte-meta {
+.right-section-notes {
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -59,21 +59,21 @@
   padding: 2%;
 }
 
-.apunte-categoria {
+.note-category {
   background-color: var(--color-hover-button);
   border: 1px solid var(--color-secundario);
   border-radius: 5px;
   padding: 2px;
 }
 
-.apunte-categoria p {
+.note-category p {
   margin: 0;
   font-size: 12px;
   color: var(--color-secundario);
   font-weight: 600;
 }
 
-.apunte-like {
+.note-like {
   display: flex;
   align-items: center;
   gap: 4px;
@@ -101,7 +101,7 @@
     font-size: 10px;
   }
 
-  .apunte-categoria p {
+  .note-category p {
     font-size: 10px;
     word-break: normal;
   }
@@ -129,7 +129,7 @@
     font-size: 8px;
   }
 
-  .apunte-categoria p {
+  .note-category p {
     font-size: 8px;
     word-break: normal;
   }
