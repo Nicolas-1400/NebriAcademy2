@@ -1,6 +1,8 @@
 @import "../../../styles/general.css";
 
-.perfil-curso {
+/* Estilos para el contenedor de gestión de cursos */
+
+.course-management-wrapper {
   display: flex;
   justify-content: center;
   padding: 40px 20px;
@@ -8,7 +10,7 @@
   min-height: 60vh;
 }
 
-.form-add-curso {
+.add-course-container {
   width: 70%;
   background-color: white;
   padding: 24px;
@@ -16,13 +18,13 @@
   box-shadow: 0 6px 18px rgba(0, 0, 0, 0.08);
 }
 
-.form-add-curso h3 {
+.add-course-container h3 {
   color: var(--rojo-nebrija);
   margin-bottom: 15px;
   border-bottom: 2px solid var(--rojo-nebrija);
 }
 
-.contenedor-contenidos {
+.content-container {
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -36,10 +38,10 @@
   width: 100%;
 }
 
-.curso-cont,
-.apuntes-cont,
-.video-cont,
-.ejercicio-cont {
+.course-info-section,
+.notes-section,
+.video-section,
+.exercises-section {
   margin: 10px;
   padding: 10px;
   border: 1px solid var(--rojo-nebrija);
@@ -48,37 +50,37 @@
   width: 95%;
 }
 
-.apuntes-cont h4,
-.video-cont h4,
-.ejercicio-cont h4 {
+.notes-section h4,
+.video-section h4,
+.exercises-section h4 {
   margin-bottom: 10px;
   border-bottom: 2px solid var(--rojo-nebrija);
 }
 
-.formulario-grupo {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
   margin-bottom: 12px;
 }
 
-.formulario-grupo input,
-.formulario-grupo textarea,
-.formulario-grupo select {
+.form-group input,
+.form-group textarea,
+.form-group select {
   padding: 12px;
-  border: 2px solid #e6e6e6;
+  border: 2px solid black;
   border-radius: 6px;
   font-size: 14px;
   width: 100%;
 }
 
-.descripcion-textarea {
+.description-textarea {
   min-height: 140px;
   line-height: 1.4;
   resize: vertical;
 }
 
-.button-editar-perfil {
+.submit-button {
   width: 100%;
   padding: 12px;
   background-color: var(--rojo-nebrija);
@@ -89,7 +91,7 @@
   cursor: pointer;
 }
 
-.button-go-back {
+.back-button {
   display: flex;
   align-items: center;
   justify-content: center;
@@ -105,17 +107,16 @@
   color: black;
   font-size: 16px;
   cursor: pointer;
-  transition: color 0.3s ease;
 }
 
-.button-go-back img {
+.back-button img {
   width: 20px;
   height: 20px;
   border-radius: 100%;
   transform: rotate(180deg);
 }
 
-.button-go-back:hover {
+.back-button:hover {
   border: 1px solid var(--color-secundario);
   color: var(--color-secundario);
   background-color: var(--color-hover-button);
@@ -124,12 +125,11 @@
   box-shadow: none;
 }
 
-.button-go-back img:hover {
+.back-button img:hover {
   background-color: var(--color-hover-button);
-  transition: all 0.3s ease;
 }
 
-.mensaje-error {
+.error-message {
   padding: 10px;
   background-color: #f8d7da;
   color: #721c24;
@@ -137,8 +137,7 @@
   margin-bottom: 12px;
 }
 
-/* Mensaje de éxito verde para crear curso */
-.mensaje-exito {
+.success-message {
   padding: 10px;
   background-color: #d4edda;
   color: #155724;
@@ -146,119 +145,37 @@
   margin-bottom: 12px;
 }
 
-/* RESPONSIVE 1024px */
+/* RESPONSIVE */
 @media (max-width: 1024px) {
-  .perfil-curso {
+  .course-management-wrapper {
     padding: 35px 20px;
   }
-
-  .form-add-curso {
+  .add-course-container {
     width: 90%;
     max-width: 800px;
     padding: 22px;
   }
-
-  .contenedor-contenidos {
-    display: flex;
-    flex-direction: column;
-  }
-
   .line-1,
   .line-2 {
-    display: flex;
     flex-direction: column;
   }
-
-  .formulario-grupo input,
-  .formulario-grupo textarea,
-  .formulario-grupo select {
-    font-size: 13px;
-    padding: 11px;
-  }
-
-  .descripcion-textarea {
-    min-height: 130px;
-  }
-
-  .button-go-back {
+  .back-button {
     width: 140px;
     height: 28px;
     font-size: 14px;
   }
-
-  .button-go-back img {
-    width: 18px;
-    height: 18px;
-  }
 }
 
-/* RESPONSIVE 768px */
 @media (max-width: 768px) {
-  .perfil-curso {
+  .course-management-wrapper {
     padding: 25px 15px;
-    min-height: auto;
   }
-
-  .form-add-curso {
+  .add-course-container {
     width: 95%;
   }
-
-  .form-add-curso h3 {
-    font-size: 18px;
-    margin-bottom: 14px;
-  }
-
-  .formulario-grupo {
-    gap: 6px;
-    margin-bottom: 10px;
-  }
-
-  .formulario-grupo input,
-  .formulario-grupo textarea,
-  .formulario-grupo select {
-    padding: 10px;
-    font-size: 12px;
-  }
-
-  .descripcion-textarea {
-    min-height: 100px;
-  }
-
-  .button-editar-perfil {
-    padding: 10px;
-    font-size: 14px;
-  }
-
-  .button-go-back {
+  .back-button {
     width: 130px;
     height: 26px;
     font-size: 12px;
-  }
-
-  .button-go-back img {
-    width: 16px;
-    height: 16px;
-  }
-
-  .mensaje-error,
-  .mensaje-exito {
-    padding: 8px;
-    font-size: 12px;
-  }
-}
-
-/* RESPONSIVE mobile (480px) */
-@media (max-width: 480px) {
-  .perfil-curso {
-    padding: 15px 10px;
-  }
-
-  .form-add-curso {
-    padding: 12px;
-  }
-
-  .button-go-back {
-    width: 100%;
-    margin-bottom: 10px;
   }
 }

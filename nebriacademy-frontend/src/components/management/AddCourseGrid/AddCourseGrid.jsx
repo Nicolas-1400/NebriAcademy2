@@ -5,6 +5,7 @@ import useAuthStore from "../../../store/useAuthStore";
 import { useNavigate } from "react-router-dom";
 import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 import CourseBackgroundCard from "../../catalogs/Courses/CourseBackgroundCard/CourseBackgroundCard";
+import "./AddCourseGrid.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Formulario para que el profesor cree un nuevo curso con contenido inicial opcional
@@ -200,15 +201,15 @@ function AddCourseGrid() {
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div className="perfil-curso">
-      <div className="form-add-curso">
+    <div className="course-management-wrapper">
+      <div className="add-course-container">
         <h3>Crear Curso</h3>
         <form onSubmit={handleSubmit}>
-          <div className="contenedor-contenidos">
+          <div className="content-container">
             <div className="line-1">
               {/* Sección de datos obligatorios del curso */}
-              <div className="curso-cont">
-                <div className="formulario-grupo">
+              <div className="course-info-section">
+                <div className="form-group">
                   <label>Nombre del curso *</label>
                   <input
                     type="text"
@@ -217,7 +218,7 @@ function AddCourseGrid() {
                     required
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Categoría *</label>
                   <select
                     value={categoria}
@@ -239,7 +240,7 @@ function AddCourseGrid() {
                     <option value="Data Science">Data Science</option>
                   </select>
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Nivel *</label>
                   <select
                     value={nivel}
@@ -254,10 +255,10 @@ function AddCourseGrid() {
                     <option value="Avanzado">Avanzado</option>
                   </select>
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Descripción *</label>
                   <textarea
-                    className="descripcion-textarea"
+                    className="description-textarea"
                     value={descripcion}
                     onChange={(e) => setDescripcion(e.target.value)}
                     required
@@ -266,9 +267,9 @@ function AddCourseGrid() {
               </div>
 
               {/* Sección opcional para añadir un apunte inicial al crear el curso */}
-              <div className="apuntes-cont">
+              <div className="notes-section">
                 <h4>Añadir Apunte (Opcional)</h4>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Nombre</label>
                   <input
                     type="text"
@@ -276,7 +277,7 @@ function AddCourseGrid() {
                     onChange={(e) => setNombreApunte(e.target.value)}
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>
                     Archivo (.pdf, .doc, .docx, .ppt, .pptx) (máximo 20 MB)
                   </label>
@@ -287,10 +288,10 @@ function AddCourseGrid() {
                     onChange={(e) => setFileApunte(e.target.files[0] || null)}
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Descripción</label>
                   <textarea
-                    className="descripcion-textarea"
+                    className="description-textarea"
                     value={descripcionApunte}
                     onChange={(e) => setDescripcionApunte(e.target.value)}
                   />
@@ -299,9 +300,9 @@ function AddCourseGrid() {
             </div>
             <div className="line-2">
               {/* Sección opcional para añadir un vídeo inicial al crear el curso */}
-              <div className="video-cont">
+              <div className="video-section">
                 <h4>Añadir Video (Opcional)</h4>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Nombre</label>
                   <input
                     type="text"
@@ -309,7 +310,7 @@ function AddCourseGrid() {
                     onChange={(e) => setNombreVideo(e.target.value)}
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Archivo (Video) (máximo 20 MB)</label>
                   <input
                     type="file"
@@ -321,9 +322,9 @@ function AddCourseGrid() {
               </div>
 
               {/* Sección opcional para añadir un ejercicio inicial al crear el curso */}
-              <div className="ejercicio-cont">
+              <div className="exercises-section">
                 <h4>Añadir Ejercicio (Opcional)</h4>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Nombre</label>
                   <input
                     type="text"
@@ -331,7 +332,7 @@ function AddCourseGrid() {
                     onChange={(e) => setNombreEjercicio(e.target.value)}
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Archivo (.zip, .pdf...) (máximo 20 MB)</label>
                   <input
                     type="file"
@@ -342,7 +343,7 @@ function AddCourseGrid() {
                     }
                   />
                 </div>
-                <div className="formulario-grupo">
+                <div className="form-group">
                   <label>Descripción</label>
                   <input
                     type="text"
@@ -356,16 +357,16 @@ function AddCourseGrid() {
             {/* Galería de imágenes para elegir la portada del curso */}
             <CourseBackgroundCard selectedImage={imagen} onSelect={setImagen} />
 
-            <div className="buttons-cont">
-              {success && <p className="mensaje-exito">{success}</p>}
-              {error && <p className="mensaje-error">{error}</p>}
+            <div className="action-buttons-container">
+              {success && <p className="success-message">{success}</p>}
+              {error && <p className="error-message">{error}</p>}
 
-              <button type="submit" className="button-editar-perfil">
+              <button type="submit" className="submit-button">
                 Crear curso
               </button>
               <button
                 type="button"
-                className="button-go-back"
+                className="back-button"
                 onClick={() => navigate("/Home")}
               >
                 <img src={ArrowCorrect} alt="Volver" />

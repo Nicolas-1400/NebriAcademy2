@@ -164,10 +164,10 @@ function GradeExercisesGrid() {
   };
 
   return (
-    <div className="corregir-ejercicios-grid">
+    <div className="grade-exercises-grid">
       <h3>Ejercicios subidos</h3>
       {ejerciciosConNombre.length > 0 ? (
-        <ul className="ejercicios-lista">
+        <ul className="submissions-list">
           {ejerciciosConNombre.map((reg) => {
             const existing = getExistingScore(reg.id, reg.alumnoId);
             // Mostramos en el input el valor tecleado o, si no, la nota ya guardada
@@ -177,17 +177,17 @@ function GradeExercisesGrid() {
                 : (existing?.puntuacion ?? "");
 
             return (
-              <li className="ejercicio-contenedor" key={reg.id}>
+              <li className="submission-item" key={reg.id}>
                 <StudentSubmissionCard registro={reg} />
                 {/* Input de nota y botón de guardar (profesores), y botón de borrar (profes/admins) */}
-                <div className="calificar-container">
+                <div className="grade-container">
                   {tipo !== "administrador" && (
                     <>
                       <input
                         type="number"
                         min="0"
                         max="10"
-                        className="input-nota"
+                        className="grade-input"
                         value={currentVal}
                         onChange={(e) =>
                           handeScoreInput(reg.id, e.target.value)
@@ -195,7 +195,7 @@ function GradeExercisesGrid() {
                         placeholder="0-10"
                       />
                       <button
-                        className="button-guardar-nota"
+                        className="save-grade-btn"
                         onClick={() => handleSubmitScore(reg)}
                       >
                         Guardar nota
@@ -204,7 +204,7 @@ function GradeExercisesGrid() {
                   )}
                   {(tipo === "administrador" || tipo === "profesor") && (
                     <button
-                      className="button-borrar-ejercicio"
+                      className="delete-submission-btn"
                       onClick={() => handleDeleteEntrega(reg.id)}
                     >
                       Borrar entrega
@@ -218,7 +218,7 @@ function GradeExercisesGrid() {
       ) : (
         <p>No hay entregas para este ejercicio.</p>
       )}
-      <button className="button-go-back" onClick={() => navigate(-1)}>
+      <button className="back-button" onClick={() => navigate(-1)}>
         <img src={ArrowCorrect} alt="Volver" />
         <p>Volver</p>
       </button>

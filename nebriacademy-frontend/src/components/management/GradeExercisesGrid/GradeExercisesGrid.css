@@ -1,11 +1,13 @@
 @import "../../../styles/general.css";
 
-.corregir-ejercicios-grid {
+/* Estilos para el grid de calificación de ejercicios */
+
+.grade-exercises-grid {
   margin: 20px;
   background-color: var(--color-fondo);
 }
 
-.corregir-ejercicios-grid h3 {
+.grade-exercises-grid h3 {
   border-bottom: 3px solid var(--rojo-nebrija);
   border-radius: 3px;
   color: var(--rojo-nebrija);
@@ -13,7 +15,7 @@
   font-weight: bold;
 }
 
-.ejercicios-lista {
+.submissions-list {
   display: flex;
   flex-direction: row;
   list-style: none;

@@ -144,14 +144,14 @@ function AddContentGrid({ tipo, idCurso }) {
   // ── RENDER ───────────────────────────────────────────────────────────────────
 
   return (
-    <div className="addcontenidocursogrid">
+    <div className="add-content-grid">
       <h2>
         {isCourseContent
           ? `Añadir ${tipoContenido} al curso`
           : "Añadir apuntes"}
       </h2>
 
-      <form onSubmit={handleSubmit} className="add-contenido-form">
+      <form onSubmit={handleSubmit} className="add-content-form">
         <div className="form-group">
           <label>Nombre</label>
           <input
@@ -225,12 +225,12 @@ function AddContentGrid({ tipo, idCurso }) {
         {error && <p className="error">{error}</p>}
 
         <div className="form-buttons">
-          <button type="submit" className="button-subir" disabled={loading}>
+          <button type="submit" className="upload-btn" disabled={loading}>
             {loading ? "Subiendo..." : "Subir"}
           </button>
           <button
             type="button"
-            className="button-cancel"
+            className="cancel-btn"
             onClick={() => navigate(-1)}
           >
             Cancelar

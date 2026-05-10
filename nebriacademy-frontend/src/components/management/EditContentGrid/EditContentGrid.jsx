@@ -90,9 +90,9 @@ function EditContentGrid() {
   if (!item) return <p>Cargando...</p>;
 
   return (
-    <div className="editar-curso-container">
+    <div className="edit-course-container">
       <h2>Editar {tipo}</h2>
-      <div className="add-contenido-form">
+      <div className="edit-content-form">
         {/* Enlace al archivo actual para que el usuario pueda verlo antes de reemplazarlo */}
         <p>
           <strong>Archivo actual:</strong>{" "}
@@ -141,14 +141,14 @@ function EditContentGrid() {
 
         <div className="form-buttons">
           <button
-            className="button-subir"
+            className="update-btn"
             onClick={handleSave}
             disabled={loading}
           >
             {loading ? "Guardando..." : "Guardar"}
           </button>
           <button
-            className="button-cancel"
+            className="cancel-btn"
             onClick={() => {
               if (cursoId) {
                 navigate(`/Home/Courses/${cursoId}`);
