@@ -1,6 +1,6 @@
 @import "../../../../styles/general.css";
 
-.tarjeta-curso {
+.course-card {
   max-width: 400px;
   background-color: white;
   border: 2px solid var(--rojo-nebrija);
@@ -14,12 +14,12 @@
   position: relative;
 }
 
-.tarjeta-curso:hover {
+.course-card:hover {
   transform: translateY(-3px);
   box-shadow: 0 10px 25px rgba(194, 0, 47, 0.2);
 }
 
-.tarjeta-curso .img-curso {
+.course-card .course-image {
   width: 100%;
   height: 200px;
   object-fit: cover;
@@ -28,7 +28,7 @@
   margin-bottom: 8px;
 }
 
-.tarjeta-curso h3 {
+.course-card h3 {
   font-size: 18px;
   color: var(--rojo-nebrija);
   border-bottom: 1px solid var(--rojo-nebrija);
@@ -42,20 +42,20 @@
   overflow: hidden;
 }
 
-.tarjeta-curso p {
+.course-card p {
   font-size: 13px;
   color: #666;
   margin-bottom: 8px;
   line-height: 1.5;
 }
 
-.p-datos {
+.data-info {
   padding: 5px;
   border: 1px solid gray;
   border-radius: 5px;
 }
 
-.tarjeta-curso .p-categoria {
+.course-card .data-category {
   font-weight: bold;
   color: #999;
   text-transform: capitalize;
@@ -63,27 +63,27 @@
   font-size: 12px;
 }
 
-.tarjeta-curso .p-nivel {
+.course-card .data-level {
   font-weight: 600;
   color: #555;
   font-size: 12px;
 }
 
-.tarjeta-curso .p-descripcion {
+.course-card .data-description {
   color: #777;
   font-size: 13px;
   line-height: 1.6;
   margin: 10px 0;
 }
 
-.tarjeta-curso .p-profesor {
+.course-card .data-professor {
   font-style: italic;
   color: #888;
   font-size: 12px;
   margin-top: 8px;
 }
 
-.tarjeta-curso .p-valoracion {
+.course-card .data-rating {
   margin-top: auto;
   color: var(--rojo-nebrija);
   font-weight: bold;
@@ -127,8 +127,8 @@
   border-radius: 0;
 }
 
-/* Botón Eliminar Curso Admin Independiente */
-.button-eliminar-curso-admin-standalone {
+/* Admin delete button (bottom) */
+.admin-delete-course-btn {
   margin-top: 15px;
   width: 100%;
   background-color: var(--rojo-nebrija);
@@ -145,59 +145,59 @@
   transition: background-color 0.3s ease;
 }
 
-.button-eliminar-curso-admin-standalone img {
+.admin-delete-course-btn img {
   width: 18px;
   height: 18px;
   filter: brightness(0) invert(1);
 }
 
-.button-eliminar-curso-admin-standalone:hover {
+.admin-delete-course-btn:hover {
   background-color: #a00026;
 }
 
 /* RESPONSIVE 1024px */
 @media (max-width: 1024px) {
-  .tarjeta-curso {
+  .course-card {
     padding: 18px;
     max-width: 380px;
   }
 
-  .tarjeta-curso .img-curso {
+  .course-card .course-image {
     height: 180px;
     margin-bottom: 7px;
   }
 
-  .tarjeta-curso h3 {
+  .course-card h3 {
     font-size: 17px;
     margin-bottom: 9px;
   }
 
-  .tarjeta-curso p {
+  .course-card p {
     font-size: 12px;
   }
 
-  .tarjeta-curso .p-descripcion {
+  .course-card .data-description {
     margin: 8px 0;
   }
 }
 
 /* RESPONSIVE 768px */
 @media (max-width: 768px) {
-  .tarjeta-curso {
+  .course-card {
     padding: 15px;
   }
 
-  .tarjeta-curso .img-curso {
+  .course-card .course-image {
     height: 150px;
     margin-bottom: 6px;
   }
 
-  .tarjeta-curso h3 {
+  .course-card h3 {
     font-size: 16px;
     margin-bottom: 8px;
   }
 
-  .tarjeta-curso p {
+  .course-card p {
     font-size: 12px;
     margin-bottom: 6px;
   }

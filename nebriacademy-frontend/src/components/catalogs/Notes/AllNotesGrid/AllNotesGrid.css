@@ -15,14 +15,14 @@
   flex-shrink: 0;
 }
 
-.formulario-busqueda {
+.search-form {
   display: flex;
   flex-direction: column;
   gap: 10px;
   margin-bottom: 30px;
 }
 
-.formulario-busqueda input {
+.search-form input {
   padding: 12px;
   border: 2px solid #ddd;
   border-radius: 5px;
@@ -31,13 +31,13 @@
   transition: all 0.3s ease;
 }
 
-.formulario-busqueda input:focus {
+.search-form input:focus {
   outline: none;
   border-color: var(--rojo-nebrija);
   box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
 }
 
-.categorias-sidebar h3 {
+.categories-sidebar h3 {
   font-size: 18px;
   color: var(--rojo-nebrija);
   margin-bottom: 15px;
@@ -45,7 +45,7 @@
   border-bottom: 2px solid var(--rojo-nebrija);
 }
 
-.categorias-sidebar ul {
+.categories-sidebar ul {
   list-style: none;
   display: flex;
   flex-direction: column;
@@ -53,14 +53,14 @@
   margin-bottom: 10px;
 }
 
-.categorias-sidebar li {
+.categories-sidebar li {
   margin: 0;
   width: 100%;
   padding: 1px;
   border-radius: 5px;
 }
 
-.categorias-sidebar a {
+.categories-sidebar a {
   color: #333;
   text-decoration: none;
   font-size: 14px;
@@ -70,7 +70,7 @@
   display: block;
 }
 
-.categorias-sidebar a:hover {
+.categories-sidebar a:hover {
   background-color: rgba(194, 0, 47, 0.1);
   color: var(--rojo-nebrija);
   font-weight: 600;
@@ -78,7 +78,7 @@
 }
 
 /* Estilos para botones de filtros */
-.categorias-sidebar button {
+.categories-sidebar button {
   width: 100%;
   border: solid var(--rojo-nebrija) 1px;
   background: none;
@@ -92,30 +92,31 @@
   display: block;
 }
 
-.categorias-sidebar button:hover {
+.categories-sidebar button:hover {
   background-color: rgba(194, 0, 47, 0.06);
   color: var(--rojo-nebrija);
   font-weight: 600;
   padding-left: 18px;
 }
 
-.categorias-sidebar button.activo {
+.categories-sidebar button.active {
   background-color: rgba(194, 0, 47, 0.08);
   color: var(--rojo-nebrija);
   font-weight: 700;
   padding-left: 18px;
 }
 
-.categorias-sidebar .subtitulo-nivel {
+.categories-sidebar .subtitle-level {
   margin-top: 1rem;
 }
 
-.categorias-sidebar .limpiar-filtros {
+
+.categories-sidebar .clear-filters {
   margin-top: 0.75rem;
   margin-bottom: 0.75rem;
 }
 
-.categorias-sidebar .limpiar-filtros button {
+.categories-sidebar .clear-filters button {
   padding: 8px 12px;
   background-color: transparent;
   border: 1px solid #ddd;
@@ -123,7 +124,7 @@
   cursor: pointer;
 }
 
-.categorias-sidebar .limpiar-filtros button:hover {
+.categories-sidebar .clear-filters button:hover {
   background-color: rgba(0, 0, 0, 0.03);
 }
 

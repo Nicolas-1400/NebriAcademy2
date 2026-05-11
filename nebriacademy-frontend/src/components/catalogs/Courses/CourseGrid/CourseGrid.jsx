@@ -902,7 +902,7 @@ function CourseGrid() {
               </div>
             )}
             <br />
-            <div className="comentarios-existentes">
+            <div className="existing-comments">
               {comentarios
                 .slice()
                 .sort((a, b) => b.id - a.id)

@@ -43,14 +43,14 @@ function CourseBackgroundCard({ selectedImage, onSelect }) {
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <div className="tarjeta-fondos-container">
+    <div className="background-cards-container">
       <h4>Selecciona una imagen de fondo</h4>
-      <div className="fondos-grid">
+      <div className="backgrounds-grid">
         {imageKeys.map((key) => (
           <div
             key={key}
             // La imagen seleccionada recibe la clase "selected" para resaltarse visualmente
-            className={`fondo-item ${selectedImage === key ? "selected" : ""}`}
+            className={`background-item ${selectedImage === key ? "selected" : ""}`}
             onClick={() => onSelect(key)}
           >
             <img src={IMAGES[key]} alt={key} />

@@ -213,7 +213,7 @@ function AllCoursesGrid() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="todos-cursos-grid">
+    <div className="all-courses-grid">
       {/* Sidebar lateral con buscador y filtros de categoría y nivel */}
       <SearchSidebar
         searchTerm={filters.searchTerm}
@@ -237,14 +237,14 @@ function AllCoursesGrid() {
       />
 
       {/* Grid principal con las tarjetas de los cursos filtrados */}
-      <main className="cursos-contenedor">
+      <main className="courses-container">
         <h2>Cursos</h2>
         {loading ? (
           <p className="loading-message">Cargando cursos...</p>
         ) : filteredCursos.length > 0 ? (
-          <div className="cursos-grid">
+          <div className="courses-grid">
             {filteredCursos.map((c) => (
-              <div key={c.id} className="tarjeta-curso-wrapper">
+              <div key={c.id} className="course-card-wrapper">
                 <CourseCard
                   name={c.nombreCurso}
                   cursoId={c.id}

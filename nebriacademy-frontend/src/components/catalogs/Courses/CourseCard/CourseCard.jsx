@@ -52,7 +52,7 @@ function CourseCard({
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div
-      className="tarjeta-curso"
+      className="course-card"
       onClick={() => navigate(`/Home/Courses/${cursoId}`)}
     >
       {/* Botón de eliminar: solo aparece cuando el modo borrado está activo en el padre */}
@@ -65,14 +65,14 @@ function CourseCard({
           <img src={DeleteIcon} alt="X" />
         </button>
       )}
-      <img className="img-curso" src={imageSrc} alt="Imagen del curso" />
+      <img className="course-image" src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
-      <div className="p-datos">
-        <p className="p-categoria">Categoría: {categoria}</p>
-        <p className="p-nivel">Nivel: {nivel}</p>
+      <div className="data-info">
+        <p className="data-category">Categoría: {categoria}</p>
+        <p className="data-level">Nivel: {nivel}</p>
       </div>
-      <p className="p-profesor">{profesor}</p>
-      <p className="p-valoracion">
+      <p className="data-professor">{profesor}</p>
+      <p className="data-rating">
         <img
           className="like-icon-course"
           src={LikeMarkedIcon}
@@ -83,7 +83,7 @@ function CourseCard({
       {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
       {isAdmin && (
         <button
-          className="button-eliminar-curso-admin-standalone"
+          className="admin-delete-course-btn"
           onClick={(e) => {
             e.stopPropagation();
             if (onAdminDelete) onAdminDelete();
