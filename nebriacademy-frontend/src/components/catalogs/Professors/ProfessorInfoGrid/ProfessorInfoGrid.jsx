@@ -58,12 +58,12 @@ function ProfessorInfoGrid() {
     return <p className="loading-message">Cargando perfil del profesor...</p>;
 
   return (
-    <div className="profesor-contenedor-principal">
+    <div className="professor-main-container">
       {/* Lista de cursos del profesor */}
-      <div className="profesor-contenedor-cursos">
+      <div className="professor-courses-container">
         <h3>Cursos</h3>
         {cursos.length > 0 ? (
-          <div className="cursos-profesor">
+          <div className="professor-courses-list">
             {cursos.map((c) => (
               <CardSlider
                 key={c.id}
@@ -91,7 +91,7 @@ function ProfessorInfoGrid() {
       <div className="profile-data">
         <h1>Profesor</h1>
         <img
-          className="imagenPerfil"
+          className="profile-image"
           src={
             profesor?.imagenPerfil && PERFILES[profesor.imagenPerfil]
               ? PERFILES[profesor.imagenPerfil]
@@ -106,13 +106,13 @@ function ProfessorInfoGrid() {
         </h2>
         <p className="profile-email">{profesor?.email}</p>
         {profesor?.especializacion && (
-          <p className="especializacionPerfil">📚 {profesor.especializacion}</p>
+          <p className="profile-specialization">📚 {profesor.especializacion}</p>
         )}
-        {profesor?.pais && <p className="paisPerfil">🌍 {profesor.pais}</p>}
+        {profesor?.pais && <p className="profile-country">🌍 {profesor.pais}</p>}
         {profesor?.localidad && (
-          <p className="localidadPerfil">🏙️ {profesor.localidad}</p>
+          <p className="profile-location">🏙️ {profesor.localidad}</p>
         )}
-        {profesor?.redes && <p className="redesPerfil">{profesor.redes}</p>}
+        {profesor?.redes && <p className="profile-socials">{profesor.redes}</p>}
       </div>
     </div>
   );

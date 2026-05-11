@@ -1,7 +1,7 @@
 @import "../../../../styles/general.css";
 
 /* PERFIL */
-.profesor-contenedor-principal {
+.professor-main-container {
   display: flex;
   gap: 40px;
   padding: 40px;
@@ -27,7 +27,7 @@
   color: var(--rojo-nebrija);
 }
 
-.imagenPerfil {
+.profile-image {
   width: 150px;
   height: 150px;
   border-radius: 50%;
@@ -46,29 +46,29 @@
   color: #777;
 }
 
-.tipoPerfil {
+.profile-type {
   font-size: 12px;
   color: var(--rojo-nebrija);
   font-weight: bold;
   text-transform: uppercase;
 }
 
-.telPerfil,
-.paisPerfil,
-.localidadPerfil,
-.redesPerfil {
+.profile-phone,
+.profile-country,
+.profile-location,
+.profile-socials {
   font-size: 13px;
   color: #666;
   margin-top: 5px;
 }
 
-.especializacionPerfil {
+.profile-specialization {
   font-size: 13px;
   color: #666;
   margin-top: 5px;
 }
 
-.profesor-contenedor-cursos {
+.professor-courses-container {
   width: 70%;
   background-color: white;
   padding: 30px;
@@ -76,7 +76,7 @@
   box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
 }
 
-.profesor-contenedor-cursos h3 {
+.professor-courses-container h3 {
   font-size: 22px;
   color: var(--rojo-nebrija);
   margin-bottom: 20px;
@@ -84,36 +84,36 @@
   padding-bottom: 10px;
 }
 
-.profesor-contenedor-cursos form {
+.professor-courses-container form {
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: 20px;
 }
 
-.profesor-contenedor-cursos form.formulario-profesor {
+.professor-courses-container form.professor-form {
   display: flex;
   flex-direction: column;
   gap: 30px;
 }
 
-.seccion-superior-form {
+.form-upper-section {
   display: flex;
   gap: 30px;
   width: 100%;
 }
 
-.columna-imagen {
+.image-column {
   flex: 0 0 45%;
 }
 
-.columna-datos {
+.data-column {
   flex: 1;
   display: flex;
   flex-direction: column;
   gap: 15px;
 }
 
-.label-seccion {
+.section-label {
   display: block;
   font-weight: 600;
   color: #333;
@@ -121,19 +121,19 @@
   margin-bottom: 8px;
 }
 
-.formulario-grupo {
+.form-group {
   display: flex;
   flex-direction: column;
   gap: 8px;
 }
 
-.formulario-grupo label {
+.form-group label {
   font-weight: 600;
   color: #333;
   font-size: 14px;
 }
 
-.formulario-grupo input {
+.form-group input {
   padding: 12px;
   border: 2px solid #ddd;
   border-radius: 5px;
@@ -142,32 +142,13 @@
   transition: all 0.3s ease;
 }
 
-.formulario-grupo input:focus {
+.form-group input:focus {
   outline: none;
   border-color: var(--rojo-nebrija);
   box-shadow: 0 0 8px rgba(194, 0, 47, 0.2);
 }
 
-.button-editar-perfil {
-  grid-column: 1 / -1;
-  padding: 15px;
-  background-color: var(--rojo-nebrija);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  font-size: 16px;
-  font-weight: bold;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.button-editar-perfil:hover {
-  background-color: var(--color-secundario);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
-}
-
-.mensaje-exito {
+.success-message {
   grid-column: 1 / -1;
   padding: 12px;
   background-color: #d4edda;
@@ -179,7 +160,7 @@
   margin-bottom: 10px;
 }
 
-.mensaje-error {
+.error-message {
   grid-column: 1 / -1;
   padding: 12px;
   background-color: #f8d7da;
@@ -191,7 +172,7 @@
   margin-bottom: 10px;
 }
 
-.cursos-profesor {
+.professor-courses-list {
   display: flex;
   flex-direction: row;
   flex-wrap: wrap;
@@ -201,7 +182,7 @@
 
 /* RESPONSIVE Perfil 1024px */
 @media (max-width: 1024px) {
-  .profesor-contenedor-principal {
+  .professor-main-container {
     gap: 30px;
     padding: 35px;
     margin-bottom: 70px;
@@ -216,17 +197,17 @@
     font-size: 22px;
   }
 
-  .imagenPerfil {
+  .profile-image {
     width: 140px;
     height: 140px;
   }
 
-  .profesor-contenedor-cursos {
+  .professor-courses-container {
     width: 65%;
     padding: 25px;
   }
 
-  .profesor-contenedor-cursos h3 {
+  .professor-courses-container h3 {
     font-size: 20px;
     margin-bottom: 18px;
   }
@@ -234,7 +215,7 @@
 
 /* RESPONSIVE Perfil 768px */
 @media (max-width: 768px) {
-  .profesor-contenedor-principal {
+  .professor-main-container {
     flex-direction: column;
     gap: 20px;
     padding: 20px;
@@ -250,7 +231,7 @@
     font-size: 20px;
   }
 
-  .imagenPerfil {
+  .profile-image {
     width: 120px;
     height: 120px;
   }
@@ -264,19 +245,19 @@
     font-size: 12px;
   }
 
-  .telPerfil,
-  .paisPerfil,
-  .especializacionPerfil {
+  .profile-phone,
+  .profile-country,
+  .profile-specialization {
     font-size: 12px;
     margin-top: 4px;
   }
 
-  .profesor-contenedor-cursos {
+  .professor-courses-container {
     width: 100%;
     padding: 20px;
   }
 
-  .profesor-contenedor-cursos h3 {
+  .professor-courses-container h3 {
     font-size: 18px;
     margin-bottom: 15px;
   }
