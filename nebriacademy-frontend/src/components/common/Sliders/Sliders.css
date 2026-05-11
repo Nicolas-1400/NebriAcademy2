@@ -152,6 +152,7 @@
   max-width: 300px;
   box-sizing: border-box;
   text-align: left;
+  aspect-ratio: auto;
 }
 
 .card.card-slider:hover {

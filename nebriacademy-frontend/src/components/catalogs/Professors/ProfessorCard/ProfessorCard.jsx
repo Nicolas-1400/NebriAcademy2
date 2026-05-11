@@ -22,14 +22,14 @@ function ProfessorCard({
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div
-      className="tarjeta-profesor"
+      className="professor-card"
       onClick={() => navigate(`/Home/Professors/${profesorId}`)}
     >
       <img src={imageSrc} alt="Foto profesor" />
       <h3>
         {nombre} {apellidos}
       </h3>
-      <p className="p-especializacion">{especializacion}</p>
+      <p className="specialization-text">{especializacion}</p>
     </div>
   );
 }
