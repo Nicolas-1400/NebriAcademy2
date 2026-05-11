@@ -207,23 +207,21 @@
   height: 16px;
 }
 
-.card.card-apunte {
+.card.card-note {
   min-height: 320px;
   display: flex;
   flex-direction: column;
   justify-content: space-between;
   cursor: default;
 }
-
-.card-apunte-label {
+.card-note-label {
   font-size: 0.8rem;
   font-weight: 600;
   color: #888;
   text-transform: uppercase;
   letter-spacing: 0.04em;
 }
-
-.card-apunte-title {
+.card-note-title {
   font-size: 1.1rem;
   color: var(--rojo-nebrija);
   font-weight: 700;

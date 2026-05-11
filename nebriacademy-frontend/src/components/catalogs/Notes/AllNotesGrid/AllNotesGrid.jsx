@@ -234,7 +234,7 @@ function AllNotesGrid() {
   if (error) return <p>{error}</p>;
 
   return (
-    <div className="apuntes-grid">
+    <div className="notes-grid">
       {/* Sidebar lateral con buscador, filtros de categoría, modos de vista y botón de limpiar */}
       <SearchSidebar
         searchTerm={filters.searchTerm}
@@ -252,15 +252,15 @@ function AllNotesGrid() {
       />
 
       {/* Grid principal con la lista de apuntes filtrados */}
-      <main className="apuntes-contenedor">
+      <main className="notes-container">
         <h2>Apuntes</h2>
-        <div className="apuntes-list-container">
+        <div className="notes-list-container">
           {loading ? (
             <p className="loading-message">Cargando apuntes...</p>
           ) : processedApuntes.length > 0 ? (
-            <ul className="apuntes-list">
+            <ul className="notes-list">
               {processedApuntes.map((ap) => (
-                <li key={ap.id} className="apunte-item">
+                <li key={ap.id} className="note-item">
                   <NoteCard
                     apunte={ap}
                     usuario={usuario}
@@ -271,7 +271,7 @@ function AllNotesGrid() {
                   />
                   {/* Botones de editar/borrar visibles en modo edición si es autor, o siempre para admin */}
                   {(tipo === "administrador" || (editMode && canEdit(ap))) && (
-                    <div className="apunte-edit-controls">
+                    <div className="note-edit-controls">
                       {tipo !== "administrador" && (
                         <button
                           onClick={() =>
@@ -301,7 +301,7 @@ function AllNotesGrid() {
       <div className="fixed-action-group">
         {tipo !== "administrador" && (
           <button
-            className="editarApuntes"
+            className="edit-notes-btn"
             onClick={() => setEditMode(!editMode)}
             title={editMode ? "Salir edición" : "Editar"}
           >
@@ -310,7 +310,7 @@ function AllNotesGrid() {
         )}
         {tipo !== "administrador" && (
           <button
-            className="subirContenidoCurso"
+            className="upload-course-content-btn"
             onClick={() =>
               navigate("/Home/AddContent/individual", {
                 state: { tipo: "apunte", cursoId: id || 0 },

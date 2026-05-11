@@ -43,7 +43,7 @@ function NoteCard({
         </a>
         {apunte.descripcion && <p>{apunte.descripcion}</p>}
         {/* El nombre del autor puede venir ya resuelto (vista global) o en el propio objeto (vista curso) */}
-        <p className="apunte-autor">
+        <p className="note-author">
           {autorNombre || apunte.nombreAutor || apunte.autor}
         </p>
       </div>

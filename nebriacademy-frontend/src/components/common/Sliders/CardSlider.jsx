@@ -44,10 +44,10 @@ function CardSlider({
 
   if (type === "apunte") {
     return (
-      <div className="card card-slider card-apunte">
+      <div className="card card-slider card-note">
         <div className="card-slider-content">
-          <span className="card-apunte-label">Apunte:</span>
-          <h3 className="card-apunte-title">{apunte.nombre}</h3>
+          <span className="card-note-label">Apunte:</span>
+          <h3 className="card-note-title">{apunte.nombre}</h3>
           <p className="card-slider-author">{autorNombre || apunte.autor}</p>
           <button
             type="button"

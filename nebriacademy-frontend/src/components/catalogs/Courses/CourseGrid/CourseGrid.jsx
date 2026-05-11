@@ -667,11 +667,11 @@ function CourseGrid() {
 
               <h4>Apuntes</h4>
               {/* Los apuntes se dividen en dos columnas: del profesor y de los alumnos */}
-              <div className="apuntes-columns-wrapper">
-                <div className="profesor-apuntes">
+              <div className="notes-columns-wrapper">
+                <div className="professor-notes">
                   <h5>Apuntes profesor</h5>
                   {profApuntes.length > 0 ? (
-                    <ul className="apuntes-list">
+                    <ul className="notes-list">
                       {profApuntes.map((a) => (
                         <NoteCard
                           key={a.id}
@@ -694,10 +694,10 @@ function CourseGrid() {
                     <p className="sin-contenido">Sin apuntes.</p>
                   )}
                 </div>
-                <div className="alumnos-apuntes">
+                <div className="student-notes">
                   <h5>Apuntes alumnos</h5>
                   {alumnApuntes.length > 0 ? (
-                    <ul className="apuntes-list">
+                    <ul className="notes-list">
                       {alumnApuntes.map((a) => (
                         <NoteCard
                           key={a.id}
@@ -991,7 +991,7 @@ function CourseGrid() {
           {(tipo === "profesor" || tipo === "alumno") && (
             <div className="relative-container">
               <button
-                className={`subirContenidoCurso${rotado ? " rotated" : ""}`}
+                className={`upload-course-content-btn${rotado ? " rotated" : ""}`}
                 onClick={() => {
                   setRotado((prev) => !prev);
                   if (tipo === "alumno") {

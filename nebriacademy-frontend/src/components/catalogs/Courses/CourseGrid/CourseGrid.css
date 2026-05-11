@@ -93,7 +93,6 @@
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
-
 .curso-header-info p {
   color: rgba(255, 255, 255, 0.95);
   font-size: 16px;
@@ -425,7 +424,7 @@
   z-index: 2000;
 }
 
-.subirContenidoCurso {
+.upload-course-content-btn {
   width: 56px;
   height: 56px;
   border-radius: 50%;
@@ -439,21 +438,21 @@
   transition: all 0.3s ease;
 }
 
-.subirContenidoCurso:hover {
+.upload-course-content-btn:hover {
   background-color: var(--color-hover-button);
   border: 2px solid var(--rojo-nebrija);
   box-shadow: 0 0 10px var(--color-secundario);
 }
 
-.subirContenidoCurso:active {
+.upload-course-content-btn:active {
   background-color: var(--color-secundario);
 }
 
-.subirContenidoCurso.rotated {
+.upload-course-content-btn.rotated {
   transform: rotate(45deg);
 }
 
-.subirContenidoCurso img {
+.upload-course-content-btn img {
   width: 26px;
 }
 
@@ -496,43 +495,42 @@
    10. SECCIÓN DE APUNTES
    ───────────────────────────────────────────────────────────────────────────── */
 
-.apuntes-list {
+.notes-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
 
-.curso-grid .apuntes-list {
+.curso-grid .notes-list {
   max-height: 400px;
   overflow-y: auto;
   padding-right: 5px;
 }
 
 /* Wrapper para dos columnas de apuntes: profesor (izquierda) y alumnos (derecha) */
-.apuntes-columns-wrapper {
+.notes-columns-wrapper {
   display: flex;
   width: 100%;
   gap: 20px;
   align-items: flex-start;
 }
 
-.apuntes-columns-wrapper h5 {
+.notes-columns-wrapper h5 {
   color: var(--color-secundario);
   font-size: 15px;
   font-weight: 700;
   margin: 0 0 15px 0;
   border-bottom: #000 1px solid;
 }
-
-.apuntes-columns-wrapper .apuntes-list {
+.notes-columns-wrapper .notes-list {
   flex: 1 1 0;
   min-width: 0;
 }
-.apuntes-columns-wrapper .profesor-apuntes {
+.notes-columns-wrapper .professor-notes {
   order: 0;
   width: 50%;
 }
-.apuntes-columns-wrapper .alumnos-apuntes {
+.notes-columns-wrapper .student-notes {
   order: 1;
   width: 50%;
 }
@@ -992,7 +990,7 @@
     font-size: 22px;
   }
 
-  .apuntes-list h4,
+  .notes-list h4,
   .videos-list h4 {
     font-size: 18px;
   }
