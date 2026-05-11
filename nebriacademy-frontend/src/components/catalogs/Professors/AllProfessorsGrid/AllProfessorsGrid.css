@@ -1,10 +1,5 @@
 @import "../../../../styles/general.css";
 
-/* El sidebar (SearchSidebar) en esta página */
-.all-professors-grid > .search-sidebar {
-  width: clamp(250px, 20%, 300px);
-  flex-shrink: 0;
-}
 
 /* PROFESORES */
 .all-professors-grid {
@@ -96,9 +91,7 @@
     gap: 15px;
   }
 
-  .all-professors-grid > .search-sidebar {
-    width: 100%;
-  }
+
 
   .professors-grid h2 {
     font-size: 22px;

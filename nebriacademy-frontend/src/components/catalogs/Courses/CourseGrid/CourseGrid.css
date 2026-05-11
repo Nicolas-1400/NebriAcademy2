@@ -718,6 +718,24 @@
 .comments-details p:first-child {
   margin-bottom: 15px;
 }
+
+.comments-header-toggle {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  border-bottom: 1px solid black;
+  margin-bottom: 12px;
+}
+
+.comments-header-toggle p {
+  border-bottom: none !important;
+  margin-bottom: 0 !important;
+}
+
+.comments-header-toggle .arrow-toggle {
+  display: none;
+}
+
 /* ─────────────────────────────────────────────────────────────────────────────
    13.5. SECCIÓN DE DETALLES DESCRIPCIÓN (acciones)
    ───────────────────────────────────────────────────────────────────────────── */
@@ -979,8 +997,32 @@
   }
 
   .course-main-container {
+    display: flex;
+    flex-direction: column;
     padding: 20px;
     gap: 10px;
+  }
+
+  .course-details {
+    order: -1;
+  }
+
+  .comments-header-toggle {
+    cursor: pointer;
+  }
+
+  .comments-header-toggle .arrow-toggle {
+    display: inline-block;
+  }
+
+  .comments-content {
+    display: none;
+  }
+
+  .comments-content.expanded {
+    display: flex;
+    flex-direction: column;
+    animation: slideDown 0.3s ease-out;
   }
 
   .course-content h3 {

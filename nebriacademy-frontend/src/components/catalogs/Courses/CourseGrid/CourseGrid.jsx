@@ -73,6 +73,7 @@ function CourseGrid() {
   // Estado para la edición de la descripción del curso
   const [editingDescription, setEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState("");
+  const [commentsExpanded, setCommentsExpanded] = useState(false);
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
   // Mapa de nombre → imagen importada para resolver la portada del curso desde la BDD
@@ -888,20 +889,27 @@ function CourseGrid() {
             )}
           </div>
           <div className="comments-details">
-            <p>Comentarios</p>
-            {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
-            {tipo === "alumno" && (
-              <div className="write-comment">
-                <textarea
-                  placeholder="Comenta..."
-                  value={commentText}
-                  onChange={(e) => setCommentText(e.target.value)}
-                  maxLength={500}
-                />
-                <button onClick={handleCommentSubmit}>Enviar</button>
-              </div>
-            )}
-            <br />
+            <div 
+              className="comments-header-toggle" 
+              onClick={() => setCommentsExpanded(!commentsExpanded)}
+            >
+              <p>Comentarios</p>
+              <span className={`arrow-toggle ${commentsExpanded ? 'active' : ''}`}>▶</span>
+            </div>
+            <div className={`comments-content ${commentsExpanded ? 'expanded' : ''}`}>
+              {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
+              {tipo === "alumno" && (
+                <div className="write-comment">
+                  <textarea
+                    placeholder="Comenta..."
+                    value={commentText}
+                    onChange={(e) => setCommentText(e.target.value)}
+                    maxLength={500}
+                  />
+                  <button onClick={handleCommentSubmit}>Enviar</button>
+                </div>
+              )}
+              <br />
             <div className="existing-comments">
               {comentarios
                 .slice()
@@ -968,6 +976,7 @@ function CourseGrid() {
                     )}
                   </div>
                 ))}
+            </div>
             </div>
           </div>
         </div>
