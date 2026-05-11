@@ -404,6 +404,10 @@ body {
   color: var(--rojo-nebrija);
 }
 
+select option{
+  background-color: var(--color-hover-button);
+}
+
 /* ── RESPONSIVE PARA GESTIÓN ── */
 
 @media (max-width: 1024px) {
