@@ -154,11 +154,11 @@ function ProfileGrid() {
         {tipo === "profesor" && user.especializacion && (
           <p className="profile-specialization">📚 {user.especializacion}</p>
         )}
-        {user.numTelefono && <p className="profile-phone">📱 {user.numTelefono}</p>}
-        {user.pais && <p className="profile-country">🌍 {user.pais}</p>}
-        {user.localidad && (
-          <p className="profile-city">🏙️ {user.localidad}</p>
+        {user.numTelefono && (
+          <p className="profile-phone">📱 {user.numTelefono}</p>
         )}
+        {user.pais && <p className="profile-country">🌍 {user.pais}</p>}
+        {user.localidad && <p className="profile-city">🏙️ {user.localidad}</p>}
       </div>
 
       {/* Panel derecho: formulario para editar los datos del perfil */}
@@ -200,17 +200,13 @@ function ProfileGrid() {
             />
           )}
 
-          <button
-            type="submit"
-            className="btn-edit-profile"
-            disabled={loading}
-          >
+          <button type="submit" className="btn-edit-profile" disabled={loading}>
             {loading ? "Guardando..." : "Guardar Cambios"}
           </button>
 
           <button
             type="button"
-            className="btn-go-back"
+            className="button-go-back"
             onClick={() => navigate(-1)}
           >
             <img src={ArrowCorrect} alt="Volver" />

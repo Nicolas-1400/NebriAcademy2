@@ -328,7 +328,7 @@ body {
   gap: 8px;
 }
 
-/* Botones de acción principales (Subir/Actualizar) */
+/* Botones de acción principales */
 .upload-btn,
 .update-btn {
   background: var(--rojo-nebrija);
@@ -346,6 +346,46 @@ body {
   background: transparent;
   border: 2px solid var(--rojo-nebrija);
   color: var(--rojo-nebrija);
+}
+
+.button-go-back {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  margin-top: 10px;
+  width: 150px;
+  height: 30px;
+  font-weight: bold;
+  background-color: white;
+  border: 1px solid black;
+  border-radius: 10px;
+  box-shadow: 2px 2px 1px black;
+  color: black;
+  font-size: 16px;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.button-go-back img {
+  width: 20px;
+  height: 20px;
+  border-radius: 100%;
+  transform: rotate(180deg);
+}
+
+.button-go-back:hover {
+  border: 1px solid var(--color-secundario);
+  color: var(--color-secundario);
+  background-color: var(--color-hover-button);
+  transition: all 0.3s ease;
+  translate: 1px 1px;
+  box-shadow: none;
+}
+
+.button-go-back img:hover {
+  background-color: var(--color-hover-button);
+  transition: all 0.3s ease;
 }
 
 /* Botón de cancelar compartido */
@@ -383,6 +423,16 @@ body {
   .edit-content-form {
     gap: 10px;
     padding: 6px;
+  }
+  .button-go-back {
+    width: 140px;
+    height: 28px;
+    font-size: 14px;
+  }
+  
+  .button-go-back img {
+    width: 18px;
+    height: 18px;
   }
 }
 
@@ -438,6 +488,15 @@ body {
     padding: 8px 12px;
     font-size: 13px;
   }
+  .button-go-back {
+    width: 130px;
+    height: 26px;
+    font-size: 12px;
+  }
+  .button-go-back img {
+    width: 16px;
+    height: 16px;
+  }
 }
 
 @media (max-width: 480px) {
@@ -456,5 +515,10 @@ body {
   .update-btn,
   .cancel-btn {
     width: 100%;
+  }
+
+  .button-go-back {
+    width: 100%;
+    margin-bottom: 10px;
   }
 }

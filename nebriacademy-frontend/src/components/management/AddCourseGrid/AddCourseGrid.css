@@ -91,6 +91,12 @@
   cursor: pointer;
 }
 
+.submit-button:hover {
+  background-color: var(--color-secundario);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
+}
+
 .back-button {
   display: flex;
   align-items: center;
