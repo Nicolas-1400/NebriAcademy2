@@ -566,12 +566,12 @@ function CourseGrid() {
     (tipo === "alumno" && registroUser?.apuntado);
 
   return (
-    <div className="curso-grid">
+    <div className="course-grid">
       {/* Cabecera del curso: imagen de fondo, título, categoría, nivel y controles del alumno */}
-      <div className="curso-header">
-        <img className="curso-header-bg" src={bgImage} alt="" />
+      <div className="course-header">
+        <img className="course-header-bg" src={bgImage} alt="" />
 
-        <div className="curso-header-info">
+        <div className="course-header-info">
           <h2>{curso.nombreCurso}</h2>
           <p>{curso.categoria}</p>
           <p>Nivel: {curso.nivel}</p>
@@ -579,7 +579,7 @@ function CourseGrid() {
 
         {/* Botones de valoración, favorito y apuntarme: solo para alumnos */}
         {tipo === "alumno" && (
-          <div className="curso-header-buttons">
+          <div className="course-header-buttons">
             <p>
               <strong>Valoración: </strong>
               <button
@@ -612,13 +612,13 @@ function CourseGrid() {
             </p>
             <p>
               <button
-                className="button-favorito"
+                className="favorite-button"
                 onClick={() => handleLike("favorito")}
               >
                 {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
               </button>
               <button
-                className="button-apuntarme"
+                className="enroll-button"
                 onClick={() => handleLike("apuntado")}
               >
                 {registroUser?.apuntado ? "✔ Apuntado" : "Apuntarme"}
@@ -628,7 +628,7 @@ function CourseGrid() {
         )}
         {/* El profesor o los administradores, solo ven la valoración total, sin poder votar */}
         {(tipo === "profesor" || tipo === "administrador") && (
-          <div className="curso-header-buttons">
+          <div className="course-header-buttons">
             <p>
               <strong>Valoración: {curso.valoracion || 0}</strong>
             </p>
@@ -636,9 +636,9 @@ function CourseGrid() {
         )}
       </div>
 
-      <div className="curso-contenedor-principal">
+      <div className="course-main-container">
         {/* Sección central: vídeos, apuntes y ejercicios del curso */}
-        <div className="contenido-curso">
+        <div className="course-content">
           <h3>Contenido del curso</h3>
 
           {puedeVerContenido ? (
@@ -662,7 +662,7 @@ function CourseGrid() {
                   ))}
                 </div>
               ) : (
-                <p className="sin-contenido">No hay vídeos.</p>
+                <p className="no-content">No hay vídeos.</p>
               )}
 
               <h4>Apuntes</h4>
@@ -691,7 +691,7 @@ function CourseGrid() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="sin-contenido">Sin apuntes.</p>
+                    <p className="no-content">Sin apuntes.</p>
                   )}
                 </div>
                 <div className="student-notes">
@@ -718,17 +718,17 @@ function CourseGrid() {
                       ))}
                     </ul>
                   ) : (
-                    <p className="sin-contenido">Sin apuntes.</p>
+                    <p className="no-content">Sin apuntes.</p>
                   )}
                 </div>
               </div>
 
               <h4>Ejercicios</h4>
               {contenidos.ejercicios.length > 0 ? (
-                <div className="ejercicios-list">
+                <div className="exercises-list">
                   {contenidos.ejercicios.map((e) => (
-                    <div key={e.id} className="ejercicio-row">
-                      <div className="ejercicio-row-main">
+                    <div key={e.id} className="exercise-row">
+                      <div className="exercise-row-main">
                         <CourseExerciseCard
                           ejercicio={e}
                           tipo={tipo}
@@ -741,11 +741,11 @@ function CourseGrid() {
                           handleDeleteContenido={handleDeleteItem}
                         />
                       </div>
-                      <div className="ejercicio-row-button">
+                      <div className="exercise-row-button">
                         {tipo === "profesor" || tipo === "administrador" ? (
                           // El profesor y el admin pueden ir a la pantalla de corrección/visualización de entregas
                           <button
-                            className="button-corregir-ejercicio"
+                            className="button-grade-exercise"
                             onClick={() =>
                               navigate(
                                 `/Home/Courses/${id}/GradeExercises/${e.id}`,
@@ -761,9 +761,11 @@ function CourseGrid() {
                               const entrega = uploadedEjercicios.find(
                                 (ej) => ej.ejercicioId === e.id,
                               );
-                              const puntuacion = puntuacionesEjercicios.find(
-                                (p) => p.ejercicioId === e.id,
-                              );
+                              const puntuacion = entrega
+                                ? puntuacionesEjercicios.find(
+                                    (p) => String(p.ejercicioId) === String(entrega.id),
+                                  )
+                                : null;
                               return (
                                 <>
                                   {entrega ? (
@@ -772,7 +774,7 @@ function CourseGrid() {
                                       href={entrega.archivo}
                                       target="_blank"
                                       rel="noreferrer"
-                                      className="button-ejercicio-subido"
+                                      className="button-exercise-submitted"
                                     >
                                       <img
                                         src={UploadFile2}
@@ -781,7 +783,7 @@ function CourseGrid() {
                                     </a>
                                   ) : (
                                     // Si no ha entregado, mostramos el input de subida disfrazado de botón
-                                    <label className="button-subir-ejercicio">
+                                    <label className="button-upload-exercise">
                                       <input
                                         type="file"
                                         className="file-input-hidden"
@@ -796,13 +798,13 @@ function CourseGrid() {
                                       <img
                                         src={UploadFile}
                                         alt="Subir"
-                                        className="img-subir-ejercicio"
+                                        className="img-upload-exercise"
                                       />
                                     </label>
                                   )}
                                   {/* Si el profesor ya puso nota, se muestra debajo del ejercicio */}
                                   {puntuacion && (
-                                    <div className="puntuacion-ejercicio">
+                                    <div className="exercise-score">
                                       <p>Nota: {puntuacion.puntuacion}</p>
                                     </div>
                                   )}
@@ -816,24 +818,24 @@ function CourseGrid() {
                   ))}
                 </div>
               ) : (
-                <p className="sin-contenido">No hay ejercicios.</p>
+                <p className="no-content">No hay ejercicios.</p>
               )}
             </>
           ) : (
-            <div className="mensaje-no-apuntado">
+            <div className="not-enrolled-message">
               <p>Debes apuntarte al curso para acceder a sus contenidos.</p>
             </div>
           )}
         </div>
 
         {/* Panel lateral derecho: datos del profesor, descripción del curso y comentarios */}
-        <div className="curso-detalles">
-          <div className="detalles-profesor">
+        <div className="course-details">
+          <div className="professor-details">
             <p>Profesor</p>
             {profesor ? (
               tipo === "alumno" ? (
                 <span
-                  className="link-profesor"
+                  className="professor-link"
                   onClick={() => navigate(`/Home/Professors/${profesor.id}`)}
                 >
                   {profesor.nombre} {profesor.apellidos}
@@ -845,7 +847,7 @@ function CourseGrid() {
               "Desconocido"
             )}
           </div>
-          <div className="detalles-descripcion">
+          <div className="description-details">
             <p>Descripción</p>
             {editingDescription ? (
               <div className="edit-description-box">
@@ -877,7 +879,7 @@ function CourseGrid() {
                       setDescriptionText(curso.descripcion);
                       setEditingDescription(true);
                     }}
-                    className="button-editar-descripcion"
+                    className="button-edit-description"
                   >
                     Editar
                   </button>
@@ -885,11 +887,11 @@ function CourseGrid() {
               </>
             )}
           </div>
-          <div className="detalles-comentarios">
+          <div className="comments-details">
             <p>Comentarios</p>
             {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
             {tipo === "alumno" && (
-              <div className="escribir-comentario">
+              <div className="write-comment">
                 <textarea
                   placeholder="Comenta..."
                   value={commentText}
@@ -904,9 +906,9 @@ function CourseGrid() {
               {comentarios
                 .slice()
                 .sort((a, b) => b.id - a.id)
-                .map((c) => (
-                  <div key={c.id} className="comentario-item">
-                    <div className="comentario-autor">
+                  .map((c) => (
+                  <div key={c.id} className="comment-item">
+                    <div className="comment-author">
                       <Avatar
                         name={`${c.nombre} ${c.apellidos}`}
                         src={
@@ -920,7 +922,7 @@ function CourseGrid() {
                         {c.nombre} {c.apellidos}
                       </span>
                     </div>
-                    {editingComment.id === c.id ? (
+                        {editingComment.id === c.id ? (
                       // Formulario de edición en línea para el comentario activo
                       <div className="edit-comment-box">
                         <textarea
@@ -943,7 +945,7 @@ function CourseGrid() {
                         user &&
                         Number(c.usuarioId) ===
                           Number(user.usuarioId || user.id) ? (
-                          <div className="comentario-acciones">
+                            <div className="comment-actions">
                             <button onClick={() => startEditComment(c)}>
                               Editar
                             </button>
@@ -955,7 +957,7 @@ function CourseGrid() {
                           /* Admin o Profesor en modo edición pueden borrar cualquier comentario */
                           (tipo === "administrador" ||
                             (tipo === "profesor" && editingMode)) && (
-                            <div className="comentario-acciones">
+                            <div className="comment-actions">
                               <button onClick={() => deleteComment(c.id)}>
                                 Borrar
                               </button>
@@ -979,7 +981,7 @@ function CourseGrid() {
           {/* El botón de editar/borrar contenido es visible solo para profesor */}
           {tipo === "profesor" && (
             <button
-              className="editarCurso"
+              className="edit-course-btn"
               onClick={() => setEditingMode(!editingMode)}
               title={editingMode ? "Salir edición" : "Editar"}
             >

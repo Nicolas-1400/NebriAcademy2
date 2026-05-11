@@ -11,7 +11,7 @@
    1. ESTRUCTURA GENERAL
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-grid {
+.course-grid {
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -21,7 +21,7 @@
    2. HEADER - SECCIÓN SUPERIOR COMPLETA CON IMAGEN DE FONDO
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-header {
+.course-header {
   width: 100%;
   background-size: cover;
   background-position: center;
@@ -36,7 +36,7 @@
 }
 
 /* Overlay oscuro (actualmente transparente) para el header */
-.curso-header::before {
+.course-header::before {
   content: "";
   position: absolute;
   top: 0;
@@ -48,7 +48,7 @@
 }
 
 /* Imagen de fondo del header: ahora usamos un <img> posicionado absolutamente */
-.curso-header-bg {
+.course-header-bg {
   position: absolute;
   top: 0;
   left: 0;
@@ -68,7 +68,7 @@
    3. INFO DEL HEADER - NOMBRE, CATEGORÍA Y NIVEL (ESQUINA INFERIOR IZQUIERDA)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-header-info {
+.course-header-info {
   display: flex;
   flex-direction: column;
   gap: 15px;
@@ -86,14 +86,14 @@
   border-radius: 10px;
 }
 
-.curso-header-info h2 {
+.course-header-info h2 {
   color: white;
   font-size: 36px;
   font-weight: bold;
   margin: 0;
   text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
 }
-.curso-header-info p {
+.course-header-info p {
   color: rgba(255, 255, 255, 0.95);
   font-size: 16px;
   margin: 0;
@@ -104,7 +104,7 @@
    4. BOTONES DEL HEADER - VALORACIÓN, FAVORITO, APUNTARSE (ESQUINA INFERIOR DERECHA)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-header-buttons {
+.course-header-buttons {
   display: flex;
   flex-direction: column;
   gap: 12px;
@@ -121,7 +121,7 @@
   transition: all 0.3s ease;
 }
 
-.curso-header-buttons p {
+.course-header-buttons p {
   display: flex;
   align-items: center;
   color: white;
@@ -181,15 +181,15 @@
    6. BOTONES DE FAVORITO Y APUNTARSE
    ───────────────────────────────────────────────────────────────────────────── */
 
-.button-favorito,
-.button-apuntarme {
+.favorite-button,
+.enroll-button {
   display: flex;
   gap: 8px;
   flex-wrap: wrap;
 }
 
-.button-favorito,
-.button-apuntarme {
+.favorite-button,
+.enroll-button {
   padding: 10px 16px;
   border: 2px solid var(--rojo-nebrija);
   background-color: white;
@@ -201,8 +201,8 @@
   transition: all 0.3s ease;
 }
 
-.button-favorito:hover,
-.button-apuntarme:hover {
+.favorite-button:hover,
+.enroll-button:hover {
   background-color: var(--rojo-nebrija);
   color: white;
   transform: translateY(-2px);
@@ -213,7 +213,7 @@
    7. CONTENEDOR PRINCIPAL - GRID CON 75% CONTENIDO Y 25% DETALLES
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-contenedor-principal {
+.course-main-container {
   display: grid;
   grid-template-columns: 75% 25%;
   gap: 30px;
@@ -227,7 +227,7 @@
    8. CONTENIDO DEL CURSO - SECCIÓN PRINCIPAL (75%)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.contenido-curso {
+.course-content {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
@@ -237,7 +237,7 @@
   gap: 35px;
 }
 
-.contenido-curso h3 {
+.course-content h3 {
   color: var(--rojo-nebrija);
   font-size: 26px;
   font-weight: 700;
@@ -246,7 +246,7 @@
   border-bottom: 3px solid var(--rojo-nebrija);
 }
 
-.contenido-curso h4 {
+.course-content h4 {
   color: var(--rojo-nebrija);
   width: fit-content;
   font-size: 20px;
@@ -370,7 +370,7 @@
   width: 15px;
 }
 
-.editarCurso {
+.edit-course-btn {
   position: fixed;
   right: 100px;
   bottom: 30px;
@@ -387,28 +387,29 @@
   transition: all 0.3s ease;
 }
 
-.editarCurso img {
+.edit-course-btn img {
   width: 26px;
   filter: invert(1);
 }
 
-.editarCurso:hover {
+.edit-course-btn:hover {
   background: var(--color-hover-button);
   border: 2px solid var(--rojo-nebrija);
   box-shadow: 0 0 10px var(--color-secundario);
 }
-.editarCurso:hover img {
+
+.edit-course-btn:hover img {
   filter: invert(0);
 }
 
 /* Variante del botón flotante para eliminar curso (admin) */
-.editarCurso--eliminar {
+.edit-course-btn--delete {
   background: linear-gradient(135deg, #c0392b, #e74c3c);
   border-color: #96281b;
   font-size: 20px;
 }
 
-.editarCurso--eliminar:hover {
+.edit-course-btn--delete:hover {
   background: linear-gradient(135deg, #96281b, #c0392b);
   border-color: #c0392b;
   box-shadow: 0 0 10px rgba(192, 57, 43, 0.5);
@@ -501,7 +502,7 @@
   gap: 20px;
 }
 
-.curso-grid .notes-list {
+.course-grid .notes-list {
   max-height: 400px;
   overflow-y: auto;
   padding-right: 5px;
@@ -537,34 +538,34 @@
 /* ─────────────────────────────────────────────────────────────────────────────
    10. SECCIÓN DE EJERCICIOS
    ───────────────────────────────────────────────────────────────────────────── */
-.ejercicios-list {
+.exercises-list {
   display: flex;
   flex-direction: column;
   gap: 20px;
 }
-.ejercicio-row {
+.exercise-row {
   display: flex;
   flex-direction: row;
   align-items: center;
   gap: 20px;
 }
-.ejercicio-row-main {
+.exercise-row-main {
   flex: 1;
   display: flex;
   flex-direction: column;
   width: 90%;
   gap: 8px;
 }
-.ejercicio-row-button {
+.exercise-row-button {
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 8px;
 }
 
-.button-corregir-ejercicio,
-.button-ejercicio-subido,
-.button-subir-ejercicio {
+.button-grade-exercise,
+.button-exercise-submitted,
+.button-upload-exercise {
   padding: 2px;
   width: 50px;
   height: 50px;
@@ -579,24 +580,24 @@
   justify-content: center;
 }
 
-.button-corregir-ejercicio:hover,
-.button-ejercicio-subido:hover,
-.button-subir-ejercicio:hover {
+.button-grade-exercise:hover,
+.button-exercise-submitted:hover,
+.button-upload-exercise:hover {
   background-color: var(--color-hover-button);
   border-color: var(--rojo-nebrija);
   transition: all 0.3s ease;
   translate: 2px 2px;
   box-shadow: none;
 }
-.button-corregir-ejercicio:active,
-.button-ejercicio-subido:active,
-.button-subir-ejercicio:active {
+.button-grade-exercise:active,
+.button-exercise-submitted:active,
+.button-upload-exercise:active {
   background-color: var(--color-secundario);
 }
 
-.button-corregir-ejercicio img,
-.button-ejercicio-subido img,
-.button-subir-ejercicio img {
+.button-grade-exercise img,
+.button-exercise-submitted img,
+.button-upload-exercise img {
   width: 100%;
   height: 100%;
   object-fit: contain;
@@ -606,11 +607,11 @@
   display: none;
 }
 
-.img-subir-ejercicio {
+.img-upload-exercise {
   cursor: pointer;
 }
 
-.puntuacion-ejercicio {
+.exercise-score {
   margin-top: 10px;
   width: 70px;
   font-weight: bold;
@@ -626,7 +627,7 @@
    11. MENSAJES SIN CONTENIDO Y NO APUNTADO
    ───────────────────────────────────────────────────────────────────────────── */
 
-.sin-contenido {
+.no-content {
   font-size: 13px;
   color: #999;
   font-style: italic;
@@ -636,7 +637,7 @@
   border-radius: 8px;
 }
 
-.mensaje-no-apuntado {
+.not-enrolled-message {
   font-size: 16px;
   color: var(--rojo-nebrija);
   font-weight: 600;
@@ -652,7 +653,7 @@
    12. DETALLES LATERALES - SECCIÓN DERECHA (25%)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.curso-detalles {
+.course-details {
   display: flex;
   flex-direction: column;
   gap: 20px;
@@ -663,18 +664,18 @@
    13. CAJAS DE DETALLES - PROFESOR, DESCRIPCIÓN, COMENTARIOS
    ───────────────────────────────────────────────────────────────────────────── */
 
-.detalles-profesor,
-.detalles-descripcion,
-.detalles-comentarios {
+.professor-details,
+.description-details,
+.comments-details {
   background-color: white;
   border-radius: 10px;
   box-shadow: 0 4px 15px rgba(0, 0, 0, 0.08);
   padding: 25px;
 }
 
-.detalles-profesor p,
-.detalles-descripcion p,
-.detalles-comentarios p {
+.professor-details p,
+.description-details p,
+.comments-details p {
   color: var(--color-secundario);
   border-bottom: 1px solid black;
   font-weight: 700;
@@ -683,38 +684,38 @@
   display: block;
 }
 
-.detalles-profesor,
-.detalles-descripcion,
-.detalles-comentarios {
+.professor-details,
+.description-details,
+.comments-details {
   position: relative;
   word-wrap: break-word;
 }
 
-.detalles-profesor,
-.detalles-descripcion {
+.professor-details,
+.description-details {
   border-top: 5px solid var(--rojo-nebrija);
 }
 
-.link-profesor {
+.professor-link {
   color: var(--rojo-nebrija);
   cursor: pointer;
   font-weight: 600;
   transition: all 0.3s ease;
 }
 
-.link-profesor:hover {
+.professor-link:hover {
   color: var(--color-secundario);
   text-decoration: none;
 }
 
-.detalles-comentarios {
+.comments-details {
   border-top: 5px solid var(--rojo-nebrija);
   flex: 1;
   display: flex;
   flex-direction: column;
 }
 
-.detalles-comentarios p:first-child {
+.comments-details p:first-child {
   margin-bottom: 15px;
 }
 /* ─────────────────────────────────────────────────────────────────────────────
@@ -753,7 +754,7 @@
 }
 
 .edit-description-actions button,
-.button-editar-descripcion {
+.button-edit-description {
   padding: 6px 12px;
   font-weight: 600;
   font-size: 13px;
@@ -767,7 +768,7 @@
 }
 
 .edit-description-actions button:hover,
-.button-editar-descripcion:hover {
+.button-edit-description:hover {
   background-color: var(--rojo-nebrija);
   color: white;
 }
@@ -776,7 +777,7 @@
    14. SECCIÓN DE DETALLES COMENTARIOS (acciones-general)
    ───────────────────────────────────────────────────────────────────────────── */
 
-.detalles-comentarios textarea {
+.comments-details textarea {
   width: 100%;
   padding: 12px;
   border: 2px solid #ddd;
@@ -788,13 +789,13 @@
   transition: all 0.3s ease;
 }
 
-.detalles-comentarios textarea:focus {
+.comments-details textarea:focus {
   outline: none;
   border-color: var(--rojo-nebrija);
   box-shadow: 0 0 0 3px rgba(194, 0, 47, 0.1);
 }
 
-.detalles-comentarios button {
+.comments-details button {
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
   background-color: transparent;
@@ -804,7 +805,7 @@
   margin-bottom: 10px;
 }
 
-.detalles-comentarios button:hover {
+.comments-details button:hover {
   background-color: var(--rojo-nebrija);
   color: white;
 }
@@ -821,38 +822,35 @@
   border-bottom: 1px solid #e0e0e0;
 }
 
-.curso-grid .comentarios-existentes {
+.course-grid .comentarios-existentes {
   max-height: 1000px;
   overflow-y: auto;
   padding-right: 5px;
 }
-
-.comentario-autor {
+.comment-author {
   display: flex;
   align-items: center;
   gap: 12px;
   margin-bottom: 12px;
 }
-
-.comentario-autor span {
+.comment-author span {
   font-weight: 700;
   color: var(--rojo-nebrija);
   font-size: 14px;
 }
 
 /* Forzar letras blancas en los avatares de comentarios */
-.comentario-autor .avatar-initials {
+.comment-author .avatar-initials {
   color: white !important;
 }
 
-.comentario-item button {
+.comment-item button {
   padding: 6px 12px;
   font-weight: 600;
   font-size: 13px;
   margin-right: 10px;
 }
-
-.comentario-item p {
+.comment-item p {
   font-size: 13px;
   font-weight: 100;
   color: black;
@@ -862,14 +860,14 @@
   padding: 10px;
 }
 
-.comentario-autor {
+.comment-author {
   display: flex;
   align-items: center;
   gap: 10px;
   margin-bottom: 8px;
 }
 
-.comentario-autor span {
+.comment-author span {
   font-weight: 700;
   color: var(--rojo-nebrija);
   font-size: 14px;
@@ -879,13 +877,12 @@
    16. FORMULARIO DE COMENTARIOS - ESCRIBIR NUEVO COMENTARIO
    ───────────────────────────────────────────────────────────────────────────── */
 
-.escribir-comentario {
+.write-comment {
   display: flex;
   flex-direction: column;
   gap: 12px;
 }
-
-.escribir-comentario button {
+.write-comment button {
   padding: 10px 18px;
   font-weight: 700;
   font-size: 14px;
@@ -900,33 +897,33 @@
    RESPONSIVE - Tablets (1024px)
    ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 1024px) {
-  .curso-header {
+  .course-header {
     flex-wrap: wrap;
     gap: 25px;
     padding: 35px;
     min-height: 350px;
   }
 
-  .curso-header-buttons {
+  .course-header-buttons {
     flex-shrink: 0;
   }
 
-  .curso-header-info img {
+  .course-header-info img {
     width: 150px;
     height: 150px;
   }
 
-  .curso-header-info h2 {
+  .course-header-info h2 {
     font-size: 28px;
   }
 
-  .contenido-curso {
+  .course-content {
     padding: 15px;
   }
 
-  .detalles-profesor,
-  .detalles-descripcion,
-  .detalles-comentarios {
+  .professor-details,
+  .description-details,
+  .comments-details {
     padding: 20px;
   }
 }
@@ -935,42 +932,42 @@
    RESPONSIVE - Tablets/Móviles medianos (768px)
    ───────────────────────────────────────────────────────────────────────────── */
 @media (max-width: 768px) {
-  .curso-grid {
+  .course-grid {
     min-height: auto;
   }
 
-  .curso-header {
+  .course-header {
     flex-direction: column;
     align-items: flex-start;
     padding: 25px;
     min-height: 300px;
   }
 
-  .curso-header-buttons {
+  .course-header-buttons {
     align-self: flex-end;
     gap: 10px;
   }
 
-  .curso-header-info {
+  .course-header-info {
     gap: 12px;
   }
 
-  .curso-header-info img {
+  .course-header-info img {
     width: 100%;
     max-width: 200px;
     height: auto;
     aspect-ratio: 1;
   }
 
-  .curso-header-info h2 {
+  .course-header-info h2 {
     font-size: 24px;
   }
 
-  .curso-header-buttons p {
+  .course-header-buttons p {
     font-size: 12px;
   }
 
-  .curso-header-buttons button {
+  .course-header-buttons button {
     padding: 8px 12px;
     font-size: 11px;
   }
@@ -981,12 +978,12 @@
     height: 36px;
   }
 
-  .curso-contenedor-principal {
+  .course-main-container {
     padding: 20px;
     gap: 10px;
   }
 
-  .contenido-curso h3 {
+  .course-content h3 {
     font-size: 22px;
   }
 
@@ -995,14 +992,14 @@
     font-size: 18px;
   }
 
-  .detalles-profesor p,
-  .detalles-descripcion p,
-  .detalles-comentarios p {
+  .professor-details p,
+  .description-details p,
+  .comments-details p {
     font-size: 15px;
   }
 }
 @media (max-width: 655px) {
-  .curso-grid {
+  .course-grid {
     word-break: break-word;
   }
 }
