@@ -1,13 +1,13 @@
 @import "../../../../styles/general.css";
 
 /* El sidebar (SearchSidebar) en esta página */
-.TodosProfesoresGrid > .search-sidebar {
+.all-professors-grid > .search-sidebar {
   width: clamp(250px, 20%, 300px);
   flex-shrink: 0;
 }
 
 /* PROFESORES */
-.TodosProfesoresGrid {
+.all-professors-grid {
   display: flex;
   gap: 30px;
   padding: 40px;
@@ -18,7 +18,7 @@
   background-position: center;
 }
 
-.profesores-grid {
+.professors-grid {
   flex: 1;
   min-width: 0;
   background-color: rgba(255, 224, 224, 0.9);
@@ -26,7 +26,7 @@
   border-radius: 10px;
 }
 
-.profesores-grid h2 {
+.professors-grid h2 {
   color: #333;
   margin-bottom: 30px;
   padding-bottom: 10px;
@@ -35,7 +35,7 @@
   font-weight: 700;
 }
 
-.profesores-contenedor {
+.professors-container {
   display: flex;
   gap: 20px;
   flex-wrap: wrap;
@@ -43,12 +43,12 @@
   padding: 0;
 }
 
-.profesores-contenedor .tarjeta-profesor {
+.professors-container .professor-card {
   flex: 0 0 240px;
 }
 
 .empty-message,
-.TodosProfesoresGrid > p {
+.all-professors-grid > p {
   color: #999;
   font-size: 14px;
   font-style: italic;
@@ -58,71 +58,71 @@
 }
 
 /* Scrollbar cuando haya overflow horizontal */
-.profesores-contenedor::-webkit-scrollbar {
+.professors-container::-webkit-scrollbar {
   height: 8px;
 }
 
-.profesores-contenedor::-webkit-scrollbar-track {
+.professors-container::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
 }
 
-.profesores-contenedor::-webkit-scrollbar-thumb {
+.professors-container::-webkit-scrollbar-thumb {
   background: var(--rojo-nebrija);
   border-radius: 10px;
 }
 
 /* RESPONSIVE 1024px */
 @media (max-width: 1024px) {
-  .TodosProfesoresGrid {
+  .all-professors-grid {
     padding: 35px 20px;
   }
 
-  .profesores-contenedor {
+  .professors-container {
     gap: 18px;
     padding: 0;
   }
 
-  .profesores-contenedor .tarjeta-profesor {
+  .professors-container .professor-card {
     flex: 0 0 220px;
   }
 }
 
 /* RESPONSIVE 768px — sidebar sube al top */
 @media (max-width: 768px) {
-  .TodosProfesoresGrid {
+  .all-professors-grid {
     flex-direction: column;
     padding: 15px;
     gap: 15px;
   }
 
-  .TodosProfesoresGrid > .search-sidebar {
+  .all-professors-grid > .search-sidebar {
     width: 100%;
   }
 
-  .profesores-grid h2 {
+  .professors-grid h2 {
     font-size: 22px;
     margin-bottom: 20px;
   }
 
-  .profesores-contenedor .tarjeta-profesor {
+  .professors-container .professor-card {
     flex: 0 0 48%;
   }
 }
 
 /* RESPONSIVE 480px */
 @media (max-width: 480px) {
-  .profesores-contenedor {
+  .professors-container {
     gap: 12px;
     justify-content: center;
   }
 
-  .profesores-contenedor .tarjeta-profesor {
+  .professors-container .professor-card {
     flex: 0 0 100%;
     max-width: 420px;
   }
 
-  .profesores-grid h2 {
+  .professors-grid h2 {
     font-size: 20px;
   }
 }

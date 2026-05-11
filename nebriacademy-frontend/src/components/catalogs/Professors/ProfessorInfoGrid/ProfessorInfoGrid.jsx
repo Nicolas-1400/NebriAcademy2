@@ -53,7 +53,7 @@ function ProfessorInfoGrid() {
     fetchData();
   }, [id]);
 
-  if (error) return <p className="error-msg">{error}</p>;
+  if (error) return <p className="error-message">{error}</p>;
   if (loading)
     return <p className="loading-message">Cargando perfil del profesor...</p>;
 

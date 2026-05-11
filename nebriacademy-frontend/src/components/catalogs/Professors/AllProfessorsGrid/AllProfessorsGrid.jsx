@@ -66,10 +66,10 @@ function AllProfessorsGrid() {
   ];
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
-  if (error) return <p className="error-msg">{error}</p>;
+  if (error) return <p className="error-message">{error}</p>;
 
   return (
-    <div className="TodosProfesoresGrid">
+    <div className="all-professors-grid">
       {/* Sidebar lateral con buscador por nombre y filtro por especialización */}
       <SearchSidebar
         searchTerm={searchTerm}
@@ -85,12 +85,12 @@ function AllProfessorsGrid() {
       />
 
       {/* Grid principal con las tarjetas de los profesores filtrados */}
-      <div className="profesores-grid">
+      <div className="professors-grid">
         <h2>Profesores</h2>
         {loading ? (
           <p className="loading-message">Cargando profesores...</p>
         ) : filteredProfesores.length > 0 ? (
-          <div className="profesores-contenedor">
+          <div className="professors-container">
             {filteredProfesores.map((p) => (
               <ProfessorCard
                 key={p.id}
