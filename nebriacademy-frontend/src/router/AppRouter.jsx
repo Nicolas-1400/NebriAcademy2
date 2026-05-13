@@ -190,7 +190,7 @@ function AppRouter() {
         <Route
           path="/Home/Courses/:courseId/GradeExercises/:exerciseId"
           element={
-            <ProtectedRoute requiredTipo={["profesor", "administrador"]}>
+            <ProtectedRoute requiredTipo="profesor">
               <GradeExercises />
             </ProtectedRoute>
           }
