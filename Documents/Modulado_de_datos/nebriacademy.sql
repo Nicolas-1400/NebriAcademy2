@@ -14,27 +14,6 @@
 /*!40014 SET @OLD_FOREIGN_KEY_CHECKS=@@FOREIGN_KEY_CHECKS, FOREIGN_KEY_CHECKS=0 */;
 /*!40101 SET @OLD_SQL_MODE=@@SQL_MODE, SQL_MODE='NO_AUTO_VALUE_ON_ZERO' */;
 /*!40111 SET @OLD_SQL_NOTES=@@SQL_NOTES, SQL_NOTES=0 */;
-SET @MYSQLDUMP_TEMP_LOG_BIN = @@SESSION.SQL_LOG_BIN;
-SET @@SESSION.SQL_LOG_BIN= 0;
-
---
--- GTID state at the beginning of the backup 
---
-
-SET @@GLOBAL.GTID_PURGED=/*!80000 '+'*/ '2ab3849c-37d6-11f1-bd6c-1e0c9b6e56aa:1-127,
-30fb175e-33f7-11f1-8461-a693a0a5af93:1-15,
-5545ae7a-3722-11f1-9975-36ec638b158f:1-135,
-5e668b9a-3713-11f1-891a-bade3ac00f92:1-91,
-67a0ec0e-371d-11f1-8a82-92ace150940c:1-94,
-6830b7a7-370b-11f1-bfad-aaf3e92072e8:1-69,
-963a8f56-371a-11f1-94a8-5ea4b0289d10:1-96,
-b24c7247-33ed-11f1-a111-4ed8722d7942:1-15,
-bc1a2150-3356-11f1-aff8-621a46c7c30c:1-27,
-c0df0eae-33e5-11f1-a408-a27b3c8d632d:1-85,
-c87b417b-34ae-11f1-b6b2-72df6d2ad353:1-35,
-cc571ef3-37d4-11f1-afc5-cae20e7fc797:1-119,
-f084a3ef-371e-11f1-aa5b-e226cb21fe46:1-97,
-f2afd3bb-37df-11f1-b40b-da3c8bc6dcc8:1-899';
 
 --
 -- Table structure for table `administradores`
@@ -523,7 +502,6 @@ LOCK TABLES `videos` WRITE;
 INSERT INTO `videos` VALUES (4,6,16,'Video prueba__','https://res.cloudinary.com/dge59jbqb/video/upload/v1777017879/nebriacademy/videos/WhatsApp_Video_2025-11-25_at_13.42.22.mp4');
 /*!40000 ALTER TABLE `videos` ENABLE KEYS */;
 UNLOCK TABLES;
-SET @@SESSION.SQL_LOG_BIN = @MYSQLDUMP_TEMP_LOG_BIN;
 /*!40103 SET TIME_ZONE=@OLD_TIME_ZONE */;
 
 /*!40101 SET SQL_MODE=@OLD_SQL_MODE */;
