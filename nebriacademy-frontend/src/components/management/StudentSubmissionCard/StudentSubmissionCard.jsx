@@ -29,8 +29,8 @@ function StudentSubmissionCard({ registro }) {
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
-    <li key={registro.id} className="submission-card">
-      <div className="card-content">
+    <div className="item-row submission-card">
+      <div className="item-main">
         <a href={archivo} target="_blank" rel="noreferrer">
           {nombre}
         </a>
@@ -39,9 +39,9 @@ function StudentSubmissionCard({ registro }) {
           <div className="upload-info">Subido por: {alumnoNombre}</div>
         )}
 
-        {descripcion && <p className="mt-2">{descripcion}</p>}
+        {registro.fecha && <div className="note-category"><p>{registro.fecha}</p></div>}
       </div>
-    </li>
+    </div>
   );
 }
 

@@ -1,16 +1,7 @@
 @import "../../../styles/general.css";
 
-/* Estilos para la tarjeta de entrega de estudiante */
-
-.submission-item {
-  display: flex;
-  flex-direction: column;
-  gap: 15px;
-  margin-bottom: 20px;
-  padding: 15px;
-  background-color: rgba(255, 0, 0, 0.132);
-  border: 2px solid var(--rojo-nebrija);
-  border-radius: 8px;
+.item-row {
+  margin-bottom: 12px;
 }
 
 .grade-container {
@@ -18,20 +9,17 @@
   align-items: center;
   gap: 10px;
 }
-
 .grade-input {
   width: 60px;
   padding: 5px;
   border: 2px solid black;
   border-radius: 5px;
 }
-
 .grade-input:focus {
   outline: none;
   border-color: var(--color-secundario);
 }
-
-.save-grade-btn {
+.save-grade-btn, .delete-submission-btn {
   padding: 8px;
   border: 2px solid var(--rojo-nebrija);
   border-radius: 5px;
@@ -41,38 +29,29 @@
   transition: all 0.3s ease;
 }
 
-.save-grade-btn:hover {
-  background-color: var(--rojo-nebrija);
-  color: white;
+.save-grade-btn:hover { 
+  background-color: var(--rojo-nebrija); 
+  color: white; 
 }
 
-.save-grade-btn:active {
-  background-color: var(--color-secundario);
-  border-color: var(--color-secundario);
+.delete-submission-btn { 
+  background-color: var(--rojo-nebrija); 
+  color: white; 
 }
 
-.delete-submission-btn {
-  padding: 8px;
-  border: 2px solid var(--rojo-nebrija);
-  border-radius: 5px;
-  background-color: var(--rojo-nebrija);
-  color: white;
-  cursor: pointer;
-  transition: all 0.3s ease;
+.delete-submission-btn:hover { 
+  background-color: #a00026; 
 }
 
-.delete-submission-btn:hover {
-  background-color: #a00026;
-  color: white;
+/* Responsive */
+@media (max-width: 768px) {
+  .item-row { padding: 10px; }
+  .item-main a { font-size: 14px; }
+  .item-main p { font-size: 12px; }
 }
 
-.delete-submission-btn:active {
-  background-color: var(--color-secundario);
-  border-color: var(--color-secundario);
-}
-
-.upload-info {
-  color: var(--color-primario);
-  text-align: center;
-  margin-bottom: 20px;
+@media (max-width: 450px) {
+  .item-row { padding: 8px; flex-direction: column; align-items: flex-start; }
+  .right-section-notes { flex-direction: row; gap: 8px; margin-top: 8px; }
+  .item-main a { font-size: 13px; }
 }

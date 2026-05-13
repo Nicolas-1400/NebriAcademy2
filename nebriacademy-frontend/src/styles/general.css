@@ -398,6 +398,23 @@ body {
   transition: all 0.3s ease;
 }
 
+/* ── LAYOUT: Footer siempre abajo (sticky footer) ── */
+html, body, #root {
+  height: 100%;
+}
+
+/* Asegura que cada página principal sea un contenedor vertical que pueda empujar el footer */
+body > #root > * {
+  display: flex;
+  flex-direction: column;
+  min-height: 100vh;
+}
+
+/* Si el footer está dentro del árbol de la página, margin-top:auto lo sitúa abajo */
+.footer {
+  margin-top: auto;
+}
+
 .cancel-btn:hover {
   background: transparent;
   border: 2px solid var(--rojo-nebrija);
