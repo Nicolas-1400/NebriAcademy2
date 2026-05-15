@@ -34,6 +34,7 @@ function AddCourseGrid() {
 
   const [error, setError] = useState("");
   const [success, setSuccess] = useState("");
+  const [submitting, setSubmitting] = useState(false);
 
   // Referencias a los inputs de tipo file para poder limpiarlos tras el envío exitoso
   const fileInputRef = useRef(null);
@@ -86,6 +87,7 @@ function AddCourseGrid() {
       return setError("El ejercicio requiere un nombre");
 
     try {
+      setSubmitting(true);
       const profesorId = usuarioStore?.id;
 
       if (!profesorId) {
@@ -196,6 +198,9 @@ function AddCourseGrid() {
     } catch (error) {
       console.error(error);
       setError(error.message || "Error de conexión con el servidor");
+    } finally {
+      // Mantener el botón desactivado 5 segundos tras el envío para evitar duplicados
+      setTimeout(() => setSubmitting(false), 5000);
     }
   };
 
@@ -361,8 +366,12 @@ function AddCourseGrid() {
               {success && <p className="success-message">{success}</p>}
               {error && <p className="error-message">{error}</p>}
 
-              <button type="submit" className="submit-button">
-                Crear curso
+              <button
+                type="submit"
+                className="submit-button"
+                disabled={submitting}
+              >
+                {submitting ? "Creando..." : "Crear curso"}
               </button>
               <button
                 type="button"

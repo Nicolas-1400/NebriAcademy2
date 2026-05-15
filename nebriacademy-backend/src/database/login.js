@@ -22,8 +22,15 @@ router.post("/auth", async (req, res) => {
 
     // Buscamos primero entre los administradores; si coincide email y contraseña, respondemos con sus datos
     const admins = await Administradores.findAll();
+    // Rechazamos administradores sin datos (nombre/apellidos) para evitar cuentas "vacías".
     const admin = admins.find(
-      (a) => a.email === email && a.contrasena === contrasena,
+      (a) =>
+        a.email === email &&
+        a.contrasena === contrasena &&
+        a.nombre &&
+        a.apellidos &&
+        a.nombre.toString().trim() !== "" &&
+        a.apellidos.toString().trim() !== "",
     );
     if (admin) {
       return res.json({
@@ -47,8 +54,16 @@ router.post("/auth", async (req, res) => {
     // Si no era administrador, buscamos entre los alumnos con el mismo criterio.
     // Los alumnos vinculados a un profesor (esVinculado=1) nunca pueden iniciar sesión directamente.
     const alumnos = await Alumnos.findAll();
+    // Rechazamos alumnos incompletos (sin nombre/apellidos) y los vinculados
     const alumno = alumnos.find(
-      (a) => !a.esVinculado && a.email === email && a.contrasena === contrasena,
+      (a) =>
+        !a.esVinculado &&
+        a.email === email &&
+        a.contrasena === contrasena &&
+        a.nombre &&
+        a.apellidos &&
+        a.nombre.toString().trim() !== "" &&
+        a.apellidos.toString().trim() !== "",
     );
     if (alumno) {
       return res.json({
@@ -74,8 +89,15 @@ router.post("/auth", async (req, res) => {
 
     // Si no era alumno, buscamos entre los profesores con el mismo criterio
     const profesores = await Profesores.findAll();
+    // Rechazamos profesores sin nombre/apellidos para evitar accesos antes de completar perfil
     const profesor = profesores.find(
-      (p) => p.email === email && p.contrasena === contrasena,
+      (p) =>
+        p.email === email &&
+        p.contrasena === contrasena &&
+        p.nombre &&
+        p.apellidos &&
+        p.nombre.toString().trim() !== "" &&
+        p.apellidos.toString().trim() !== "",
     );
     if (profesor) {
       return res.json({
