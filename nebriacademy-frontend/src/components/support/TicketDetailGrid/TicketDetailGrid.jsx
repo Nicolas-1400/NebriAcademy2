@@ -143,7 +143,7 @@ function TicketDetailGrid() {
   };
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
-  if (loading) return <p>Cargando ticket...</p>;
+  if (loading) return <p className="loading-message">Cargando ticket...</p>;
   if (error) return <p>{error}</p>;
   if (!ticket) return null;
 
