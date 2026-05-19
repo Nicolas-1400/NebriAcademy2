@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../../config/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useAuthStore from "../../../../store/useAuthStore";
 import { useParams, useNavigate } from "react-router-dom";
 import useToastStore from "../../../../store/toastStore";
@@ -73,6 +73,16 @@ function CourseGrid() {
   const [editingDescription, setEditingDescription] = useState(false);
   const [descriptionText, setDescriptionText] = useState("");
   const [commentsExpanded, setCommentsExpanded] = useState(false);
+  // Locks para prevenir acciones duplicadas (double-click)
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => {
+      delete locksRef.current[key];
+    }, delay);
+    return true;
+  };
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
   // Mapa de nombre → imagen importada para resolver la portada del curso desde la BDD
@@ -249,6 +259,7 @@ function CourseGrid() {
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Elimina un elemento de contenido del curso (vídeo, apunte o ejercicio) con confirmación
   const handleDeleteItem = async (type, itemId) => {
+    if (!acquireLock(`delete-${type}-${itemId}`)) return;
     const isModerator = tipo === "administrador" || tipo === "profesor";
     const result = await showConfirm(
       "¿Eliminar este elemento?",
@@ -295,6 +306,11 @@ function CourseGrid() {
   // Gestiona las acciones del alumno sobre el curso: valorar, marcar favorito y apuntarse
   const handleLike = async (action, value) => {
     try {
+      if (!acquireLock(`like-${action}`)) return;
+      // Evitamos que un alumno no apuntado pueda votar
+      if (action === "valoracion" && tipo === "alumno" && !registroUser?.apuntado) return;
+      // Evitamos votaciones repetidas del mismo valor
+      if (action === "valoracion" && registroUser?.valoracion === value) return;
       let url;
       let body = { cursoId: id, alumnoId: user.id };
 
@@ -350,6 +366,7 @@ function CourseGrid() {
   // Alterna el like de un apunte del alumno y actualiza el contador localmente
   const handleToggleApunteLike = async (apunte) => {
     if (!user?.id || tipo !== "alumno") return;
+    if (!acquireLock(`apunte-like-${apunte.id}`)) return;
     try {
       const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
@@ -381,6 +398,12 @@ function CourseGrid() {
 
   // Sube la entrega de un ejercicio del alumno al servidor y la registra en el estado local
   const uploadEjercicio = async (file, ejercicioId) => {
+    // Solo alumnos apuntados pueden subir ejercicios
+    if (tipo === "alumno" && !registroUser?.apuntado) {
+      addToast("Debes apuntarte al curso para subir ejercicios", "error");
+      return;
+    }
+    if (!acquireLock(`upload-ej-${ejercicioId}`)) return;
     try {
       const form = new FormData();
       form.append("archivo", file);
@@ -413,6 +436,11 @@ function CourseGrid() {
   // Envía un nuevo comentario al backend y recarga la lista de comentarios del curso
   const handleCommentSubmit = async () => {
     if (!commentText.trim()) return;
+    if (tipo === "alumno" && !registroUser?.apuntado) {
+      addToast("Debes apuntarte al curso para comentar", "error");
+      return;
+    }
+    if (!acquireLock(`comment-submit-${id}`)) return;
     try {
       const respuesta = await fetch(`${API_URL}/comentarioalumnocurso`, {
         method: "POST",
@@ -456,6 +484,7 @@ function CourseGrid() {
     );
     if (reason === false) return;
 
+    if (!acquireLock(`delete-comment-${cid}`)) return;
     try {
       const reasonParam =
         typeof reason === "string"
@@ -516,6 +545,7 @@ function CourseGrid() {
   // Guarda el texto editado del comentario en el backend y actualiza el estado local
   const saveEditComment = async () => {
     if (!editingComment.text.trim()) return;
+    if (!acquireLock(`edit-comment-${editingComment.id}`)) return;
     try {
       const res = await fetch(
         `${API_URL}/comentarioalumnocurso/${editingComment.id}`,
@@ -584,7 +614,9 @@ function CourseGrid() {
               <strong>Valoración: </strong>
               <button
                 className="vote-up"
-                onClick={() => handleLike("valoracion", true)}
+                onClick={() => registroUser?.apuntado && handleLike("valoracion", true)}
+                disabled={!registroUser?.apuntado || registroUser?.valoracion === true}
+                title={!registroUser?.apuntado ? "Apúntate al curso para valorar" : "Votar positivo"}
               >
                 <img
                   src={
@@ -598,7 +630,9 @@ function CourseGrid() {
               <strong> {curso.valoracion || 0} </strong>
               <button
                 className="vote-down"
-                onClick={() => handleLike("valoracion", false)}
+                onClick={() => registroUser?.apuntado && handleLike("valoracion", false)}
+                disabled={!registroUser?.apuntado || registroUser?.valoracion === false}
+                title={!registroUser?.apuntado ? "Apúntate al curso para valorar" : "Votar negativo"}
               >
                 <img
                   src={
@@ -613,7 +647,9 @@ function CourseGrid() {
             <p>
               <button
                 className="favorite-button"
-                onClick={() => handleLike("favorito")}
+                onClick={() => registroUser?.apuntado && handleLike("favorito")}
+                disabled={!registroUser?.apuntado}
+                title={!registroUser?.apuntado ? "Apúntate al curso para marcar favorito" : "Marcar favorito"}
               >
                 {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
               </button>
@@ -896,8 +932,8 @@ function CourseGrid() {
               <span className={`arrow-toggle ${commentsExpanded ? 'active' : ''}`}>▶</span>
             </div>
             <div className={`comments-content ${commentsExpanded ? 'expanded' : ''}`}>
-              {/* Caja para escribir nuevos comentarios: solo visible para alumnos, nunca admin */}
-              {tipo === "alumno" && (
+              {/* Caja para escribir nuevos comentarios: solo visible para alumnos apuntados */}
+              {tipo === "alumno" && registroUser?.apuntado && (
                 <div className="write-comment">
                   <textarea
                     placeholder="Comenta..."
@@ -913,7 +949,7 @@ function CourseGrid() {
               {comentarios
                 .slice()
                 .sort((a, b) => b.id - a.id)
-                  .map((c) => (
+                .map((c) => (
                   <div key={c.id} className="comment-item">
                     <div className="comment-author">
                       <Avatar
@@ -952,7 +988,7 @@ function CourseGrid() {
                         user &&
                         Number(c.usuarioId) ===
                           Number(user.usuarioId || user.id) ? (
-                            <div className="comment-actions">
+                          <div className="comment-actions">
                             <button onClick={() => startEditComment(c)}>
                               Editar
                             </button>
@@ -998,21 +1034,25 @@ function CourseGrid() {
           )}
 
           {/* El botón "+" de añadir contenido: visible para alumno y profesor, nunca para admin */}
-          {(tipo === "profesor" || tipo === "alumno") && (
+          {(tipo === "profesor" || (tipo === "alumno" && registroUser?.apuntado)) && (
             <div className="relative-container">
               <button
                 className={`upload-course-content-btn${rotado ? " rotated" : ""}`}
                 onClick={() => {
                   setRotado((prev) => !prev);
-                  if (tipo === "alumno") {
-                    // El alumno solo puede subir apuntes
-                    navigate(`/Home/AddContent/curso/${id}`, {
-                      state: { tipo: "apunte", cursoId: id },
-                    });
-                  } else {
-                    // El profesor abre un menú para elegir el tipo de contenido a subir
-                    setShowAddMenu(!showAddMenu);
-                  }
+                      if (tipo === "alumno") {
+                        // El alumno solo puede subir apuntes y debe estar apuntado
+                        if (!registroUser?.apuntado) {
+                          addToast("Apúntate al curso para añadir contenido", "error");
+                          return;
+                        }
+                        navigate(`/Home/AddContent/curso/${id}`, {
+                          state: { tipo: "apunte", cursoId: id },
+                        });
+                      } else {
+                        // El profesor abre un menú para elegir el tipo de contenido a subir
+                        setShowAddMenu(!showAddMenu);
+                      }
                 }}
                 title="Añadir contenido"
               >

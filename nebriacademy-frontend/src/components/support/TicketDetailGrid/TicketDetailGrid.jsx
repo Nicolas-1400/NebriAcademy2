@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 import useToastStore from "../../../store/toastStore";
@@ -26,6 +26,14 @@ function TicketDetailGrid() {
   const [archivosAdjuntar, setArchivosAdjuntar] = useState([]);
   const [subiendoAdjuntos, setSubiendoAdjuntos] = useState(false);
   const [mensajeAdjuntos, setMensajeAdjuntos] = useState("");
+  const locksRef = useRef({});
+  // Helper de bloqueo local para evitar envíos duplicados en comentarios/adjuntos
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Carga inicial del ticket en cuanto detecta su "key" (ej: SUP-123)
@@ -58,6 +66,7 @@ function TicketDetailGrid() {
   const handleEnviarComentario = async (e) => {
     e.preventDefault();
     if (!nuevoComentario.trim()) return;
+    if (!acquireLock(`ticket-comment-${issueKey}`)) return;
     setEnviandoComentario(true);
     try {
       const res = await fetch(`${API_URL}/jira/ticket/${issueKey}/comentario`, {
@@ -93,6 +102,7 @@ function TicketDetailGrid() {
   const handleSubirAdjuntos = async (e) => {
     e.preventDefault();
     if (!archivosAdjuntar || archivosAdjuntar.length === 0) return;
+    if (!acquireLock(`ticket-attach-${issueKey}`)) return;
     setSubiendoAdjuntos(true);
     setMensajeAdjuntos("");
     try {

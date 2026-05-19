@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import useToastStore from "../../../store/toastStore";
 
@@ -18,6 +18,14 @@ function HelpGrid() {
   
   // Bloqueo del botón de envío mientras se procesa la petición
   const [enviando, setEnviando] = useState(false);
+  // Evita envíos duplicados del formulario de ayuda (incidencias).
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Construye un payload multipart (para incluir archivos) y lo envía a la pasarela backend de Jira
@@ -54,6 +62,7 @@ function HelpGrid() {
       formData.append("archivo", archivo);
     }
 
+    if (!acquireLock("help-submit")) return;
     try {
       setEnviando(true);
       const res = await fetch(`${API_URL}/jira`, {

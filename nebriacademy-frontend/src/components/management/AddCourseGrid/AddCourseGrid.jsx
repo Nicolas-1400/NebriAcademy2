@@ -43,6 +43,15 @@ function AddCourseGrid() {
 
   const navigate = useNavigate();
   const usuarioStore = useAuthStore((state) => state.user);
+  // Bloqueo local para evitar envíos duplicados al crear un curso.
+  // Esto impide que el profesor pulse varias veces "Crear curso" por error.
+  const locksRefLocal = useRef({});
+  const acquireLockLocal = (key, delay = 800) => {
+    if (locksRefLocal.current[key]) return false;
+    locksRefLocal.current[key] = true;
+    setTimeout(() => delete locksRefLocal.current[key], delay);
+    return true;
+  };
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Sube un archivo de contenido a un endpoint concreto con los metadatos dados
@@ -75,6 +84,8 @@ function AddCourseGrid() {
     e.preventDefault();
     setError("");
     setSuccess("");
+
+    if (!acquireLockLocal("create-course")) return;
 
     if (!nombreCurso || !categoria || !descripcion || !nivel) {
       return setError("Rellena todos los campos obligatorios del curso");

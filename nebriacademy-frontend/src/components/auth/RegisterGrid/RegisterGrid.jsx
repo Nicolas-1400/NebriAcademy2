@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -25,6 +25,14 @@ function RegisterGrid({ tipo }) {
   });
 
   const [error, setError] = useState("");
+  // Bloqueo para evitar envíos duplicados durante el registro de usuarios.
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // Campos según rol: alumnoexterno requiere tarjeta; alumnonebrija usa email precargado; profesor requiere IBAN y especialización
 
@@ -63,6 +71,8 @@ function RegisterGrid({ tipo }) {
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!acquireLock(`register-${tipo}`)) return;
 
     // Determina endpoint y elimina campos no relevantes según el rol
     let endpoint = "";

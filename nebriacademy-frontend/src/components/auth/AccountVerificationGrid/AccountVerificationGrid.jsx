@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
@@ -14,12 +14,22 @@ function AccountVerificationGrid({ tipo }) {
   // Mensaje de error mostrado al usuario
   const [error, setError] = useState("");
   const navigate = useNavigate();
+  const locksRef = useRef({});
+  // Bloqueo local para evitar envíos duplicados desde la interfaz (clicks rápidos)
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Envía el email y el código al backend y redirige si la verificación es correcta
   const handleVerification = async (e) => {
     e.preventDefault();
     setError("");
+
+    if (!acquireLock(`verify-${tipo}`)) return;
 
     // Bifurcación según el tipo de usuario para llamar al endpoint correspondiente
     if (tipo === "alumnonebrija") {

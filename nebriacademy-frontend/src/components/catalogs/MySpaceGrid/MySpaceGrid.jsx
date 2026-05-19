@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import CardSlider from "../../common/Sliders/CardSlider";
 import SliderComponent from "../../common/Sliders/SliderComponent";
@@ -23,6 +23,7 @@ function MySpaceGrid() {
   const [likedApuntes, setLikedApuntes] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const locksRef = useRef({});
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   // Al montar el componente, cargamos todos los datos necesarios en paralelo
@@ -121,6 +122,14 @@ function MySpaceGrid() {
   // Alterna el like de un apunte: actualiza el backend y luego el estado local
   const handleToggleLike = async (apunte) => {
     if (!user) return;
+    if (!locksRef.current) locksRef.current = {};
+    const acquire = (key, delay = 800) => {
+      if (locksRef.current[key]) return false;
+      locksRef.current[key] = true;
+      setTimeout(() => delete locksRef.current[key], delay);
+      return true;
+    };
+    if (!acquire(`apunte-like-${apunte.id}`)) return;
     try {
       const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
