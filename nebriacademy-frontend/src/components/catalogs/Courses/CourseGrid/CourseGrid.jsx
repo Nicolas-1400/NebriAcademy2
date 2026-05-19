@@ -44,7 +44,7 @@ function CourseGrid() {
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [curso, setCurso] = useState(null);
-  // Estado del botón "+" para animar su rotación al abrirse el menú de añadir contenido
+  // Indica si los datos principales del curso se están cargando; usado para mostrar el mensaje "Cargando"
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [contenidos, setContenidos] = useState({
@@ -108,6 +108,8 @@ function CourseGrid() {
     if (!id) return;
 
     const fetchAll = async () => {
+      // Marcar inicio de carga para mostrar indicador mientras hacemos las peticiones
+      setLoading(true);
       try {
         const respuestaCurso = await fetch(`${API_URL}/cursos/${id}`).then(
           (respuesta) => (respuesta.ok ? respuesta.json() : null),
@@ -183,6 +185,9 @@ function CourseGrid() {
       } catch (e) {
         console.error(e);
         setError("Error cargando el curso");
+      } finally {
+        // Siempre desactivamos el indicador de carga al terminar
+        setLoading(false);
       }
     };
 
@@ -579,7 +584,8 @@ function CourseGrid() {
   };
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
-  if (!curso) return <p>Cargando curso...</p>;
+  // Mostrar indicador de carga consistente con el resto de componentes
+  if (loading) return <p className="loading-message">Cargando curso...</p>;
   if (error) return <p className="error">{error}</p>;
 
   // Separamos los apuntes del profesor de los de los alumnos para mostrarlos en columnas distintas y los ordenamos por likes
