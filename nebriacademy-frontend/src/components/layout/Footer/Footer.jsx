@@ -1,21 +1,24 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Linkedin from "../../../assets/Icons/linkedin.png";
 import Facebook from "../../../assets/Icons/facebook.png";
 import X from "../../../assets/Icons/X.png";
 import Instagram from "../../../assets/Icons/instagram.png";
 import YouTube from "../../../assets/Icons/youtube.png";
 
-// Footer con los links a las políticas legales y a las redes sociales de la universidad
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Footer estático con enlaces a las políticas legales y redes sociales oficiales de la universidad.
 function Footer() {
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="footer">
-      {/* Links a las páginas legales de la aplicación */}
+      {/* Links a las páginas legales de la plataforma */}
       <div className="footer-policies">
         <a href="/Home/Policies/privacyPolicy">Política de privacidad</a>
         <a href="/Home/Policies/legalNote">Nota legal</a>
         <a href="/Home/Policies/cookies">Política de cookies</a>
       </div>
 
-      {/* Iconos de redes sociales que enlazan a los perfiles oficiales */}
+      {/* Iconos de redes sociales que abren los perfiles oficiales */}
       <div className="footer-socialmedia">
         <a
           href="https://www.linkedin.com/school/universidad-nebrija/"

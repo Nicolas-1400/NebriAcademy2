@@ -1,23 +1,35 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
 import { useState } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import useToastStore from "../../../store/toastStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Formulario de soporte para que los usuarios envíen incidencias, dudas o sugerencias directamente a Jira.
 function HelpGrid() {
+  // Datos del usuario (si está logueado) para vincularlos al ticket automáticamente
   const { user, tipo } = useAuthStore();
   const { addToast } = useToastStore();
+  
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [tipoReporte, setTipoReporte] = useState("");
   const [descripcion, setDescripcion] = useState("");
   const [archivo, setArchivo] = useState(null);
+  
+  // Bloqueo del botón de envío mientras se procesa la petición
   const [enviando, setEnviando] = useState(false);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Construye un payload multipart (para incluir archivos) y lo envía a la pasarela backend de Jira
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
     if (!tipoReporte || !descripcion) {
       addToast("Por favor, rellena todos los campos requeridos.", "error");
       return;
     }
 
+    // Límite de tamaño para evitar errores en el servidor (10MB)
     if (archivo && archivo.size > 10 * 1024 * 1024) {
       addToast("El archivo adjunto no puede superar los 10MB.", "error");
       return;
@@ -26,6 +38,8 @@ function HelpGrid() {
     const formData = new FormData();
     formData.append("tipo", tipoReporte);
     formData.append("descripcion", descripcion);
+    
+    // Si hay sesión iniciada, identificamos al usuario en Jira
     if (user) {
       formData.append("usuario_id", user.id || "");
       formData.append(
@@ -35,6 +49,7 @@ function HelpGrid() {
       formData.append("usuario_tipo", tipo || "");
       formData.append("usuario_email", user.email || "");
     }
+    
     if (archivo) {
       formData.append("archivo", archivo);
     }
@@ -48,10 +63,11 @@ function HelpGrid() {
 
       if (res.ok) {
         addToast("Incidencia enviada correctamente.", "success");
+        // Limpiamos los campos para permitir nuevos envíos
         setTipoReporte("");
         setDescripcion("");
         setArchivo(null);
-        // Reseteamos el input file
+        // Limpieza explícita del input file en el DOM
         const fileInput = document.getElementById("archivoIncidencia");
         if (fileInput) fileInput.value = "";
       } else {
@@ -65,6 +81,7 @@ function HelpGrid() {
     }
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="help-container">
       <h1>Solicita ayuda al equipo de soporte de Nebriacademy</h1>
@@ -115,6 +132,7 @@ function HelpGrid() {
           Enviar
         </button>
       </form>
+      {/* Feedback visual durante el tiempo de petición */}
       {enviando && (
         <span className="sending-text">
           Enviando tu reporte a Jira, espera un momento...

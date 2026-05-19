@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import { useParams, useNavigate } from "react-router-dom";
@@ -5,25 +6,35 @@ import useAuthStore from "../../../store/useAuthStore";
 import useToastStore from "../../../store/toastStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Vista detallada de un ticket de soporte: muestra el resumen, chat con el soporte (Jira) y manejo de adjuntos.
 function TicketDetailGrid() {
   const { issueKey } = useParams();
   const { user } = useAuthStore();
   const { addToast } = useToastStore();
   const navigate = useNavigate();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [ticket, setTicket] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
+  
+  // Estados para el chat (comentarios)
   const [nuevoComentario, setNuevoComentario] = useState("");
   const [enviandoComentario, setEnviandoComentario] = useState(false);
+  
+  // Estados para subida de adjuntos
   const [archivosAdjuntar, setArchivosAdjuntar] = useState([]);
   const [subiendoAdjuntos, setSubiendoAdjuntos] = useState(false);
   const [mensajeAdjuntos, setMensajeAdjuntos] = useState("");
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Carga inicial del ticket en cuanto detecta su "key" (ej: SUP-123)
   useEffect(() => {
     fetchTicket();
   }, [issueKey]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Llama a la API para obtener todo el detalle del ticket de Jira, incluyendo comentarios y adjuntos
   const fetchTicket = async () => {
     setLoading(true);
     setError("");
@@ -43,6 +54,7 @@ function TicketDetailGrid() {
     }
   };
 
+  // Envía un comentario nuevo desde el frontend al backend, para que éste lo registre en Jira
   const handleEnviarComentario = async (e) => {
     e.preventDefault();
     if (!nuevoComentario.trim()) return;
@@ -77,6 +89,7 @@ function TicketDetailGrid() {
     }
   };
 
+  // Subida de múltiples archivos en formato form-data hacia el backend
   const handleSubirAdjuntos = async (e) => {
     e.preventDefault();
     if (!archivosAdjuntar || archivosAdjuntar.length === 0) return;
@@ -113,17 +126,20 @@ function TicketDetailGrid() {
     }
   };
 
+  // Conversor de fecha de ISO a formato local
   const formatFecha = (fecha) => {
     if (!fecha) return "—";
     return new Date(fecha).toLocaleString("es-ES");
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (loading) return <p>Cargando ticket...</p>;
   if (error) return <p>{error}</p>;
   if (!ticket) return null;
 
   return (
     <div className="container-detail-ticket-grid">
+      {/* Panel izquierdo: Información global del ticket y subida de archivos */}
       <div className="detail-ticket-left">
         <button
           className="button-submit"
@@ -208,6 +224,8 @@ function TicketDetailGrid() {
           )}
         </form>
       </div>
+
+      {/* Panel derecho: Chat bidireccional (Comentarios de Jira) */}
       <div className="detail-ticket-chat">
         <h2>Chat</h2>
         <div className="chat-comments">
@@ -217,7 +235,7 @@ function TicketDetailGrid() {
           {ticket.comentarios.map((c) => {
             // Los mensajes del alumno se guardan en Jira bajo la cuenta "nebriacademy"
             // y llevan el prefijo "Nombre Apellido: " en el texto.
-            // Visualmente mostramos "Usted" como autor y eliminamos ese prefijo.
+            // Visualmente mostramos "Usted" o su nombre como autor y limpiamos ese prefijo.
             const esMio = c.autor?.toLowerCase().includes("nebriacademy");
             const autorVisible = esMio
               ? user
@@ -239,6 +257,8 @@ function TicketDetailGrid() {
             );
           })}
         </div>
+        
+        {/* Formulario para añadir respuesta al ticket */}
         <h3>Responder</h3>
         <form onSubmit={handleEnviarComentario} className="chat-form">
           <textarea

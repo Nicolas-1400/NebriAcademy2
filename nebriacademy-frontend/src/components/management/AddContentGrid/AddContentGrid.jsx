@@ -5,8 +5,8 @@ import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Componente unificado para añadir contenido (vídeos, apuntes, ejercicios) a un curso
-// o subir un apunte individual de forma general.
+// Componente para añadir contenido (vídeos, apuntes, ejercicios) a cursos
+// o subir apuntes de forma individual.
 function AddContentGrid({ tipo, idCurso }) {
   const { id: idParam } = useParams();
   const { state } = useLocation();
@@ -89,12 +89,14 @@ function AddContentGrid({ tipo, idCurso }) {
 
     try {
       // Determinamos el endpoint según el tipo de contenido
+      // endpoint: 'videos' | 'apuntes' | 'ejercicios' (coincide con rutas del backend)
       let endpoint = "";
       if (tipoContenido === "video") endpoint = "videos";
       else if (tipoContenido === "apunte") endpoint = "apuntes";
       else if (tipoContenido === "ejercicio") endpoint = "ejercicios";
 
       const form = new FormData();
+      // Adjuntamos los campos obligatorios al FormData que se enviará al backend
       form.append("nombre", formData.nombre);
       form.append("archivo", file);
 
@@ -112,6 +114,7 @@ function AddContentGrid({ tipo, idCurso }) {
       }
 
       // Información de autoría
+      // Añadimos identificadores de autor para que el backend asocie el contenido
       if (usuario) {
         form.append("profileId", usuario.id);
         form.append("tipo", tipoUsuario);

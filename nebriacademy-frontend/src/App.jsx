@@ -1,6 +1,7 @@
 import AppRouter from "./router/AppRouter.jsx";
 import { Analytics } from "@vercel/analytics/react";
 
+// Importación global de estilos (CSS centralizado y módulos específicos)
 import "./styles/general.css";
 import "./components/layout/Header/Header.css";
 import "./components/layout/Nav/Nav.css";
@@ -38,15 +39,21 @@ import "./components/common/NotFound/NotFound.css";
 import "./components/common/Notifications/Toast.css";
 import "./components/common/Modals/ConfirmModal.css";
 
+// Componentes globales renderizados en toda la app
 import Toast from "./components/common/Notifications/Toast.jsx";
 import ConfirmModal from "./components/common/Modals/ConfirmModal.jsx";
 
+// Componente raíz de la aplicación React
 function App() {
   return (
     <>
+      {/* Vercel Analytics para métricas de uso y rendimiento */}
       <Analytics />
+      {/* Gestor global de notificaciones flotantes */}
       <Toast />
+      {/* Gestor global de modales de confirmación (ej: borrar algo) */}
       <ConfirmModal />
+      {/* Enrutador principal que gestiona la navegación entre páginas */}
       <AppRouter />
     </>
   );

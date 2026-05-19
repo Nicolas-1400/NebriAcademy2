@@ -5,20 +5,23 @@ import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Formulario de inicio de sesión: valida credenciales con el backend y redirige al home
+// Componente de formulario para el inicio de sesión de usuarios (Alumnos, Profesores, Admins)
 function LoginGrid() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
-  // Estado local para los campos del formulario y para mostrar errores
+  // Email del usuario
   const [email, setEmail] = useState("");
+  // Contraseña del usuario
   const [contrasena, setContrasena] = useState("");
+  // Mensaje de error para mostrar en el formulario
   const [error, setError] = useState("");
 
   const navigate = useNavigate();
+  // Guarda usuario y rol en el store global tras login exitoso
   const setUser = useAuthStore((state) => state.setUser);
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
-  // Maneja el envío del formulario: hace la petición al backend y redirige si el login es correcto
   const handleLogin = async (evento) => {
+    // Envía las credenciales al backend y actualiza el store en caso de éxito
     evento.preventDefault();
     setError("");
 
@@ -32,7 +35,7 @@ function LoginGrid() {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        // Guardamos el usuario en el store global y navegamos al home
+        // Autenticación exitosa: se guarda el usuario globalmente y se redirige
         setUser(datos.usuario, datos.tipo);
         navigate("/Home");
       } else {
@@ -48,7 +51,6 @@ function LoginGrid() {
   return (
     <div className="auth-grid">
       <div className="auth-form-container">
-        {/* Formulario de login: al hacer submit se ejecuta handleLogin */}
         <form className="auth-form" onSubmit={handleLogin}>
           <input
             type="email"
@@ -65,7 +67,6 @@ function LoginGrid() {
             required
           />
 
-          {/* Mostramos el error solo si hay alguno */}
           {error && <p className="login-error-message">{error}</p>}
 
           <button type="submit">Iniciar Sesión</button>

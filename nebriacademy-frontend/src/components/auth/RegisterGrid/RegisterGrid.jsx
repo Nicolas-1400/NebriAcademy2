@@ -10,6 +10,7 @@ function RegisterGrid({ tipo }) {
   const location = useLocation();
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado del formulario que agrupa todos los campos de registro
   const [formData, setFormData] = useState({
     nombre: "",
     apellidos: "",
@@ -25,8 +26,10 @@ function RegisterGrid({ tipo }) {
 
   const [error, setError] = useState("");
 
+  // Campos según rol: alumnoexterno requiere tarjeta; alumnonebrija usa email precargado; profesor requiere IBAN y especialización
+
   // ── EFECTOS ─────────────────────────────────────────────────────────────────
-  // Si el tipo requiere verificación previa, cargamos el email y redirigimos si no está
+  // Si el rol requiere verificación previa (Nebrija o Profesor), precarga el email verificado o redirige al paso anterior
   useEffect(() => {
     if (tipo === "alumnonebrija") {
       const verifiedEmail = sessionStorage.getItem("verifiedStudentEmail");
@@ -47,25 +50,27 @@ function RegisterGrid({ tipo }) {
         navigate("/Register/Verification/profesor", { replace: true });
       }
     }
-    // Para alumnoexterno no hay verificación previa
   }, [tipo, location.state, navigate]);
 
   // ── FUNCIONES ───────────────────────────────────────────────────────────────
+  // Actualiza dinámicamente el estado del formulario según el input modificado
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData((prev) => ({ ...prev, [name]: value }));
   };
 
+  // Procesa el registro dependiendo del tipo de usuario, eliminando los campos innecesarios antes de enviar a la API
   const handleRegister = async (e) => {
     e.preventDefault();
     setError("");
 
+    // Determina endpoint y elimina campos no relevantes según el rol
     let endpoint = "";
     let dataToSend = { ...formData };
 
+    // Configuración del endpoint y payload según el rol
     if (tipo === "alumnoexterno") {
       endpoint = "/alumnos/registerAlumnoExterno/auth";
-      // Limpiamos campos no necesarios
       delete dataToSend.numeroCuentaBancaria;
       delete dataToSend.especializacion;
     } else if (tipo === "alumnonebrija") {
@@ -88,11 +93,10 @@ function RegisterGrid({ tipo }) {
       const datos = await respuesta.json();
 
       if (respuesta.ok) {
-        if (tipo === "alumnonebrija") {
-          sessionStorage.removeItem("verifiedStudentEmail");
-        } else if (tipo === "profesor") {
-          sessionStorage.removeItem("verifiedProfessorEmail");
-        }
+        // Limpia el storage temporal y redirige al login
+        if (tipo === "alumnonebrija") sessionStorage.removeItem("verifiedStudentEmail");
+        else if (tipo === "profesor") sessionStorage.removeItem("verifiedProfessorEmail");
+        
         navigate("/");
       } else {
         setError(datos.error || "Error en el registro");
@@ -104,6 +108,7 @@ function RegisterGrid({ tipo }) {
   };
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
+  // Bloquea la edición del email si viene del paso de verificación
   const isEmailDisabled = tipo === "alumnonebrija" || tipo === "profesor";
 
   return (
@@ -111,6 +116,8 @@ function RegisterGrid({ tipo }) {
       <div className="auth-form-container">
         <h2>Regístrate</h2>
         <form className="auth-form" onSubmit={handleRegister}>
+          
+          {/* Inputs bloqueados para usuarios verificados previamente */}
           {isEmailDisabled && (
             <input
               name="email"
@@ -126,17 +133,14 @@ function RegisterGrid({ tipo }) {
             <input
               name="contrasena"
               type="password"
-              placeholder={
-                tipo === "alumnonebrija"
-                  ? "Nueva contraseña"
-                  : "Nueva Contraseña"
-              }
+              placeholder={tipo === "alumnonebrija" ? "Nueva contraseña" : "Nueva Contraseña"}
               value={formData.contrasena}
               onChange={handleChange}
               required
             />
           )}
 
+          {/* Inputs comunes para todos los roles */}
           <input
             name="nombre"
             type="text"
@@ -162,6 +166,7 @@ function RegisterGrid({ tipo }) {
             required
           />
 
+          {/* Inputs exclusivos para alumnos externos */}
           {!isEmailDisabled && (
             <>
               <input
@@ -191,6 +196,7 @@ function RegisterGrid({ tipo }) {
             </>
           )}
 
+          {/* Input exclusivo para profesores */}
           {tipo === "profesor" && (
             <input
               name="numeroCuentaBancaria"
@@ -202,15 +208,8 @@ function RegisterGrid({ tipo }) {
             />
           )}
 
-          <select
-            name="pais"
-            value={formData.pais}
-            onChange={handleChange}
-            required
-          >
-            <option value="" disabled>
-              Seleccione un país
-            </option>
+          <select name="pais" value={formData.pais} onChange={handleChange} required>
+            <option value="" disabled>Seleccione un país</option>
             <option value="España">España</option>
             <option value="México">México</option>
             <option value="Colombia">Colombia</option>
@@ -224,15 +223,8 @@ function RegisterGrid({ tipo }) {
             <option value="Otro">Otro</option>
           </select>
 
-          <select
-            name="localidad"
-            value={formData.localidad}
-            onChange={handleChange}
-            required
-          >
-            <option value="" disabled>
-              Seleccione una localidad
-            </option>
+          <select name="localidad" value={formData.localidad} onChange={handleChange} required>
+            <option value="" disabled>Seleccione una localidad</option>
             <option value="Madrid">Madrid</option>
             <option value="Barcelona">Barcelona</option>
             <option value="Valencia">Valencia</option>
@@ -241,16 +233,10 @@ function RegisterGrid({ tipo }) {
             <option value="Otro">Otro</option>
           </select>
 
+          {/* Select exclusivo de especialización para profesores */}
           {tipo === "profesor" && (
-            <select
-              name="especializacion"
-              value={formData.especializacion}
-              onChange={handleChange}
-              required
-            >
-              <option value="" disabled>
-                Seleccione una especialización
-              </option>
+            <select name="especializacion" value={formData.especializacion} onChange={handleChange} required>
+              <option value="" disabled>Seleccione una especialización</option>
               <option value="Programación">Programación</option>
               <option value="BDD">Base de datos</option>
               <option value="Ciberseguridad">Ciberseguridad</option>
@@ -268,11 +254,10 @@ function RegisterGrid({ tipo }) {
           </button>
         </form>
 
-        <p>
-          ¿Ya tienes cuenta? <a href="/">Inicia sesión</a>
-        </p>
+        <p>¿Ya tienes cuenta? <a href="/">Inicia sesión</a></p>
       </div>
 
+      {/* Banner de precios solo para alumnos externos */}
       {tipo === "alumnoexterno" && (
         <div className="register-pricing">
           <h2>Precio</h2>

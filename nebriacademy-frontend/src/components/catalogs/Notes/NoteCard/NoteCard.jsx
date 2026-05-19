@@ -5,14 +5,9 @@ import PencilIcon from "../../../../assets/Icons/pencil.png";
 import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Tarjeta unificada para mostrar un apunte tanto en la lista global de Apuntes
-// como dentro de la vista de un curso concreto.
-//
-// Props opcionales para el contexto de curso (editingMode, handleEditNavigate, etc.):
-// si no se pasan, la tarjeta se comporta como la versión simple de la lista global.
-//
-// Props opcionales para la vista global (autorNombre, categoria):
-// si no se pasan, la tarjeta no muestra categoría ni resuelve el nombre externamente.
+// Tarjeta para mostrar un apunte en la lista global o en la vista de curso.
+// Props clave: `editingMode`, `handleEditNavigate`, `handleDeleteContenido`,
+// `autorNombre`, `categoria` y `onToggleLike`.
 function NoteCard({
   apunte,
   usuario,

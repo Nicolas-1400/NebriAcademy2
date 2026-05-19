@@ -1,9 +1,8 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import React from "react";
 
-/**
- * Componente de table genérico para la gestión de cuentas.
- * Maneja el filtrado de datos y el renderizado de filas editables o estáticas.
- */
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Maneja el filtrado de datos y el renderizado de filas editables o estáticas.
 function AccountsTable({
   title,
   data,
@@ -44,6 +43,7 @@ function AccountsTable({
           .includes(filtros.localidad.toLowerCase())),
   );
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <>
       <h3>{title}</h3>

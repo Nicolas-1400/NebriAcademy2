@@ -5,7 +5,7 @@ import IndividualIcon from "../../../assets/Icons/individual.png";
 import ProfessorIcon from "../../../assets/Icons/professor.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Pantalla previa al registro: el usuario elige si es alumno Nebrija, alumno externo o profesor
+// Pantalla de selección de rol previo al registro para redirigir al flujo adecuado
 function PreRegisterGrid() {
   const navigate = useNavigate();
 
@@ -15,6 +15,7 @@ function PreRegisterGrid() {
       <h2>¿Eres estudiante de la familia Nebrija?</h2>
 
       <div className="buttons-container">
+        {/* Flujo: Alumno Interno (Requiere código de centro) */}
         <button
           type="button"
           className="student-yes-button"
@@ -25,6 +26,7 @@ function PreRegisterGrid() {
           <p>Estudio actualmente en un centro asociado a Nebrija</p>
         </button>
 
+        {/* Flujo: Alumno Externo (Requiere suscripción de pago) */}
         <button
           type="button"
           className="student-no-button"
@@ -39,6 +41,7 @@ function PreRegisterGrid() {
       </div>
 
       <div>
+        {/* Flujo: Profesor (Requiere código de departamento) */}
         <button
           type="button"
           className="professor-button"

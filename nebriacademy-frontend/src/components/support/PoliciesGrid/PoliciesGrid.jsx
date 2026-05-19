@@ -1,4 +1,7 @@
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Renderiza el contenido estático de las políticas de privacidad, nota legal o cookies.
 function PoliciesGrid({ tipo }) {
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (tipo === "privacyPolicy") {
     return (
       <div className="policiesGrid">

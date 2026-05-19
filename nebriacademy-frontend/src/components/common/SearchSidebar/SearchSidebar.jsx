@@ -1,17 +1,8 @@
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 /**
- * SearchSidebar — buscador + filtros laterales reutilizable.
- *
- * Props:
- *  · searchTerm       {string}   — valor actual del buscador
- *  · onSearchChange   {fn}       — callback(valor) al escribir en el buscador
- *  · searchPlaceholder{string}   — placeholder del input de búsqueda
- *  · filterGroups     {Array}    — lista de grupos de filtros:
- *      [{ label, key, options: [{label, value}] }]
- *      Cada grupo genera una sección con título, botones (desktop) y <select> (móvil).
- *  · activeFilters    {Object}   — { [key]: valorActivo }
- *  · onFilterChange   {fn}       — callback(key, valor) al cambiar un filtro
- *  · onClearAll       {fn}       — callback al pulsar "Limpiar filtros"
+ * Componente reutilizable para menús laterales de filtrado.
+ * Implementa un buscador de texto y múltiples grupos de selectores (categoría, nivel, etc.).
+ * Adapta su vista dinámicamente: usa botones en Desktop y elementos <select> en Mobile.
  */
 function SearchSidebar({
   searchTerm = "",
@@ -22,9 +13,10 @@ function SearchSidebar({
   onFilterChange,
   onClearAll,
 }) {
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <aside className="search-sidebar">
-      {/* ── Buscador ─────────────────────────────────────────────────── */}
+      {/* Caja de búsqueda por texto libre */}
       <div className="ss-search-box">
         <span className="ss-search-icon">🔍</span>
         <input
@@ -36,12 +28,12 @@ function SearchSidebar({
         />
       </div>
 
-      {/* ── Grupos de filtros ─────────────────────────────────────────── */}
+      {/* Renderizado iterativo de grupos de filtros pasados por props */}
       {filterGroups.map((group) => (
         <div key={group.key} className="ss-filter-group">
           <h3 className="ss-group-title">{group.label}</h3>
 
-          {/* Versión desktop: lista de botones */}
+          {/* Versión desktop: lista de botones tipo toggle */}
           <ul className="ss-button-list">
             {group.options.map((opt) => {
               const isActive =
@@ -60,7 +52,7 @@ function SearchSidebar({
             })}
           </ul>
 
-          {/* Versión móvil: select compacto */}
+          {/* Versión móvil: select tradicional para ahorrar espacio */}
           <select
             className="ss-select"
             value={activeFilters[group.key] || ""}
@@ -75,7 +67,7 @@ function SearchSidebar({
         </div>
       ))}
 
-      {/* ── Limpiar filtros ───────────────────────────────────────────── */}
+      {/* Botón global para resetear todos los filtros simultáneamente */}
       <button className="ss-clear-button" onClick={onClearAll}>
         ✕ Limpiar filtros
       </button>

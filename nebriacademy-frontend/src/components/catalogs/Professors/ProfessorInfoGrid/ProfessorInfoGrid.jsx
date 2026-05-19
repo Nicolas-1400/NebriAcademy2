@@ -57,6 +57,7 @@ function ProfessorInfoGrid() {
   if (loading)
     return <p className="loading-message">Cargando perfil del profesor...</p>;
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="professor-main-container">
       {/* Lista de cursos del profesor */}

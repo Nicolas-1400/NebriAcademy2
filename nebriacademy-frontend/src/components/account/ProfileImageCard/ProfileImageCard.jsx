@@ -33,10 +33,8 @@ import Female15 from "../../../assets/profiles/female-15.png";
 import Female16 from "../../../assets/profiles/female-16.png";
 import "./ProfileImageCard.css";
 
-// ── CONSTANTES ─────────────────────────────────────────────────────────────
-// Mapa exportado de nombre de archivo → imagen importada.
-// Se usa en toda la app (Nav, PerfilProfesor, TarjetaProfesores, InfoProfesor...) para resolver la imagen de perfil.
-// Las claves ("male-1", "female-1", etc.) coinciden con los valores guardados en la base de datos.
+// ── CONSTANTES ──────────────────────────────────────────────────────────────
+// Mapa clave→imagen usado para resolver avatares en la app (claves coinciden con BD)
 export const PERFILES = {
   "male-1": Male1,
   "male-2": Male2,
@@ -73,7 +71,7 @@ export const PERFILES = {
 };
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Componente que muestra la galería de avatares de perfil para que el usuario elija el suyo
+// Galería de avatares; hace `onSelect(nombre)` al elegir uno
 function ProfileImageCard({ imagenSeleccionada, onSelect }) {
   // ── RENDER ───────────────────────────────────────────────────────────────────
   return (

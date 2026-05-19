@@ -1,10 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useState } from "react";
 import PencilIcon from "../../../../assets/Icons/pencil.png";
 import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Tarjeta que muestra un vídeo dentro de la vista de un curso.
-// Si el usuario es profesor y está en modo edición, muestra botones de editar y borrar.
+// Tarjeta desplegable que incrusta un vídeo del curso con reproductor nativo.
 function CourseVideoCard({
   video,
   tipo,
@@ -12,19 +12,24 @@ function CourseVideoCard({
   handleEditNavigate,
   handleDeleteContenido,
 }) {
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [expanded, setExpanded] = useState(false);
+
+  // Lógica de permisos para los botones de edición y borrado
   const isProfesorEdit = tipo === "profesor" && editingMode;
   const showDelete = isProfesorEdit || tipo === "administrador";
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div key={video.id} className={`video-item ${expanded ? "expanded" : ""}`}>
+      {/* Cabecera clickeable para desplegar/contraer el reproductor */}
       <div className="video-item-header" onClick={() => setExpanded(!expanded)}>
         <div className="video-title-group">
           <span className={`arrow-toggle ${expanded ? "active" : ""}`}>▶</span>
           <h5>{video.nombre}</h5>
         </div>
 
-        {/* Controles de edición: editar solo profesor, borrar profesor/admin */}
+        {/* Controles flotantes de administración del vídeo */}
         {(isProfesorEdit || showDelete) && (
           <div className="edit-controls" onClick={(e) => e.stopPropagation()}>
             {isProfesorEdit && (
@@ -47,6 +52,7 @@ function CourseVideoCard({
         )}
       </div>
 
+      {/* Reproductor de vídeo nativo HTML5 renderizado de forma condicional */}
       {expanded && (
         <div className="video-player-container">
           <video controls autoPlay>

@@ -34,8 +34,7 @@ import Avatar from "../../../common/Avatar/Avatar";
 import { PERFILES } from "../../../account/ProfileImageCard/ProfileImageCard.jsx";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Página de detalle de un curso: muestra su contenido (vídeos, apuntes, ejercicios),
-// permite a los alumnos votar, apuntarse y comentar, y al profesor editar el contenido.
+// Página de detalle de un curso: muestra contenido, permite votaciones, inscripción y edición.
 function CourseGrid() {
   const { id } = useParams();
   const navigate = useNavigate();

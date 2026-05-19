@@ -1,8 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Logo from "../../../assets/Icons/nebriLogo.png";
 
-// Header estático que muestra el logo y el nombre de la aplicación.
-// Solo aparece en las páginas de registro y login (antes de entrar al home).
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Header estático con logo y título, usado en páginas públicas (login/registro).
 function Header() {
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <header className="header">
       <div className="header-container">

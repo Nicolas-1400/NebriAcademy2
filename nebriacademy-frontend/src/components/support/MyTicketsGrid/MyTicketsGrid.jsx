@@ -1,21 +1,29 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Vista donde el usuario puede consultar el estado de todos sus tickets de soporte (Jira).
 function MyTicketsGrid() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [tickets, setTickets] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
 
+  // ── EFECTOS ───────────────────────────────────────────────────────────────────
+  // Si hay un usuario logueado, obtenemos sus tickets desde el backend
   useEffect(() => {
     if (!user?.id) return;
     fetchMisTickets();
   }, [user]);
 
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Petición al backend para listar los tickets de Jira asociados al ID del usuario
   const fetchMisTickets = async () => {
     setLoading(true);
     setError("");
@@ -35,11 +43,13 @@ function MyTicketsGrid() {
     }
   };
 
+  // Formateador de fechas para mostrar ISO de forma legible (ej: DD/MM/YYYY, HH:mm:ss)
   const formatFecha = (iso) => {
     if (!iso) return "—";
     return new Date(iso).toLocaleString("es-ES");
   };
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="my-tickets-container">
       <h1>Mis Tickets</h1>
@@ -47,6 +57,7 @@ function MyTicketsGrid() {
         Aquí puedes ver todos los reportes que has enviado al equipo de soporte.
       </p>
 
+      {/* Manejo de estados de carga y error */}
       {loading && <p className="loading-message">Cargando tickets...</p>}
       {error && <p className="error">{error}</p>}
 
@@ -56,6 +67,7 @@ function MyTicketsGrid() {
         </p>
       )}
 
+      {/* Listado de tickets en formato tabla */}
       {!loading && tickets.length > 0 && (
         <table className="tickets-table">
           <thead className="column-title">
@@ -74,6 +86,7 @@ function MyTicketsGrid() {
                 onClick={() => navigate(`/Home/MyTickets/${t.key}`)}
               >
                 <td className="td-summary">
+                  {/* Resalta la primera palabra del resumen para darle estilo visual */}
                   {(() => {
                     const [primera, ...resto] = t.resumen.split(" ");
                     return (

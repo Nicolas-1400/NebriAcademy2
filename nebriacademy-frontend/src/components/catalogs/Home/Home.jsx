@@ -11,68 +11,69 @@ import useToastStore from "../../../store/toastStore";
 import useModalStore from "../../../store/modalStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Componente principal de la vista de inicio (Dashboard)
 function Home() {
   // ── ESTADO ─────────────────────────────────────────────────────────────────
+  // Estado local para almacenar datos recuperados del backend
   const [usuario, setUsuario] = useState(null);
   const [cursos, setCursos] = useState([]);
   const [cursosAlumnos, setCursosAlumnos] = useState([]);
   const [categorias, setCategorias] = useState([]);
   const [error, setError] = useState(null);
+  
+  // Estado para controlar la pantalla de carga y el modo de borrado de cursos
   const [loading, setLoading] = useState(true);
   const [isDeleting, setIsDeleting] = useState(false);
 
   const navigate = useNavigate();
+  // Extracción de datos del estado global Zustand
   const storeUser = useAuthStore((state) => state.user);
   const tipoUsuario = useAuthStore((state) => state.tipo);
 
-  // Identificación de roles
+  // Banderas booleanas para facilitar la verificación de roles
   const isEstudiante = tipoUsuario === "alumno";
   const isAdmin = tipoUsuario === "administrador";
   const isProfesor = tipoUsuario === "profesor";
+  
   const { addToast } = useToastStore();
   const { showConfirm } = useModalStore();
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
-  // Sincronizar usuario del store
+  // Mantiene sincronizado el estado local de usuario con el store global
   useEffect(() => {
     if (storeUser) setUsuario(storeUser);
   }, [storeUser]);
 
-  // Cargar datos al montar el componente
+  // Carga inicial de datos desde la base de datos al montar el componente
   useEffect(() => {
     setLoading(true);
     setError(null);
 
     const fetchData = async () => {
       try {
-        const datosCursos = await fetch(`${API_URL}/cursos`).then((r) =>
-          r.json(),
-        );
+        // Obtenemos todos los cursos disponibles
+        const datosCursos = await fetch(`${API_URL}/cursos`).then((r) => r.json());
         setCursos(datosCursos.Cursos || []);
 
-        // Tanto alumnos como administradores necesitan categorías y (opcionalmente) cursos matriculados
+        // Carga de datos específicos para alumnos y administradores
         if (isEstudiante || isAdmin) {
           if (isEstudiante) {
-            const datosCursosAlumnos = await fetch(
-              `${API_URL}/cursosalumnos`,
-            ).then((r) => r.json());
+            // Obtenemos las inscripciones del alumno para la sección "Tus cursos"
+            const datosCursosAlumnos = await fetch(`${API_URL}/cursosalumnos`).then((r) => r.json());
             setCursosAlumnos(datosCursosAlumnos.CursosAlumnos || []);
           }
 
+          // Obtenemos las categorías para generar los botones de filtro
           const datosCategorias = await fetch(`${API_URL}/cursos/categorias`)
             .then((r) => r.json())
             .catch(() => ({ categorias: [] }));
-          setCategorias(
-            Array.isArray(datosCategorias.categorias)
-              ? datosCategorias.categorias
-              : [],
-          );
+          setCategorias(Array.isArray(datosCategorias.categorias) ? datosCategorias.categorias : []);
         }
       } catch (err) {
         console.error("Error cargando datos:", err);
         setError("Error al cargar el contenido");
       } finally {
-        setLoading(false);
+        setLoading(false); // Desactiva la pantalla de carga independientemente del resultado
       }
     };
 
@@ -80,14 +81,13 @@ function Home() {
   }, [isEstudiante, isAdmin]);
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
-  // Filtrar cursos para alumnos vinculados
+  // Filtra cursos creados por el profesor vinculado para que el alumno no pueda interactuar con ellos
   const filtrarCursosVinculado = (lista) => {
-    if (!storeUser?.esVinculado || !storeUser?.profesorVinculadoId)
-      return lista;
+    if (!storeUser?.esVinculado || !storeUser?.profesorVinculadoId) return lista;
     return lista.filter((c) => c.profesor !== storeUser.profesorVinculadoId);
   };
 
-  // [ALUMNO] Filtrar cursos en los que está apuntado
+  // Obtiene los cursos en los que el alumno está inscrito y los ordena por valoración
   const tusCursos = () => {
     if (!usuario) return [];
     const lista = cursosAlumnos
@@ -98,31 +98,33 @@ function Home() {
     return filtrarCursosVinculado(lista);
   };
 
-  // [ALUMNO/ADMIN] Ordenar por ID descendente (novedades)
+  // Obtiene los cursos más recientes (IDs más altos)
   const novedades = () => {
     return filtrarCursosVinculado(cursos.slice().sort((a, b) => b.id - a.id));
   };
 
-  // [ALUMNO/ADMIN] Ordenar por valoración (populares)
+  // Obtiene todos los cursos ordenados por su puntuación media
   const cursosPopulares = () => {
     return filtrarCursosVinculado(
       cursos.slice().sort((a, b) => (b.valoracion || 0) - (a.valoracion || 0)),
     );
   };
 
-  // [PROFESOR] Filtrar cursos del profesor
+  // Obtiene los cursos creados por el profesor logueado
   const misCursos = () => {
     return cursos.filter((c) => c.profesor === usuario?.id) || [];
   };
 
-  // Navegar a cursos con filtro por categoría
+  // Redirige al listado general de cursos filtrando por la categoría seleccionada
   const handleCategoryClick = (categoria) => {
     navigate(`/Home/Courses`, { state: { selectedCategory: categoria } });
   };
 
-  // Eliminar curso (profesor)
+  // Elimina un curso y todo su contenido asociado (Solo Profesor)
   const handleDeleteCurso = async (cursoId, e) => {
-    e.stopPropagation();
+    e.stopPropagation(); // Evita que se abra el curso al pulsar en borrar
+    
+    // Pide confirmación al usuario (requiere escribir motivo/nombre)
     const result = await showConfirm(
       "¿Estás seguro de que quieres borrar este curso? Se eliminará TODO su contenido (videos, apuntes, ejercicios...) y NO se podrá recuperar.",
       "Eliminar Curso",
@@ -131,15 +133,15 @@ function Home() {
     if (result === false) return;
 
     try {
-      const url =
-        typeof result === "string" && result.trim()
+      // Si el modal devuelve un string, lo adjuntamos como motivo en la querystring
+      const url = typeof result === "string" && result.trim()
           ? `${API_URL}/cursos/${cursoId}?reason=${encodeURIComponent(result)}`
           : `${API_URL}/cursos/${cursoId}`;
 
-      const res = await fetch(url, {
-        method: "DELETE",
-      });
+      const res = await fetch(url, { method: "DELETE" });
+      
       if (res.ok) {
+        // Actualizamos el estado para remover el curso visualmente sin recargar la página
         setCursos((prev) => prev.filter((c) => c.id !== cursoId));
         addToast("Curso eliminado con éxito", "success");
       } else {
@@ -152,6 +154,7 @@ function Home() {
   };
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
+  // Muestra mensaje de carga mientras se obtienen los datos
   if (loading) {
     return (
       <div className="page-container">
@@ -160,6 +163,7 @@ function Home() {
     );
   }
 
+  // Muestra mensaje de error si falló la conexión con la base de datos
   if (error) {
     return (
       <div className="page-container">
@@ -170,12 +174,13 @@ function Home() {
 
   return (
     <div className="page-container">
+      {/* Cabecera con saludo personalizado */}
       <div className="page-header-container">
         <h1>
           Bienvenido/a:{" "}
           {usuario ? `${usuario.nombre} ${usuario.apellidos}` : "Usuario"}
         </h1>
-        {/* Botón de eliminar solo para profesores */}
+        {/* Toggle para habilitar/deshabilitar el modo borrado (Solo Profesores) */}
         {isProfesor && (
           <button
             onClick={() => setIsDeleting(!isDeleting)}
@@ -191,10 +196,10 @@ function Home() {
         )}
       </div>
 
-      {/* VISTA ALUMNO / ADMINISTRADOR */}
+      {/* Renderizado condicional basado en el rol del usuario */}
       {isEstudiante || isAdmin ? (
         <div className="page-sections">
-          {/* Sección Novedades */}
+          {/* Carrusel de novedades (últimos cursos subidos) */}
           <div className="section-carousel">
             <h2>Novedades</h2>
             <SliderComponent>
@@ -210,14 +215,12 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="empty-message">
-                  No se han encontrado cursos en esta sección.
-                </p>
+                <p className="empty-message">No se han encontrado cursos en esta sección.</p>
               )}
             </SliderComponent>
           </div>
 
-          {/* Sección Tus cursos (Solo para Alumnos) */}
+          {/* Carrusel de cursos matriculados (Solo visible para alumnos) */}
           {isEstudiante && (
             <div className="section-carousel">
               <h2>Tus cursos</h2>
@@ -234,15 +237,13 @@ function Home() {
                     />
                   ))
                 ) : (
-                  <p className="empty-message">
-                    Aún no estás apuntado a ningún curso. ¡Explora el catálogo!
-                  </p>
+                  <p className="empty-message">Aún no estás apuntado a ningún curso. ¡Explora el catálogo!</p>
                 )}
               </SliderComponent>
             </div>
           )}
 
-          {/* Sección Categorías */}
+          {/* Botonera de acceso rápido por categorías de cursos */}
           <div className="section-categories">
             <h2>Categorías</h2>
             <div className="category-buttons">
@@ -258,7 +259,7 @@ function Home() {
             </div>
           </div>
 
-          {/* Sección Cursos populares */}
+          {/* Carrusel de cursos ordenados por valoración media */}
           <div className="section-carousel">
             <h2>Cursos populares</h2>
             <SliderComponent>
@@ -274,15 +275,13 @@ function Home() {
                   />
                 ))
               ) : (
-                <p className="empty-message">
-                  No se han encontrado cursos en esta sección.
-                </p>
+                <p className="empty-message">No se han encontrado cursos en esta sección.</p>
               )}
             </SliderComponent>
           </div>
         </div>
       ) : (
-        /* VISTA PROFESOR */
+        /* Vista de Profesor: Cuadrícula con los cursos que imparte para su gestión */
         <div className="page-grid-professor">
           <h2>Tus cursos</h2>
           <div className="grid-courses">
@@ -297,9 +296,7 @@ function Home() {
                   categoria={c.categoria}
                   nivel={c.nivel}
                   descripcion={c.descripcion}
-                  profesor={
-                    usuario ? `${usuario.nombre} ${usuario.apellidos}` : ""
-                  }
+                  profesor={usuario ? `${usuario.nombre} ${usuario.apellidos}` : ""}
                   valoracion={c.valoracion}
                   imagen={c.imagen}
                   isDeleting={isDeleting}

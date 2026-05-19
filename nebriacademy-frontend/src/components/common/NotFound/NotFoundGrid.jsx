@@ -1,15 +1,20 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 
-// Página que se muestra cuando el usuario intenta acceder a una URL que no existe
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de error 404 para rutas inexistentes
 function NotFoundGrid() {
+  // Hook de React Router para navegación programática
   const navigate = useNavigate();
+  
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   return (
     <div className="not-found-container">
       <div className="not-found-content">
         <h2>404</h2>
         <p>Página no encontrada</p>
-        {/* El botón "Volver" navega a la página anterior en el historial del navegador */}
+        {/* onClick={() => navigate(-1)} emula el botón "Atrás" del navegador */}
         <button className="button-go-back" onClick={() => navigate(-1)}>
           <img src={ArrowCorrect} alt="Volver" />
           <p>Volver</p>

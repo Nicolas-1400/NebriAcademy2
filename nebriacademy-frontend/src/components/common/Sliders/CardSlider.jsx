@@ -1,3 +1,4 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useNavigate } from "react-router-dom";
 import { API_URL } from "../../../config/api";
 import photo1 from "../../../assets/CourseImages/photo1.jpg";
@@ -13,6 +14,8 @@ import photo10 from "../../../assets/CourseImages/photo10.jpg";
 import LikeIcon from "../../../assets/Icons/like.png";
 import LikeMarkedIcon from "../../../assets/Icons/like-marked.png";
 
+// ── CONSTANTES ──────────────────────────────────────────────────────────────
+// Mapa de nombres de imagen → recurso estático usado por las tarjetas
 const IMAGES_MAP = {
   photo1,
   photo2,
@@ -26,6 +29,8 @@ const IMAGES_MAP = {
   photo10,
 };
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Tarjeta para curso o apunte. `type` decide el layout y acciones
 function CardSlider({
   type = "curso",
   cursoId,
@@ -42,6 +47,7 @@ function CardSlider({
   const imageSrc = IMAGES_MAP[imagen];
   const isLiked = apunte && likedIds.includes(apunte.id);
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (type === "apunte") {
     return (
       <div className="card card-slider card-note">
@@ -93,6 +99,7 @@ function CardSlider({
   }
 
   return (
+    // Navega a la página del curso al hacer click en la tarjeta
     <div
       className="card card-slider"
       onClick={() => navigate(`/Home/Courses/${cursoId}`)}

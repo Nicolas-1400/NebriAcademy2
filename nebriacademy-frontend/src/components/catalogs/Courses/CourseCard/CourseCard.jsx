@@ -14,7 +14,7 @@ import LikeMarkedIcon from "../../../../assets/Icons/like-marked.png";
 import DeleteIcon from "../../../../assets/Icons/delete.png";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Tarjeta de presentación de un curso: imagen, título, categoría, nivel, descripción y valoración
+// Tarjeta compacta para renderizar cursos en grids (Home y AllCourses).
 function CourseCard({
   name,
   cursoId,
@@ -32,7 +32,7 @@ function CourseCard({
   const navigate = useNavigate();
 
   // ── CONSTANTES ─────────────────────────────────────────────────────────────
-  // Mapa para buscar la imagen por nombre tal como viene guardada en la BDD
+  // Mapeo estático de las imágenes importadas para resolver el string que viene de la API
   const IMAGES_MAP = {
     photo1,
     photo2,
@@ -46,7 +46,6 @@ function CourseCard({
     photo10,
   };
 
-  // Obtenemos la imagen del curso directamente del mapa por su nombre guardado en la BDD
   const imageSrc = IMAGES_MAP[imagen];
 
   // ── RENDER ───────────────────────────────────────────────────────────────────
@@ -55,7 +54,7 @@ function CourseCard({
       className="course-card"
       onClick={() => navigate(`/Home/Courses/${cursoId}`)}
     >
-      {/* Botón de eliminar: solo aparece cuando el modo borrado está activo en el padre */}
+      {/* Botón de borrado overlay: visible si se activa modo de borrado en el componente padre */}
       {isDeleting && (
         <button
           onClick={onDelete}
@@ -65,6 +64,7 @@ function CourseCard({
           <img src={DeleteIcon} alt="X" />
         </button>
       )}
+
       <img className="course-image" src={imageSrc} alt="Imagen del curso" />
       <h3>{name}</h3>
       <div className="data-info">
@@ -80,7 +80,8 @@ function CourseCard({
         />{" "}
         {valoracion}
       </p>
-      {/* Botón de eliminar curso de admin: siempre visible y debajo de valoración */}
+
+      {/* Botón de borrado admin: visible explícitamente para administradores en todo momento */}
       {isAdmin && (
         <button
           className="admin-delete-course-btn"

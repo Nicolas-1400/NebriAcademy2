@@ -1,6 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import useModalStore from "../../../store/modalStore";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Componente de modal genérico para solicitar confirmación del usuario
 const ConfirmModal = () => {
+  // ── ESTADO Y FUNCIONES GLOBALES ───────────────────────────────────────────
   const {
     isOpen,
     title,
@@ -12,6 +16,7 @@ const ConfirmModal = () => {
     cancel,
   } = useModalStore();
 
+  // ── RENDER ───────────────────────────────────────────────────────────────────
   if (!isOpen) return null;
 
   return (

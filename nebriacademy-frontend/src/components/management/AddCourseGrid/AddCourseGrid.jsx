@@ -49,6 +49,8 @@ function AddCourseGrid() {
   const uploadContent = async (endpoint, file, metadata) => {
     if (!file) return;
 
+    // `endpoint` coincide con las rutas del backend (ej: 'apuntes', 'videos', 'ejercicios')
+
     const form = new FormData();
     form.append("archivo", file);
     Object.keys(metadata).forEach((key) => form.append(key, metadata[key]));
@@ -96,7 +98,7 @@ function AddCourseGrid() {
         );
       }
 
-      // Primero creamos el curso para obtener su ID
+      // Primero creamos el curso (POST) para obtener su ID y asociar el contenido inicial
       const respuestaCurso = await fetch(`${API_URL}/cursos/add`, {
         method: "POST",
         headers: { "Content-Type": "application/json" },

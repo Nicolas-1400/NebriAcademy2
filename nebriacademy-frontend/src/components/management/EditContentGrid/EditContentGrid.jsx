@@ -4,8 +4,8 @@ import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Formulario genérico para editar vídeos, apuntes o ejercicios de un curso.
-// El tipo de contenido y los datos actuales llegan en el state de navegación.
+// Formulario para editar contenido de un curso (vídeos, apuntes, ejercicios).
+// Recibe tipo y datos actuales vía `state` de navegación.
 function EditContentGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
@@ -45,12 +45,13 @@ function EditContentGrid() {
     setError(null);
 
     try {
+      // Determinamos la URL completa según el tipo y el id del item
       const endpoint = getEndpoint();
       const url = `${API_URL}/${endpoint}/${item.id}`;
 
       let respuesta;
       if (newFile) {
-        // Si se seleccionó un archivo nuevo, enviamos todo como FormData (multipart)
+        // Si se seleccionó un archivo nuevo: enviamos FormData (multipart)
         const form = new FormData();
         form.append("nombre", nombre);
         if (tipo !== "video") form.append("descripcion", descripcion);
