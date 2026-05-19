@@ -10,7 +10,6 @@ app.use(cors());
 app.use(express.json());
 
 // Los archivos (apuntes, vídeos, ejercicios) se almacenan en Cloudinary.
-// Ya no se necesitan carpetas locales ni rutas express.static para servirlos.
 
 
 // Registramos cada módulo de rutas; Express redirige la petición al archivo correspondiente según el prefijo de la URL
