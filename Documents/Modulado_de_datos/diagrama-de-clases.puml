@@ -1,191 +1,434 @@
 @startuml diagrama-de-clases-nebriacademy
-!define ENTITY_COLOR #E1F5FE
+!define BACKEND_COLOR #E1F5FE
 !define RELATIONSHIP_COLOR #FFF9C4
 !define USER_COLOR #C8E6C9
+!define FRONTEND_COLOR #FFE0B2
 
 skinparam class {
-  BackgroundColor ENTITY_COLOR
+  BackgroundColor BACKEND_COLOR
   BorderColor #01579B
   ArrowColor #01579B
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' CLASES PRINCIPALES - USUARIOS
+' BACKEND - CLASES PRINCIPALES - USUARIOS
 ' ════════════════════════════════════════════════════════════════════
 
 class Usuarios {
   --Atributos--
-  id : int (PK)
-  tipo : ENUM[alumno|profesor|administrador]
+  # id : int [PK]
+  # tipo : ENUM
+  --Métodos--
+  + create() : Promise<Usuarios>
+  + findAll() : Promise<Usuarios[]>
+  + findById(id: int) : Promise<Usuarios>
+  + update(data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 class Alumnos <<USER_COLOR>> {
   --Atributos--
-  usuarioId : int (FK)
-  dni : string (UNIQUE)
-  nombre : string
-  apellidos : string
-  email : string (UNIQUE)
-  contrasena : string
-  numeroTarjeta : string (UNIQUE)
-  numTelefono : string
-  redes : text
-  pais : string
-  localidad : string
-  esVinculado : int
-  profesorVinculadoId : int
+  # usuarioId : int [FK]
+  - dni : string [UNIQUE]
+  - nombre : string
+  - apellidos : string
+  - email : string [UNIQUE]
+  - contrasena : string
+  - numeroTarjeta : string [UNIQUE]
+  - numTelefono : string
+  - redes : text
+  - pais : string
+  - localidad : string
+  - esVinculado : int
+  - profesorVinculadoId : int
+  --Métodos--
+  + create(data: object) : Promise<Alumnos>
+  + findAll() : Promise<Alumnos[]>
+  + findById(id: int) : Promise<Alumnos>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + enrollCourse(cursoId: int) : Promise<void>
+  + linkProfessor(profesorId: int) : Promise<void>
 }
 
 class Profesores <<USER_COLOR>> {
   --Atributos--
-  usuarioId : int (FK)
-  dni : string (UNIQUE)
-  nombre : string
-  apellidos : string
-  email : string (UNIQUE)
-  contrasena : string
-  numCuentaBancaria : string (UNIQUE)
-  numTelefono : string
-  redes : text
-  pais : string
-  localidad : string
-  especializacion : ENUM
-  imagenPerfil : string
-  alumnoVinculadoId : int
+  # usuarioId : int [FK]
+  - dni : string [UNIQUE]
+  - nombre : string
+  - apellidos : string
+  - email : string [UNIQUE]
+  - contrasena : string
+  - numCuentaBancaria : string [UNIQUE]
+  - numTelefono : string
+  - especializacion : ENUM
+  - imagenPerfil : string
+  - alumnoVinculadoId : int
+  --Métodos--
+  + create(data: object) : Promise<Profesores>
+  + findAll() : Promise<Profesores[]>
+  + findById(id: int) : Promise<Profesores>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + createCourse(data: object) : Promise<Cursos>
+  + gradExercise(ejercicioId: int, calificacion: float) : Promise<void>
 }
 
 class Administradores <<USER_COLOR>> {
   --Atributos--
-  usuarioId : int (FK)
-  dni : string (UNIQUE)
-  nombre : string
-  apellidos : string
-  email : string (UNIQUE)
-  contrasena : string
-  numCuentaBancaria : string (UNIQUE)
-  numTelefono : string
-  redes : string
-  pais : string
-  localidad : string
+  # usuarioId : int [FK]
+  - dni : string [UNIQUE]
+  - nombre : string
+  - apellidos : string
+  - email : string [UNIQUE]
+  - contrasena : string
+  - numCuentaBancaria : string [UNIQUE]
+  - numTelefono : string
+  --Métodos--
+  + create(data: object) : Promise<Administradores>
+  + findAll() : Promise<Administradores[]>
+  + findById(id: int) : Promise<Administradores>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + deleteUser(id: int) : Promise<void>
+  + manageContent() : Promise<void>
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' CLASES PRINCIPALES - CONTENIDO EDUCATIVO
+' BACKEND - CONTENIDO EDUCATIVO
 ' ════════════════════════════════════════════════════════════════════
 
 class Cursos {
   --Atributos--
-  id : int (PK)
-  nombreCurso : string
-  categoria : ENUM
-  profesor : int (FK)
-  nivel : string
-  valoracion : float
-  descripcion : text
-  imagen : string
+  # id : int [PK]
+  # nombreCurso : string
+  # categoria : ENUM
+  # profesor : int [FK]
+  # nivel : string
+  - valoracion : float
+  - descripcion : text
+  - imagen : string
+  --Métodos--
+  + create(data: object) : Promise<Cursos>
+  + findAll(filtros?: object) : Promise<Cursos[]>
+  + findById(id: int) : Promise<Cursos>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + rateCourse(rating: float) : Promise<void>
+  + addStudent(alumnoId: int) : Promise<void>
 }
 
 class Ejercicios {
   --Atributos--
-  id : int (PK)
-  autor : int (FK) - Profesor
-  curso : int (FK)
-  nombre : text
-  archivo : string
-  descripcion : text
+  # id : int [PK]
+  # autor : int [FK]
+  # curso : int [FK]
+  - nombre : text
+  - archivo : string
+  - descripcion : text
+  --Métodos--
+  + create(data: object) : Promise<Ejercicios>
+  + findAll() : Promise<Ejercicios[]>
+  + findById(id: int) : Promise<Ejercicios>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + submitSolution(alumnoId: int, archivo: string) : Promise<void>
+  + grade(alumnoId: int, puntuacion: float) : Promise<void>
 }
 
 class Videos {
   --Atributos--
-  id : int (PK)
-  autor : int (FK) - Profesor
-  curso : int (FK)
-  nombre : string
-  archivo : string
+  # id : int [PK]
+  # autor : int [FK]
+  # curso : int [FK]
+  # nombre : string
+  # archivo : string
+  --Métodos--
+  + create(data: object) : Promise<Videos>
+  + findAll() : Promise<Videos[]>
+  + findById(id: int) : Promise<Videos>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 class Apuntes {
   --Atributos--
-  id : int (PK)
-  autor : int (FK) - Profesor o Alumno
-  curso : int (FK)
-  categoria : ENUM
-  nombre : text
-  archivo : string
-  descripcion : text
-  valoracion : float
+  # id : int [PK]
+  # autor : int [FK]
+  # curso : int [FK]
+  # categoria : ENUM
+  # nombre : text
+  # archivo : string
+  - descripcion : text
+  - valoracion : float
+  --Métodos--
+  + create(data: object) : Promise<Apuntes>
+  + findAll(filtros?: object) : Promise<Apuntes[]>
+  + findById(id: int) : Promise<Apuntes>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + addLike(alumnoId: int) : Promise<void>
+  + removeLike(alumnoId: int) : Promise<void>
+  + updateRating() : Promise<void>
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' CLASES PRINCIPALES - NOTIFICACIONES Y COMENTARIOS
+' BACKEND - NOTIFICACIONES Y COMENTARIOS
 ' ════════════════════════════════════════════════════════════════════
 
 class Notificaciones {
   --Atributos--
-  id : int (PK)
-  usuarioId : int (FK)
-  tipoUsuario : string
-  mensaje : string
-  enlace : string
-  vista : boolean
-  fecha : date
+  # id : int [PK]
+  # usuarioId : int [FK]
+  # tipoUsuario : string
+  # mensaje : string
+  - enlace : string
+  - vista : boolean
+  - fecha : date
+  --Métodos--
+  + create(data: object) : Promise<Notificaciones>
+  + findAll() : Promise<Notificaciones[]>
+  + findById(id: int) : Promise<Notificaciones>
+  + markAsRead(id: int) : Promise<void>
+  + delete(id: int) : Promise<void>
+  + getUnread(usuarioId: int) : Promise<Notificaciones[]>
 }
 
 class ComentarioAlumnoCurso {
   --Atributos--
-  id : int (PK)
-  usuarioId : int (FK)
-  cursoId : int (FK)
-  comentario : text
+  # id : int [PK]
+  # usuarioId : int [FK]
+  # cursoId : int [FK]
+  - comentario : text
+  --Métodos--
+  + create(data: object) : Promise<ComentarioAlumnoCurso>
+  + findAll() : Promise<ComentarioAlumnoCurso[]>
+  + findById(id: int) : Promise<ComentarioAlumnoCurso>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' TABLAS DE RELACIÓN (MANY-TO-MANY)
+' BACKEND - TABLAS DE RELACIÓN (MANY-TO-MANY)
 ' ════════════════════════════════════════════════════════════════════
 
 class CursosAlumnos <<RELATIONSHIP_COLOR>> {
   --Atributos--
-  id : int (PK)
-  cursoId : int (FK)
-  alumnoId : int (FK)
-  favorito : boolean
-  apuntado : boolean
-  valoracion : boolean
+  # id : int [PK]
+  # cursoId : int [FK]
+  # alumnoId : int [FK]
+  - favorito : boolean
+  - apuntado : boolean
+  - valoracion : boolean
+  --Métodos--
+  + create(data: object) : Promise<CursosAlumnos>
+  + findAll() : Promise<CursosAlumnos[]>
+  + toggleFavorite(cursoId: int, alumnoId: int) : Promise<void>
+  + toggleEnrolled(cursoId: int, alumnoId: int) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 class ProfesoresCursos <<RELATIONSHIP_COLOR>> {
   --Atributos--
-  id : int (PK)
-  profesorId : int (FK)
-  cursoId : int (FK)
+  # id : int [PK]
+  # profesorId : int [FK]
+  # cursoId : int [FK]
+  --Métodos--
+  + create(data: object) : Promise<ProfesoresCursos>
+  + findAll() : Promise<ProfesoresCursos[]>
+  + delete(id: int) : Promise<void>
 }
 
 class EjerciciosAlumnos <<RELATIONSHIP_COLOR>> {
   --Atributos--
-  id : int (PK)
-  ejercicioId : int (FK)
-  alumnoId : int (FK)
-  archivo : string
+  # id : int [PK]
+  # ejercicioId : int [FK]
+  # alumnoId : int [FK]
+  - archivo : string
+  --Métodos--
+  + create(data: object) : Promise<EjerciciosAlumnos>
+  + findAll() : Promise<EjerciciosAlumnos[]>
+  + update(id: int, data: object) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 class ApuntesAlumnos <<RELATIONSHIP_COLOR>> {
   --Atributos--
-  id : int (PK)
-  apunteId : int (FK)
-  alumnoId : int (FK)
-  megusta : boolean
+  # id : int [PK]
+  # apunteId : int [FK]
+  # alumnoId : int [FK]
+  - megusta : boolean
+  --Métodos--
+  + create(data: object) : Promise<ApuntesAlumnos>
+  + findAll() : Promise<ApuntesAlumnos[]>
+  + toggleLike(apunteId: int, alumnoId: int) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 class PuntuacionesEjercicios <<RELATIONSHIP_COLOR>> {
   --Atributos--
-  id : int (PK)
-  ejercicioId : int (FK)
-  alumnoId : int (FK)
-  puntuacion : float
+  # id : int [PK]
+  # ejercicioId : int [FK]
+  # alumnoId : int [FK]
+  - puntuacion : float
+  --Métodos--
+  + create(data: object) : Promise<PuntuacionesEjercicios>
+  + findAll() : Promise<PuntuacionesEjercicios[]>
+  + update(id: int, puntuacion: float) : Promise<void>
+  + delete(id: int) : Promise<void>
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' RELACIONES - HERENCIA
+' FRONTEND - COMPONENTES PRINCIPALES
+' ════════════════════════════════════════════════════════════════════
+
+class LoginGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - email : string
+  - password : string
+  - loading : boolean
+  --Métodos--
+  + handleLogin() : Promise<void>
+  + handleRegister() : void
+  + validateForm() : boolean
+}
+
+class RegisterGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - formData : object
+  - step : int
+  - userType : string
+  --Métodos--
+  + handleNextStep() : void
+  + handlePrevStep() : void
+  + submitRegistration() : Promise<void>
+  + validateStep() : boolean
+}
+
+class ProfileGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - profileData : object
+  - editing : boolean
+  - imageUrl : string
+  --Métodos--
+  + handleEditProfile() : void
+  + handleSaveProfile() : Promise<void>
+  + uploadProfileImage() : Promise<void>
+  + handleCancel() : void
+}
+
+class Home <<FRONTEND_COLOR>> {
+  --Atributos--
+  - userType : string
+  - courses : array
+  - notifications : array
+  --Métodos--
+  + loadUserCourses() : Promise<void>
+  + loadNotifications() : Promise<void>
+  + renderDashboard() : JSX
+  + filterCourses() : array
+}
+
+class CourseGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - courseId : int
+  - courseData : object
+  - enrolled : boolean
+  - isOwner : boolean
+  --Métodos--
+  + loadCourseData() : Promise<void>
+  + handleEnroll() : Promise<void>
+  + handleRate() : Promise<void>
+  + loadComments() : Promise<void>
+  + submitComment() : Promise<void>
+  + handleDownload() : void
+}
+
+class Nav <<FRONTEND_COLOR>> {
+  --Atributos--
+  - searchQuery : string
+  - searchResults : array
+  - notifications : int
+  - userMenu : boolean
+  --Métodos--
+  + handleSearch() : Promise<void>
+  + handleLogout() : void
+  + toggleNotifications() : void
+  + handleUserMenu() : void
+  + clearCache() : void
+}
+
+class AddCourseGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - courseForm : object
+  - imageFile : File
+  - uploading : boolean
+  --Métodos--
+  + handleFormChange() : void
+  + handleImageUpload() : Promise<void>
+  + handleCreateCourse() : Promise<void>
+  + validateCourseForm() : boolean
+  + handleCancel() : void
+}
+
+class GradeExercisesGrid <<FRONTEND_COLOR>> {
+  --Atributos--
+  - submissions : array
+  - selectedSubmission : object
+  - grade : float
+  --Métodos--
+  + loadSubmissions() : Promise<void>
+  + handleSelectSubmission() : void
+  + handleGradeChange() : void
+  + submitGrade() : Promise<void>
+  + downloadFile() : void
+}
+
+class Avatar <<FRONTEND_COLOR>> {
+  --Atributos--
+  - user : object
+  - size : string
+  - imageUrl : string
+  --Métodos--
+  + handleImageError() : void
+  + getInitials() : string
+}
+
+' ════════════════════════════════════════════════════════════════════
+' STORES Y SERVICIOS
+' ════════════════════════════════════════════════════════════════════
+
+class useAuthStore <<FRONTEND_COLOR>> {
+  --Atributos--
+  - user : object
+  - token : string
+  - isLogged : boolean
+  --Métodos--
+  + login(credentials: object) : Promise<void>
+  + logout() : void
+  + setUser(user: object) : void
+  + updateProfile(data: object) : Promise<void>
+  + checkToken() : boolean
+}
+
+class useToastStore <<FRONTEND_COLOR>> {
+  --Atributos--
+  - toasts : array
+  --Métodos--
+  + showToast(message: string, type: string) : void
+  + removeToast(id: int) : void
+}
+
+class useModalStore <<FRONTEND_COLOR>> {
+  --Atributos--
+  - modals : object
+  --Métodos--
+  + openModal(key: string, data?: object) : Promise<boolean>
+  + closeModal(key: string) : void
+}
+
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - HERENCIA (BACKEND)
 ' ════════════════════════════════════════════════════════════════════
 
 Usuarios <|-- Alumnos : hereda
@@ -193,58 +436,112 @@ Usuarios <|-- Profesores : hereda
 Usuarios <|-- Administradores : hereda
 
 ' ════════════════════════════════════════════════════════════════════
-' RELACIONES - COMPOSICIÓN Y ASOCIACIONES
+' RELACIONES - BACKEND
 ' ════════════════════════════════════════════════════════════════════
 
-Alumnos "1" -- "*" CursosAlumnos : participa en
-CursosAlumnos "*" -- "1" Cursos : registra
+Alumnos "1" -- "*" CursosAlumnos : inscrito en
+CursosAlumnos "*" -- "1" Cursos : contiene
 
-Profesores "1" -- "*" ProfesoresCursos : enseña
+Profesores "1" -- "*" ProfesoresCursos : imparte
 ProfesoresCursos "*" -- "1" Cursos : en
 
-Profesores "1" -- "*" Cursos : crea/imparte
-Profesores "1" -- "*" Ejercicios : autor
-Profesores "1" -- "*" Videos : autor
-Profesores "1" -- "*" Apuntes : autor
+Profesores "1" -- "*" Cursos : crea
+Profesores "1" -- "*" Ejercicios : autor de
+Profesores "1" -- "*" Videos : autor de
+Profesores "1" -- "*" Apuntes : autor de
 
 Cursos "1" -- "*" Ejercicios : contiene
 Cursos "1" -- "*" Videos : contiene
 Cursos "1" -- "*" Apuntes : contiene
 Cursos "1" -- "*" ComentarioAlumnoCurso : recibe
 
-Alumnos "1" -- "*" Ejercicios : entrega en EjerciciosAlumnos
 Alumnos "1" -- "*" EjerciciosAlumnos : entrega
-EjerciciosAlumnos "*" -- "1" Ejercicios : es entregado
+EjerciciosAlumnos "*" -- "1" Ejercicios : resuelto
 
 Alumnos "1" -- "*" ApuntesAlumnos : valora
-ApuntesAlumnos "*" -- "1" Apuntes : es valorado
+ApuntesAlumnos "*" -- "1" Apuntes : valorado
 
 Alumnos "1" -- "*" PuntuacionesEjercicios : recibe
-PuntuacionesEjercicios "*" -- "1" Ejercicios : puntúa
+PuntuacionesEjercicios "*" -- "1" Ejercicios : califica
 
 Usuarios "1" -- "*" Notificaciones : recibe
 Alumnos "1" -- "*" ComentarioAlumnoCurso : comenta
 
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - FRONTEND
+' ════════════════════════════════════════════════════════════════════
+
+LoginGrid --|> useAuthStore : usa
+RegisterGrid --|> useAuthStore : usa
+ProfileGrid --|> useAuthStore : usa
+
+Home --|> useAuthStore : usa
+Home --|> useToastStore : usa
+Home --|> useModalStore : usa
+
+CourseGrid --|> useAuthStore : usa
+CourseGrid --|> useToastStore : usa
+
+Nav --|> useAuthStore : usa
+Nav --|> useToastStore : usa
+
+AddCourseGrid --|> useAuthStore : usa
+AddCourseGrid --|> useToastStore : usa
+
+GradeExercisesGrid --|> useAuthStore : usa
+GradeExercisesGrid --|> useToastStore : usa
+
+Avatar --|> useAuthStore : usa
+
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - FRONTEND A BACKEND
+' ════════════════════════════════════════════════════════════════════
+
+LoginGrid ..> Usuarios : autentica
+RegisterGrid ..> Usuarios : crea
+ProfileGrid ..> Alumnos : edita
+ProfileGrid ..> Profesores : edita
+
+Home ..> Cursos : consulta
+Home ..> Apuntes : consulta
+
+CourseGrid ..> Cursos : consulta
+CourseGrid ..> Ejercicios : consulta
+CourseGrid ..> Videos : consulta
+CourseGrid ..> ComentarioAlumnoCurso : consulta
+CourseGrid ..> CursosAlumnos : modifica
+
+AddCourseGrid ..> Cursos : crea
+
+GradeExercisesGrid ..> Ejercicios : consulta
+GradeExercisesGrid ..> EjerciciosAlumnos : consulta
+GradeExercisesGrid ..> PuntuacionesEjercicios : crea
+
+Nav ..> Notificaciones : consulta
+
 note right of Usuarios
-  Clase base para toda la jerarquía
-  de usuarios del sistema
+  Base de jerarquía de usuarios
+  (+) Público | (-) Privado | (#) Protegido
 end note
 
-note right of CursosAlumnos
-  Tabla de relación:
-  - Favorito: marca en favoritos
-  - Apuntado: inscripción en curso
-  - Valoración: si el alumno ha votado
+note right of Cursos
+  Gestión de cursos con categoría ENUM
+  y sistema de valoración
 end note
 
-note right of EjerciciosAlumnos
-  Registra las entregas de ejercicios
-  que realiza cada alumno en cada curso
+note right of Apuntes
+  Contenido compartido con sistema
+  de likes y valoración dinámica
 end note
 
-note right of PuntuacionesEjercicios
-  Almacena las calificaciones que
-  el profesor asigna a las entregas
+note right of Home
+  Dashboard personalizado según tipo:
+  Alumno | Profesor | Administrador
+end note
+
+note right of useAuthStore
+  Gestión de autenticación persistente
+  en localStorage + token
 end note
 
 @enduml
