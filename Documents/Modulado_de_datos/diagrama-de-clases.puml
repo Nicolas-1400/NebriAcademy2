@@ -1,0 +1,250 @@
+@startuml diagrama-de-clases-nebriacademy
+!define ENTITY_COLOR #E1F5FE
+!define RELATIONSHIP_COLOR #FFF9C4
+!define USER_COLOR #C8E6C9
+
+skinparam class {
+  BackgroundColor ENTITY_COLOR
+  BorderColor #01579B
+  ArrowColor #01579B
+}
+
+' ════════════════════════════════════════════════════════════════════
+' CLASES PRINCIPALES - USUARIOS
+' ════════════════════════════════════════════════════════════════════
+
+class Usuarios {
+  --Atributos--
+  id : int (PK)
+  tipo : ENUM[alumno|profesor|administrador]
+}
+
+class Alumnos <<USER_COLOR>> {
+  --Atributos--
+  usuarioId : int (FK)
+  dni : string (UNIQUE)
+  nombre : string
+  apellidos : string
+  email : string (UNIQUE)
+  contrasena : string
+  numeroTarjeta : string (UNIQUE)
+  numTelefono : string
+  redes : text
+  pais : string
+  localidad : string
+  esVinculado : int
+  profesorVinculadoId : int
+}
+
+class Profesores <<USER_COLOR>> {
+  --Atributos--
+  usuarioId : int (FK)
+  dni : string (UNIQUE)
+  nombre : string
+  apellidos : string
+  email : string (UNIQUE)
+  contrasena : string
+  numCuentaBancaria : string (UNIQUE)
+  numTelefono : string
+  redes : text
+  pais : string
+  localidad : string
+  especializacion : ENUM
+  imagenPerfil : string
+  alumnoVinculadoId : int
+}
+
+class Administradores <<USER_COLOR>> {
+  --Atributos--
+  usuarioId : int (FK)
+  dni : string (UNIQUE)
+  nombre : string
+  apellidos : string
+  email : string (UNIQUE)
+  contrasena : string
+  numCuentaBancaria : string (UNIQUE)
+  numTelefono : string
+  redes : string
+  pais : string
+  localidad : string
+}
+
+' ════════════════════════════════════════════════════════════════════
+' CLASES PRINCIPALES - CONTENIDO EDUCATIVO
+' ════════════════════════════════════════════════════════════════════
+
+class Cursos {
+  --Atributos--
+  id : int (PK)
+  nombreCurso : string
+  categoria : ENUM
+  profesor : int (FK)
+  nivel : string
+  valoracion : float
+  descripcion : text
+  imagen : string
+}
+
+class Ejercicios {
+  --Atributos--
+  id : int (PK)
+  autor : int (FK) - Profesor
+  curso : int (FK)
+  nombre : text
+  archivo : string
+  descripcion : text
+}
+
+class Videos {
+  --Atributos--
+  id : int (PK)
+  autor : int (FK) - Profesor
+  curso : int (FK)
+  nombre : string
+  archivo : string
+}
+
+class Apuntes {
+  --Atributos--
+  id : int (PK)
+  autor : int (FK) - Profesor o Alumno
+  curso : int (FK)
+  categoria : ENUM
+  nombre : text
+  archivo : string
+  descripcion : text
+  valoracion : float
+}
+
+' ════════════════════════════════════════════════════════════════════
+' CLASES PRINCIPALES - NOTIFICACIONES Y COMENTARIOS
+' ════════════════════════════════════════════════════════════════════
+
+class Notificaciones {
+  --Atributos--
+  id : int (PK)
+  usuarioId : int (FK)
+  tipoUsuario : string
+  mensaje : string
+  enlace : string
+  vista : boolean
+  fecha : date
+}
+
+class ComentarioAlumnoCurso {
+  --Atributos--
+  id : int (PK)
+  usuarioId : int (FK)
+  cursoId : int (FK)
+  comentario : text
+}
+
+' ════════════════════════════════════════════════════════════════════
+' TABLAS DE RELACIÓN (MANY-TO-MANY)
+' ════════════════════════════════════════════════════════════════════
+
+class CursosAlumnos <<RELATIONSHIP_COLOR>> {
+  --Atributos--
+  id : int (PK)
+  cursoId : int (FK)
+  alumnoId : int (FK)
+  favorito : boolean
+  apuntado : boolean
+  valoracion : boolean
+}
+
+class ProfesoresCursos <<RELATIONSHIP_COLOR>> {
+  --Atributos--
+  id : int (PK)
+  profesorId : int (FK)
+  cursoId : int (FK)
+}
+
+class EjerciciosAlumnos <<RELATIONSHIP_COLOR>> {
+  --Atributos--
+  id : int (PK)
+  ejercicioId : int (FK)
+  alumnoId : int (FK)
+  archivo : string
+}
+
+class ApuntesAlumnos <<RELATIONSHIP_COLOR>> {
+  --Atributos--
+  id : int (PK)
+  apunteId : int (FK)
+  alumnoId : int (FK)
+  megusta : boolean
+}
+
+class PuntuacionesEjercicios <<RELATIONSHIP_COLOR>> {
+  --Atributos--
+  id : int (PK)
+  ejercicioId : int (FK)
+  alumnoId : int (FK)
+  puntuacion : float
+}
+
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - HERENCIA
+' ════════════════════════════════════════════════════════════════════
+
+Usuarios <|-- Alumnos : hereda
+Usuarios <|-- Profesores : hereda
+Usuarios <|-- Administradores : hereda
+
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - COMPOSICIÓN Y ASOCIACIONES
+' ════════════════════════════════════════════════════════════════════
+
+Alumnos "1" -- "*" CursosAlumnos : participa en
+CursosAlumnos "*" -- "1" Cursos : registra
+
+Profesores "1" -- "*" ProfesoresCursos : enseña
+ProfesoresCursos "*" -- "1" Cursos : en
+
+Profesores "1" -- "*" Cursos : crea/imparte
+Profesores "1" -- "*" Ejercicios : autor
+Profesores "1" -- "*" Videos : autor
+Profesores "1" -- "*" Apuntes : autor
+
+Cursos "1" -- "*" Ejercicios : contiene
+Cursos "1" -- "*" Videos : contiene
+Cursos "1" -- "*" Apuntes : contiene
+Cursos "1" -- "*" ComentarioAlumnoCurso : recibe
+
+Alumnos "1" -- "*" Ejercicios : entrega en EjerciciosAlumnos
+Alumnos "1" -- "*" EjerciciosAlumnos : entrega
+EjerciciosAlumnos "*" -- "1" Ejercicios : es entregado
+
+Alumnos "1" -- "*" ApuntesAlumnos : valora
+ApuntesAlumnos "*" -- "1" Apuntes : es valorado
+
+Alumnos "1" -- "*" PuntuacionesEjercicios : recibe
+PuntuacionesEjercicios "*" -- "1" Ejercicios : puntúa
+
+Usuarios "1" -- "*" Notificaciones : recibe
+Alumnos "1" -- "*" ComentarioAlumnoCurso : comenta
+
+note right of Usuarios
+  Clase base para toda la jerarquía
+  de usuarios del sistema
+end note
+
+note right of CursosAlumnos
+  Tabla de relación:
+  - Favorito: marca en favoritos
+  - Apuntado: inscripción en curso
+  - Valoración: si el alumno ha votado
+end note
+
+note right of EjerciciosAlumnos
+  Registra las entregas de ejercicios
+  que realiza cada alumno en cada curso
+end note
+
+note right of PuntuacionesEjercicios
+  Almacena las calificaciones que
+  el profesor asigna a las entregas
+end note
+
+@enduml
