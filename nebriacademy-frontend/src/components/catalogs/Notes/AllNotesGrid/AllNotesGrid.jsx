@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../../config/api";
-import { useEffect, useState, useMemo } from "react";
+import { useEffect, useState, useMemo, useRef } from "react";
 import { useNavigate, useParams, useSearchParams } from "react-router-dom";
 import PlusIcon from "../../../../assets/Icons/plus.png";
 import PencilIcon from "../../../../assets/Icons/pencil.png";
@@ -31,6 +31,14 @@ function AllNotesGrid() {
   const [likedIds, setLikedIds] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  // Bloqueo por clave para acciones que modifican estado (likes, borrados)
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // Estado de los filtros: categoría, buscador de texto y modo de vista
   const [filters, setFilters] = useState({
@@ -147,6 +155,10 @@ function AllNotesGrid() {
   // Alterna el like de un apunte (solo alumnos): actualiza backend y estado local
   const handleToggleLike = async (apunte) => {
     if (!usuario?.id || tipo !== "alumno") return;
+    if (!locksRef.current) locksRef.current = {};
+    if (locksRef.current[`like-${apunte.id}`]) return;
+    locksRef.current[`like-${apunte.id}`] = true;
+    setTimeout(() => delete locksRef.current[`like-${apunte.id}`], 800);
     try {
       const res = await fetch(`${API_URL}/apuntesalumnos/vote`, {
         method: "POST",
@@ -178,6 +190,8 @@ function AllNotesGrid() {
 
   // Borra un apunte con confirmación y lo elimina también del estado local
   const handleDelete = async (aid) => {
+    // Evita envíos duplicados al borrar un apunte
+    if (!acquireLock(`delete-note-${aid}`)) return;
     const isUIAdmin = tipo === "administrador";
     const result = await showConfirm("¿Borrar apunte?", "Borrar Apunte", {
       withInput: isUIAdmin,

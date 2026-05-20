@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { useNavigate } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 
@@ -18,12 +18,22 @@ function LoginGrid() {
   const navigate = useNavigate();
   // Guarda usuario y rol en el store global tras login exitoso
   const setUser = useAuthStore((state) => state.setUser);
+  // Bloqueo local para evitar envíos duplicados del formulario de login.
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   const handleLogin = async (evento) => {
     // Envía las credenciales al backend y actualiza el store en caso de éxito
     evento.preventDefault();
     setError("");
+
+    if (!acquireLock(`login-submit`)) return;
 
     try {
       const respuesta = await fetch(`${API_URL}/login/auth`, {

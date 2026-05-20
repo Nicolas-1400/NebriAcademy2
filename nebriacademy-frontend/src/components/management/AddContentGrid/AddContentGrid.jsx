@@ -1,12 +1,11 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Componente para añadir contenido (vídeos, apuntes, ejercicios) a cursos
-// o subir apuntes de forma individual.
+// Componente para añadir contenido (vídeos, apuntes, ejercicios) a cursos o subir apuntes de forma individual.
 function AddContentGrid({ tipo, idCurso }) {
   const { id: idParam } = useParams();
   const { state } = useLocation();
@@ -40,6 +39,14 @@ function AddContentGrid({ tipo, idCurso }) {
   const [categorias, setCategorias] = useState([]); // Para selector en modo individual
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  // Previene envíos duplicados al subir contenido (apuntes/vídeos/ejercicios).
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── EFECTOS ─────────────────────────────────────────────────────────────────
 
@@ -75,6 +82,7 @@ function AddContentGrid({ tipo, idCurso }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    if (!acquireLock(`addcontent-${isCourseContent ? `course-${cursoId}` : "individual"}`)) return;
     setLoading(true);
     setError(null);
 
@@ -85,6 +93,12 @@ function AddContentGrid({ tipo, idCurso }) {
     if (!formData.nombre.trim()) {
       setLoading(false);
       return setError("El nombre es obligatorio");
+    }
+
+    // Evitar que un administrador suba ejercicios a un curso (UX + permisos)
+    if (isCourseContent && tipoContenido === "ejercicio" && tipoUsuario === "administrador") {
+      setLoading(false);
+      return setError("Los administradores no pueden subir ejercicios a cursos");
     }
 
     try {

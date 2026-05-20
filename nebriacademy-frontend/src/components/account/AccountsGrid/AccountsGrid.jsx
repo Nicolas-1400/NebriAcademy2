@@ -1,6 +1,6 @@
 // ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { API_URL } from "../../../config/api";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import useAuthStore from "../../../store/useAuthStore";
 import AccountsTable from "../AccountsTable/AccountsTable";
 import useToastStore from "../../../store/toastStore";
@@ -29,6 +29,14 @@ function AccountsGrid() {
     pais: "",
     localidad: "",
   });
+  // Bloqueo local para evitar envíos duplicados desde la interfaz de administración.
+  const locksRef = useRef({});
+  const acquireLock = (key, delay = 800) => {
+    if (locksRef.current[key]) return false;
+    locksRef.current[key] = true;
+    setTimeout(() => delete locksRef.current[key], delay);
+    return true;
+  };
 
   // ── EFECTOS ───────────────────────────────────────────────────────────────────
   useEffect(() => {
@@ -99,6 +107,7 @@ function AccountsGrid() {
         ? `${API_URL}/alumnos/admin/crear`
         : `${API_URL}/profesores/admin/crear`;
 
+    if (!acquireLock(`create-account-${email}`)) return;
     try {
       const respuesta = await fetch(endpoint, {
         method: "POST",
@@ -125,6 +134,8 @@ function AccountsGrid() {
 
   // Borrar cuenta — los alumnos vinculados no se pueden borrar de forma independiente
   const handleBorrarCuenta = async (cuentaId, rolCuenta, esVinculado) => {
+    // Evita envíos duplicados al borrar cuentas
+    if (!acquireLock(`delete-account-${cuentaId}`)) return;
     if (rolCuenta === "alumno" && esVinculado) {
       return addToast(
         "No puedes borrar la versión alumno de un profesor de forma independiente. Borra la cuenta de profesor vinculada.",
@@ -182,6 +193,7 @@ function AccountsGrid() {
 
   // Actualiza los datos in-line y, si es un profesor, sincroniza al alumno vinculado
   const handleUpdateDato = async (cuentaId, rolCuenta, campo, nuevoValor) => {
+    if (!acquireLock(`update-${rolCuenta}-${cuentaId}-${campo}`)) return false;
     const endpoint =
       rolCuenta === "alumno"
         ? `${API_URL}/alumnos/${cuentaId}`

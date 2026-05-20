@@ -73,6 +73,7 @@
 .modal-actions {
   display: flex;
   justify-content: center;
+  gap: 12px;
 }
 
 .modal-button {
@@ -84,23 +85,24 @@
   transition: all 0.2s;
   border: none;
 }
-button .modal-button.cancel {
+.modal-button.cancel {
   background: #f3f4f6;
   color: #4b5563;
 }
-button .modal-button.cancel:hover {
+.modal-button.cancel:hover {
   background: #e5e7eb;
 }
 
 .modal-button.confirm {
-  background: linear-gradient(135deg, #3b82f6, #2563eb);
+  background: linear-gradient(135deg, var(--rojo-nebrija, #c2002f), #9b0024);
   color: white;
-  box-shadow: 0 4px 12px rgba(37, 99, 235, 0.3);
+  box-shadow: 0 4px 12px rgba(194, 0, 47, 0.18);
+  min-width: 110px;
 }
 
 .modal-button.confirm:hover {
   transform: translateY(-1px);
-  box-shadow: 0 6px 16px rgba(37, 99, 235, 0.4);
+  box-shadow: 0 6px 16px rgba(194, 0, 47, 0.22);
 }
 
 @keyframes fadeIn {

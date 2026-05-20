@@ -102,8 +102,23 @@ function ProfileGrid() {
       });
 
       if (respuesta.ok) {
-        const usuarioActualizado = await respuesta.json();
-        setUser(usuarioActualizado, tipo);
+        // Intentamos usar la respuesta como usuario actualizado; si no, recargamos desde GET
+        let usuarioActualizado = null;
+        try {
+          usuarioActualizado = await respuesta.json();
+        } catch (e) {
+          usuarioActualizado = null;
+        }
+        if (usuarioActualizado && usuarioActualizado.id) {
+          setUser(usuarioActualizado, tipo);
+        } else {
+          try {
+            const fresh = await fetch(`${API_URL}/usuarios/${user.id}?tipo=${tipo}`).then((r) => (r.ok ? r.json() : null));
+            if (fresh) setUser(fresh, tipo);
+          } catch (e) {
+            console.warn("No se pudo recargar usuario tras actualizar", e);
+          }
+        }
         setFormData((prev) => ({ ...prev, contrasena: "" }));
         setMensajeExito("¡Perfil actualizado correctamente!");
         // El mensaje de éxito desaparece solo tras 3 segundos
