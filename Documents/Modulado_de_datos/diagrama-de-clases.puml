@@ -2,7 +2,6 @@
 !define BACKEND_COLOR #E1F5FE
 !define RELATIONSHIP_COLOR #FFF9C4
 !define USER_COLOR #C8E6C9
-!define FRONTEND_COLOR #FFE0B2
 
 skinparam class {
   BackgroundColor BACKEND_COLOR
@@ -279,12 +278,61 @@ class PuntuacionesEjercicios <<RELATIONSHIP_COLOR>> {
 }
 
 ' ════════════════════════════════════════════════════════════════════
-' FRONTEND - COMPONENTES PRINCIPALES
+' RELACIONES - HERENCIA (BACKEND)
 ' ════════════════════════════════════════════════════════════════════
 
-class LoginGrid <<FRONTEND_COLOR>> {
-  --Atributos--
-  - email : string
+Usuarios <|-- Alumnos : hereda
+Usuarios <|-- Profesores : hereda
+Usuarios <|-- Administradores : hereda
+
+' ════════════════════════════════════════════════════════════════════
+' RELACIONES - BACKEND
+' ════════════════════════════════════════════════════════════════════
+
+Alumnos "1" -- "*" CursosAlumnos : inscrito en
+CursosAlumnos "*" -- "1" Cursos : contiene
+
+Profesores "1" -- "*" ProfesoresCursos : imparte
+ProfesoresCursos "*" -- "1" Cursos : en
+
+Profesores "1" -- "*" Cursos : crea
+Profesores "1" -- "*" Ejercicios : autor de
+Profesores "1" -- "*" Videos : autor de
+Profesores "1" -- "*" Apuntes : autor de
+
+Cursos "1" -- "*" Ejercicios : contiene
+Cursos "1" -- "*" Videos : contiene
+Cursos "1" -- "*" Apuntes : contiene
+Cursos "1" -- "*" ComentarioAlumnoCurso : recibe
+
+Alumnos "1" -- "*" EjerciciosAlumnos : entrega
+EjerciciosAlumnos "*" -- "1" Ejercicios : resuelto
+
+Alumnos "1" -- "*" ApuntesAlumnos : valora
+ApuntesAlumnos "*" -- "1" Apuntes : valorado
+
+Alumnos "1" -- "*" PuntuacionesEjercicios : recibe
+PuntuacionesEjercicios "*" -- "1" Ejercicios : califica
+
+Usuarios "1" -- "*" Notificaciones : recibe
+Alumnos "1" -- "*" ComentarioAlumnoCurso : comenta
+
+note right of Usuarios
+  Base de jerarquía de usuarios
+  (+) Público | (-) Privado | (#) Protegido
+end note
+
+note right of Cursos
+  Gestión de cursos con categoría ENUM
+  y sistema de valoración
+end note
+
+note right of Apuntes
+  Contenido compartido con sistema
+  de likes y valoración dinámica
+end note
+
+@enduml
   - password : string
   - loading : boolean
   --Métodos--
