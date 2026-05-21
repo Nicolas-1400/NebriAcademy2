@@ -1,8 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import { useParams } from "react-router-dom";
 import Nav from "../../components/layout/Nav/Nav.jsx";
 import PoliciesGrid from "../../components/support/PoliciesGrid/PoliciesGrid.jsx";
 import Footer from "../../components/layout/Footer/Footer.jsx";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de políticas de privacidad o condiciones de uso según el tipo recibido por URL
 function Policies() {
   const { tipo } = useParams();
   return (

@@ -2,7 +2,7 @@
 import React from "react";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-// Maneja el filtrado de datos y el renderizado de filas editables o estáticas.
+// Tabla genérica de cuentas con filtrado multcampo, edición inline y borrado.
 function AccountsTable({
   title,
   data,
@@ -15,8 +15,8 @@ function AccountsTable({
   className,
   getExtraCol,
 }) {
-  // ── FILTRADO ────────────────────────────────────────────────────────────────
-  // Aplicamos los filtros de búsqueda a los datos recibidos
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Aplica los filtros de búsqueda texto a los datos recibidos por props
   const filteredData = data.filter(
     (c) =>
       (!filtros.nombre ||

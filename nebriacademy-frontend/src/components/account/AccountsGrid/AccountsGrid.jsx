@@ -7,11 +7,13 @@ import useToastStore from "../../../store/toastStore";
 import useModalStore from "../../../store/modalStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Panel de administración de cuentas: lista, crea, edita y borra alumnos y profesores
 function AccountsGrid() {
   const { tipo } = useAuthStore();
   const { addToast } = useToastStore();
   const { showConfirm } = useModalStore();
 
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
   const [cuentas, setCuentas] = useState([]);
   const [loading, setLoading] = useState(true);
 
@@ -44,7 +46,8 @@ function AccountsGrid() {
     fetchCuentas();
   }, [tipo]);
 
-  // Carga paralela de alumnos y profesores y unifica la lista
+  // ── FUNCIONES ──────────────────────────────────────────────────────────────────
+  // Carga paralela de alumnos y profesores y unifica la lista en un solo array
   const fetchCuentas = async () => {
     setLoading(true);
     try {

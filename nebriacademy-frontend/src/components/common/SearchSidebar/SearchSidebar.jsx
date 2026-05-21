@@ -1,9 +1,6 @@
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
-/**
- * Componente reutilizable para menús laterales de filtrado.
- * Implementa un buscador de texto y múltiples grupos de selectores (categoría, nivel, etc.).
- * Adapta su vista dinámicamente: usa botones en Desktop y elementos <select> en Mobile.
- */
+// Sidebar reutilizable de filtrado: buscador libre + grupos de selectores (categoría, nivel…).
+// En desktop usa botones tipo toggle; en mobile usa <select> para ahorrar espacio.
 function SearchSidebar({
   searchTerm = "",
   onSearchChange,

@@ -1,7 +1,10 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 import Nav from "../../components/layout/Nav/Nav.jsx";
 import Footer from "../../components/layout/Footer/Footer.jsx";
 import Home from "../../components/catalogs/Home/Home.jsx";
 
+// ── COMPONENTE ──────────────────────────────────────────────────────────────
+// Página de inicio: slider de cursos y apuntes destacados
 function HomePage() {
   return (
     <div>

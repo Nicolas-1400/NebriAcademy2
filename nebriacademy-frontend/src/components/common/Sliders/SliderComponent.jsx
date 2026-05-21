@@ -4,13 +4,10 @@ import { useEffect, useRef, useState } from "react";
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Carrusel horizontal con flechas; espera `children` tipo tarjeta
 const SliderComponent = ({ children }) => {
-  // ── ESTADO Y REFERENCIAS ────────────────────────────────────────────────────
-  // Referencia al contenedor desplazable
-  const sliderRef = useRef(null);
-  // Indica si puede desplazarse a la izquierda
-  const [canScrollLeft, setCanScrollLeft] = useState(false);
-  // Indica si puede desplazarse a la derecha
-  const [canScrollRight, setCanScrollRight] = useState(false);
+  // ── ESTADO ─────────────────────────────────────────────────────────────────
+  const sliderRef = useRef(null); // Referencia al contenedor desplazable
+  const [canScrollLeft, setCanScrollLeft] = useState(false);  // Flecha izquierda activa
+  const [canScrollRight, setCanScrollRight] = useState(false); // Flecha derecha activa
 
   // ── FUNCIONES ──────────────────────────────────────────────────────────────────
   // Verifica la posición de scroll para habilitar/deshabilitar las flechas
