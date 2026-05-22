@@ -3,10 +3,9 @@ import { Analytics } from "@vercel/analytics/react";
 
 // Importación global de estilos (CSS centralizado y módulos específicos)
 import "./styles/general.css";
-import "./styles/auth.css";
-import "./styles/management.css";
 import "./components/layout/Header/Header.css";
 import "./components/layout/Nav/Nav.css";
+import "./components/auth/auth.css";
 import "./components/common/SearchSidebar/SearchSidebar.css";
 import "./components/support/HelpGrid/HelpGrid.css";
 import "./components/support/MyTicketsGrid/MyTicketsGrid.css";
@@ -34,6 +33,7 @@ import "./components/catalogs/Professors/ProfessorInfoGrid/ProfessorInfoGrid.css
 import "./components/common/Avatar/Avatar.css";
 import "./components/common/Sliders/Sliders.css";
 import "./components/management/AddCourseGrid/AddCourseGrid.css";
+import "./components/management/management.css";
 import "./components/management/GradeExercisesGrid/GradeExercisesGrid.css";
 import "./components/management/StudentSubmissionCard/StudentSubmissionCard.css";
 import "./components/common/NotFound/NotFound.css";
