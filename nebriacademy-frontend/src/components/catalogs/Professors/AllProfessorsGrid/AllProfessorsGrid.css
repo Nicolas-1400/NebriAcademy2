@@ -8,17 +8,16 @@
   padding: 40px;
   min-height: calc(100vh - 250px);
   align-items: flex-start;
-  background-image: url("../../../../assets/Backgrounds/classroom-background.jpg");
-  background-size: cover;
-  background-position: center;
+  background-color: var(--color-fondo);
 }
 
 .professors-grid {
   flex: 1;
   min-width: 0;
-  background-color: rgba(255, 224, 224, 0.9);
+  background-color: var(--color-hover-button);
   padding: 25px;
   border-radius: 10px;
+   border: 2px solid var(--rojo-nebrija);
 }
 
 .professors-grid h2 {
