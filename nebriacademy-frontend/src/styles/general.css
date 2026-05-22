@@ -86,7 +86,7 @@ body {
   width: 8px;
   height: 8px;
 }
-
+ 
 ::-webkit-scrollbar-track {
   background: #f1f1f1;
   border-radius: 10px;
@@ -101,233 +101,6 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: var(--color-secundario);
 }
-
-/* ── AUTH SHARED LAYOUT ── */
-.auth-grid {
-  display: flex;
-  align-items: center;
-  min-height: 615px;
-  background-image: url("../assets/Backgrounds/LoginBackground.png");
-  background-size: cover;
-  background-position: right center;
-  background-repeat: no-repeat;
-  padding: 40px;
-}
-
-.auth-form-container {
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  width: 40%;
-  background-color: rgba(255, 255, 255, 0.95);
-  padding: 60px 50px;
-  border-radius: 10px;
-  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
-}
-
-.auth-form {
-  display: flex;
-  flex-direction: column;
-  gap: 20px;
-  width: 100%;
-  margin-bottom: 20px;
-}
-
-.auth-form input,
-.auth-form select {
-  padding: 15px;
-  font-size: 14px;
-  border: 2px solid #ddd;
-  border-radius: 5px;
-  transition: all 0.3s ease;
-  font-family: "Arial", sans-serif;
-}
-
-.auth-form input:focus {
-  outline: none;
-  border-color: var(--rojo-nebrija);
-  box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
-}
-
-.auth-form button {
-  padding: 15px;
-  font-size: 16px;
-  font-weight: bold;
-  background-color: var(--rojo-nebrija);
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-  transition: all 0.3s ease;
-}
-
-.auth-form button:hover {
-  background-color: var(--color-secundario);
-  transform: translateY(-2px);
-  box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
-}
-
-.auth-form-container a {
-  color: var(--rojo-nebrija);
-  text-decoration: none;
-  font-size: 14px;
-  font-weight: 600;
-  transition: color 0.3s ease;
-}
-
-.auth-form-container a:hover {
-  text-decoration: underline;
-}
-
-/* RESPONSIVE AUTH */
-@media (max-width: 1024px) {
-  .auth-grid {
-    padding: 35px;
-    gap: 25px;
-  }
-
-  .auth-form-container {
-    width: 50%;
-    padding: 50px 40px;
-  }
-
-  .auth-form {
-    gap: 18px;
-    margin-bottom: 18px;
-  }
-
-  .auth-form input,
-  .auth-form select {
-    padding: 14px;
-    font-size: 13px;
-  }
-
-  .auth-form button {
-    padding: 14px;
-    font-size: 15px;
-  }
-}
-
-@media (max-width: 768px) {
-  .auth-grid {
-    flex-direction: column;
-    padding: 20px;
-    min-height: auto;
-    gap: 30px;
-    height: 100vh;
-    background-image: url("../assets/Backgrounds/LoginBackgroundRotated.png");
-    background-size: cover;
-    background-position: top;
-    background-repeat: no-repeat;
-  }
-
-  .auth-form-container {
-    width: 100%;
-    max-width: 350px;
-    padding: 40px 30px;
-  }
-
-  .auth-form input,
-  .auth-form select {
-    padding: 12px;
-    font-size: 13px;
-  }
-
-  .auth-form button {
-    padding: 12px;
-    font-size: 14px;
-  }
-}
-
-/* ── GESTIÓN DE CONTENIDO Y CURSOS ── */
-
-/* Contenedores principales para formularios de gestión */
-.add-content-grid,
-.edit-content-grid,
-.edit-course-container {
-  max-width: 900px;
-  margin: 30px auto;
-  padding: 24px;
-  background: white;
-  border-radius: 10px;
-  box-shadow: 0 6px 24px rgba(0, 0, 0, 0.06);
-}
-
-.add-content-grid h2,
-.edit-content-grid h2,
-.edit-course-container h2 {
-  color: var(--rojo-nebrija);
-  border-bottom: 2px solid var(--rojo-nebrija);
-  margin-bottom: 10px;
-}
-
-.add-content-grid p,
-.edit-content-grid p {
-  color: black;
-  font-size: 16px;
-}
-
-/* Contenedores de formulario internos */
-.add-content-form,
-.edit-content-form {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-  padding: 8px;
-}
-
-/* Estilos de grupos de formulario compartidos */
-.form-group {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.form-group label {
-  font-weight: 700;
-  color: black;
-}
-
-/* Áreas de entrada con borde negro por requerimiento */
-.input-area,
-.form-group input,
-.form-group textarea,
-.form-group select {
-  padding: 10px;
-  border: 2px solid black;
-  border-radius: 6px;
-  font-family: inherit;
-}
-
-.input-area:focus,
-.form-group input:focus,
-.form-group textarea:focus,
-.form-group select:focus {
-  outline: none;
-  border-color: var(--rojo-nebrija);
-}
-
-.form-group textarea {
-  min-height: 120px;
-  resize: vertical;
-}
-
-.file-help-text {
-  color: #666;
-}
-
-.error {
-  color: #b00020;
-}
-
-/* Botonera de formularios */
-.form-buttons {
-  margin-top: 12px;
-  display: flex;
-  gap: 8px;
-}
-
 /* Botones de acción principales */
 .upload-btn,
 .update-btn {
@@ -407,33 +180,15 @@ body {
 select option{
   background-color: var(--color-hover-button);
 }
-
-/* ── RESPONSIVE PARA GESTIÓN ── */
+/* RESPONSIVE (ajustes específicos de botones y navegación global) */
 
 @media (max-width: 1024px) {
-  .add-content-grid,
-  .edit-content-grid,
-  .edit-course-container {
-    max-width: 80%;
-    margin: 25px auto;
-    padding: 20px;
-  }
-
-  .form-group textarea {
-    min-height: 100px;
-  }
-
-  .add-content-form,
-  .edit-content-form {
-    gap: 10px;
-    padding: 6px;
-  }
   .button-go-back {
     width: 140px;
     height: 28px;
     font-size: 14px;
   }
-  
+
   .button-go-back img {
     width: 18px;
     height: 18px;
@@ -441,57 +196,13 @@ select option{
 }
 
 @media (max-width: 768px) {
-  .add-content-grid,
-  .edit-content-grid,
-  .edit-course-container {
-    max-width: 80%;
-    margin: 20px auto;
-    padding: 16px;
-    border-radius: 8px;
-  }
-
-  .add-content-grid h2,
-  .edit-content-grid h2,
-  .edit-course-container h2 {
-    font-size: 20px;
-    margin-bottom: 12px;
-  }
-
-  .add-content-grid p,
-  .edit-content-grid p {
-    font-size: 14px;
-  }
-
-  .add-content-form,
-  .edit-content-form {
-    gap: 10px;
-    padding: 4px;
-  }
-
-  .input-area,
-  .form-group input,
-  .form-group select {
-    padding: 8px;
-    font-size: 13px;
-  }
-
-  .form-group textarea {
-    min-height: 80px;
-    font-size: 13px;
-  }
-
-  .form-buttons {
-    margin-top: 10px;
-    gap: 6px;
-    flex-wrap: wrap;
-  }
-
   .upload-btn,
   .update-btn,
   .cancel-btn {
     padding: 8px 12px;
     font-size: 13px;
   }
+
   .button-go-back {
     width: 130px;
     height: 26px;
@@ -504,17 +215,6 @@ select option{
 }
 
 @media (max-width: 480px) {
-  .add-content-grid,
-  .edit-content-grid,
-  .edit-course-container {
-    margin: 15px auto;
-    padding: 12px;
-  }
-
-  .form-buttons {
-    flex-direction: column;
-  }
-
   .upload-btn,
   .update-btn,
   .cancel-btn {

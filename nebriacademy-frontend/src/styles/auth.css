@@ -1,0 +1,137 @@
+/* ── AUTH SHARED LAYOUT ── */
+.auth-grid {
+  display: flex;
+  align-items: center;
+  min-height: 615px;
+  background-image: url("../assets/Backgrounds/LoginBackground.png");
+  background-size: cover;
+  background-position: right center;
+  background-repeat: no-repeat;
+  padding: 40px;
+}
+
+.auth-form-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  width: 40%;
+  background-color: rgba(255, 255, 255, 0.95);
+  padding: 60px 50px;
+  border-radius: 10px;
+  box-shadow: 0 10px 25px rgba(0, 0, 0, 0.2);
+}
+
+.auth-form {
+  display: flex;
+  flex-direction: column;
+  gap: 20px;
+  width: 100%;
+  margin-bottom: 20px;
+}
+
+.auth-form input,
+.auth-form select {
+  padding: 15px;
+  font-size: 14px;
+  border: 2px solid #ddd;
+  border-radius: 5px;
+  transition: all 0.3s ease;
+  font-family: "Arial", sans-serif;
+}
+
+.auth-form input:focus {
+  outline: none;
+  border-color: var(--rojo-nebrija);
+  box-shadow: 0 0 8px rgba(220, 126, 126, 0.3);
+}
+
+.auth-form button {
+  padding: 15px;
+  font-size: 16px;
+  font-weight: bold;
+  background-color: var(--rojo-nebrija);
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+.auth-form button:hover {
+  background-color: var(--color-secundario);
+  transform: translateY(-2px);
+  box-shadow: 0 5px 15px rgba(194, 0, 47, 0.3);
+}
+
+.auth-form-container a {
+  color: var(--rojo-nebrija);
+  text-decoration: none;
+  font-size: 14px;
+  font-weight: 600;
+  transition: color 0.3s ease;
+}
+
+.auth-form-container a:hover {
+  text-decoration: underline;
+}
+
+/* RESPONSIVE AUTH */
+@media (max-width: 1024px) {
+  .auth-grid {
+    padding: 35px;
+    gap: 25px;
+  }
+
+  .auth-form-container {
+    width: 50%;
+    padding: 50px 40px;
+  }
+
+  .auth-form {
+    gap: 18px;
+    margin-bottom: 18px;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    padding: 14px;
+    font-size: 13px;
+  }
+
+  .auth-form button {
+    padding: 14px;
+    font-size: 15px;
+  }
+}
+
+@media (max-width: 768px) {
+  .auth-grid {
+    flex-direction: column;
+    padding: 20px;
+    min-height: auto;
+    gap: 30px;
+    height: 100vh;
+    background-image: url("../assets/Backgrounds/LoginBackgroundRotated.png");
+    background-size: cover;
+    background-position: top;
+    background-repeat: no-repeat;
+  }
+
+  .auth-form-container {
+    width: 100%;
+    max-width: 350px;
+    padding: 40px 30px;
+  }
+
+  .auth-form input,
+  .auth-form select {
+    padding: 12px;
+    font-size: 13px;
+  }
+
+  .auth-form button {
+    padding: 12px;
+    font-size: 14px;
+  }
+}

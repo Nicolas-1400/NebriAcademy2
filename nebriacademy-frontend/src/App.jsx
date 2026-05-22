@@ -3,6 +3,8 @@ import { Analytics } from "@vercel/analytics/react";
 
 // Importación global de estilos (CSS centralizado y módulos específicos)
 import "./styles/general.css";
+import "./styles/auth.css";
+import "./styles/management.css";
 import "./components/layout/Header/Header.css";
 import "./components/layout/Nav/Nav.css";
 import "./components/common/SearchSidebar/SearchSidebar.css";
