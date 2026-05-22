@@ -2,9 +2,10 @@
 !define BACKEND_COLOR #E1F5FE
 !define RELATIONSHIP_COLOR #FFF9C4
 !define USER_COLOR #C8E6C9
+!define FRONTEND_COLOR #FFE0B2
 
 skinparam class {
-  BackgroundColor BACKEND_COLOR
+  BackgroundColor #E1F5FE
   BorderColor #01579B
   ArrowColor #01579B
 }
@@ -25,7 +26,7 @@ class Usuarios {
   + delete(id: int) : Promise<void>
 }
 
-class Alumnos <<USER_COLOR>> {
+class Alumnos #C8E6C9 {
   --Atributos--
   # usuarioId : int [FK]
   - dni : string [UNIQUE]
@@ -50,7 +51,7 @@ class Alumnos <<USER_COLOR>> {
   + linkProfessor(profesorId: int) : Promise<void>
 }
 
-class Profesores <<USER_COLOR>> {
+class Profesores #C8E6C9 {
   --Atributos--
   # usuarioId : int [FK]
   - dni : string [UNIQUE]
@@ -73,7 +74,7 @@ class Profesores <<USER_COLOR>> {
   + gradExercise(ejercicioId: int, calificacion: float) : Promise<void>
 }
 
-class Administradores <<USER_COLOR>> {
+class Administradores #C8E6C9 {
   --Atributos--
   # usuarioId : int [FK]
   - dni : string [UNIQUE]
@@ -211,7 +212,7 @@ class ComentarioAlumnoCurso {
 ' BACKEND - TABLAS DE RELACIÓN (MANY-TO-MANY)
 ' ════════════════════════════════════════════════════════════════════
 
-class CursosAlumnos <<RELATIONSHIP_COLOR>> {
+class CursosAlumnos #FFF9C4 {
   --Atributos--
   # id : int [PK]
   # cursoId : int [FK]
@@ -227,18 +228,7 @@ class CursosAlumnos <<RELATIONSHIP_COLOR>> {
   + delete(id: int) : Promise<void>
 }
 
-class ProfesoresCursos <<RELATIONSHIP_COLOR>> {
-  --Atributos--
-  # id : int [PK]
-  # profesorId : int [FK]
-  # cursoId : int [FK]
-  --Métodos--
-  + create(data: object) : Promise<ProfesoresCursos>
-  + findAll() : Promise<ProfesoresCursos[]>
-  + delete(id: int) : Promise<void>
-}
-
-class EjerciciosAlumnos <<RELATIONSHIP_COLOR>> {
+class EjerciciosAlumnos #FFF9C4 {
   --Atributos--
   # id : int [PK]
   # ejercicioId : int [FK]
@@ -251,7 +241,7 @@ class EjerciciosAlumnos <<RELATIONSHIP_COLOR>> {
   + delete(id: int) : Promise<void>
 }
 
-class ApuntesAlumnos <<RELATIONSHIP_COLOR>> {
+class ApuntesAlumnos #FFF9C4 {
   --Atributos--
   # id : int [PK]
   # apunteId : int [FK]
@@ -264,7 +254,7 @@ class ApuntesAlumnos <<RELATIONSHIP_COLOR>> {
   + delete(id: int) : Promise<void>
 }
 
-class PuntuacionesEjercicios <<RELATIONSHIP_COLOR>> {
+class PuntuacionesEjercicios #FFF9C4 {
   --Atributos--
   # id : int [PK]
   # ejercicioId : int [FK]
@@ -291,9 +281,6 @@ Usuarios <|-- Administradores : hereda
 
 Alumnos "1" -- "*" CursosAlumnos : inscrito en
 CursosAlumnos "*" -- "1" Cursos : contiene
-
-Profesores "1" -- "*" ProfesoresCursos : imparte
-ProfesoresCursos "*" -- "1" Cursos : en
 
 Profesores "1" -- "*" Cursos : crea
 Profesores "1" -- "*" Ejercicios : autor de
@@ -341,7 +328,7 @@ end note
   + validateForm() : boolean
 }
 
-class RegisterGrid <<FRONTEND_COLOR>> {
+class RegisterGrid #FFE0B2 {
   --Atributos--
   - formData : object
   - step : int
@@ -353,7 +340,7 @@ class RegisterGrid <<FRONTEND_COLOR>> {
   + validateStep() : boolean
 }
 
-class ProfileGrid <<FRONTEND_COLOR>> {
+class ProfileGrid #FFE0B2 {
   --Atributos--
   - profileData : object
   - editing : boolean
@@ -365,7 +352,7 @@ class ProfileGrid <<FRONTEND_COLOR>> {
   + handleCancel() : void
 }
 
-class Home <<FRONTEND_COLOR>> {
+class Home #FFE0B2 {
   --Atributos--
   - userType : string
   - courses : array
@@ -377,7 +364,7 @@ class Home <<FRONTEND_COLOR>> {
   + filterCourses() : array
 }
 
-class CourseGrid <<FRONTEND_COLOR>> {
+class CourseGrid #FFE0B2 {
   --Atributos--
   - courseId : int
   - courseData : object
@@ -392,7 +379,7 @@ class CourseGrid <<FRONTEND_COLOR>> {
   + handleDownload() : void
 }
 
-class Nav <<FRONTEND_COLOR>> {
+class Nav #FFE0B2 {
   --Atributos--
   - searchQuery : string
   - searchResults : array
@@ -406,7 +393,7 @@ class Nav <<FRONTEND_COLOR>> {
   + clearCache() : void
 }
 
-class AddCourseGrid <<FRONTEND_COLOR>> {
+class AddCourseGrid #FFE0B2 {
   --Atributos--
   - courseForm : object
   - imageFile : File
@@ -419,7 +406,7 @@ class AddCourseGrid <<FRONTEND_COLOR>> {
   + handleCancel() : void
 }
 
-class GradeExercisesGrid <<FRONTEND_COLOR>> {
+class GradeExercisesGrid #FFE0B2 {
   --Atributos--
   - submissions : array
   - selectedSubmission : object
@@ -432,7 +419,7 @@ class GradeExercisesGrid <<FRONTEND_COLOR>> {
   + downloadFile() : void
 }
 
-class Avatar <<FRONTEND_COLOR>> {
+class Avatar #FFE0B2 {
   --Atributos--
   - user : object
   - size : string
@@ -446,7 +433,7 @@ class Avatar <<FRONTEND_COLOR>> {
 ' STORES Y SERVICIOS
 ' ════════════════════════════════════════════════════════════════════
 
-class useAuthStore <<FRONTEND_COLOR>> {
+class useAuthStore #FFE0B2 {
   --Atributos--
   - user : object
   - token : string
@@ -459,7 +446,7 @@ class useAuthStore <<FRONTEND_COLOR>> {
   + checkToken() : boolean
 }
 
-class useToastStore <<FRONTEND_COLOR>> {
+class useToastStore #FFE0B2 {
   --Atributos--
   - toasts : array
   --Métodos--
@@ -467,7 +454,7 @@ class useToastStore <<FRONTEND_COLOR>> {
   + removeToast(id: int) : void
 }
 
-class useModalStore <<FRONTEND_COLOR>> {
+class useModalStore #FFE0B2 {
   --Atributos--
   - modals : object
   --Métodos--
@@ -489,9 +476,6 @@ Usuarios <|-- Administradores : hereda
 
 Alumnos "1" -- "*" CursosAlumnos : inscrito en
 CursosAlumnos "*" -- "1" Cursos : contiene
-
-Profesores "1" -- "*" ProfesoresCursos : imparte
-ProfesoresCursos "*" -- "1" Cursos : en
 
 Profesores "1" -- "*" Cursos : crea
 Profesores "1" -- "*" Ejercicios : autor de
