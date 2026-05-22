@@ -1,82 +1,9 @@
-// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const express = require("express");
 const router = express.Router();
-const Notificaciones = require("../models/Notificaciones.js");
+const controller = require("../controllers/notificacionesController.js");
 
-// ── GET ─────────────────────────────────────────────────────────────────────
-// Obtener notificaciones para un usuario específico donde vista = false
-router.get("/:usuarioId", async (req, res) => {
-  try {
-    const { usuarioId } = req.params;
-    // Opcional: Recibir tipo de usuario si fuese necesario para distinguir misma ID entre tablas
-    const { tipo } = req.query; 
+router.get("/:usuarioId", controller.getByUsuario);
+router.post("/", controller.create);
+router.delete("/:id", controller.remove);
 
-    const whereClause = {
-      usuarioId: parseInt(usuarioId),
-      vista: false,
-    };
-    
-    if (tipo) {
-      whereClause.tipoUsuario = tipo;
-    }
-
-    const notificaciones = await Notificaciones.findAll({
-      where: whereClause,
-      order: [["fecha", "DESC"]], // Más recientes primero
-    });
-
-    res.json(notificaciones);
-  } catch (error) {
-    console.error("Error obteniendo notificaciones:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// ── POST ────────────────────────────────────────────────────────────────────
-// Crear una nueva notificación
-router.post("/", async (req, res) => {
-  try {
-    const { usuarioId, tipoUsuario, mensaje, enlace } = req.body;
-    
-    if (!usuarioId || !mensaje) {
-      return res.status(400).json({ error: "Faltan campos obligatorios (usuarioId, mensaje)" });
-    }
-
-    const nueva = await Notificaciones.create({
-      usuarioId: parseInt(usuarioId),
-      tipoUsuario,
-      mensaje,
-      enlace,
-      vista: false,
-      fecha: new Date(),
-    });
-
-    res.status(201).json(nueva);
-  } catch (error) {
-    console.error("Error creando notificación:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// ── DELETE ──────────────────────────────────────────────────────────────────
-// Borrar una notificación al marcarla como vista
-router.delete("/:id", async (req, res) => {
-  try {
-    const { id } = req.params;
-    
-    const notificacion = await Notificaciones.findByPk(id);
-    if (!notificacion) {
-      return res.status(404).json({ error: "Notificación no encontrada" });
-    }
-
-    await notificacion.destroy();
-    
-    res.json({ mensaje: "Notificación eliminada permanentemente" });
-  } catch (error) {
-    console.error("Error eliminando notificación:", error);
-    res.status(500).json({ error: "Error interno del servidor" });
-  }
-});
-
-// ── EXPORTAR ─────────────────────────────────────────────────────────────────
 module.exports = router;
