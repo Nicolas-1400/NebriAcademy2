@@ -3,6 +3,7 @@ import { API_URL } from "../../../config/api";
 import { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate, useParams } from "react-router-dom";
 import useAuthStore from "../../../store/useAuthStore";
+import useToastStore from "../../../store/toastStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Componente para añadir contenido (vídeos, apuntes, ejercicios) a cursos o subir apuntes de forma individual.
@@ -11,6 +12,7 @@ function AddContentGrid({ tipo, idCurso }) {
   const { state } = useLocation();
   const navigate = useNavigate();
   const { user: usuario, tipo: tipoUsuario } = useAuthStore();
+  const { addToast } = useToastStore();
 
   // ── LOGICA DE CONTEXTO ──────────────────────────────────────────────────────
   const isCourseContent = tipo === "curso";
@@ -145,6 +147,8 @@ function AddContentGrid({ tipo, idCurso }) {
       }
 
       // Redirección tras éxito
+      // Notificación y redirección tras éxito
+      addToast("Contenido subido correctamente", "success");
       if (isCourseContent && cursoId) {
         navigate(`/Home/Courses/${cursoId}`);
       } else {
@@ -153,6 +157,7 @@ function AddContentGrid({ tipo, idCurso }) {
     } catch (error) {
       console.error("Upload error:", error);
       setError(error.message || "Error al subir el contenido");
+      addToast(error.message || "Error al subir el contenido", "error");
     } finally {
       setLoading(false);
     }

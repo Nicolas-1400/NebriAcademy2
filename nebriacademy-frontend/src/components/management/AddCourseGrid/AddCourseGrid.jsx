@@ -2,6 +2,7 @@
 import { API_URL } from "../../../config/api";
 import { useState, useRef } from "react";
 import useAuthStore from "../../../store/useAuthStore";
+import useToastStore from "../../../store/toastStore";
 import { useNavigate } from "react-router-dom";
 import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 import CourseBackgroundCard from "../../catalogs/Courses/CourseBackgroundCard/CourseBackgroundCard";
@@ -43,6 +44,7 @@ function AddCourseGrid() {
 
   const navigate = useNavigate();
   const usuarioStore = useAuthStore((state) => state.user);
+  const { addToast } = useToastStore();
   // Bloqueo local para evitar envíos duplicados al crear un curso.
   // Esto impide que el profesor pulse varias veces "Crear curso" por error.
   const locksRefLocal = useRef({});
@@ -179,11 +181,11 @@ function AddCourseGrid() {
       );
 
       if (errors.length > 0) {
-        setError(
-          `Curso creado, pero hubo errores al subir algunos contenidos.`,
-        );
+        setError(`Curso creado, pero hubo errores al subir algunos contenidos.`);
+        addToast("Curso creado, pero hubo errores subiendo contenidos", "warning");
       } else {
         setSuccess("Curso y contenidos creados correctamente");
+        addToast("Curso y contenidos creados correctamente", "success");
 
         // Limpiamos todos los campos del formulario tras la creación exitosa
         setNombreCurso("");

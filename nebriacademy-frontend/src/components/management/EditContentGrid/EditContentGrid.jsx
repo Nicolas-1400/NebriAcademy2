@@ -2,6 +2,7 @@
 import { API_URL } from "../../../config/api";
 import { useEffect, useState } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
+import useToastStore from "../../../store/toastStore";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Formulario para editar contenido de un curso (vídeos, apuntes, ejercicios).
@@ -9,6 +10,7 @@ import { useLocation, useNavigate } from "react-router-dom";
 function EditContentGrid() {
   const { state } = useLocation();
   const navigate = useNavigate();
+  const { addToast } = useToastStore();
   const { tipo, item, cursoId } = state || {};
 
   // ── ESTADO ─────────────────────────────────────────────────────────────────
@@ -75,6 +77,7 @@ function EditContentGrid() {
         throw new Error(datos.error || "Error actualizando contenido");
       }
 
+      addToast("Contenido actualizado correctamente", "success");
       if (cursoId) {
         navigate(`/Home/Courses/${cursoId}`);
       } else {
@@ -83,6 +86,7 @@ function EditContentGrid() {
     } catch (error) {
       console.error(error);
       setError(error.message || "Error al guardar cambios");
+      addToast(error.message || "Error al guardar cambios", "error");
     } finally {
       setLoading(false);
     }
