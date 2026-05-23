@@ -127,7 +127,11 @@ function EditContentGrid() {
         )}
 
         <div className="form-group">
-          <label>Cambiar archivo (opcional) (máximo 20 MB)</label>
+          <label>
+            {tipo === "video"
+              ? "Archivo (se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm) (máximo 100 MB)"
+              : "Cambiar archivo (opcional) (máximo 10 MB)"}
+          </label>
           <input
             className="input-area"
             type="file"

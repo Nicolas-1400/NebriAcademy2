@@ -50,7 +50,7 @@ function AllNotesGrid() {
   const [editMode, setEditMode] = useState(false);
   const [searchParams] = useSearchParams();
 
-  // Si se llega desde el slider con ?categoria=X, pre-seleccionamos ese filtro
+  // Si se llega desde el slider con categoria=X, pre-seleccionamos ese filtro
   useEffect(() => {
     const categoriaParam = searchParams.get("categoria");
     if (categoriaParam) {

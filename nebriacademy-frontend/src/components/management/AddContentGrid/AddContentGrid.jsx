@@ -198,9 +198,9 @@ function AddContentGrid({ tipo, idCurso }) {
           <label>
             Archivo{" "}
             {tipoContenido === "video"
-              ? "(se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm)"
-              : "(se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar)"}{" "}
-            (máximo 20 MB)
+              ? "(se aceptan .mp4, .mov, .avi, .mkv, .wmv y .webm) (máximo 100 MB)"
+              : "(se aceptan .txt, .pdf, .doc, .docx, .pptx, .xls, .xlsx, .zip y .rar) (máximo 10 MB)"
+            }
           </label>
           <input
             className="input-area"

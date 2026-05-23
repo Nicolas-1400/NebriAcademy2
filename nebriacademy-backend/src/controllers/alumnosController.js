@@ -1,6 +1,11 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const Alumnos = require("../models/Alumnos.js");
 const Usuarios = require("../models/Usuarios.js");
 
+// ── CONTROLADOR: alumnos ─────────────────────────────────────────────────────
+// Operaciones CRUD, registro externo/Nebrija y verificación de alumnos
+
+// Listar todos los alumnos
 exports.listAll = async (req, res) => {
   try {
     const todos = await Alumnos.findAll();
@@ -11,6 +16,7 @@ exports.listAll = async (req, res) => {
   }
 };
 
+// Obtener alumno por su id
 exports.getById = async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
@@ -23,6 +29,7 @@ exports.getById = async (req, res) => {
   }
 };
 
+// Actualizar un alumno existente
 exports.update = async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
@@ -36,11 +43,13 @@ exports.update = async (req, res) => {
   }
 };
 
+// Eliminar alumno por id con notificaciones opcionales a profesores afectados
 exports.remove = async (req, res) => {
   try {
     const alumno = await Alumnos.findByPk(req.params.id);
     if (!alumno) return res.status(404).json({ error: "No encontrado" });
 
+    // No se permite borrar el alumno vinculado de un profesor de forma independiente
     if (alumno.esVinculado) {
       return res.status(400).json({
         error:
@@ -53,6 +62,7 @@ exports.remove = async (req, res) => {
     const { reason } = req.query;
     if (reason) {
       try {
+        // Si se proporciona una razón, notificamos a los profesores de los cursos en los que estaba matriculado
         const Cursos = require("../models/Cursos.js");
         const CursosAlumnos = require("../models/CursosAlumnos.js");
         const Notificaciones = require("../models/Notificaciones.js");
@@ -66,6 +76,7 @@ exports.remove = async (req, res) => {
           if (curso && curso.profesor) {
             const prof = await ProfesoresModel.findByPk(curso.profesor);
             if (prof && prof.usuarioId) {
+              // Creamos la notificación para cada profesor afectado
               await Notificaciones.create({
                 usuarioId: prof.usuarioId,
                 tipoUsuario: "profesor",
@@ -82,6 +93,7 @@ exports.remove = async (req, res) => {
 
     await alumno.destroy();
 
+    // Eliminamos también el usuario asociado si existe
     if (usuarioId) {
       await Usuarios.destroy({ where: { id: usuarioId } });
     }
@@ -93,6 +105,7 @@ exports.remove = async (req, res) => {
   }
 };
 
+// Crear alumno por admin con solo email y contraseña (registro parcial)
 exports.postAdminCrear = async (req, res) => {
   try {
     const { email, contrasena } = req.body;
@@ -106,6 +119,7 @@ exports.postAdminCrear = async (req, res) => {
     const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
 
     try {
+      // Creamos el alumno vinculado al nuevo usuario; si falla, revertimos el usuario
       const nuevoAlumno = await Alumnos.create({
         usuarioId: nuevoUsuario.id,
         email,
@@ -122,6 +136,7 @@ exports.postAdminCrear = async (req, res) => {
   }
 };
 
+// Registro externo de alumno con todos los datos personales y de pago
 exports.registerAlumnoExterno = async (req, res) => {
   try {
     const {
@@ -155,6 +170,7 @@ exports.registerAlumnoExterno = async (req, res) => {
     const nuevoUsuario = await Usuarios.create({ tipo: "alumno" });
 
     try {
+      // Creamos el alumno con todos los datos; si falla, revertimos el usuario
       const nuevoAlumno = await Alumnos.create({
         usuarioId: nuevoUsuario.id,
         nombre,
@@ -181,6 +197,7 @@ exports.registerAlumnoExterno = async (req, res) => {
   }
 };
 
+// Verificación previa al completar registro Nebrija (comprueba email y código)
 exports.verificacionNeijrjaAuth = async (req, res) => {
   const { email, contrasena } = req.body;
 
@@ -210,6 +227,7 @@ exports.verificacionNeijrjaAuth = async (req, res) => {
   }
 };
 
+// Completar registro Nebrija rellenando los datos personales del alumno preexistente
 exports.verificacionNeijrjaCompletar = async (req, res) => {
   try {
     const { nombre, apellidos, dni, contrasena, email, pais, localidad } =
@@ -237,6 +255,7 @@ exports.verificacionNeijrjaCompletar = async (req, res) => {
       return res.status(400).json({ error: "Cuenta ya registrada" });
     }
 
+    // Actualizamos el alumno con los datos personales del formulario de registro
     await alumno.update({
       nombre,
       apellidos,

@@ -1,3 +1,4 @@
+// Rutas delegadas a controlador de `usuarios`
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/usuariosController.js");

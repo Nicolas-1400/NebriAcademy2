@@ -314,8 +314,7 @@ function CourseGrid() {
       if (!acquireLock(`like-${action}`)) return;
       // Evitamos que un alumno no apuntado pueda votar
       if (action === "valoracion" && tipo === "alumno" && !registroUser?.apuntado) return;
-      // Evitamos votaciones repetidas del mismo valor
-      if (action === "valoracion" && registroUser?.valoracion === value) return;
+      // Permitimos reenviar el mismo valor para que el backend pueda procesar el toggle
       let url;
       let body = { cursoId: id, alumnoId: user.id };
 
@@ -621,7 +620,7 @@ function CourseGrid() {
               <button
                 className="vote-up"
                 onClick={() => registroUser?.apuntado && handleLike("valoracion", true)}
-                disabled={!registroUser?.apuntado || registroUser?.valoracion === true}
+                disabled={!registroUser?.apuntado}
                 title={!registroUser?.apuntado ? "Apúntate al curso para valorar" : "Votar positivo"}
               >
                 <img
@@ -637,7 +636,7 @@ function CourseGrid() {
               <button
                 className="vote-down"
                 onClick={() => registroUser?.apuntado && handleLike("valoracion", false)}
-                disabled={!registroUser?.apuntado || registroUser?.valoracion === false}
+                disabled={!registroUser?.apuntado}
                 title={!registroUser?.apuntado ? "Apúntate al curso para valorar" : "Votar negativo"}
               >
                 <img
@@ -657,7 +656,7 @@ function CourseGrid() {
                 disabled={!registroUser?.apuntado}
                 title={!registroUser?.apuntado ? "Apúntate al curso para marcar favorito" : "Marcar favorito"}
               >
-                {registroUser?.favorito ? "★ Favorito" : "☆ Favorito"}
+                {registroUser?.favorito ? "★ Favorito" : "Favorito"}
               </button>
               <button
                 className="enroll-button"

@@ -1,8 +1,12 @@
+// ── IMPORTACIONES ───────────────────────────────────────────────────────────
 const Usuarios = require("../models/Usuarios.js");
 const Alumnos = require("../models/Alumnos.js");
 const Profesores = require("../models/Profesores.js");
 const Administradores = require("../models/Administradores.js");
 
+// ── CONTROLADOR: usuarios ────────────────────────────────────────────────────
+// Operaciones CRUD sobre el modelo Usuarios con resolución dinámica por tipo
+// Devuelve el modelo específico (Alumnos, Profesores o Administradores) según el tipo de usuario
 const getModelByType = (tipo) => {
   switch (tipo) {
     case "alumno":
@@ -16,6 +20,7 @@ const getModelByType = (tipo) => {
   }
 };
 
+// Listar todos los usuarios
 exports.listAll = async (req, res) => {
   try {
     const all = await Usuarios.findAll();
@@ -25,6 +30,7 @@ exports.listAll = async (req, res) => {
   }
 };
 
+// Obtener usuario por id usando el query param tipo para resolver el modelo correcto
 exports.getById = async (req, res) => {
   try {
     const { tipo } = req.query;
@@ -40,6 +46,7 @@ exports.getById = async (req, res) => {
   }
 };
 
+// Crear un nuevo usuario base (sin datos de perfil específicos)
 exports.create = async (req, res) => {
   try {
     const nuevo = await Usuarios.create(req.body);
@@ -49,6 +56,7 @@ exports.create = async (req, res) => {
   }
 };
 
+// Actualizar usuario resolviendo el modelo por tipo y actualizando la entidad correspondiente
 exports.update = async (req, res) => {
   try {
     const { tipo } = req.body;
@@ -66,6 +74,7 @@ exports.update = async (req, res) => {
   }
 };
 
+// Eliminar usuario base por id
 exports.remove = async (req, res) => {
   try {
     const u = await Usuarios.findByPk(req.params.id);

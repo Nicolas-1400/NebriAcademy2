@@ -1,4 +1,4 @@
-
+// Rutas delegadas a controller de alumnos
 const express = require("express");
 const router = express.Router();
 const controller = require("../controllers/alumnosController.js");
