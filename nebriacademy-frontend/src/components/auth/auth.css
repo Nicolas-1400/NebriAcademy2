@@ -2,7 +2,7 @@
 .auth-grid {
   display: flex;
   align-items: center;
-  min-height: 615px;
+  min-height: calc(100vh - 80px);
   background-image: url("../../assets/Backgrounds/LoginBackground.png");
   background-size: cover;
   background-position: right center;
@@ -109,9 +109,8 @@
   .auth-grid {
     flex-direction: column;
     padding: 20px;
-    min-height: auto;
+    min-height: calc(100vh - 61px);
     gap: 30px;
-    height: 100vh;
     background-image: url("../../assets/Backgrounds/LoginBackgroundRotated.png");
     background-size: cover;
     background-position: top;
