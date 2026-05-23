@@ -213,7 +213,7 @@ La aplicación arranca en `http://localhost:5173` y apunta al backend en `http:/
 ## Despliegue
 
 - **Frontend**: desplegado en [Vercel](https://vercel.com) — el archivo `vercel.json` gestiona el enrutamiento SPA.
-- **Backend**: configurable en cualquier plataforma Node.js (Railway, Render, etc.).
+- **Backend**: desplegado en [Render](https://render.com).
 - **Base de datos**: MySQL en la nube mediante [Aiven](https://aiven.io).
 - **Archivos**: almacenados en [Cloudinary](https://cloudinary.com).
 
