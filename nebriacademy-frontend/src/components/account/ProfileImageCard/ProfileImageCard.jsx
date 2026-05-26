@@ -31,7 +31,6 @@ import Female13 from "../../../assets/profiles/female-13.png";
 import Female14 from "../../../assets/profiles/female-14.png";
 import Female15 from "../../../assets/profiles/female-15.png";
 import Female16 from "../../../assets/profiles/female-16.png";
-import "./ProfileImageCard.css";
 
 // ── CONSTANTES ──────────────────────────────────────────────────────────────
 // Mapa clave→imagen usado para resolver avatares en la app (claves coinciden con BD)

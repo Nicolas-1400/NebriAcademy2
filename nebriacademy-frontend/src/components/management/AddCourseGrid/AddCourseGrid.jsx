@@ -6,7 +6,6 @@ import useToastStore from "../../../store/toastStore";
 import { useNavigate } from "react-router-dom";
 import ArrowCorrect from "../../../assets/Icons/arrow-correct.png";
 import CourseBackgroundCard from "../../catalogs/Courses/CourseBackgroundCard/CourseBackgroundCard";
-import "./AddCourseGrid.css";
 
 // ── COMPONENTE ──────────────────────────────────────────────────────────────
 // Formulario para que el profesor cree un nuevo curso con contenido inicial opcional
